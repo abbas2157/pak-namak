@@ -1,11 +1,8 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
     <a href="{{ route('home') }}" class="brand-link">
         <span class="brand-text font-weight-light">PakNamak</span>
     </a>
-    <!-- Sidebar -->
     <div class="sidebar">
-        <!-- SidebarSearch -->
         <div class="form-inline">
             <div class="input-group" data-widget="sidebar-search">
                 <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
@@ -17,7 +14,6 @@
             </div>
         </div>
 
-        <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
@@ -42,6 +38,38 @@
                         class="nav-link {{ Str::startsWith(Request::route()->getName(), 'admin.package') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-box"></i>
                         <p>Packages</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.employees.index') }}"
+                        class="nav-link {{ Str::startsWith(Request::route()->getName(), 'admin.employee') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-box"></i>
+                        <p>Employees</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.assets.index') }}"
+                        class="nav-link {{ Str::startsWith(Request::route()->getName(), 'admin.assets') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-box"></i>
+                        <p>Assets</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.salt-purchases.index') }}"
+                    class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'admin.salt-purchases') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-box"></i>
+                        <p>Salt Purchases</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.productions.index') }}"
+                        class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'admin.production') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-box"></i>
+                        <p>Production</p>
                     </a>
                 </li>
             </ul>

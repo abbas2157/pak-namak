@@ -2,7 +2,7 @@
 @section('title', content: 'Packages')
 @section('content')
     <section class="content-header">
-        <div class="container-fluid">   
+        <div class="container-fluid">
             <div class="row mb-2 align-items-center">
                 <div class="col-sm-6">
                     <h1>Packages List</h1>
@@ -41,7 +41,7 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Title</th>
+                                        <th>Namak Name</th>
                                         <th>Packages</th>
                                         <th>Created At</th>
                                         <th>Action</th>

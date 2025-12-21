@@ -6,6 +6,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>@yield('title', 'PakNamak')</title>
     <base href="{{ asset("asset") }}/" />
     <!-- Bootstrap CSS -->
@@ -86,6 +88,7 @@
     <script src="dist/js/demo.js"></script>
 
     <script src="dist/js/pages/dashboard.js"></script>
+@yield('scripts')
 </body>
 
 <!-- Mirrored from adminlte.io/themes/v3/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 06 May 2024 05:16:08 GMT -->
