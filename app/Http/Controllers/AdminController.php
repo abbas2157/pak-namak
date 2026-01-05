@@ -38,17 +38,19 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required'
+            'title' => 'required',
+            'description' => 'required'
         ]);
         $data = new Post();
         $data->title = $request->title;
+        $data->description = $request->description;
         $data->save();
         return redirect()->route('posts.index')->with('success', 'Post created successfully!');
     }
      public function edit($id){
         $post = Post::find($id);
         return view('admin.posts.edit', compact('post'));
-        
+
     }
     public function update(Request $request, $id){
         $request->validate([

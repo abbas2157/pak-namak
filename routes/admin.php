@@ -1,5 +1,8 @@
 <?php
+use App\Models\Shop;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SaleController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PurchaseController;
@@ -18,11 +21,13 @@ Route::prefix('admin')->name('admin.')->middleware('web')->group(function () {
 
         Route::resource('vendors', VendorController::class);
 
-        Route::resource('types', TypeController::class);
+        Route::resource('salt-types', TypeController::class);
         Route::resource('package', PackageController::class);
         Route::resource('employees', EmployeeController::class);
         Route::resource('assets', AssetController::class);
         Route::resource('salt-purchases',PurchaseController::class);
         Route::resource('productions', ProductionController::class);
+        Route::resource('shops', ShopController::class);
+        Route::resource('sales', SaleController::class);
     });
 });

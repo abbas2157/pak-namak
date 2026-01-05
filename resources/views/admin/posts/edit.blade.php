@@ -41,6 +41,8 @@
                                     @error('title')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
+                                    <label for="description">Description</label>
+                                      <input type="text" name="description" id="description" class="form-control" placeholder="Enter description" value="{{ $post->description }}">
                                 </div>
                                 <button type="submit" class="btn btn-primary">update</button>
                             </form>

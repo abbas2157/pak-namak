@@ -18,8 +18,8 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
                 <li class="nav-item">
-                    <a href="{{ route('admin.types.index') }}"
-                        class="nav-link {{ Str::startsWith(Request::route()->getName(), 'admin.types') ? 'active' : '' }}">
+                    <a href="{{ route('admin.salt-types.index') }}"
+                        class="nav-link {{ Str::startsWith(Request::route()->getName(), 'admin.salt-types') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-store"></i>
                         <p>Title</p>
                     </a>
@@ -70,6 +70,22 @@
                         class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'admin.production') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-box"></i>
                         <p>Production</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.shops.index') }}"
+                        class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'admin.shops') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-box"></i>
+                        <p>Shops</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.sales.index') }}"
+                        class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'admin.sales') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-box"></i>
+                        <p>Sales</p>
                     </a>
                 </li>
             </ul>

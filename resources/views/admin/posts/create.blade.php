@@ -37,6 +37,8 @@
                 <div class="form-group">
                   <label for="title">Title</label>
                   <input type="text" name="title" id="title" class="form-control" placeholder="Enter title" value="">
+                  <label for="description">Description</label>
+                    <input type="text" name="description" id="description" class="form-control" placeholder="Enter description" value="">
                   @error('title')
                     <span class="text-danger">{{ $message }}</span>
                   @enderror
