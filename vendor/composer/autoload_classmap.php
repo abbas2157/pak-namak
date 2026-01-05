@@ -6,7 +6,20 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Http\\Controllers\\AdminController' => $baseDir . '/app/Http/Controllers/AdminController.php',
+    'App\\Http\\Controllers\\Admin\\AuthController' => $baseDir . '/app/Http/Controllers/Admin/AuthController.php',
+    'App\\Http\\Controllers\\Admin\\DashboardController' => $baseDir . '/app/Http/Controllers/Admin/DashboardController.php',
+    'App\\Http\\Controllers\\Admin\\PackageController' => $baseDir . '/app/Http/Controllers/Admin/PackageController.php',
+    'App\\Http\\Controllers\\Admin\\TypeController' => $baseDir . '/app/Http/Controllers/Admin/TypeController.php',
+    'App\\Http\\Controllers\\Admin\\VendorController' => $baseDir . '/app/Http/Controllers/Admin/VendorController.php',
+    'App\\Http\\Controllers\\AssetController' => $baseDir . '/app/Http/Controllers/AssetController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
+    'App\\Http\\Controllers\\EmployeeController' => $baseDir . '/app/Http/Controllers/EmployeeController.php',
+    'App\\Models\\Asset' => $baseDir . '/app/Models/Asset.php',
+    'App\\Models\\Employee' => $baseDir . '/app/Models/Employee.php',
+    'App\\Models\\Package' => $baseDir . '/app/Models/Package.php',
+    'App\\Models\\Post' => $baseDir . '/app/Models/Post.php',
+    'App\\Models\\Title' => $baseDir . '/app/Models/Title.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
