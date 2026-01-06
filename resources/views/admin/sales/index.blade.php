@@ -137,7 +137,7 @@ $(function () {
         e.preventDefault();
 
         let id = $('#id').val();
-        let url = id ? `/admin/sales/${id}` : `{{ route('admin.sales.store') }}`;
+        let url = id ? `sales/${id}` : `{{ route('sales.store') }}`;
 
         $.ajax({
             url: url,
@@ -155,7 +155,7 @@ $(function () {
     $('.editBtn').click(function () {
         let id = $(this).data('id');
 
-        $.get(`/admin/sales/${id}/edit`, function (sale) {
+        $.get(`sales/${id}/edit`, function (sale) {
             $('#id').val(sale.id);
             $('#shop_id').val(sale.shop_id);
             $('#salt_type_id').val(sale.salt_type_id);
@@ -179,7 +179,7 @@ $(function () {
             showCancelButton: true
         }).then((result) => {
             if (result.isConfirmed) {
-                $.post(`/admin/sales/${id}`, {
+                $.post(`sales/${id}`, {
                     _method: 'DELETE',
                     _token: '{{ csrf_token() }}'
                 }, function () {

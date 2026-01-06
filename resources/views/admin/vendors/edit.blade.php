@@ -20,17 +20,17 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
-                        
+
                         <div class="card-header">
                             <h3 class="card-title">update Vendor</h3>
-                            
+
                         </div>
-                        
+
                         <div class="card-body">
-                            <form action="{{ route('admin.vendors.update', $vendor->id) }}" method="POST">
-                                  @method('PUT')  
+                            <form action="{{ route('vendors.update', $vendor->id) }}" method="POST">
+                                  @method('PUT')
                                 @csrf
-                              
+
                                 <div class="form-group">
                                     <label for="name">Name</label>
                                     <input type="text" name="name" class="form-control" value="{{ $vendor->name }}">
@@ -51,7 +51,7 @@
                                     <label for="phone">Phone</label>
                                     <input type="number" name="phone" class="form-control" value="{{ $vendor->phone }}">
                                     @error('phone')
-                                        <span class="text-danger">{{ $message }}</span> 
+                                        <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
 
@@ -64,7 +64,7 @@
                                 </div>
 
                                 <button type="submit" class="btn btn-primary">Update</button>
-                                  <a href="{{ route('admin.vendors.index') }}" class="btn btn-secondary btn-sm">
+                                  <a href="{{ route('vendors.index') }}" class="btn btn-secondary btn-sm">
                 <i class="fas fa-plus"></i> Back
                             </form>
 

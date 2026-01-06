@@ -14,7 +14,7 @@
                         </ol>
                     </div>
                     <div class="col-sm-6 d-flex justify-content-end">
-                        <a href="{{ route('admin.vendors.create') }}" class="btn btn-primary shadow rounded-pill">
+                        <a href="{{ route('vendors.create') }}" class="btn btn-primary shadow rounded-pill">
                             <i class="fas fa-plus"></i> Add Title
                         </a>
                     </div>

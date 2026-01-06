@@ -4,7 +4,7 @@
 @section('content')
 <div class="container mt-4">
 
-    <a href="{{ route('admin.productions.create') }}" class="btn btn-primary mb-3">Add Production</a>
+    <a href="{{ route('productions.create') }}" class="btn btn-primary mb-3">Add Production</a>
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
@@ -35,8 +35,8 @@
                 <td>{{ $p->production_date }}</td>
                 <td>{{ $p->remarks }}</td>
                 <td>
-                    <a href="{{ route('admin.productions.edit', $p->id) }}" class="btn btn-sm btn-info">Edit</a>
-                    <form action="{{ route('admin.productions.destroy', $p->id) }}" method="POST" style="display:inline-block;">
+                    <a href="{{ route('productions.edit', $p->id) }}" class="btn btn-sm btn-info">Edit</a>
+                    <form action="{{ route('productions.destroy', $p->id) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
                         <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>

@@ -29,7 +29,7 @@
                                     {{ Session::get('success') }}
                                 </div>
                             @endif
-                            <form action="{{ route('admin.vendors.store') }}" method="POST">
+                            <form action="{{ route('vendors.store') }}" method="POST">
                                 @csrf
                                 <div class="form-group">
                                     <label for="name">Name</label>
@@ -64,9 +64,9 @@
                                     @enderror
                                 </div>
                                 <button type="submit" class="btn btn-primary">submit</button>
-                                 <a href="{{ route('admin.vendors.index') }}" class="btn btn-secondary btn-sm">
-                <i class="fas fa-plus"></i> Back
-            </a>
+                                 <a href="{{ route('vendors.index') }}" class="btn btn-secondary btn-sm">
+                                    <i class="fas fa-plus"></i> Back
+                                </a>
                             </form>
                         </div>
 

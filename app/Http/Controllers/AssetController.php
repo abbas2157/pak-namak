@@ -35,25 +35,11 @@ class AssetController extends Controller
         return response()->json(['success' => true]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Asset $asset)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Asset $asset)
     {
         return response()->json($asset);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Asset $asset)
     {
         // $request->validate([
@@ -72,9 +58,6 @@ class AssetController extends Controller
         return response()->json(['success' => true]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Asset $asset)
     {
         $asset->delete();

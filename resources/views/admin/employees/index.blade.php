@@ -125,7 +125,7 @@ $(document).ready(function(){
     $('#createEmployeeForm').on('submit', function(e){
         e.preventDefault();
         $.ajax({
-            url: "{{ route('admin.employees.store') }}",
+            url: "{{ route('employees.store') }}",
             type: 'POST',
             data: $(this).serialize(),
             success: function(response){

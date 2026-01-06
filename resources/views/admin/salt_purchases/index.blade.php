@@ -118,7 +118,7 @@ $(function () {
         e.preventDefault();
 
         let id = $('#id').val();
-        let url = id ? "/admin/salt-purchases/" + id : "{{ route('admin.salt-purchases.store') }}";
+        let url = id ? "salt-purchases/" + id : "{{ route('salt-purchases.store') }}";
         let method = id ? "PUT" : "POST";
 
         $.ajax({
@@ -137,7 +137,7 @@ $(function () {
     $('.editBtn').click(function () {
         let id = $(this).data('id');
         $.ajax({
-            url: "/admin/salt-purchases/" + id + "/edit",
+            url: "salt-purchases/" + id + "/edit",
             type: "GET",
             dataType: 'json',
             success: function (response) {
@@ -161,7 +161,7 @@ $(function () {
     $('.deleteBtn').click(function () {
         if (!confirm('Delete this record?')) return;
         let id = $(this).data('id');
-        let url = "/admin/salt-purchases/" + id;
+        let url = "salt-purchases/" + id;
         $.ajax({
             url: url,
             type: "POST",

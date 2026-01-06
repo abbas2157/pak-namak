@@ -10,7 +10,7 @@
                     <h1 class="mb-0">Add Production</h1>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.productions.store') }}" method="POST">
+                    <form action="{{ route('productions.store') }}" method="POST">
                         @csrf
                     <div class="modal-body row">
                         <div class="form-group col-md-6 mb-2">
@@ -51,7 +51,7 @@
 
                         <div class="d-flex justify-content-between">
                             <button type="submit" class="btn btn-success">Save</button>
-                            <a href="{{ route('admin.productions.index') }}" class="btn btn-secondary">Back</a>
+                            <a href="{{ route('productions.index') }}" class="btn btn-secondary">Back</a>
                         </div>
                     </form>
                 </div>

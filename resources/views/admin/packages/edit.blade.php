@@ -29,7 +29,7 @@
                                     {{ Session::get('success') }}
                                 </div>
                             @endif
-                            <form action="{{ route('admin.package.update', $package->id) }}" method="POST">
+                            <form action="{{ route('package.update', $package->id) }}" method="POST">
                                 @csrf
                                 @method('PUT')
                                 <div class="form-group">
@@ -49,7 +49,7 @@
                                     @enderror
                                 </div>
                                 <button type="submit" class="btn btn-primary">Update</button>
-                                <a href="{{ route('admin.package.index') }}" class="btn btn-secondary btn-sm">
+                                <a href="{{ route('package.index') }}" class="btn btn-secondary btn-sm">
                                     <i class="fas fa-plus"></i> Back
                                 </a>
                             </form>
