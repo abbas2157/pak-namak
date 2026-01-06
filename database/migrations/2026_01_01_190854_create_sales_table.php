@@ -19,9 +19,6 @@ return new class extends Migration
             $table->text('remarks')->nullable();
             $table->date('date');
             $table->timestamps();
-
-            $table->foreign('shop_id')->references('id')->on('shops')->onDelete('cascade');
-            $table->foreign('salt_type_id')->references('id')->on('salt_type')->onDelete('cascade');
         });
     }
 
