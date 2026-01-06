@@ -94,7 +94,7 @@
             $(document).on('submit', '#shopForm', function(e) {
                 e.preventDefault();
                 let id = $('#id').val();
-                let url = id ? "/admin/shops/" + id : "{{ route('admin.shops.store') }}";
+                let url = id ? "shops/" + id : "{{ route('shops.store') }}";
                 let method = id ? "PUT" : "POST";
 
                 $.ajax({
@@ -134,7 +134,7 @@
             $(document).on('click', '.editBtn', function() {
                 let id = $(this).data('id');
                 $.ajax({
-                    url: "/admin/shops/" + id + "/edit",
+                    url: "shops/" + id + "/edit",
                     type: "GET",
                     dataType: 'json',
                     success: function(shop) {
@@ -165,7 +165,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: "/admin/shops/" + id,
+                            url: "shops/" + id,
                             type: "POST",
                             data: {
                                 _method: "DELETE",

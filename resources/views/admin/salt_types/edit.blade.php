@@ -1,4 +1,4 @@
-@extends('admin.layout.app')
+{{-- @extends('admin.layout.app')
 
 @section('content')
     <section class="content-header">
@@ -45,7 +45,7 @@
                                 </div>
 
                                 <button type="submit" class="btn btn-primary">Update</button>
-                                <a href="{{ route('admin.salt-types.index') }}" class="btn btn-secondary">Back</a>
+                                <a href="{{ route('salt-types.index') }}" class="btn btn-secondary">Back</a>
                             </form>
 
                         </div>
@@ -54,4 +54,4 @@
             </div>
         </div>
     </section>
-@endsection
+@endsection --}}

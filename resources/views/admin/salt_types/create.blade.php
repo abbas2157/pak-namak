@@ -1,4 +1,4 @@
-@extends('admin.layout.app')
+{{-- @extends('admin.layout.app')
 
 @section('content')
   <section class="content-header">
@@ -32,7 +32,7 @@
                 </div>
               @endif
 
-              <form action="{{ route('admin.salt-types.store') }}" method="POST">
+              <form action="{{ route('salt-types.store') }}" method="POST">
                 @csrf
                 <div class="form-group">
                   <label for="title">Title</label>
@@ -51,4 +51,4 @@
       </div>
     </div>
   </section>
-@endsection
+@endsection --}}

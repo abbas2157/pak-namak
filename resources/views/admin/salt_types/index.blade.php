@@ -86,7 +86,7 @@ $(function () {
     $('#typeForm').submit(function (e) {
         e.preventDefault();
         let id = $('#id').val();
-        let url = id ? `/admin/salt-types/${id}` : "{{ route('admin.salt-types.store') }}";
+        let url = id ? `/salt-types/${id}` : "{{ route('salt-types.store') }}";
 
         $.ajax({
             url: url,
@@ -134,7 +134,7 @@ $(function () {
     $(document).on('click', '.editBtn', function () {
         let id = $(this).data('id');
 
-        $.get(`/admin/salt-types/${id}/edit`, function (res) {
+        $.get(`/salt-types/${id}/edit`, function (res) {
             $('#id').val(res.id);
             $('#title').val(res.title);
             $('#typeModal').modal('show');
@@ -156,7 +156,7 @@ $(function () {
         }).then((result) => {
             if(result.isConfirmed) {
                 $.ajax({
-                    url: `/admin/salt-types/${id}`,
+                    url: `/salt-types/${id}`,
                     type: 'DELETE',
                     data: {_token: '{{ csrf_token() }}'},
                     success: function () {

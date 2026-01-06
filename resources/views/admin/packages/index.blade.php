@@ -15,7 +15,7 @@
                         </ol>
                     </div>
                     <div class="col-sm-6 d-flex justify-content-end">
-                        <a href="{{ route('admin.package.create') }}" class="btn btn-primary shadow rounded-pill">
+                        <a href="{{ route('package.create') }}" class="btn btn-primary shadow rounded-pill">
                             <i class="fas fa-plus"></i> Add package
                         </a>
                     </div>
@@ -55,11 +55,11 @@
                                             <td>{{ $package->weight }}</td>
                                             <td>{{ $package->created_at }}</td>
                                             <td>
-                                                <a href="{{ route('admin.package.edit', $package->id) }}"
+                                                <a href="{{ route('package.edit', $package->id) }}"
                                                     class="btn btn-primary btn-sm" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <form action="{{ route('admin.package.destroy', $package->id) }}" method="POST"
+                                                <form action="{{ route('package.destroy', $package->id) }}" method="POST"
                                                     style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')

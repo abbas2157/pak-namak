@@ -75,7 +75,7 @@
 @section('scripts')
 <script>
 $(document).ready(function(){
-    let base_url = "{{ url('admin/assets') }}";
+    let base_url = "{{ url('assets') }}";
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

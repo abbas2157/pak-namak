@@ -31,7 +31,7 @@
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Sign in to start your session</p>
-                <form action="{{ route('admin.login') }}" method="post">
+                <form action="{{ route('login') }}" method="post">
                     @csrf
                     <div class="input-group mb-3">
                         <input type="email" class="form-control" name="email" placeholder="Email">
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                     @error('email')
-                    <div class="text-danger">{{ $message }}</div>
+                    <div class="text-danger">{{ $email }}</div>
                     @enderror
                     <div class="input-group mb-3">
                         <input type="password" name="password" class="form-control" placeholder="Password">
@@ -53,7 +53,7 @@
                         </div>
                     </div>
                     @error('password')
-                    <div class="text-danger">{{ $message }}</div>
+                    <div class="text-danger">{{ $password }}</div>
                     @enderror
 
                     <div class="row">
