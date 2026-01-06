@@ -44,7 +44,6 @@ Route::middleware('web')->group(function () {
 
         Route::get('dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'home'])->name('dashboard');
 
-
         Route::resource('vendors', VendorController::class);
         Route::resource('salt-types', TypeController::class);
         Route::resource('package', PackageController::class);
