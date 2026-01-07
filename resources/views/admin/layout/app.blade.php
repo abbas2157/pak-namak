@@ -34,6 +34,10 @@
         </div>
         @include('admin.layout.footer')
     </div>
+    <script type="text/javascript">
+        var APP_URL = {!! json_encode(url('/')) !!}
+        var ASSET_URL = {!! json_encode(asset('/')) !!}
+    </script>
     <script src="plugins/jquery/jquery.min.js"></script>
     <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
     <script>

@@ -14,7 +14,7 @@
                 <li class="nav-item">
                     <a href="{{ route('salt-types.index') }}"
                         class="nav-link {{ Str::startsWith(Request::route()->getName(), 'salt-types') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-store"></i>
+                        <i class="nav-icon fas fa-bars"></i>
                         <p>Salt Types</p>
                     </a>
                 </li>
