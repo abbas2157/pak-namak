@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin Login</title>
-    <base href="{{ asset('asset')}}/" />
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/logo.png') }}">
+    <title>Pak Namak Login</title>
+    <base href="{{ asset('assets')}}/" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
     <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <link rel="stylesheet" href="dist/css/adminlte.min2167.css?v=3.2.0">
@@ -15,22 +14,22 @@
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="card card-outline card-primary">
-            <div class="card-header text-center">
-                @if (Session::has('success'))
-                <div class="alert alert-success">
-                    {{ Session::get('success') }}
+            @if (Session::has('success'))
+                <div class="card-header text-center">
+                    <div class="alert alert-success">
+                        {{ Session::get('success') }}
+                    </div>
                 </div>
-                @endif
-            </div>
-            <div class="card-header text-center">
-                @if (Session::has('error'))
-                <div class="alert alert-danger">
-                    {{ Session::get('error') }}
+            @endif
+            @if (Session::has('error'))
+                <div class="card-header text-center">
+                    <div class="alert alert-danger">
+                        {{ Session::get('error') }}
+                    </div>
                 </div>
-                @endif
-            </div>
+            @endif
             <div class="card-body">
-                <p class="login-box-msg">Sign in to start your session</p>
+                <img src="{{ asset('assets/images/logo.png') }}" alt="Pak Namak Logo" class="mx-auto d-block mb-3" style="width: 150px;">
                 <form action="{{ route('login') }}" method="post">
                     @csrf
                     <div class="input-group mb-3">
@@ -55,21 +54,11 @@
                     @error('password')
                     <div class="text-danger">{{ $password }}</div>
                     @enderror
-
                     <div class="row">
-                        <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" id="remember">
-                                <label for="remember">
-                                    Remember Me
-                                </label>
-                            </div>
-                        </div>
-
+                        <div class="col-8"></div>
                         <div class="col-4">
                             <button type="submit" class="btn btn-primary btn-block">Sign In</button>
                         </div>
-
                     </div>
                 </form>
             </div>

@@ -1,30 +1,23 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <a href="{{ route('home') }}" class="brand-link">
-        <span class="brand-text font-weight-light">PakNamak</span>
+    <a href="{{ route('home') }}" class="brand-link text-center">
+        <span class="brand-text font-weight-light">PN&MJ</span>
     </a>
     <div class="sidebar">
-        <div class="form-inline">
-            <div class="input-group" data-widget="sidebar-search">
-                <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-                <div class="input-group-append">
-                    <button class="btn btn-sidebar">
-                        <i class="fas fa-search fa-fw"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-
+                <li class="nav-item">
+                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->is('/') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-home"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a href="{{ route('salt-types.index') }}"
                         class="nav-link {{ Str::startsWith(Request::route()->getName(), 'salt-types') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-store"></i>
-                        <p>Title</p>
+                        <p>Salt Types</p>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a href="{{ route('vendors.index') }}"
                         class="nav-link {{ Str::startsWith(Request::route()->getName(), 'vendors') ? 'active' : '' }}">
@@ -32,7 +25,6 @@
                         <p>Vendors</p>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a href="{{ route('package.index') }}"
                         class="nav-link {{ Str::startsWith(Request::route()->getName(), 'package') ? 'active' : '' }}">
@@ -40,7 +32,6 @@
                         <p>Packages</p>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a href="{{ route('employees.index') }}"
                         class="nav-link {{ Str::startsWith(Request::route()->getName(), 'employee') ? 'active' : '' }}">
@@ -48,7 +39,6 @@
                         <p>Employees</p>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a href="{{ route('assets.index') }}"
                         class="nav-link {{ Str::startsWith(Request::route()->getName(), 'assets') ? 'active' : '' }}">
@@ -56,7 +46,6 @@
                         <p>Assets</p>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a href="{{ route('salt-purchases.index') }}"
                     class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'salt-purchases') ? 'active' : '' }}">
@@ -64,7 +53,6 @@
                         <p>Salt Purchases</p>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a href="{{ route('productions.index') }}"
                         class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'production') ? 'active' : '' }}">
@@ -72,7 +60,6 @@
                         <p>Production</p>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a href="{{ route('shops.index') }}"
                         class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'shops') ? 'active' : '' }}">
@@ -80,7 +67,6 @@
                         <p>Shops</p>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a href="{{ route('sales.index') }}"
                         class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'sales') ? 'active' : '' }}">
