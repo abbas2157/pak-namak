@@ -12,6 +12,34 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('salt-purchases.index') }}"
+                    class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'salt-purchases') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-box"></i>
+                        <p>Purchases</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('productions.index') }}"
+                        class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'production') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-box"></i>
+                        <p>Production</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('sales.index') }}"
+                        class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'sales') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-box"></i>
+                        <p>Sales</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('shops.index') }}"
+                        class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'shops') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-box"></i>
+                        <p>Shops</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ route('salt-types.index') }}"
                         class="nav-link {{ Str::startsWith(Request::route()->getName(), 'salt-types') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-bars"></i>
@@ -44,34 +72,6 @@
                         class="nav-link {{ Str::startsWith(Request::route()->getName(), 'assets') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-box"></i>
                         <p>Assets</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('salt-purchases.index') }}"
-                    class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'salt-purchases') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-box"></i>
-                        <p>Salt Purchases</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('productions.index') }}"
-                        class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'production') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-box"></i>
-                        <p>Production</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('shops.index') }}"
-                        class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'shops') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-box"></i>
-                        <p>Shops</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('sales.index') }}"
-                        class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'sales') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-box"></i>
-                        <p>Sales</p>
                     </a>
                 </li>
             </ul>

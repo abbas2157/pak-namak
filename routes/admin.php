@@ -15,11 +15,12 @@ use App\Http\Controllers\Admin\PackageController;
 
 Route::middleware('web')->group(function () {
     Route::middleware('guest')->group(function () {
-        Route::get('login', [App\Http\Controllers\Admin\AuthController::class, 'login'])->name('login');
-        Route::post('login', [App\Http\Controllers\Admin\AuthController::class, 'auth'])->name('login.submit');
+        Route::get('login', [App\Http\Controllers\Admin\AuthController::class, 'login'])->name('admin.login');
+        Route::post('login', [App\Http\Controllers\Admin\AuthController::class, 'auth'])->name('admin.login.submit');
     });
 
     Route::middleware('auth')->group(function () {
+        Route::get('logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('admin.logout');
         Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'home'])->name('dashboard');
         Route::resource('vendors', VendorController::class);
         Route::resource('salt-types', TypeController::class);

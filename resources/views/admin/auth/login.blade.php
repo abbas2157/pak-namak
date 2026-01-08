@@ -30,7 +30,7 @@
             @endif
             <div class="card-body">
                 <img src="{{ asset('assets/images/logo.png') }}" alt="Pak Namak Logo" class="mx-auto d-block mb-3" style="width: 150px;">
-                <form action="{{ route('login') }}" method="post">
+                <form action="{{ route('admin.login') }}" method="post">
                     @csrf
                     <div class="input-group mb-3">
                         <input type="email" class="form-control" name="email" placeholder="Email">

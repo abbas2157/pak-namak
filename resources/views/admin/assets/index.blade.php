@@ -75,7 +75,7 @@
 @section('scripts')
 <script>
 $(document).ready(function(){
-    let base_url = "{{ url('assets') }}";
+    let base_url = "{{ url('/') }}";
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -89,7 +89,7 @@ $(document).ready(function(){
     $('#assetForm').submit(function(e){
         e.preventDefault();
         let id = $('#asset_id').val();
-        let url = id ? `${base_url}/${id}` : base_url;
+        let url = id ? `${APP_URL}/assets/${id}` : APP_URL + '/assets';
 
         $.ajax({
             url: url,
@@ -116,7 +116,7 @@ $(document).ready(function(){
     });
     $(document).on('click','.edit',function(){
         let id = $(this).data('id');
-        $.get(`${base_url}/${id}/edit`,function(data){
+        $.get(`${APP_URL}/assets/${id}/edit`,function(data){
             $('#asset_id').val(data.id);
             $('#asset_name').val(data.asset_name);
             $('#quantity').val(data.quantity);
@@ -130,7 +130,7 @@ $(document).ready(function(){
         if(!confirm('Are you sure you want to delete?')) return;
         let id = $(this).data('id');
         $.ajax({
-            url: `${base_url}/${id}`,
+            url: `${APP_URL}/${id}`,
             type: 'POST',
             data:{_token:"{{ csrf_token() }}",_method:'DELETE'},
             success:function(){
