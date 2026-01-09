@@ -37,16 +37,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.vendors.index') }}"
-                        class="nav-link {{ (request()->is('admin/vendors') || request()->is('admin/vendors/create')) ? 'active' : '' }}">
+                    <a href="{{ route('admin.vendors.index') }}" class="nav-link {{ (request()->is('admin/vendors') || request()->is('admin/vendors/create')) ? 'active' : '' }}">
                         <i class="nav-icon fas fa-boxes-packing"></i>
                         <p>Vendors/Supplier</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('employees.index') }}"
-                        class="nav-link {{ Str::startsWith(Request::route()->getName(), 'employee') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-box"></i>
+                    <a href="{{ route('admin.employees.index') }}" class="nav-link {{ (request()->is('admin/employees') || request()->is('admin/employees/create')) ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-users"></i>
                         <p>Employees</p>
                     </a>
                 </li>

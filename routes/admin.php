@@ -19,7 +19,7 @@ Route::middleware('web')->group(function () {
             Route::resource('sales', App\Http\Controllers\Admin\SaleController::class, ['as' => 'admin']);
             Route::resource('shops', App\Http\Controllers\Admin\ShopController::class, ['as' => 'admin']);
             Route::resource('types', App\Http\Controllers\Admin\TypeController::class, ['as' => 'admin']);
-            Route::resource('employees', App\Http\Controllers\Admin\EmployeeController::class);
+            Route::resource('employees', App\Http\Controllers\Admin\EmployeeController::class, ['as' => 'admin']);
             Route::resource('assets', App\Http\Controllers\Admin\AssetController::class);
         });
     });

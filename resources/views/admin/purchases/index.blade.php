@@ -70,7 +70,7 @@
             <input type="hidden" id="id" name="id">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Salt Purchase</h5>
+                    <h5 class="modal-title">Create Purchase</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body row">

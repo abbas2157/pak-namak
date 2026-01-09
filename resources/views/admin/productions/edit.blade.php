@@ -1,16 +1,23 @@
 @extends('admin.layout.app')
 @section('content')
-<section class="content-header">
+    <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
+            <div class="row mb-2 align-items-center">
                 <div class="col-sm-6">
-                    <h1>Update Production</h1>
+                    <h1>Edit Production</h1>
                 </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">Update Production</li>
-                    </ol>
+                <div class="row mb-2 align-items-center">
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+                            <li class="breadcrumb-item active">Edit Production </li>
+                        </ol>
+                    </div>
+                    <div class="col-sm-6 d-flex justify-content-end">
+                        <a href="{{ route('admin.productions.index') }}" class="btn btn-primary shadow rounded-pill">
+                            <i class="fas fa-plus"></i> All Production
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -19,7 +26,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card">
+                    <div class="card card-primary">
                         <div class="card-header">
                             <h3 class="card-title">Update Production</h3>
                         </div>
@@ -63,7 +70,6 @@
                                         <textarea id="remarks" name="remarks" class="form-control" placeholder="Remarks" rows="3">{{ $production->remarks }}</textarea>
                                     </div>
                                     <div class="d-flex justify-content-between">
-                                        <a href="{{ route('admin.productions.index') }}" class="btn btn-secondary">Back</a>
                                         <button type="submit" class="btn btn-success">Update Production</button>
                                     </div>
                                 </div>

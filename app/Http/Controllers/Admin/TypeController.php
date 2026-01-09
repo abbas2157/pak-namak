@@ -29,10 +29,8 @@ class TypeController extends Controller
          return response()->json(['id' => $type->id,'title' => $type->title,'created_at' => $type->created_at->format('Y-m-d')]);
      }
 
-    public function edit(SaltType $type,$id)
+    public function edit(SaltType $type)
     {
-        $type = SaltType::findOrFail($id);
-
         return response()->json([
             'id' => $type->id,
             'title' => $type->title

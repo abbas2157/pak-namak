@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 @section('content')
- <section class="content-header">
+    <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2 align-items-center">
                 <div class="col-sm-6">
@@ -19,7 +19,6 @@
                         </a>
                     </div>
                 </div>
-
             </div>
         </div>
     </section>
@@ -33,7 +32,6 @@
                 <table id="example1" class="table table-bordered table-striped">
                     <thead class="thead-dark">
                         <tr>
-                            <th>ID</th>
                             <th>Raw Salt</th>
                             <th>Finished Salt</th>
                             <th>Wastage</th>
@@ -50,19 +48,18 @@
                                 <td colspan="8" class="text-center">No productions found.</td>
                             </tr>
                         @endif
-                        @foreach($productions as $p)
+                        @foreach($productions as $item)
                         <tr>
-                            <td>{{ $p->id }}</td>
-                            <td>{{ $p->raw_salt_used }}</td>
-                            <td>{{ $p->finished_salt }}</td>
-                            <td>{{ $p->wastage }}</td>
-                            <td>{{ $p->machine_used }}</td>
-                            <td>{{ $p->electricity_fuel_cost }}</td>
-                            <td>{{ $p->production_date }}</td>
-                            <td>{{ $p->remarks }}</td>
+                            <td>{{ $item->raw_salt_used ?? '' }}</td>
+                            <td>{{ $item->finished_salt ?? '' }}</td>
+                            <td>{{ $item->wastage ?? '' }}</td>
+                            <td>{{ $item->machine_used ?? '' }}</td>
+                            <td>{{ $item->electricity_fuel_cost ?? '' }}</td>
+                            <td>{{ $item->production_date ?? '' }}</td>
+                            <td>{{ $item->remarks ?? '' }}</td>
                             <td>
-                                <a href="{{ route('admin.productions.edit', $p->id) }}" class="btn btn-sm btn-info">Edit</a>
-                                <form action="{{ route('admin.productions.destroy', $p->id) }}" method="POST" style="display:inline-block;">
+                                <a href="{{ route('admin.productions.edit', $item->id) }}" class="btn btn-sm btn-info">Edit</a>
+                                <form action="{{ route('admin.productions.destroy', $item->id) }}" method="POST" style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>

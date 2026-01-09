@@ -2,64 +2,119 @@
 @section('title','Employees')
 
 @section('content')
-<div class="container-fluid mt-3">
-    <div class="container-fluid mt-3 d-flex justify-content-end">
-        <button class="btn btn-primary rounded-pill mb-3 mt-3 m-3" id="addEmployee">
-            + Add Employee
-        </button>
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2 align-items-center">
+                <div class="col-sm-6">
+                    <h1>Employee List</h1>
+                </div>
+                <div class="row mb-2 align-items-center">
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+                            <li class="breadcrumb-item active">Employee List</li>
+                        </ol>
+                    </div>
+                    <div class="col-sm-6 d-flex justify-content-end">
+                        <button class="btn btn-primary mb-3 float-right mt-3 px-3 mr-3 rounded-pill" id="addEmployee">
+                            <i class="fas fa-plus"></i> Add Employee
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            <table class="table table-bordered table-striped" id="employeesTable">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Salary</th>
+                        <th>Address</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @if($employees->isEmpty())
+                    <tr>
+                        <td colspan="8" class="text-center">No employees found.</td>
+                    </tr>
+                @endif
+                @foreach($employees as $item)
+                    <tr id="row{{$item->id}}">
+                        <td>{{$item->name ?? ''}}</td>
+                        <td>{{$item->phone ?? ''}}</td>
+                        <td>{{$item->salary ?? ''}}</td>
+                        <td>{{$item->address ?? ''}}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm edit" data-id="{{$item->id ?? ''}}">Edit</button>
+                            <button class="btn btn-danger btn-sm delete" data-id="{{$item->id ?? ''}}">Delete</button>
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    </section>
+   <div class="modal fade" id="createEmployeeModal">
+        <div class="modal-dialog modal-lg">
+            <form id="createEmployeeForm">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create Employee</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body row">
+                        <div class="col-md-6 mb-2">
+                            <label>Full Name</label>
+                            <input type="text" class="form-control mb-2" name="name" placeholder="Name" required>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label>Phone</label>
+                            <input type="text" class="form-control mb-2" name="phone" placeholder="Phone" required>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label>Salary</label>
+                            <input type="number" class="form-control mb-2" name="salary" placeholder="Salary" required>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label>Address</label>
+                            <input type="text" class="form-control mb-2" name="address" placeholder="Address" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Create Employee</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Salary</th>
-                <th>Address</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach($employees as $emp)
-            <tr id="row{{$emp->id}}">
-                <td>{{$emp->id}}</td>
-                <td>{{$emp->name}}</td>
-                <td>{{$emp->email}}</td>
-                <td>{{$emp->phone}}</td>
-                <td>{{$emp->salary}}</td>
-                <td>{{$emp->address}}</td>
-                <td>
-                    <button class="btn btn-warning btn-sm edit"
-                        data-id="{{$emp->id}}">Edit</button>
-                    <button class="btn btn-danger btn-sm delete"
-                        data-id="{{$emp->id}}">Delete</button>
-                </td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
-</div>
-<!-- CREATE MODAL -->
-<div class="modal fade" id="createEmployeeModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Add Employee</h5>
-        <button type="button" class="close" data-dismiss="modal">
-        <span>&times;</span>
-        </button>
-      </div>
-      <form id="createEmployeeForm">
+    <div class="modal fade" id="editEmployeeModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Edit Employee</h5>
+            <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+            </button>
+        </div>
+
+        <form id="editEmployeeForm">
             @csrf
+            @method('PUT')
+            <input type="hidden" name="employee_id" id="editEmployeeId">
             <div class="modal-body">
-                <input type="text" class="form-control mb-2" name="name" placeholder="Name" required>
-                <input type="email" class="form-control mb-2" name="email" placeholder="Email" required>
-                <input type="text" class="form-control mb-2" name="phone" placeholder="Phone" required>
-                <input type="number" class="form-control mb-2" name="salary" placeholder="Salary" required>
-                <input type="text" class="form-control mb-2" name="address" placeholder="Address" required>
-                <select name="status" class="form-control mb-2" required>
+                <input type="text" class="form-control mb-2" name="name" id="editName" placeholder="Name" required>
+                <input type="email" class="form-control mb-2" name="email" id="editEmail" placeholder="Email" required>
+                <input type="text" class="form-control mb-2" name="phone" id="editPhone" placeholder="Phone" required>
+                <input type="number" class="form-control mb-2" name="salary" id="editSalary" placeholder="Salary" required>
+                <input type="text" class="form-control mb-2" name="address" id="editAddress" placeholder="Address" required>
+                <select name="status" class="form-control mb-2" id="editStatus" required>
                     <option value="">Select Status</option>
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
@@ -67,47 +122,12 @@
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-primary" type="submit">Save</button>
+                <button class="btn btn-primary" type="submit">Update</button>
             </div>
         </form>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="editEmployeeModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Edit Employee</h5>
-        <button type="button" class="close" data-dismiss="modal">
-          <span>&times;</span>
-        </button>
-      </div>
-
-      <form id="editEmployeeForm">
-        @csrf
-        @method('PUT')
-        <input type="hidden" name="employee_id" id="editEmployeeId">
-        <div class="modal-body">
-            <input type="text" class="form-control mb-2" name="name" id="editName" placeholder="Name" required>
-            <input type="email" class="form-control mb-2" name="email" id="editEmail" placeholder="Email" required>
-            <input type="text" class="form-control mb-2" name="phone" id="editPhone" placeholder="Phone" required>
-            <input type="number" class="form-control mb-2" name="salary" id="editSalary" placeholder="Salary" required>
-            <input type="text" class="form-control mb-2" name="address" id="editAddress" placeholder="Address" required>
-            <select name="status" class="form-control mb-2" id="editStatus" required>
-                <option value="">Select Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-            </select>
         </div>
-
-        <div class="modal-footer">
-            <button class="btn btn-primary" type="submit">Update</button>
-        </div>
-      </form>
     </div>
-  </div>
-</div>
+    </div>
 
 @include('admin.employees.create')
 @include('admin.employees.edit')
@@ -125,7 +145,7 @@ $(document).ready(function(){
     $('#createEmployeeForm').on('submit', function(e){
         e.preventDefault();
         $.ajax({
-            url: "{{ route('employees.store') }}",
+            url: "{{ route('admin.employees.store') }}",
             type: 'POST',
             data: $(this).serialize(),
             success: function(response){
@@ -152,7 +172,7 @@ $(document).ready(function(){
 
     $(document).on('click', '.edit', function(){
         let id = $(this).data('id');
-        $.get("/admin/employees/" + id + "/edit", function(employee){
+        $.get(APP_URL + "/admin/employees/" + id + "/edit", function(employee){
             $('#editEmployeeId').val(employee.id);
             $('#editName').val(employee.name);
             $('#editEmail').val(employee.email);
@@ -168,7 +188,7 @@ $(document).ready(function(){
         e.preventDefault();
         let id = $('#editEmployeeId').val();
         $.ajax({
-            url: "/admin/employees/" + id,
+            url: APP_URL + "/admin/employees/" + id,
             type: 'POST',
             data: $(this).serialize(),
             success: function(response){
@@ -198,7 +218,7 @@ $(document).ready(function(){
 
         let id = $(this).data('id');
         $.ajax({
-            url: "/admin/employees/" + id,
+            url: APP_URL + "/admin/employees/" + id,
             type: 'POST',
             data: {
                 _method: 'DELETE',

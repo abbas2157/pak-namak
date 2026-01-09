@@ -2,37 +2,59 @@
 @section('title','Types List')
 
 @section('content')
-<div class="container-fluid">
-    <table class="table table-bordered table-striped" id="typesTable">
-        <thead class="thead-dark">
-            <tr>
-                <th>ID</th>
-                <th>Salt Type</th>
-                <th>Created At</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($types as $type)
-            <tr id="row_{{ $type->id }}">
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $type->title }}</td>
-                <td>{{ $type->created_at->format('Y-m-d') }}</td>
-                <td>
-                    <button class="btn btn-info btn-sm editBtn" data-id="{{ $type->id }}">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-danger btn-sm deleteBtn" data-id="{{ $type->id }}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2 align-items-center">
+                <div class="col-sm-6">
+                    <h1>Types List</h1>
+                </div>
+                <div class="row mb-2 align-items-center">
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+                            <li class="breadcrumb-item active">Types List</li>
+                        </ol>
+                    </div>
+                    <div class="col-sm-6 d-flex justify-content-end">
+                        <button class="btn btn-primary mb-3 float-right mt-3 px-3 mr-3 rounded-pill" id="addBtn">
+                            <i class="fas fa-plus"></i> Add Type
+                        </button>
+                    </div>
+                </div>
 
-</div>
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            <table class="table table-bordered table-striped" id="typesTable">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Type</th>
+                        <th>Created At</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($types as $type)
+                    <tr id="row_{{ $type->id }}">
+                        <td>{{ $type->title }}</td>
+                        <td>{{ $type->created_at->format('Y-m-d') }}</td>
+                        <td>
+                            <button class="btn btn-info btn-sm editBtn" data-id="{{ $type->id }}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm deleteBtn" data-id="{{ $type->id }}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
 
+        </div>
+    </section>
 <!-- Modal for Add/Edit -->
 <div class="modal fade" id="typeModal">
     <div class="modal-dialog">
@@ -41,13 +63,13 @@
             <input type="hidden" name="id" id="id">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add/Edit Salt Type</h5>
+                    <h5 class="modal-title">Add/Edit Type</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Title</label>
-                        <input type="text" name="title" id="title" class="form-control" required>
+                        <input type="text" name="title" id="title" class="form-control" required placeholder="Enter Type Title">
                         <span class="text-danger" id="titleError"></span>
                     </div>
                 </div>

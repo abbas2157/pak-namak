@@ -2,17 +2,24 @@
 @section('title','Add Production')
 
 @section('content')
-<section class="content-header">
+    <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
+            <div class="row mb-2 align-items-center">
                 <div class="col-sm-6">
                     <h1>Create Production</h1>
                 </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                        <li class="breadcrumb-item active">Create Production</li>
-                    </ol>
+                <div class="row mb-2 align-items-center">
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+                            <li class="breadcrumb-item active">Create Production </li>
+                        </ol>
+                    </div>
+                    <div class="col-sm-6 d-flex justify-content-end">
+                        <a href="{{ route('admin.productions.index') }}" class="btn btn-primary shadow rounded-pill">
+                            <i class="fas fa-plus"></i> All Production
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -21,9 +28,9 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <div class="card shadow">
+                    <div class="card card-primary">
                         <div class="card-header">
-                            <h1 class="mb-0">Add Production</h1>
+                            <h3 class="card-title">Add Production</h3>
                         </div>
                         <div class="card-body">
                             <form action="{{ route('admin.productions.store') }}" method="POST">
@@ -64,7 +71,6 @@
                                         <textarea id="remarks" name="remarks" class="form-control" placeholder="Remarks" rows="3"></textarea>
                                     </div>
                                     <div class="d-flex justify-content-between">
-                                        <a href="{{ route('admin.productions.index') }}" class="btn btn-secondary">Back</a>
                                         <button type="submit" class="btn btn-success">Create Production</button>
                                     </div>
                                 </div>
