@@ -1,36 +1,27 @@
 <?php
-use App\Models\Shop;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\SaleController;
-use App\Http\Controllers\ShopController;
-use App\Http\Controllers\AssetController;
-use App\Http\Controllers\EmployeeController;
-use App\Http\Controllers\PurchaseController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Admin\TypeController;
-use App\Http\Controllers\ProductionController;
-use App\Http\Controllers\Admin\VendorController;
-use App\Http\Controllers\Admin\PackageController;
 
 Route::middleware('web')->group(function () {
     Route::middleware('guest')->group(function () {
-        Route::get('login', [App\Http\Controllers\Admin\AuthController::class, 'login'])->name('admin.login');
-        Route::post('login', [App\Http\Controllers\Admin\AuthController::class, 'auth'])->name('admin.login.submit');
+        Route::get('login', [App\Http\Controllers\Admin\AuthController::class, 'login'])->name('login');
+        Route::post('login', [App\Http\Controllers\Admin\AuthController::class, 'auth'])->name('login.submit');
     });
 
     Route::middleware('auth')->group(function () {
-        Route::get('logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('admin.logout');
-        Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'home'])->name('dashboard');
-        Route::resource('vendors', VendorController::class);
-        Route::resource('salt-types', TypeController::class);
-        Route::resource('package', PackageController::class);
-        Route::resource('employees', EmployeeController::class);
-        Route::resource('assets', AssetController::class);
-        Route::resource('salt-purchases', PurchaseController::class);
-        Route::resource('productions', ProductionController::class);
-        Route::resource('shops', ShopController::class);
-        Route::resource('sales', SaleController::class);
+        Route::group(['prefix' => 'admin'], function(){
 
+            Route::get('logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('logout');
+            Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'home'])->name('dashboard');
+
+            Route::resource('purchases', App\Http\Controllers\Admin\PurchaseController::class, ['as' => 'admin']);
+            Route::resource('productions', App\Http\Controllers\Admin\ProductionController::class, ['as' => 'admin']);
+            Route::resource('vendors', App\Http\Controllers\Admin\VendorController::class, ['as' => 'admin']);
+            Route::resource('sales', App\Http\Controllers\Admin\SaleController::class, ['as' => 'admin']);
+            Route::resource('salt-types', App\Http\Controllers\Admin\TypeController::class);
+            Route::resource('package', App\Http\Controllers\Admin\PackageController::class);
+            Route::resource('employees', App\Http\Controllers\Admin\EmployeeController::class);
+            Route::resource('assets', App\Http\Controllers\Admin\AssetController::class);
+            Route::resource('shops', App\Http\Controllers\Admin\ShopController::class);
+        });
     });
 });

@@ -12,22 +12,19 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('salt-purchases.index') }}"
-                    class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'salt-purchases') ? 'active' : '' }}">
+                    <a href="{{ route('admin.purchases.index') }}" class="nav-link {{ request()->is('admin/purchases') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-box"></i>
                         <p>Purchases</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('productions.index') }}"
-                        class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'production') ? 'active' : '' }}">
+                    <a href="{{ route('admin.productions.index') }}" class="nav-link {{ request()->is('admin/productions') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-box"></i>
                         <p>Production</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('sales.index') }}"
-                        class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'sales') ? 'active' : '' }}">
+                    <a href="{{ route('admin.sales.index') }}" class="nav-link {{ request()->is('admin/sales') || request()->is('admin/sales/create') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-box"></i>
                         <p>Sales</p>
                     </a>
@@ -47,10 +44,10 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('vendors.index') }}"
-                        class="nav-link {{ Str::startsWith(Request::route()->getName(), 'vendors') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-store"></i>
-                        <p>Vendors</p>
+                    <a href="{{ route('admin.vendors.index') }}"
+                        class="nav-link {{ (request()->is('admin/vendors') || request()->is('admin/vendors/create')) ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-boxes-packing"></i>
+                        <p>Vendors/Supplier</p>
                     </a>
                 </li>
                 <li class="nav-item">

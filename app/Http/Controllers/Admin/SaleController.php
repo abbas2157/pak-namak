@@ -1,26 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Sale;
-use App\Models\SaltType;
-use App\Models\Shop;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\{Sale, SaltType, Shop};
 
 class SaleController extends Controller
 {
     public function index()
     {
-        $sales = Sale::with('saltType','shop')->get();
-        $shops = Shop::all();
-        $types = SaltType::all();
-
-        return view('admin.sales.index', compact('sales','shops','types'));
+        $sales = Sale::with('salt_type','shop')->get();
+        return view('admin.sales.index', compact('sales'));
     }
 
     public function create()
     {
-        return view('admin.sales.index');
+        $shops = Shop::get();
+        $types = SaltType::get();
+        return view('admin.sales.create', compact('shops','types'));
     }
 
     public function store(Request $request)

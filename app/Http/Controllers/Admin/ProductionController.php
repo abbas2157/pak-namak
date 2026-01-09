@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\Production;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class ProductionController extends Controller
 {
@@ -28,7 +29,7 @@ class ProductionController extends Controller
         $productions->electricity_fuel_cost = $request->input('electricity_fuel_cost');
         $productions->remarks = $request->input('remarks');
         $productions->save();
-        return redirect()->route('productions.index')->with('success', 'Production added successfully.');
+        return redirect()->route('admin.productions.index')->with('success', 'Production added successfully.');
     }
     public function edit(Production $production)
     {
@@ -46,12 +47,12 @@ class ProductionController extends Controller
         $productions->electricity_fuel_cost = $request->input('electricity_fuel_cost');
         $productions->remarks = $request->input('remarks');
         $productions->save();
-        return redirect()->route('productions.index')->with('success', 'Production updated successfully.');
+        return redirect()->route('admin.productions.index')->with('success', 'Production updated successfully.');
     }
     public function destroy(Production $production)
     {
         $productions = Production::find($production->id);
         $productions->delete();
-        return redirect()->route('productions.index')->with('success', 'Production Deleted successfully.');
+        return redirect()->route('admin.productions.index')->with('success', 'Production Deleted successfully.');
     }
 }

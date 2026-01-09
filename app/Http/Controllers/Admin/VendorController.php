@@ -34,7 +34,7 @@ class VendorController extends Controller
         $data->phone = $request->phone;
         $data->address = $request->address;
         $data->save();
-        return redirect()->route('vendors.index')->with('success', 'Vendor created successfully!');
+        return redirect()->route('admin.vendors.index')->with('success', 'Vendor created successfully!');
     }
 
     public function edit(Vendor $vendor)
@@ -57,13 +57,13 @@ class VendorController extends Controller
         $data->phone = $request->phone;
         $data->address = $request->address;
         $data->save();
-        return redirect()->route('vendors.index')->with('success', 'Vendor updated successfully!');
+        return redirect()->route('admin.vendors.index')->with('success', 'Vendor updated successfully!');
     }
 
     public function destroy(string $id)
     {
         $data = Vendor::find($id);
         $data->delete();
-        return redirect()->route('vendors.index')->with('success', 'Vendor deleted successfully!');
+        return redirect()->route('admin.vendors.index')->with('success', 'Vendor deleted successfully!');
     }
 }

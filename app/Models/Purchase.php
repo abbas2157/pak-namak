@@ -18,4 +18,7 @@ class Purchase extends Model
         'grand_total',
         'remarks'
     ];
+    public function vendor(){
+        return $this->belongsTo(Vendor::class, 'vendor_id', 'id');
+    }
 }

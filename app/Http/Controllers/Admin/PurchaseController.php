@@ -1,25 +1,28 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Purchase;
 use Illuminate\Http\Request;
+use App\Models\{Purchase, Vendor};
+use App\Http\Controllers\Controller;
 
 class PurchaseController extends Controller
 {
     public function index()
     {
-        $purchases = Purchase::latest()->get();
-        return view('admin.salt_purchases.index', compact('purchases'));
+        $purchases = Purchase::with('vendor')->latest()->get();
+        $vendors = Vendor::get();
+        return view('admin.purchases.index', compact('purchases', 'vendors'));
     }
     public function create()
     {
-        return view('admin.salt_purchases.index');
+        $vendors = Vendor::get();
+        return view('admin.purchases.index', compact('vendors'));
     }
     public function store(Request $request)
     {
         $request->validate([
-            'supplier_name' => 'required',
+            'vendor_id' => 'required',
             'salt_quantity' => 'required|numeric',
             'rate_per_kg' => 'required|numeric',
             'total_cost' => 'required|numeric',
@@ -27,8 +30,9 @@ class PurchaseController extends Controller
         ]);
 
         $purchase = new Purchase();
-        $purchase->supplier_name = $request->supplier_name;
+        $purchase->vendor_id = $request->vendor_id;
         $purchase->salt_quantity = $request->salt_quantity;
+        $purchase->salt_quantity_kg = $request->salt_quantity_kg;
         $purchase->rate_per_kg = $request->rate_per_kg;
         $purchase->total_cost = $request->total_cost;
         $purchase->transport_cost = $request->transport_cost;
@@ -47,14 +51,15 @@ class PurchaseController extends Controller
     {
         $purchase = Purchase::findOrFail($id);
         $request->validate([
-            'supplier_name' => 'required',
+            'vendor_id' => 'required',
             'salt_quantity' => 'required|numeric',
             'rate_per_kg' => 'required|numeric',
             'total_cost' => 'required|numeric',
             'grand_total' => 'required|numeric',
         ]);
-        $purchase->supplier_name = $request->supplier_name;
+        $purchase->vendor_id = $request->vendor_id;
         $purchase->salt_quantity = $request->salt_quantity;
+        $purchase->salt_quantity_kg = $request->salt_quantity_kg;
         $purchase->rate_per_kg = $request->rate_per_kg;
         $purchase->total_cost = $request->total_cost;
         $purchase->transport_cost = $request->transport_cost;

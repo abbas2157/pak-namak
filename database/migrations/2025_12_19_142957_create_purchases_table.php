@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('salt_purchases', function (Blueprint $table) {
             $table->id();
-            $table->string('supplier_name');
-            $table->decimal('salt_quantity', 10, 2);
-            $table->decimal('rate_per_kg', 10, 2);
-            $table->decimal('total_cost', 12, 2);
+            $table->string('vendor_id');
+            $table->decimal('salt_quantity', 10, 2)->default(0);
+            $table->decimal('salt_quantity_kg', 10, 2)->default(0);
+            $table->decimal('rate_per_kg', 10, 2)->default(0);
+            $table->decimal('total_cost', 12, 2)->default(0);
             $table->decimal('transport_cost', 10, 2)->default(0);
             $table->decimal('loading_unloading_cost', 10, 2)->default(0);
             $table->decimal('grand_total', 12, 2);

@@ -12,7 +12,7 @@ class Sale extends Model
         return $this->belongsTo(Shop::class);
     }
 
-    public function saltType(){
+    public function salt_type(){
         return $this->belongsTo(SaltType::class);
     }
 }

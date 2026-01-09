@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('vendors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('shop');
-            $table->bigInteger('phone');
-            $table->string('address');
+            $table->string('shop')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('address')->nullable();
             $table->timestamps();
         });
     }
