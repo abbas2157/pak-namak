@@ -8,14 +8,14 @@ class TypeController extends Controller
 
     public function index()
     {
-        $types = SaltType::paginate('5');
-        return view('admin.salt_types.index', compact('types'));
+        $types = SaltType::paginate('10');
+        return view('admin.types.index', compact('types'));
 
     }
 
     public function create()
     {
-        return view('admin.salt_types.index');
+        return view('admin.types.index');
     }
 
     public function store(Request $request)

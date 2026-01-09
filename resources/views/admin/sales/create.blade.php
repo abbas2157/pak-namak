@@ -1,6 +1,8 @@
 @extends('admin.layout.app')
 @section('title', 'Sales')
-
+ALTER TABLE `vendors` CHANGE `phone` `phone` VARCHAR(500) NULL;
+ALTER TABLE `salt_purchases` CHANGE `supplier_name` `vendor_id` INT NOT NULL;
+ALTER TABLE `salt_purchases` ADD `salt_quantity_kg` INT NULL AFTER `salt_quantity`;
 @section('content')
     <section class="content-header">
         <div class="container-fluid">

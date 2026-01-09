@@ -13,34 +13,27 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.purchases.index') }}" class="nav-link {{ request()->is('admin/purchases') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-box"></i>
+                        <i class="nav-icon fas fa-cart-shopping"></i>
                         <p>Purchases</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.productions.index') }}" class="nav-link {{ request()->is('admin/productions') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-box"></i>
+                        <i class="nav-icon fas fa-umbrella-beach"></i>
                         <p>Production</p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.sales.index') }}" class="nav-link {{ request()->is('admin/sales') || request()->is('admin/sales/create') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-box"></i>
+                        <i class="nav-icon fas fa-dollar-sign"></i>
                         <p>Sales</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('shops.index') }}"
-                        class="nav-link {{ Str::startsWith(Route::currentRouteName(), 'shops') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-box"></i>
+                    <a href="{{ route('admin.shops.index') }}"
+                        class="nav-link {{ request()->is('admin/shops') || request()->is('admin/shops/create') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-shop"></i>
                         <p>Shops</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('salt-types.index') }}"
-                        class="nav-link {{ Str::startsWith(Request::route()->getName(), 'salt-types') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-bars"></i>
-                        <p>Salt Types</p>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -51,17 +44,17 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('package.index') }}"
-                        class="nav-link {{ Str::startsWith(Request::route()->getName(), 'package') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-box"></i>
-                        <p>Packages</p>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="{{ route('employees.index') }}"
                         class="nav-link {{ Str::startsWith(Request::route()->getName(), 'employee') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-box"></i>
                         <p>Employees</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.types.index') }}"
+                        class="nav-link {{ request()->is('admin/types') || request()->is('admin/types/create') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-bars"></i>
+                        <p>Types</p>
                     </a>
                 </li>
                 <li class="nav-item">

@@ -1,16 +1,8 @@
 @extends('admin.layout.app')
-@section('title','Salt Types List')
+@section('title','Types List')
 
 @section('content')
-<div class="container-fluid mt-2">
-
-    <div class="d-flex justify-content-between mb-3">
-        <h3 class="mt-3">Salt Types List</h3>
-        <button class="btn btn-primary rounded-pill mt-3" id="addBtn">
-            <i class="fas fa-plus"></i> Add Salt Type
-        </button>
-    </div>
-
+<div class="container-fluid">
     <table class="table table-bordered table-striped" id="typesTable">
         <thead class="thead-dark">
             <tr>
@@ -47,7 +39,6 @@
         <form id="typeForm">
             @csrf
             <input type="hidden" name="id" id="id">
-
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add/Edit Salt Type</h5>
@@ -86,7 +77,7 @@ $(function () {
     $('#typeForm').submit(function (e) {
         e.preventDefault();
         let id = $('#id').val();
-        let url = id ? `/salt-types/${id}` : "{{ route('salt-types.store') }}";
+        let url = id ? APP_URL + `/admin/types/${id}` : "{{ route('admin.types.store') }}";
 
         $.ajax({
             url: url,
@@ -94,7 +85,6 @@ $(function () {
             data: $(this).serialize(),
             success: function (res) {
                 $('#typeModal').modal('hide');
-
                 // Reload table row or add new row dynamically
                 let row = `
                     <tr id="row_${res.id}">
@@ -134,7 +124,7 @@ $(function () {
     $(document).on('click', '.editBtn', function () {
         let id = $(this).data('id');
 
-        $.get(`/salt-types/${id}/edit`, function (res) {
+        $.get( APP_URL + `/admin/types/${id}/edit`, function (res) {
             $('#id').val(res.id);
             $('#title').val(res.title);
             $('#typeModal').modal('show');
@@ -156,7 +146,7 @@ $(function () {
         }).then((result) => {
             if(result.isConfirmed) {
                 $.ajax({
-                    url: `/salt-types/${id}`,
+                    url: APP_URL + `/admin/types/${id}`,
                     type: 'DELETE',
                     data: {_token: '{{ csrf_token() }}'},
                     success: function () {

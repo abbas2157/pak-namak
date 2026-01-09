@@ -17,11 +17,10 @@ Route::middleware('web')->group(function () {
             Route::resource('productions', App\Http\Controllers\Admin\ProductionController::class, ['as' => 'admin']);
             Route::resource('vendors', App\Http\Controllers\Admin\VendorController::class, ['as' => 'admin']);
             Route::resource('sales', App\Http\Controllers\Admin\SaleController::class, ['as' => 'admin']);
-            Route::resource('salt-types', App\Http\Controllers\Admin\TypeController::class);
-            Route::resource('package', App\Http\Controllers\Admin\PackageController::class);
+            Route::resource('shops', App\Http\Controllers\Admin\ShopController::class, ['as' => 'admin']);
+            Route::resource('types', App\Http\Controllers\Admin\TypeController::class, ['as' => 'admin']);
             Route::resource('employees', App\Http\Controllers\Admin\EmployeeController::class);
             Route::resource('assets', App\Http\Controllers\Admin\AssetController::class);
-            Route::resource('shops', App\Http\Controllers\Admin\ShopController::class);
         });
     });
 });
