@@ -6,7 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sale extends Model
 {
-    protected $fillable = ['id','shop_id','salt_type_id','product_size','quantity_sold','rate_per_pack','total_sales_amount','remarks','date'];
+    protected $fillable = [
+        'sale_date',
+        'shop_id',
+        'total_amount',
+        'received_amount',
+        'pending_amount',
+        'remarks'
+    ];
 
     public function shop(){
         return $this->belongsTo(Shop::class);
@@ -14,5 +21,19 @@ class Sale extends Model
 
     public function salt_type(){
         return $this->belongsTo(SaltType::class);
+    }
+    public function dalla() {
+        return $this->hasOne(SaleDalla::class);
+    }
+
+    public function thailas() {
+        return $this->hasMany(SaleThaila::class);
+    }
+
+    public function packages() {
+        return $this->hasMany(SalePackage::class);
+    }
+    public function payments() {
+        return $this->hasMany(SalePayment::class);
     }
 }

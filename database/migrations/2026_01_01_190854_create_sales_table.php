@@ -10,14 +10,15 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('shop_id');
-            $table->unsignedBigInteger('salt_type_id');
-            $table->string('product_size');
-            $table->integer('quantity_sold');
-            $table->float('rate_per_pack', 8, 2);
-            $table->float('total_sales_amount', 10, 2);
+            $table->date('sale_date');
+            $table->foreignId('shop_id');
+
+            $table->decimal('total_amount', 12, 2)->default(0);
+            $table->decimal('received_amount', 12, 2)->default(0);
+            $table->decimal('pending_amount', 12, 2)->default(0);
+
             $table->text('remarks')->nullable();
-            $table->date('date');
+            $table->foreignId('created_by')->nullable();
             $table->timestamps();
         });
     }

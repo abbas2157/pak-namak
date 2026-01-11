@@ -30,11 +30,7 @@
             <table class="table table-bordered table-striped" id="salesTable">
                 <thead class="thead-dark">
                     <tr>
-                        <th>#</th>
                         <th>Shop</th>
-                        <th>Salt Type</th>
-                        <th>Size</th>
-                        <th>Qty</th>
                         <th>Total</th>
                         <th>Date</th>
                         <th>Action</th>
@@ -48,14 +44,11 @@
                     @endif
                     @foreach ($sales as $sale)
                     <tr id="row_{{ $sale->id }}">
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $sale->shop->name }}</td>
-                        <td>{{ $sale->salt_type->title }}</td>
-                        <td>{{ $sale->product_size }}</td>
-                        <td>{{ $sale->quantity_sold }}</td>
-                        <td>{{ $sale->total_sales_amount }}</td>
-                        <td>{{ $sale->date }}</td>
+                        <td>{{ $sale->shop->name ?? '' }}</td>
+                        <td>{{ $sale->total_amount ?? '' }}</td>
+                        <td>{{ $sale->sale_date ?? '' }}</td>
                         <td>
+                            <button class="btn btn-sm btn-primary viewBtn" data-id="{{ $sale->id }}">View</button>
                             <button class="btn btn-sm btn-info editBtn" data-id="{{ $sale->id }}">Edit</button>
                             <button class="btn btn-sm btn-danger deleteBtn" data-id="{{ $sale->id }}">Delete</button>
                         </td>
@@ -63,13 +56,38 @@
                     @endforeach
                 </tbody>
             </table>
-
         </div>
     </section>
+    <div class="modal fade" id="saleDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Sale Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="saleDetailBody">
+                    <div class="text-center p-4">
+                        <span class="spinner-border"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('scripts')
 <script>
+    $(document).on('click', '.viewBtn', function () {
+        let saleId = $(this).data('id');
+
+        $('#saleDetailModal').modal('show');
+        $('#saleDetailBody').html('<div class="text-center p-4"><span class="spinner-border"></span></div>');
+
+        $.get("{{ url('/admin/sales') }}/" + saleId, function (response) {
+            $('#saleDetailBody').html(response);
+        });
+    });
 $(function () {
     $('.deleteBtn').click(function () {
         let id = $(this).data('id');
