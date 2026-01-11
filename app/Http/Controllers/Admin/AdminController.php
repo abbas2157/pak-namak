@@ -19,7 +19,7 @@ class AdminController extends Controller
         ]);
         $auth = $request->only('email', 'password');
         if (Auth::attempt($auth)) {
-            return redirect()->route('home')->with('success', 'Login successful!');
+            return redirect()->route('dashboard')->with('success', 'Login successful!');
         }
         return back()->with('error', 'Invalid email or password');
     }
