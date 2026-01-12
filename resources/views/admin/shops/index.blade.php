@@ -31,19 +31,19 @@
                 <thead class="thead-dark">
                     <tr>
                         <th>Name</th>
-                        <th>Email</th>
                         <th>Phone</th>
                         <th>Address</th>
+                        <th>Create Date</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($shops as $shop)
                         <tr id="row_{{ $shop->id }}">
-                            <td>{{ $shop->name }}</td>
-                            <td>{{ $shop->email }}</td>
-                            <td>{{ $shop->phone_number }}</td>
-                            <td>{{ $shop->address }}</td>
+                            <td>{{ $shop->name ?? '' }}</td>
+                            <td>{{ $shop->phone_number ?? '' }}</td>
+                            <td>{{ $shop->address ?? '' }}</td>
+                            <td>{{ $shop->created_at ?? '' }}</td>
                             <td>
                                 <button class="btn btn-sm btn-info editBtn" data-id="{{ $shop->id }}">Edit</button>
                                 <button class="btn btn-sm btn-danger deleteBtn" data-id="{{ $shop->id }}">Delete</button>
@@ -68,10 +68,6 @@
                         <div class="col-md-6 mb-2">
                             <label>Name</label>
                             <input type="text" name="name" id="name" class="form-control" placeholder="Enter Name" required>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label>Email</label>
-                            <input type="email" name="email" id="email" class="form-control" placeholder="Enter Email">
                         </div>
                         <div class="col-md-6 mb-2">
                             <label>Phone Number</label>
