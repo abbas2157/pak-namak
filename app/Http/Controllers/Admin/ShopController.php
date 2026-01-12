@@ -10,7 +10,7 @@ class ShopController extends Controller
 {
     public function index()
     {
-        $shops = Shop::all();
+        $shops = Shop::get();
         return view('admin.shops.index', compact('shops'));
     }
 

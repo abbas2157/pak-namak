@@ -142,7 +142,6 @@
                     success: function(shop) {
                         $('#id').val(shop.id);
                         $('#name').val(shop.name);
-                        $('#email').val(shop.email);
                         $('#phone_number').val(shop.phone_number);
                         $('#address').val(shop.address);
                         $('#shopModal').modal('show');
