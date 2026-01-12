@@ -227,7 +227,7 @@
                             </div>
                             <div class="col-md-2 mb-2">
                                 <label for="price_per_bundle_400_gram">Rate (فی بنڈل)</label>
-                                <input type="number" name="package[400][price_per_bundle]" id="price_per_bundle" class="form-control">
+                                <input type="number" name="package[400][price_per_bundle]" id="price_per_bundle_400_gram" class="form-control">
                             </div>
                             <div class="col-md-3 mb-2">
                                 <label for="sub_total_400_gram">Sub Total (سب ٹوٹل)</label>
