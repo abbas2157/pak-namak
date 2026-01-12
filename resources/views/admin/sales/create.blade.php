@@ -28,9 +28,12 @@
         <div class="container-fluid">
             <form action="{{ route('admin.sales.store') }}" method="POST">
                 @csrf
-                <div class="card card-primary">
+                <div class="card card-primary collapsed-card">
                     <div class="card-header">
                         <h3 class="card-title">Dalla (ڈلہ)</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -57,9 +60,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="card card-primary">
+                <div class="card card-primary collapsed-card">
                     <div class="card-header">
                         <h3 class="card-title">Thails (تھیلا)</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -142,9 +148,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="card card-primary">
+                <div class="card card-primary collapsed-card">
                     <div class="card-header">
                         <h3 class="card-title">Package (پیکٹ)</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i></button>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="row">

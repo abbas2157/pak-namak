@@ -11,7 +11,7 @@ Route::middleware('web')->group(function () {
         Route::group(['prefix' => 'admin'], function(){
 
             Route::get('logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('logout');
-            Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'home'])->name('dashboard');
+            Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 
             Route::resource('purchases', App\Http\Controllers\Admin\PurchaseController::class, ['as' => 'admin']);
             Route::resource('productions', App\Http\Controllers\Admin\ProductionController::class, ['as' => 'admin']);
