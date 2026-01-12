@@ -109,9 +109,9 @@
                     success: function(shop) {
                         let row = `<tr id="row_${shop.id}">
                             <td>${shop.name}</td>
-                                <td>${shop.email}</td>
                                 <td>${shop.phone_number}</td>
                                 <td>${shop.address}</td>
+                                <td>${shop.created_at}</td>
                                 <td>
                                     <button class="btn btn-sm btn-info editBtn" data-id="${shop.id}">Edit</button>
                                     <button class="btn btn-sm btn-danger deleteBtn" data-id="${shop.id}">Delete</button>
