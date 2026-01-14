@@ -31,6 +31,7 @@
                 <thead class="thead-dark">
                     <tr>
                         <th>Name</th>
+                        <th>Email</th>
                         <th>Phone</th>
                         <th>Address</th>
                         <th>Create Date</th>
@@ -41,9 +42,10 @@
                     @foreach ($shops as $shop)
                         <tr id="row_{{ $shop->id }}">
                             <td>{{ $shop->name ?? '' }}</td>
+                            <td>{{ $shop->email ?? '' }}</td>
                             <td>{{ $shop->phone_number ?? '' }}</td>
                             <td>{{ $shop->address ?? '' }}</td>
-                            <td>{{ $shop->created_at ?? '' }}</td>
+                            <td>{{ $shop->created_at ? $shop->created_at->format('d-m-Y h:i A') : '' }}</td>
                             <td>
                                 <button class="btn btn-sm btn-info editBtn" data-id="{{ $shop->id }}">Edit</button>
                                 <button class="btn btn-sm btn-danger deleteBtn" data-id="{{ $shop->id }}">Delete</button>
@@ -68,6 +70,10 @@
                         <div class="col-md-6 mb-2">
                             <label>Name</label>
                             <input type="text" name="name" id="name" class="form-control" placeholder="Enter Name" required>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label>Email</label>
+                            <input type="email" name="email" id="email" class="form-control" placeholder="Enter Email" required>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label>Phone Number</label>
@@ -108,7 +114,8 @@
                     data: $(this).serialize() + (method === "PUT" ? '&_method=PUT' : ''),
                     success: function(shop) {
                         let row = `<tr id="row_${shop.id}">
-                            <td>${shop.name}</td>
+                                <td>${shop.name}</td>
+                                <td>${shop.email}</td>
                                 <td>${shop.phone_number}</td>
                                 <td>${shop.address}</td>
                                 <td>${shop.created_at}</td>
@@ -142,6 +149,7 @@
                     success: function(shop) {
                         $('#id').val(shop.id);
                         $('#name').val(shop.name);
+                        $('#email').val(shop.email);
                         $('#phone_number').val(shop.phone_number);
                         $('#address').val(shop.address);
                         $('#shopModal').modal('show');

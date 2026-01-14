@@ -108,17 +108,23 @@
             @csrf
             @method('PUT')
             <input type="hidden" name="employee_id" id="editEmployeeId">
-            <div class="modal-body">
-                <input type="text" class="form-control mb-2" name="name" id="editName" placeholder="Name" required>
-                <input type="email" class="form-control mb-2" name="email" id="editEmail" placeholder="Email" required>
-                <input type="text" class="form-control mb-2" name="phone" id="editPhone" placeholder="Phone" required>
-                <input type="number" class="form-control mb-2" name="salary" id="editSalary" placeholder="Salary" required>
-                <input type="text" class="form-control mb-2" name="address" id="editAddress" placeholder="Address" required>
-                <select name="status" class="form-control mb-2" id="editStatus" required>
-                    <option value="">Select Status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
+            <div class="modal-body row">
+                <div class="col-md-6 mb-2">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control mb-2" name="name" id="editName" placeholder="Name" required>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label for="phone">Phone</label>
+                    <input type="text" class="form-control mb-2" name="phone" id="editPhone" placeholder="Phone" required>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label for="salary">salary</label>
+                    <input type="number" class="form-control mb-2" name="salary" id="editSalary" placeholder="Salary" required>
+                </div>
+                <div class="col-md-6 mb-2">
+                    <label for="address">Address</label>
+                    <input type="text" class="form-control mb-2" name="address" id="editAddress" placeholder="Address" required>
+                </div>
             </div>
 
             <div class="modal-footer">
@@ -129,8 +135,7 @@
     </div>
     </div>
 
-@include('admin.employees.create')
-@include('admin.employees.edit')
+
 @endsection
 
 @section('scripts')
@@ -151,7 +156,7 @@ $(document).ready(function(){
             success: function(response){
                 if(response.success){
                     $('#createEmployeeModal').modal('hide');
-                    alert('Employee saved successfully!');
+                    toastr.success('Employee saved successfully!');
                     location.reload();
                 }
             },
@@ -162,9 +167,9 @@ $(document).ready(function(){
                     $.each(errors, function(key, value){
                         errorMessages += value[0] + "\n";
                     });
-                    alert(errorMessages);
+                    toastr.error(errorMessages);
                 } else {
-                    alert('Error: '+xhr.status);
+                    toastr.error('Something went wrong!');
                 }
             }
         });
@@ -175,11 +180,9 @@ $(document).ready(function(){
         $.get(APP_URL + "/admin/employees/" + id + "/edit", function(employee){
             $('#editEmployeeId').val(employee.id);
             $('#editName').val(employee.name);
-            $('#editEmail').val(employee.email);
             $('#editPhone').val(employee.phone);
             $('#editSalary').val(employee.salary);
             $('#editAddress').val(employee.address);
-            $('#editStatus').val(employee.status);
             $('#editEmployeeModal').modal('show');
         });
     });
@@ -194,7 +197,7 @@ $(document).ready(function(){
             success: function(response){
                 if(response.success){
                     $('#editEmployeeModal').modal('hide');
-                    alert('Employee updated successfully!');
+                    toastr.success('Employee updated successfully!');
                     location.reload();
                 }
             },
@@ -205,9 +208,9 @@ $(document).ready(function(){
                     $.each(errors, function(key, value){
                         errorMessages += value[0] + "\n";
                     });
-                    alert(errorMessages);
+                    toastr.error(errorMessages);
                 } else {
-                    alert('Error: '+xhr.status);
+                    toastr.error('Error: '+xhr.status);
                 }
             }
         });
@@ -226,13 +229,16 @@ $(document).ready(function(){
             },
             success: function(response){
                 if(response.success){
-                    alert('Employee deleted successfully!');
+                    toastr.success('Employee deleted successfully!');
                     $('#row' + id).remove();
                 }
             },
-            error: function(xhr){
-                console.log(xhr.responseText);
-                alert('Error: ' + xhr.status);
+             error: function(xhr){
+                Swal.fire(
+                    'Error!',
+                    'Something went wrong.',
+                    'error'
+                );
             }
         });
     });

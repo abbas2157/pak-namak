@@ -22,7 +22,6 @@ class EmployeeController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email',
             'phone' => 'required',
             'salary' => 'required|numeric',
             'address' => 'required',
@@ -30,11 +29,9 @@ class EmployeeController extends Controller
 
         $employee = new Employee();
         $employee->name = $request->name;
-        $employee->email = $request->email;
         $employee->phone = $request->phone;
         $employee->salary = $request->salary;
         $employee->address = $request->address;
-        $employee->status = $request->status;
         $employee->save();
         return response()->json(['success' => true]);
     }
@@ -46,17 +43,14 @@ class EmployeeController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email',
             'phone' => 'required',
             'salary' => 'required|numeric',
             'address' => 'required',
         ]);
         $employee->name = $request->name;
-        $employee->email = $request->email;
         $employee->phone = $request->phone;
         $employee->salary = $request->salary;
         $employee->address = $request->address;
-        $employee->status = $request->status;
         $employee->save();
 
         return response()->json(['success' => true]);
