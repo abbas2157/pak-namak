@@ -27,7 +27,7 @@
     </section>
     <section class="content">
         <div class="container-fluid">
-            <table class="table table-bordered table-striped" id="shopTable">
+            <table id="shopTable" class="table table-bordered table-striped">
                 <thead class="thead-dark">
                     <tr>
                         <th>Name</th>
@@ -202,6 +202,19 @@
                     }
                 });
             });
+        });
+
+        $(function () {
+            $('#shopTable').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true
+            });
+
         });
     </script>
 @endsection

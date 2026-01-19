@@ -7,7 +7,7 @@
     <button class="btn btn-primary mb-3 float-right mt-3 px-3 mr-3 rounded-pill" id="addAsset">
         <i class="fas fa-plus"></i>Add Asset
     </button>
-    <table class="table table-bordered">
+    <table id="assetsTable" class="table table-bordered">
         <thead>
             <tr>
                 <th>ID</th>
@@ -75,7 +75,7 @@
 @section('scripts')
 <script>
 $(document).ready(function(){
-    let base_url = "{{ url('/') }}";
+    let APP_URL = "{{ url('admin') }}";
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -137,6 +137,19 @@ $(document).ready(function(){
                 $('#row'+id).remove();
             }
         });
+    });
+
+});
+
+$(function () {
+    $('#assetsTable').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true
     });
 
 });

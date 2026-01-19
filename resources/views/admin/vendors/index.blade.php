@@ -32,7 +32,7 @@
                             {{ Session::get('success') }}
                         </div>
                     @endif
-                    <table id="example1" class="table table-bordered table-striped">
+                    <table id="vendorsTable" class="table table-bordered table-striped">
                         <thead class="thead-dark">
                             <tr>
                                 <th>Name</th>
@@ -74,15 +74,23 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <div>
-                        </div>
-                        <div>
-                            {!! $vendors->links('pagination::bootstrap-5') !!}
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </section>
+<script>
+    $(function () {
+        $('#vendorsTable').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true
+        });
+
+    });
+</script>
 @endsection
+

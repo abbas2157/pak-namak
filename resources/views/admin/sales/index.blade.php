@@ -88,27 +88,40 @@
             $('#saleDetailBody').html(response);
         });
     });
-$(function () {
-    $('.deleteBtn').click(function () {
-        let id = $(this).data('id');
+    $(function () {
+        $('.deleteBtn').click(function () {
+            let id = $(this).data('id');
 
-        Swal.fire({
-            title: "Are you sure?",
-            icon: "warning",
-            showCancelButton: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.post(APP_URL + `/admin/sales/${id}`, {
-                    _method: 'DELETE',
-                    _token: '{{ csrf_token() }}'
-                }, function () {
-                    $('#row_' + id).remove();
-                    Swal.fire("Deleted!", "", "success");
-                });
-            }
+            Swal.fire({
+                title: "Are you sure?",
+                icon: "warning",
+                showCancelButton: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post(APP_URL + `/admin/sales/${id}`, {
+                        _method: 'DELETE',
+                        _token: '{{ csrf_token() }}'
+                    }, function () {
+                        $('#row_' + id).remove();
+                        Swal.fire("Deleted!", "", "success");
+                    });
+                }
+            });
         });
+
     });
 
-});
+    $(function () {
+        $('#salesTable').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true
+        });
+
+    });
 </script>
 @endsection

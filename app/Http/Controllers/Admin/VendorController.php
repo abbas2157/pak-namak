@@ -11,7 +11,7 @@ class VendorController extends Controller
 {
     public function index()
     {
-        $vendors = Vendor::Paginate(5);
+        $vendors = Vendor::get();
         return view('admin.vendors.index', compact('vendors'));
     }
 
