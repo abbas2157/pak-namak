@@ -8,6 +8,18 @@
                 <div class="col-sm-6">
                     <h1>Sales List</h1>
                 </div>
+                    <div class="col-sm-2 ms-auto">
+                        <div class="form-group mb-0">
+                            <label class="small">Select Shop</label>
+                            <select class="select2   form-control form-control-sm" id="shopFilter">
+                                <option value="">All Shops</option>
+                                @foreach($shops as $shop)
+                                    <option value="{{ $shop->id }}">{{ $shop->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <div class="row mb-2 align-items-center">
                     <div class="col-sm-6">
                         <ol class="breadcrumb mb-0">
@@ -23,7 +35,6 @@
                 </div>
 
             </div>
-        </div>
     </section>
     <section class="content">
         <div class="container-fluid">
@@ -36,7 +47,7 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="salesBody">
                     @if($sales->isEmpty())
                         <tr>
                             <td colspan="8" class="text-center">No sales found.</td>
@@ -111,17 +122,23 @@
 
     });
 
-    $(function () {
-        $('#salesTable').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true
+    $(document).ready(function () {
+        $('#shopFilter').select2({
+            placeholder: "Select Shop",
+            allowClear: true
         });
 
+        let table = $('#salesTable').DataTable({
+            paging: true,
+            searching: true,
+            ordering: true,
+            responsive: true
+        });
+
+        $('#shopFilter').on('change', function () {
+            let shopName = $(this).val() ? $(this).find('option:selected').text() : '';
+            table.column(0).search(shopName).draw();
+        });
     });
 </script>
 @endsection

@@ -11,8 +11,9 @@ class SaleController extends Controller
 {
     public function index()
     {
+        $shops = Shop::all();
         $sales = Sale::get();
-        return view('admin.sales.index', compact('sales'));
+        return view('admin.sales.index', compact('sales','shops'));
     }
 
     public function create()

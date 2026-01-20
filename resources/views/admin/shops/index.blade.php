@@ -3,28 +3,38 @@
 
 @section('content')
     <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2 align-items-center">
-                <div class="col-sm-6">
-                    <h1>Shops List</h1>
+    <div class="container-fluid">
+        <div class="row mb-2 align-items-center">
+            <div class="col-sm-6">
+                <h1>Shops List</h1>
+            </div>
+            <div class="col-sm-2 offset-4 d-flex justify-content-end">
+                <div class="form-group mb-0 w-45">
+                    <label class="small">Select Shop</label>
+                    <select class="select2 form-control form-control-sm" id="shopFilter">
+                        <option value="">All Shops</option>
+                        @foreach($shops as $shop)
+                            <option value="{{ $shop->id }}">{{ $shop->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
-                <div class="row mb-2 align-items-center">
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                            <li class="breadcrumb-item active">Shops List</li>
-                        </ol>
-                    </div>
-                    <div class="col-sm-6 d-flex justify-content-end">
-                        <button class="btn btn-primary mb-3 float-right mt-3 px-3 mr-3 rounded-pill" id="addBtn">
-                            <i class="fas fa-plus"></i> Add Shop
-                        </button>
-                    </div>
-                </div>
-
             </div>
         </div>
-    </section>
+        <div class="row mb-2 align-items-center">
+            <div class="col-sm-6">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+                    <li class="breadcrumb-item active">Shops List</li>
+                </ol>
+            </div>
+            <div class="col-sm-6 d-flex justify-content-end">
+                <button class="btn btn-primary mb-3 float-right mt-3 px-3 mr-3 rounded-pill" id="addBtn">
+                    <i class="fas fa-plus"></i> Add Shop
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
     <section class="content">
         <div class="container-fluid">
             <table id="shopTable" class="table table-bordered table-striped">
@@ -204,17 +214,33 @@
             });
         });
 
-        $(function () {
-            $('#shopTable').DataTable({
-                "paging": true,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true
+
+        $(document).ready(function () {
+            $('#shopFilter').select2({
+                placeholder: "Select Shop",
+                allowClear: true
             });
 
+            let table = $('#shopTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                responsive: true
+            });
+
+            $('#shopFilter').on('change', function () {
+                let shopName = $('#shopFilter option:selected').text();
+                if (shopName !== 'All Shops') {
+                    table.column(0).search(shopName).draw();
+                } else {
+                    table.search('').columns().search('').draw();
+                }
+            });
+
+            $('#shopFilter').on('select2:clear', function () {
+                table.search('').draw();
+            });
         });
+
     </script>
 @endsection
