@@ -96,8 +96,8 @@ class SaleController extends Controller
                     SaleThaila::create([
                         'sale_id'       => $sale->id,
                         'bag_size_kg'   => $kg,
-                        'quantity'      => $soldKg / $kg,
-                        'total_kg'      => $soldKg,
+                        'quantity'      => $soldKg ,
+                        'total_kg'      => $soldKg * $kg,
                         'price_per_bag' => $item['pirce_per_thaila'] ?? 0,
                         'price_per_kg'  => $item['pirce_per_kg'] ?? 0,
                         'sub_total'     => $subTotal,
