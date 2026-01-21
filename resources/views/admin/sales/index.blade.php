@@ -108,7 +108,20 @@ $(function () {
             }
         });
     });
-
 });
+</script>
+<script>
+  $(function () {
+    $('#salesTable').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+      "buttons": ["csv", "excel", "pdf"]
+    }).buttons().container().appendTo('#salesTable_wrapper .col-md-6:eq(0)');
+  });
 </script>
 @endsection

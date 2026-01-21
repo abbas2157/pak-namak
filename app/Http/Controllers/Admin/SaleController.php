@@ -11,13 +11,13 @@ class SaleController extends Controller
 {
     public function index()
     {
-        $sales = Sale::get();
+        $sales = Sale::orderBy('id', 'desc')->get();
         return view('admin.sales.index', compact('sales'));
     }
 
     public function create()
     {
-        $shops = Shop::get();
+        $shops = Shop::orderBy('id', 'desc')->get();
         $types = SaltType::get();
         return view('admin.sales.create', compact('shops','types'));
     }

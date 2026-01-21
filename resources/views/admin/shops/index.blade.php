@@ -91,7 +91,6 @@
 @section('scripts')
     <script>
         $(function() {
-
             $('#addBtn').click(function() {
                 $('#shopForm')[0].reset();
                 $('#id').val('');
@@ -194,6 +193,20 @@
                     }
                 });
             });
+        });
+    </script>
+    <script>
+        $(function () {
+            $('#shopTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+            "buttons": ["csv", "excel", "pdf"]
+            }).buttons().container().appendTo('#shopTable_wrapper .col-md-6:eq(0)');
         });
     </script>
 @endsection
