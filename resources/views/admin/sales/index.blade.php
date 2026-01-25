@@ -121,29 +121,6 @@
         });
 
     });
-<<<<<<< HEAD
-
-    $(document).ready(function () {
-        $('#shopFilter').select2({
-            placeholder: "Select Shop",
-            allowClear: true
-        });
-
-        let table = $('#salesTable').DataTable({
-            paging: true,
-            searching: true,
-            ordering: true,
-            responsive: true
-        });
-
-        $('#shopFilter').on('change', function () {
-            let shopName = $(this).val() ? $(this).find('option:selected').text() : '';
-            table.column(0).search(shopName).draw();
-        });
-    });
-=======
-});
->>>>>>> 01f0bc2180f4f7f3e8747ad56e87a7ac4bba9628
 </script>
 <script>
   $(function () {

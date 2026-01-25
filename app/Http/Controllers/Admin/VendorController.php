@@ -11,11 +11,7 @@ class VendorController extends Controller
 {
     public function index()
     {
-<<<<<<< HEAD
-        $vendors = Vendor::get();
-=======
         $vendors = Vendor::orderBy('id', 'desc')->get();
->>>>>>> 01f0bc2180f4f7f3e8747ad56e87a7ac4bba9628
         return view('admin.vendors.index', compact('vendors'));
     }
 
