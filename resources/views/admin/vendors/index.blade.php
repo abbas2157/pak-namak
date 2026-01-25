@@ -50,7 +50,7 @@
                             @endif
                             @foreach ($vendors as $vendor)
                                 <tr>
-                                    <td>{{ $vendor->name }}</td>
+                                    <td>{{ $vendor->name ?? '' }}</td>
                                     <td>{{ $vendor->shop }}</td>
                                     <td>{{ $vendor->phone }}</td>
                                     <td>{{ $vendor->address }}</td>
@@ -94,3 +94,21 @@
 </script>
 @endsection
 
+
+@section('scripts')
+<script>
+<script>
+  $(function () {
+    $('#example1').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+      "buttons": ["csv", "excel", "pdf"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+  });
+</script>
+@endsection

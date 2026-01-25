@@ -45,7 +45,7 @@
     @foreach($sale->thailas as $t)
     <tr>
         <td>{{ $t->bag_size_kg ?? '' }} KG</td>
-        <td>{{ $sale->dalla->quantity_kg ?? ''}} (تھیلا)</td>
+        <td>{{ $t->quantity ?? ''}} (تھیلا)</td>
         <td>{{ $t->total_kg ?? '' }} KG</td>
         <td>Rs. {{ $t->price_per_kg ?? '' }}</td>
         <td>Rs. {{ $t->price_per_bag ?? '' }}</td>

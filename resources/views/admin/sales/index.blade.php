@@ -121,6 +121,7 @@
         });
 
     });
+<<<<<<< HEAD
 
     $(document).ready(function () {
         $('#shopFilter').select2({
@@ -140,5 +141,22 @@
             table.column(0).search(shopName).draw();
         });
     });
+=======
+});
+>>>>>>> 01f0bc2180f4f7f3e8747ad56e87a7ac4bba9628
+</script>
+<script>
+  $(function () {
+    $('#salesTable').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+      "buttons": ["csv", "excel", "pdf"]
+    }).buttons().container().appendTo('#salesTable_wrapper .col-md-6:eq(0)');
+  });
 </script>
 @endsection

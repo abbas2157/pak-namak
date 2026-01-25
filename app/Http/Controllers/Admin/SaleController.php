@@ -11,14 +11,19 @@ class SaleController extends Controller
 {
     public function index()
     {
+<<<<<<< HEAD
         $shops = Shop::all();
         $sales = Sale::get();
         return view('admin.sales.index', compact('sales','shops'));
+=======
+        $sales = Sale::orderBy('id', 'desc')->get();
+        return view('admin.sales.index', compact('sales'));
+>>>>>>> 01f0bc2180f4f7f3e8747ad56e87a7ac4bba9628
     }
 
     public function create()
     {
-        $shops = Shop::get();
+        $shops = Shop::orderBy('id', 'desc')->get();
         $types = SaltType::get();
         return view('admin.sales.create', compact('shops','types'));
     }
@@ -97,8 +102,8 @@ class SaleController extends Controller
                     SaleThaila::create([
                         'sale_id'       => $sale->id,
                         'bag_size_kg'   => $kg,
-                        'quantity'      => $soldKg / $kg,
-                        'total_kg'      => $soldKg,
+                        'quantity'      => $soldKg ,
+                        'total_kg'      => $soldKg * $kg,
                         'price_per_bag' => $item['pirce_per_thaila'] ?? 0,
                         'price_per_kg'  => $item['pirce_per_kg'] ?? 0,
                         'sub_total'     => $subTotal,
