@@ -20,6 +20,12 @@ class DashboardController extends Controller
             ->sum('total_amount');
 
         /* -------------------------
+         * Total SALES
+         * ------------------------ */
+
+        $totalSales = Sale::sum('total_amount');
+
+        /* -------------------------
          * TOTAL SHOPS (TILL DATE)
          * ------------------------ */
         $totalShops = Shop::count();
@@ -31,15 +37,24 @@ class DashboardController extends Controller
             ->sum('grand_total');
 
         /* -------------------------
+         * Total MONTH PURCHASES
+         * ------------------------ */
+        $PurchasesTotal = Purchase::sum('grand_total');
+
+        /* -------------------------
          * PROFIT / LOSS
          * ------------------------ */
         $profitLoss = $monthSalesTotal - ($monthPurchasesTotal);
+        $totalProfitLoss = $totalSales - ($PurchasesTotal);
 
         return view('admin.dashboard.index', compact(
             'totalShops',
             'monthSalesTotal',
             'monthPurchasesTotal',
-            'profitLoss'
+            'profitLoss',
+            'totalSales',
+            'PurchasesTotal',
+            'totalProfitLoss'
         ));
     }
 }
