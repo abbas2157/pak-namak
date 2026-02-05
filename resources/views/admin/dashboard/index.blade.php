@@ -31,7 +31,7 @@
                             <i class="fas fa-umbrella-beach"></i>
                         </span>
                         <div class="info-box-content">
-                            <span class="info-box-text">This Month Purchases</span>
+                            <span class="info-box-text">Total Purchases</span>
                             <span class="info-box-number">PKR. {{ number_format($PurchasesTotal, 2) }}</span>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                             <i class="far fa-dollar-sign"></i>
                         </span>
                         <div class="info-box-content">
-                            <span class="info-box-text">This Month Sales</span>
+                            <span class="info-box-text">Total Sales</span>
                             <span class="info-box-number">PKR.  {{ number_format($totalSales, 2) }}</span>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                             <i class="far fa-dollar-sign"></i>
                         </span>
                         <div class="info-box-content">
-                            <span class="info-box-text">This Month Profit / Loss</span>
+                            <span class="info-box-text">Total Profit / Loss</span>
                             <span class="info-box-number">PKR. {{ number_format($totalProfitLoss, 2) }}</span>
                         </div>
                     </div>
