@@ -11,8 +11,9 @@ class SaleController extends Controller
 {
     public function index()
     {
+        $shops = Shop::get();
         $sales = Sale::orderBy('id', 'desc')->get();
-        return view('admin.sales.index', compact('sales'));
+        return view('admin.sales.index', compact('sales','shops'));
     }
 
     public function create()
