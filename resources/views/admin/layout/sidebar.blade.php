@@ -6,7 +6,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->is('/') ? 'active' : '' }}">
+                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->is('admin') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-home"></i>
                         <p>Dashboard</p>
                     </a>
@@ -46,6 +46,12 @@
                     <a href="{{ route('admin.employees.index') }}" class="nav-link {{ (request()->is('admin/employees') || request()->is('admin/employees/create')) ? 'active' : '' }}">
                         <i class="nav-icon fas fa-users"></i>
                         <p>Employees</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.expenses.index') }}" class="nav-link {{ (request()->is('admin/expenses') || request()->is('admin/expenses/create')) ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-money-bill-wave"></i>
+                        <p>Expenses</p>
                     </a>
                 </li>
                 <li class="nav-item">

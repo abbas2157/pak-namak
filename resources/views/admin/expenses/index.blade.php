@@ -30,20 +30,20 @@
             <table class="table table-bordered table-striped" id="expenseTable">
                 <thead class="thead-dark">
                     <tr>
-                        <th>Date</th>
                         <th>Category</th>
-                        <th>Payment</th>
                         <th>Amount</th>
+                        <th>Payment Method</th>
+                        <th>Date</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($expenses as $expense)
                         <tr id="row_{{ $expense->id }}">
-                           <td>{{ $expense->expense_date ?? '' }}</td>
                             <td>{{ $expense->category ?? '' }}</td>
-                            <td>{{ $expense->payment_method ?? '' }}</td>
                             <td>{{ number_format($expense->amount, 2) }}</td>
+                            <td>{{ $expense->payment_method ?? '' }}</td>
+                            <td>{{ $expense->expense_date ?? '' }}</td>
                             <td>
                                 <button class="btn btn-sm btn-info editBtn" data-id="{{ $expense->id }}">Edit</button>
                                 <button class="btn btn-sm btn-danger deleteBtn" data-id="{{ $expense->id }}">Delete</button>
@@ -95,12 +95,6 @@
                                 <input type="number" id="amount" step="0.01" name="amount" class="form-control" required>
                             </div>
                         </div>
-
-                        <div class="mt-3">
-                            <label>Description</label>
-                            <input type="text" name="description" id="description" class="form-control">
-                        </div>
-
                         <div class="mt-3">
                             <label>Remarks</label>
                             <textarea name="remarks" id="remarks" class="form-control"></textarea>
@@ -138,10 +132,10 @@
                     data: $(this).serialize() + (method === "PUT" ? '&_method=PUT' : ''),
                     success: function(expense) {
                         let row = `<tr id="row_${expense.id}">
-                                <td>${expense.expense_date}</td>
                                 <td>${expense.category}</td>
-                                <td>${expense.payment_method}</td>
                                 <td>${expense.amount}</td>
+                                <td>${expense.payment_method}</td>
+                                <td>${expense.expense_date}</td>
                                 <td>
                                     <button class="btn btn-sm btn-info editBtn" data-id="${expense.id}">Edit</button>
                                     <button class="btn btn-sm btn-danger deleteBtn" data-id="${expense.id}">Delete</button>
@@ -175,7 +169,6 @@
                         $('#category').val(expense.category);
                         $('#payment_method').val(expense.payment_method);
                         $('#amount').val(expense.amount);
-                        $('#description').val(expense.description);
                         $('#remarks').val(expense.remarks);
                         $('#ExpenseModal').modal('show');
                     },

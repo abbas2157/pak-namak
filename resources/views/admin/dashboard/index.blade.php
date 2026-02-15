@@ -17,11 +17,11 @@
                 <div class="col-md-3 col-sm-6 col-12">
                     <div class="info-box">
                         <span class="info-box-icon bg-info">
-                            <i class="far fa-shop"></i>
+                            <i class="far fa-dollar-sign"></i>
                         </span>
                         <div class="info-box-content">
-                            <span class="info-box-text">Shops</span>
-                            <span class="info-box-number">{{ $totalShops }}</span>
+                            <span class="info-box-text">Total Sales</span>
+                            <span class="info-box-number">PKR.  {{ number_format($totalSales, 2) }}</span>
                         </div>
                     </div>
                 </div>
@@ -39,11 +39,11 @@
                 <div class="col-md-3 col-sm-6 col-12">
                     <div class="info-box">
                         <span class="info-box-icon bg-info">
-                            <i class="far fa-dollar-sign"></i>
+                            <i class="nav-icon fas fa-money-bill-wave"></i>
                         </span>
                         <div class="info-box-content">
-                            <span class="info-box-text">Total Sales</span>
-                            <span class="info-box-number">PKR.  {{ number_format($totalSales, 2) }}</span>
+                            <span class="info-box-text">Total Expenses</span>
+                            <span class="info-box-number">PKR. {{ number_format($totalExpenses, 2) }}</span>
                         </div>
                     </div>
                 </div>
@@ -63,11 +63,11 @@
                 <div class="col-md-3 col-sm-6 col-12">
                     <div class="info-box">
                         <span class="info-box-icon bg-info">
-                            <i class="far fa-shop"></i>
+                            <i class="far fa-dollar-sign"></i>
                         </span>
                         <div class="info-box-content">
-                            <span class="info-box-text">Shops</span>
-                            <span class="info-box-number">{{ $totalShops }}</span>
+                            <span class="info-box-text">This Month Sales</span>
+                            <span class="info-box-number">PKR.  {{ number_format($monthSalesTotal, 2) }}</span>
                         </div>
                     </div>
                 </div>
@@ -85,11 +85,11 @@
                 <div class="col-md-3 col-sm-6 col-12">
                     <div class="info-box">
                         <span class="info-box-icon bg-info">
-                            <i class="far fa-dollar-sign"></i>
+                            <i class="nav-icon fas fa-money-bill-wave"></i>
                         </span>
                         <div class="info-box-content">
-                            <span class="info-box-text">This Month Sales</span>
-                            <span class="info-box-number">PKR.  {{ number_format($monthSalesTotal, 2) }}</span>
+                            <span class="info-box-text">This Month Expenses</span>
+                            <span class="info-box-number">PKR. {{ number_format($monthExpensesTotal, 2) }}</span>
                         </div>
                     </div>
                 </div>

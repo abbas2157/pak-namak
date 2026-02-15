@@ -1,10 +1,12 @@
 <?php
 namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Controller;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{Sale, Purchase, Shop};
+use App\Http\Controllers\Controller;
+use App\Models\{Sale, Purchase, Shop, Expense};
+
 class DashboardController extends Controller
 {
     public function index() {
@@ -42,18 +44,31 @@ class DashboardController extends Controller
         $PurchasesTotal = Purchase::sum('grand_total');
 
         /* -------------------------
+        * MONTH EXPENSES
+        * ------------------------ */
+        $monthExpensesTotal = Expense::whereBetween('expense_date', [$monthStart, $monthEnd])
+            ->sum('amount');
+
+        /* -------------------------
+        * TOTAL EXPENSES (TILL DATE)
+        * ------------------------ */
+        $totalExpenses = Expense::sum('amount');
+
+        /* -------------------------
          * PROFIT / LOSS
          * ------------------------ */
-        $profitLoss = $monthSalesTotal - ($monthPurchasesTotal);
-        $totalProfitLoss = $totalSales - ($PurchasesTotal);
+        $profitLoss = $monthSalesTotal - ($monthPurchasesTotal + $monthExpensesTotal);
+        $totalProfitLoss = $totalSales - ($PurchasesTotal + $totalExpenses);
 
         return view('admin.dashboard.index', compact(
             'totalShops',
             'monthSalesTotal',
             'monthPurchasesTotal',
+            'monthExpensesTotal',
             'profitLoss',
             'totalSales',
             'PurchasesTotal',
+            'totalExpenses',
             'totalProfitLoss'
         ));
     }
