@@ -12,4 +12,9 @@ class Shop extends Model
         'phone_number',
         'address',
     ];
+
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
+    }
 }

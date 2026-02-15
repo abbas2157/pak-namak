@@ -36,6 +36,16 @@ class ShopController extends Controller
         return response()->json($shop);
     }
 
+    public function show($id)
+    {
+        $shop = Shop::with([
+            'sales.dalla',
+            'sales.thailas',
+            'sales.packages'
+        ])->findOrFail($id);
+
+        return view('admin.shops.sales', compact('shop'));
+    }
     public function edit($id)
     {
         $shop = Shop::findOrFail($id);

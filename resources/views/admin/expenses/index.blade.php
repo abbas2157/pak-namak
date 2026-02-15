@@ -72,10 +72,17 @@
                             </div>
                             <div class="col-md-6 mb-2">
                                 <label>Category</label>
-                                <input type="text" id="category" name="category" class="form-control" required>
+                                <select name="category" id="category" class="form-control" required>
+                                    <option value="">-- Select Category --</option>
+                                    <option value="Fuel">Fuel</option>
+                                    <option value="Vehicle Maintenance">Vehicle Maintenance</option>
+                                    <option value="Food">Food</option>
+                                    <option value="Salaries">Salaries</option>
+                                    <option value="Others">Others</option>
+                                </select>
                             </div>
                             <div class="col-md-6">
-                                <label>Payment Method</label> 
+                                <label>Payment Method</label>
                                 <select name="payment_method" id="payment_method" class="form-control" required>
                                     <option value="Cash">Cash</option>
                                     <option value="JazzCash">JazzCash</option>
@@ -112,6 +119,9 @@
 @section('scripts')
     <script>
         $(function() {
+            $('#ExpenseModal').on('hidden.bs.modal', function () {
+                $(this).find(':focus').blur();
+            });
             $('#addBtn').click(function() {
                 $('#ExpenseForm')[0].reset();
                 $('#id').val('');

@@ -16,7 +16,7 @@ class ExpenseController extends Controller
 
     public function create()
     {
-        return view('admin.expenses.create');
+        return view('admin.expenses.index');
     }
 
     public function store(Request $request)
@@ -24,7 +24,7 @@ class ExpenseController extends Controller
         $request->validate([
             'expense_date'   => 'required|date',
             'category'       => 'required|string|max:255',
-            'payment_method' => 'required|in:Cash,Bank',
+            'payment_method' => 'required|in:Cash,Bank,JazzCash,EasyPaisa',
             'amount'         => 'required|numeric|min:0',
         ]);
 
@@ -51,11 +51,20 @@ class ExpenseController extends Controller
         $request->validate([
             'expense_date'   => 'required|date',
             'category'       => 'required|string|max:255',
-            'payment_method' => 'required|in:Cash,Bank',
+            'payment_method' => 'required|in:Cash,Bank,JazzCash,EasyPaisa',
             'amount'         => 'required|numeric|min:0',
         ]);
 
         $expense->update($request->all());
+
+        $expense = Expense::find($expense->id);
+        $expense->expense_date = $request->expense_date;
+        $expense->category = $request->category;
+        $expense->payment_method = $request->payment_method;
+        $expense->amount = $request->amount;
+        $expense->description = $request->description;
+        $expense->remarks = $request->remarks;
+        $expense->save();
 
         return response()->json($expense);
     }

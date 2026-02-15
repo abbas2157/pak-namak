@@ -47,6 +47,7 @@
                             <td>
                                 <button class="btn btn-sm btn-info editBtn" data-id="{{ $shop->id }}">Edit</button>
                                 <button class="btn btn-sm btn-danger deleteBtn" data-id="{{ $shop->id }}">Delete</button>
+                                <a href="{{ route('admin.shops.show', $shop->id) }}" class="btn btn-sm btn-primary"> View Sales</a>
                             </td>
                         </tr>
                     @endforeach
@@ -193,6 +194,10 @@
                     }
                 });
             });
+        });
+        $(document).on('click', '.viewSalesBtn', function () {
+            let shopId = $(this).data('id');
+            window.location.href = APP_URL + '/admin/sales?shop_id=' + shopId;
         });
     </script>
     <script>
