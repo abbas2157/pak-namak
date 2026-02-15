@@ -27,8 +27,6 @@ class ExpenseController extends Controller
             'payment_method' => 'required|in:Cash,Bank,JazzCash,EasyPaisa',
             'amount'         => 'required|numeric|min:0',
         ]);
-
-        Expense::create($request->all());
         $expense = new Expense();
         $expense->expense_date = $request->expense_date;
         $expense->category = $request->category;
@@ -54,8 +52,6 @@ class ExpenseController extends Controller
             'payment_method' => 'required|in:Cash,Bank,JazzCash,EasyPaisa',
             'amount'         => 'required|numeric|min:0',
         ]);
-
-        $expense->update($request->all());
 
         $expense = Expense::find($expense->id);
         $expense->expense_date = $request->expense_date;
