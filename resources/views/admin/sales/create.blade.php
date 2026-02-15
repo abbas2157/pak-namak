@@ -340,7 +340,7 @@
                         <div class="row">
                             <div class="col-md-4 mb-2">
                                 <label>Shop</label>
-                                <select name="shop_id" id="shop_id" class="form-control" required>
+                                <select name="shop_id" id="shop_id" class="form-control select2" required>
                                     <option value="">Select Shop</option>
                                     @foreach($shops as $shop)
                                         <option value="{{ $shop->id }}">{{ $shop->name }}</option>
@@ -371,6 +371,8 @@
 @endsection
 
 @section('scripts')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 <script>
 $(document).ready(function () {
 
@@ -470,7 +472,17 @@ $(document).ready(function () {
     }
 
 });
+$(document).ready(function() {
+    $('.select2').select2({
+        placeholder: "Select an option",
+        allowClear: true
+    });
+    $('.select2').next('.select2-container')
+    .find('.select2-selection')
+    .css({
+        'height': '39px'
+    });
+});
 </script>
-
 
 @endsection
