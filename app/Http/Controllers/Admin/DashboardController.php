@@ -9,38 +9,39 @@ use App\Models\{Sale, Purchase, Shop, Expense};
 
 class DashboardController extends Controller
 {
-    public function index() {
-        $today = Carbon::today();
-        $monthStart = Carbon::now()->startOfMonth();
-        $monthEnd   = Carbon::now()->endOfMonth();
+    public function index(Request $request)
+    {
+        // Selected month (format: 2024-10)
+        $selectedMonth = $request->get('month');
+
+        if ($selectedMonth) {
+            $monthStart = Carbon::createFromFormat('Y-m', $selectedMonth)->startOfMonth();
+            $monthEnd   = Carbon::createFromFormat('Y-m', $selectedMonth)->endOfMonth();
+        } else {
+            $monthStart = Carbon::now()->startOfMonth();
+            $monthEnd   = Carbon::now()->endOfMonth();
+            $selectedMonth = Carbon::now()->format('Y-m');
+        }
 
         /* -------------------------
-         * MONTH SALES
-         * ------------------------ */
-
+        * MONTH SALES
+        * ------------------------ */
         $monthSalesTotal = Sale::whereBetween('sale_date', [$monthStart, $monthEnd])
             ->sum('total_amount');
-
-        /* -------------------------
-         * Total SALES
-         * ------------------------ */
 
         $totalSales = Sale::sum('total_amount');
 
         /* -------------------------
-         * TOTAL SHOPS (TILL DATE)
-         * ------------------------ */
+        * TOTAL SHOPS
+        * ------------------------ */
         $totalShops = Shop::count();
 
         /* -------------------------
-         * THIS MONTH PURCHASES
-         * ------------------------ */
+        * MONTH PURCHASES
+        * ------------------------ */
         $monthPurchasesTotal = Purchase::whereBetween('created_at', [$monthStart, $monthEnd])
             ->sum('grand_total');
 
-        /* -------------------------
-         * Total MONTH PURCHASES
-         * ------------------------ */
         $PurchasesTotal = Purchase::sum('grand_total');
 
         /* -------------------------
@@ -49,16 +50,26 @@ class DashboardController extends Controller
         $monthExpensesTotal = Expense::whereBetween('expense_date', [$monthStart, $monthEnd])
             ->sum('amount');
 
-        /* -------------------------
-        * TOTAL EXPENSES (TILL DATE)
-        * ------------------------ */
         $totalExpenses = Expense::sum('amount');
 
         /* -------------------------
-         * PROFIT / LOSS
-         * ------------------------ */
+        * PROFIT / LOSS
+        * ------------------------ */
         $profitLoss = $monthSalesTotal - ($monthPurchasesTotal + $monthExpensesTotal);
         $totalProfitLoss = $totalSales - ($PurchasesTotal + $totalExpenses);
+
+        // Generate months list from Oct 2025 till now
+        $months = [];
+        $startDate = Carbon::create(2025, 10, 1);
+        $current = $startDate->copy();
+
+        while ($current <= Carbon::now()) {
+            $months[] = [
+                'value' => $current->format('Y-m'),
+                'label' => $current->format('F Y')
+            ];
+            $current->addMonth();
+        }
 
         return view('admin.dashboard.index', compact(
             'totalShops',
@@ -69,7 +80,9 @@ class DashboardController extends Controller
             'totalSales',
             'PurchasesTotal',
             'totalExpenses',
-            'totalProfitLoss'
+            'totalProfitLoss',
+            'months',
+            'selectedMonth'
         ));
     }
 }

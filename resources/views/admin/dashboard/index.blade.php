@@ -7,6 +7,21 @@
                 <div class="col-sm-6">
                     <h1>Welcome Back</h1>
                 </div>
+                <div class="col-sm-6">
+                    <form method="GET" id="monthFilterForm" class="d-flex justify-content-end">
+                        <div class="form-group" style="width:250px;">
+                            <label>Select Month</label>
+                            <select name="month" class="form-control" onchange="document.getElementById('monthFilterForm').submit()">
+                                @foreach($months as $month)
+                                    <option value="{{ $month['value'] }}"
+                                        {{ $selectedMonth == $month['value'] ? 'selected' : '' }}>
+                                        {{ $month['label'] }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </section>
