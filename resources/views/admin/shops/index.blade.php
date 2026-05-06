@@ -47,7 +47,8 @@
                             <td>
                                 <button class="btn btn-sm btn-info editBtn" data-id="{{ $shop->id }}">Edit</button>
                                 <button class="btn btn-sm btn-danger deleteBtn" data-id="{{ $shop->id }}">Delete</button>
-                                <a href="{{ route('admin.shops.show', $shop->id) }}" class="btn btn-sm btn-primary"> View Sales</a>
+                                <a href="{{ route('admin.sales.by_shop', ['shop_id' => $shop->id]) }}" class="btn btn-sm btn-primary">See Sales</a>
+
                             </td>
                         </tr>
                     @endforeach
