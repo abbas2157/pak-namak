@@ -40,44 +40,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-3 col-sm-6 col-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-success">
-                            <i class="fas fa-store"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Top Shop (This Month)</span>
-                            <span class="info-box-number">{{ $topShops[0]->shop_id ?? '-' }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-sm-6 col-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-success">
-                            <i class="fas fa-calendar-day"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Top Day (This Month)</span>
-                            <span class="info-box-number">{{ $topDays[0]->day ?? '-' }}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-sm-6 col-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-warning">
-                            <i class="fas fa-pepper-hot"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Best Namak Type</span>
-                            <span class="info-box-number">
-                                {{ $namakBest == 'dallas' ? 'Dalla' : ($namakBest == 'thailas' ? 'Thailas' : ($namakBest == 'packages' ? 'Packages' : $namakBest)) }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
                 <div class="col-md-3 col-sm-6 col-12">
                     <div class="info-box">
                         <span class="info-box-icon bg-info">
@@ -154,6 +116,74 @@
                         <div class="info-box-content">
                             <span class="info-box-text">This Month Profit / Loss</span>
                             <span class="info-box-number">PKR. {{ number_format($profitLoss, 2) }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-warning">
+                            <i class="fas fa-pepper-hot"></i>
+                        </span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Best Namak Type</span>
+                            <span class="info-box-number">
+                                {{ $namakBest == 'dallas' ? 'Dalla' : ($namakBest == 'thailas' ? 'Thailas' : ($namakBest == 'packages' ? 'Packages' : $namakBest)) }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-12">
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <h5 class="mb-0">Top 5 Shops by Sales</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush">
+                                @forelse($topShops as $row)
+                                    <li class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-start gap-2">
+                                            <div class="pr-2" style="min-width: 0;">
+                                                <div class="font-weight-bold">{{ $row->shop_name ?? $row->shop_id ?? '-' }}</div>
+                                                <div class="text-muted" style="font-size: 12px;">
+                                                    @if(!empty($row->shop_phone_number))
+                                                        Phone: {{ $row->shop_phone_number }}
+                                                    @endif
+                                                    @if(!empty($row->shop_address))
+                                                        {{ !empty($row->shop_phone_number) ? ' • ' : '' }}Address: {{ $row->shop_address }}
+                                                    @endif
+                                                </div>
+
+                                            </div>
+                                            <span class="badge badge-primary badge-pill">PKR. {{ number_format($row->total ?? 0, 2) }}</span>
+                                        </div>
+                                    </li>
+
+                                @empty
+                                    <li class="list-group-item text-center text-muted">No sales data</li>
+                                @endforelse
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-12">
+                    <div class="card card-outline card-success">
+                        <div class="card-header">
+                            <h5 class="mb-0">Top 5 Months by Sales</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <ul class="list-group list-group-flush">
+                                @forelse($topDays as $row)
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>{{ $row->day ?? '-' }}</span>
+                                        <span class="badge badge-success badge-pill">PKR. {{ number_format($row->total ?? 0, 2) }}</span>
+                                    </li>
+
+                                @empty
+                                    <li class="list-group-item text-center text-muted">No sales data</li>
+                                @endforelse
+                            </ul>
                         </div>
                     </div>
                 </div>

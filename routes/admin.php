@@ -20,5 +20,10 @@ Route::middleware('web')->group(function () {
         Route::resource('employees', App\Http\Controllers\Admin\EmployeeController::class, ['as' => 'admin']);
         Route::resource('expenses', App\Http\Controllers\Admin\ExpenseController::class, ['as' => 'admin']);
         Route::resource('assets', App\Http\Controllers\Admin\AssetController::class);
+
+        // Receipt (new tab / print-friendly)
+        Route::get('sales/{id}/receipt', \App\Http\Controllers\Admin\SaleReceiptController::class)
+            ->name('admin.sales.receipt');
+
     });
 });

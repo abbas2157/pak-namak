@@ -122,6 +122,32 @@
                         </div>
                         <div class="row">
                             <div class="col-md-1 mb-2">
+                                <label for="quantity_30_kilo"> کلو  30</label>
+                                <input type="text" name="thaila[30][kilo_30]" id="quantity_30_kilo" value="30" readonly class="form-control">
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <label for="sold_quantity_kilo_30">Quantity Sold (تھیلا)</label>
+                                <input type="number" name="thaila[30][sold_quantity_kilo_30]" id="sold_quantity_kilo_30" class="form-control">
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <label for="sold_quantity_30_kilo_thaila">کل وزن(KG)</label>
+                                <input type="text" name="thaila[30][sold_quantity_kilo]" id="sold_quantity_30_kilo_thaila" readonly class="form-control">
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <label for="pirce_per_30_killo_thaila">Rate (فی تھیلا قیمت)</label>
+                                <input type="number" name="thaila[30][pirce_per_thaila]" id="pirce_per_30_killo_thaila" class="form-control">
+                            </div>
+                            <div class="col-md-2 mb-2">
+                                <label for="pirce_per_kg_30_killo_thaila">Rate (فی کلو قیمت)</label>
+                                <input type="number" name="thaila[30][pirce_per_kg]" id="pirce_per_kg_30_killo_thaila" readonly class="form-control">
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <label for="sub_total_30_killo_thaila">Sub Total (سب ٹوٹل)</label>
+                                <input type="text" name="thaila[30][sub_total]" id="sub_total_30_killo_thaila" readonly class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-1 mb-2">
                                 <label for="quantity_50_kilo"> کلو  50</label>
                                 <input type="text" name="thaila[50][kilo_50]" id="quantity_50_kilo" value="50" readonly class="form-control">
                             </div>
@@ -425,12 +451,13 @@ $(document).ready(function () {
         calcGrandTotal();
     }
 
-    [5, 10, 50].forEach(function (size) {
+    [5, 10, 30, 50].forEach(function (size) {
         $('#sold_quantity_kilo_' + size + ', #pirce_per_' + size + '_killo_thaila')
             .on('input', function () {
                 calcThaila(size);
             });
     });
+
 
 
     /* =====================

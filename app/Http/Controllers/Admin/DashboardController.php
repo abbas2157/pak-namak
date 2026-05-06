@@ -60,40 +60,48 @@ class DashboardController extends Controller
         $totalProfitLoss = $totalSales - ($PurchasesTotal + $totalExpenses);
 
         /* -------------------------
-        * TOP SHOPS + TOP DAYS + BEST NAMAK TYPE
+        * TOP SHOPS + TOP MONTHS + BEST NAMAK TYPE
         * ------------------------ */
         $topShops = Sale::query()
-            ->whereBetween('sale_date', [$monthStart, $monthEnd])
-            ->select('shop_id', DB::raw('SUM(total_amount) as total'))
-            ->groupBy('shop_id')
+            ->join('shops', 'shops.id', '=', 'sales.shop_id')
+            ->select(
+                'sales.shop_id',
+                'shops.name as shop_name',
+                'shops.phone_number as shop_phone_number',
+                'shops.address as shop_address',
+                DB::raw('SUM(sales.total_amount) as total')
+            )
+            ->groupBy('sales.shop_id', 'shops.name', 'shops.phone_number', 'shops.address')
             ->orderByDesc('total')
             ->limit(5)
             ->get();
 
+        // Top 5 months by sales amount (group by Y-m)
         $topDays = Sale::query()
-            ->whereBetween('sale_date', [$monthStart, $monthEnd])
-            ->select(DB::raw('sale_date as day'), DB::raw('SUM(total_amount) as total'))
-            ->groupBy('sale_date')
+            ->select(
+                DB::raw("DATE_FORMAT(sale_date, '%Y-%m') as day"),
+                DB::raw('SUM(total_amount) as total')
+            )
+            ->groupBy(DB::raw("DATE_FORMAT(sale_date, '%Y-%m')"))
             ->orderByDesc('total')
             ->limit(5)
             ->get();
+
+
 
         // Determine which namak type sells more: dalla vs thailas vs packages
         $topDalla = SaleDalla::query()
             ->whereHas('sale', function ($q) use ($monthStart, $monthEnd) {
-                $q->whereBetween('sale_date', [$monthStart, $monthEnd]);
             })
             ->sum('sub_total');
 
         $topThailas = SaleThaila::query()
             ->whereHas('sale', function ($q) use ($monthStart, $monthEnd) {
-                $q->whereBetween('sale_date', [$monthStart, $monthEnd]);
             })
             ->sum('sub_total');
 
         $topPackages = SalePackage::query()
             ->whereHas('sale', function ($q) use ($monthStart, $monthEnd) {
-                $q->whereBetween('sale_date', [$monthStart, $monthEnd]);
             })
             ->sum('sub_total');
 

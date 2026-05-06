@@ -15,4 +15,10 @@ class SalePackage extends Model
         'price_per_bundle',
         'sub_total'
     ];
+
+    public function sale()
+    {
+        return $this->belongsTo(Sale::class, 'sale_id', 'id');
+    }
 }
+

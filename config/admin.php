@@ -1,6 +1,17 @@
 <?php 
 
 return [
+    'shop_name' => 'PAK NAMAK & MASALA JAAT PRIVATE LIMITED',
+    'pak_namak' => [
+        'phone' => '+92 307 8479818',
+        'website' => 'paknamak.com',
+        'email' => 'info@paknamak.com',
+        'social' => [
+            'facebook' => 'https://www.facebook.com/profile.php?id=61579347516350',
+            'tiktok' => 'https://www.tiktok.com/@paknamak',
+            'youtube' => 'https://www.youtube.com/@PAKNAMAK',
+        ],
+    ],
     'units' => [
         'kg' => 'Kilogram',
         'g' => 'Gram'

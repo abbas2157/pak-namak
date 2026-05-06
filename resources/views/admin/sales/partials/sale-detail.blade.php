@@ -1,13 +1,8 @@
 <div class="row mb-3">
-    <div class="col-md-3"><strong>Shop:</strong> {{ $sale->shop->name ?? '-' }}</div>
-    <div class="col-md-3"><strong>Phone:</strong> {{ $sale->shop->phone ?? '-' }}</div>
-    <div class="col-md-3"><strong>Date:</strong> {{ $sale->sale_date }}</div>
-    <div class="col-md-3"><strong>Total:</strong> Rs. {{ number_format($sale->total_amount, 2) }}</div>
+    <div class="col-md-4"><strong>Shop:</strong> {{ $sale->shop->name ?? '-' }}</div>
+    <div class="col-md-4"><strong>Phone:</strong> {{ $sale->shop->phone ?? '-' }}</div>
+    <div class="col-md-4"><strong>Date:</strong> {{ $sale->sale_date ?? '-' }}</div>
 </div>
-
-<hr>
-
-{{-- DALLA --}}
 @if($sale->dalla)
 <h5 class="text-primary">Dalla</h5>
 <table class="table table-sm table-bordered">
@@ -80,4 +75,14 @@
     </tr>
     @endforeach
 </table>
+
+
 @endif
+
+<div class="mb-3 d-flex justify-content-between align-items-center gap-2">
+    <div><strong>Total Price:</strong> Rs. {{ number_format($sale->total_amount ?? 0, 2) }}</div>
+    <button class="btn btn-sm btn-outline-secondary no-print" onclick="window.open('{{ route('admin.sales.receipt', ['id' => $sale->id]) }}', '_blank')">
+        <i class="fas fa-print"></i> Print
+    </button>
+
+</div>

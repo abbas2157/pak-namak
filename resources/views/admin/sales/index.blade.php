@@ -49,7 +49,7 @@
                         <td>{{ $sale->sale_date ?? '' }}</td>
                         <td>
                             <button class="btn btn-sm btn-primary viewBtn" data-id="{{ $sale->id }}">View</button>
-                            <button class="btn btn-sm btn-info editBtn" data-id="{{ $sale->id }}">Edit</button>
+                            <button class="btn btn-sm btn-info" onclick="window.open('{{ route('admin.sales.receipt', ['id' => $sale->id]) }}', '_blank')">Print</button>
                             <button class="btn btn-sm btn-danger deleteBtn" data-id="{{ $sale->id }}">Delete</button>
                         </td>
                     </tr>
@@ -83,7 +83,7 @@
         $('#saleDetailModal').modal('show');
         $('#saleDetailBody').html('<div class="text-center p-4"><span class="spinner-border"></span></div>');
 
-        $.get("{{ url('/admin/sales') }}/" + saleId, function (response) {
+        $.get("{{ url('/sales') }}/" + saleId, function (response) {
             $('#saleDetailBody').html(response);
         });
     });
@@ -97,7 +97,7 @@ $(function () {
             showCancelButton: true
         }).then((result) => {
             if (result.isConfirmed) {
-                $.post(APP_URL + `/admin/sales/${id}`, {
+                $.post(APP_URL + `/sales/${id}`, {
                     _method: 'DELETE',
                     _token: '{{ csrf_token() }}'
                 }, function () {
