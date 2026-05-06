@@ -5,7 +5,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Models\{Sale, Purchase, Shop, Expense};
+use App\Models\{Sale, Purchase, Shop, Expense, SaleDalla, SaleThaila, SalePackage};
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -58,6 +59,55 @@ class DashboardController extends Controller
         $profitLoss = $monthSalesTotal - ($monthPurchasesTotal + $monthExpensesTotal);
         $totalProfitLoss = $totalSales - ($PurchasesTotal + $totalExpenses);
 
+        /* -------------------------
+        * TOP SHOPS + TOP DAYS + BEST NAMAK TYPE
+        * ------------------------ */
+        $topShops = Sale::query()
+            ->whereBetween('sale_date', [$monthStart, $monthEnd])
+            ->select('shop_id', DB::raw('SUM(total_amount) as total'))
+            ->groupBy('shop_id')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get();
+
+        $topDays = Sale::query()
+            ->whereBetween('sale_date', [$monthStart, $monthEnd])
+            ->select(DB::raw('sale_date as day'), DB::raw('SUM(total_amount) as total'))
+            ->groupBy('sale_date')
+            ->orderByDesc('total')
+            ->limit(5)
+            ->get();
+
+        // Determine which namak type sells more: dalla vs thailas vs packages
+        $topDalla = SaleDalla::query()
+            ->whereHas('sale', function ($q) use ($monthStart, $monthEnd) {
+                $q->whereBetween('sale_date', [$monthStart, $monthEnd]);
+            })
+            ->sum('sub_total');
+
+        $topThailas = SaleThaila::query()
+            ->whereHas('sale', function ($q) use ($monthStart, $monthEnd) {
+                $q->whereBetween('sale_date', [$monthStart, $monthEnd]);
+            })
+            ->sum('sub_total');
+
+        $topPackages = SalePackage::query()
+            ->whereHas('sale', function ($q) use ($monthStart, $monthEnd) {
+                $q->whereBetween('sale_date', [$monthStart, $monthEnd]);
+            })
+            ->sum('sub_total');
+
+        $namakBest = 'dallas';
+        $namakBestValue = $topDalla;
+        if ($topThailas > $namakBestValue) {
+            $namakBestValue = $topThailas;
+            $namakBest = 'thailas';
+        }
+        if ($topPackages > $namakBestValue) {
+            $namakBestValue = $topPackages;
+            $namakBest = 'packages';
+        }
+
         // Generate months list from Oct 2025 till now
         $months = [];
         $startDate = Carbon::create(2025, 10, 1);
@@ -72,6 +122,7 @@ class DashboardController extends Controller
         }
 
         return view('admin.dashboard.index', compact(
+
             'totalShops',
             'monthSalesTotal',
             'monthPurchasesTotal',
@@ -82,7 +133,11 @@ class DashboardController extends Controller
             'totalExpenses',
             'totalProfitLoss',
             'months',
-            'selectedMonth'
+            'selectedMonth',
+            'topShops',
+            'topDays',
+            'namakBest',
+            'namakBestValue'
         ));
     }
 }

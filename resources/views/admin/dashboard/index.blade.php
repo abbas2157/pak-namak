@@ -1,11 +1,11 @@
 @extends('admin.layout.app')
-@section('title', 'Sales')
+@section('title', 'Dashboard')
 @section('content')
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2 align-items-center">
                 <div class="col-sm-6">
-                    <h1>Welcome Back</h1>
+                    <h1>Dashboard</h1>
                 </div>
                 <div class="col-sm-6">
                     <form method="GET" id="monthFilterForm" class="d-flex justify-content-end">
@@ -37,6 +37,44 @@
                         <div class="info-box-content">
                             <span class="info-box-text">Total Sales</span>
                             <span class="info-box-number">PKR.  {{ number_format($totalSales, 2) }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-success">
+                            <i class="fas fa-store"></i>
+                        </span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Top Shop (This Month)</span>
+                            <span class="info-box-number">{{ $topShops[0]->shop_id ?? '-' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-success">
+                            <i class="fas fa-calendar-day"></i>
+                        </span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Top Day (This Month)</span>
+                            <span class="info-box-number">{{ $topDays[0]->day ?? '-' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-6 col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-warning">
+                            <i class="fas fa-pepper-hot"></i>
+                        </span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Best Namak Type</span>
+                            <span class="info-box-number">
+                                {{ $namakBest == 'dallas' ? 'Dalla' : ($namakBest == 'thailas' ? 'Thailas' : ($namakBest == 'packages' ? 'Packages' : $namakBest)) }}
+                            </span>
                         </div>
                     </div>
                 </div>
