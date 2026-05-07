@@ -40,6 +40,28 @@ class SaleController extends Controller
         try {
             $grandTotal = 0;
 
+            $billImagePath = null;
+
+            if ($request->hasFile('bill_image')) {
+                $request->validate([
+                    'bill_image' => 'image|mimes:jpg,jpeg,png,webp|max:4096',
+                ]);
+
+                $uploadDir = public_path('uploads/sales/bills');
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                $file = $request->file('bill_image');
+                $ext = strtolower($file->getClientOriginalExtension() ?: 'jpg');
+                $fileName = 'sale_bill_' . time() . '_' . bin2hex(random_bytes(6)) . '.' . $ext;
+
+                $file->move($uploadDir, $fileName);
+
+                $billImagePath = 'uploads/sales/bills/' . $fileName;
+            }
+
+
             /* ---------------------------
              * CREATE SALE
              * -------------------------- */
@@ -50,7 +72,9 @@ class SaleController extends Controller
                 'received_amount' => 0,
                 'pending_amount'  => 0,
                 'remarks'         => $request->remarks,
+                'bill_image'     => $billImagePath,
             ]);
+
 
             /* ---------------------------
              * DALLA

@@ -12,7 +12,8 @@ class Sale extends Model
         'total_amount',
         'received_amount',
         'pending_amount',
-        'remarks'
+        'remarks',
+        'bill_image',
     ];
 
     public function shop(){

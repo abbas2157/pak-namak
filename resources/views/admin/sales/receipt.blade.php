@@ -141,10 +141,19 @@
             <strong>Shop Address:</strong>
             <div>{{ $shop?->address ?? '-' }}</div>
         </div>
-        <div style="text-align:right;">
-            <strong>Total Price:</strong>
-            <div class="grand">Rs. {{ number_format((float)($sale->total_amount ?? 0), 2) }}</div>
+            <div style="text-align:right;">
+                <strong>Total Price:</strong>
+                <div class="grand">Rs. {{ number_format((float)($sale->total_amount ?? 0), 2) }}</div>
+            </div>
         </div>
+
+        @if(!empty($sale->bill_image))
+            <div style="margin-top:12px;">
+                <div style="font-weight:700; font-size:13px; margin-bottom:6px;">Bill Image</div>
+                <img src="{{ asset($sale->bill_image) }}" alt="Bill" style="max-width:100%; border:1px solid #e9ecef; border-radius:8px;" />
+            </div>
+        @endif
+
     </div>
 
     {{-- Footer / Pak Namak Details --}}

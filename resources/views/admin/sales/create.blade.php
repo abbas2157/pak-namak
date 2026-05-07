@@ -26,8 +26,9 @@
     </section>
     <section class="content">
         <div class="container-fluid">
-            <form action="{{ route('admin.sales.store') }}" method="POST">
+            <form action="{{ route('admin.sales.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
+
                 <div class="card card-primary collapsed-card">
                     <div class="card-header">
                         <h3 class="card-title">Dalla (ڈلہ)</h3>
@@ -385,6 +386,12 @@
                                 <label>Remarks</label>
                                 <textarea name="remarks" id="remarks" class="form-control"></textarea>
                             </div>
+
+                            <div class="col-md-12 mb-2">
+                                <label for="bill_image">Upload Bill Image</label>
+                                <input type="file" name="bill_image" id="bill_image" class="form-control" accept="image/*">
+                            </div>
+
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-success" type="submit">Create Sale</button>

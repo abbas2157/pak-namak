@@ -49,7 +49,13 @@
                         <td>{{ $sale->sale_date ?? '' }}</td>
                         <td>
                             <button class="btn btn-sm btn-primary viewBtn" data-id="{{ $sale->id }}">View</button>
+
                             <button class="btn btn-sm btn-info" onclick="window.open('{{ route('admin.sales.receipt', ['id' => $sale->id]) }}', '_blank')">Print</button>
+
+                            @if(!empty($sale->bill_image))
+                                <button class="btn btn-sm btn-success" onclick="window.open('{{ asset($sale->bill_image) }}', '_blank')">View Bill</button>
+                            @endif
+
                             <button class="btn btn-sm btn-danger deleteBtn" data-id="{{ $sale->id }}">Delete</button>
                         </td>
                     </tr>
