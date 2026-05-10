@@ -2,242 +2,373 @@
 @section('title','Employees')
 
 @section('content')
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2 align-items-center">
-                <div class="col-sm-6">
-                    <h1>Employee List</h1>
-                </div>
-                <div class="row mb-2 align-items-center">
-                    <div class="col-sm-6">
-                        <ol class="breadcrumb mb-0">
-                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                            <li class="breadcrumb-item active">Employee List</li>
-                        </ol>
-                    </div>
-                    <div class="col-sm-6 d-flex justify-content-end">
-                        <button class="btn btn-primary mb-3 float-right mt-3 px-3 mr-3 rounded-pill" id="addEmployee">
-                            <i class="fas fa-plus"></i> Add Employee
-                        </button>
-                    </div>
-                </div>
-
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2 align-items-center">
+            <div class="col-sm-6">
+                <h1>Employees</h1>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
+                    <li class="breadcrumb-item active">Employees</li>
+                </ol>
+            </div>
+            <div class="col-sm-6 d-flex justify-content-end">
+                <button class="btn btn-primary rounded-pill px-4" id="addEmployee">
+                    <i class="fas fa-plus mr-1"></i> Add Employee
+                </button>
             </div>
         </div>
-    </section>
-    <section class="content">
-        <div class="container-fluid">
-            <table class="table table-bordered table-striped" id="employeesTable">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>Salary</th>
-                        <th>Address</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                @if($employees->isEmpty())
-                    <tr>
-                        <td colspan="8" class="text-center">No employees found.</td>
-                    </tr>
-                @endif
-                @foreach($employees as $item)
-                    <tr id="row{{$item->id}}">
-                        <td>{{$item->name ?? ''}}</td>
-                        <td>{{$item->phone ?? ''}}</td>
-                        <td>{{$item->salary ?? ''}}</td>
-                        <td>{{$item->address ?? ''}}</td>
-                        <td>
-                            <button class="btn btn-warning btn-sm edit" data-id="{{$item->id ?? ''}}">Edit</button>
-                            <button class="btn btn-danger btn-sm delete" data-id="{{$item->id ?? ''}}">Delete</button>
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
-        </div>
-    </section>
-   <div class="modal fade" id="createEmployeeModal">
-        <div class="modal-dialog modal-lg">
-            <form id="createEmployeeForm">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Create Employee</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body row">
-                        <div class="col-md-6 mb-2">
-                            <label>Full Name</label>
-                            <input type="text" class="form-control mb-2" name="name" placeholder="Name" required>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label>Phone</label>
-                            <input type="text" class="form-control mb-2" name="phone" placeholder="Phone" required>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label>Salary</label>
-                            <input type="number" class="form-control mb-2" name="salary" placeholder="Salary" required>
-                        </div>
-                        <div class="col-md-6 mb-2">
-                            <label>Address</label>
-                            <input type="text" class="form-control mb-2" name="address" placeholder="Address" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary" type="submit">Create Employee</button>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+
+        {{-- Stats bar --}}
+        <div class="row mb-3">
+            <div class="col-6 col-md-3">
+                <div class="info-box bg-success mb-2">
+                    <span class="info-box-icon"><i class="fas fa-user-check"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Working</span>
+                        <span class="info-box-number">{{ $employees->where('status','working')->count() }}</span>
                     </div>
                 </div>
-            </form>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="info-box bg-warning mb-2">
+                    <span class="info-box-icon"><i class="fas fa-user-clock"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">On Leave</span>
+                        <span class="info-box-number">{{ $employees->where('status','on_leave')->count() }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="info-box bg-danger mb-2">
+                    <span class="info-box-icon"><i class="fas fa-user-times"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Terminated</span>
+                        <span class="info-box-number">{{ $employees->where('status','terminated')->count() }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="info-box bg-info mb-2">
+                    <span class="info-box-icon"><i class="fas fa-users"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Total</span>
+                        <span class="info-box-number">{{ $employees->count() }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Filter buttons --}}
+        <div class="mb-3">
+            <button class="btn btn-sm btn-secondary filter-btn active mr-1" data-filter="all">All</button>
+            <button class="btn btn-sm btn-success filter-btn mr-1" data-filter="working">Working</button>
+            <button class="btn btn-sm btn-warning filter-btn mr-1" data-filter="on_leave">On Leave</button>
+            <button class="btn btn-sm btn-danger filter-btn" data-filter="terminated">Terminated</button>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-0">
+                <table class="table table-bordered table-striped mb-0" id="employeesTable">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>CNIC</th>
+                            <th>Designation</th>
+                            <th>Phone</th>
+                            <th>Salary/Month</th>
+                            <th>Status</th>
+                            <th>Joining Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @forelse($employees as $i => $emp)
+                        <tr class="emp-row" data-status="{{ $emp->status }}">
+                            <td>{{ $i + 1 }}</td>
+                            <td><strong>{{ $emp->name }}</strong></td>
+                            <td>{{ $emp->cnic ?? '-' }}</td>
+                            <td>{{ $emp->designation ?? '-' }}</td>
+                            <td>{{ $emp->phone ?? '-' }}</td>
+                            <td>{{ number_format($emp->salary, 0) }}</td>
+                            <td>
+                                @if($emp->status === 'working')
+                                    <span class="badge badge-success">Working</span>
+                                @elseif($emp->status === 'on_leave')
+                                    <span class="badge badge-warning">On Leave</span>
+                                @else
+                                    <span class="badge badge-danger">Terminated</span>
+                                @endif
+                            </td>
+                            <td>{{ $emp->joining_date ? $emp->joining_date->format('d M Y') : '-' }}</td>
+                            <td>
+                                <a href="{{ route('admin.employees.show', $emp->id) }}" class="btn btn-info btn-sm" title="View Profile">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <button class="btn btn-warning btn-sm edit" data-id="{{ $emp->id }}" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm delete" data-id="{{ $emp->id }}" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr><td colspan="9" class="text-center py-4 text-muted">No employees found.</td></tr>
+                    @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+</section>
 
-    <div class="modal fade" id="editEmployeeModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">Edit Employee</h5>
-            <button type="button" class="close" data-dismiss="modal">
-            <span>&times;</span>
-            </button>
-        </div>
+{{-- ========== CREATE MODAL ========== --}}
+<div class="modal fade" id="createEmployeeModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <form id="createEmployeeForm">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-user-plus mr-2"></i>Add New Employee</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body row">
+                    <div class="col-md-6 mb-3">
+                        <label>Full Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Phone <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="phone" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>CNIC</label>
+                        <input type="text" class="form-control" name="cnic" placeholder="42101-1234567-1">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Designation</label>
+                        <input type="text" class="form-control" name="designation" placeholder="e.g. Manager, Worker, Driver">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Monthly Salary (PKR) <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" name="salary" min="0" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Joining Date</label>
+                        <input type="date" class="form-control" name="joining_date">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Status <span class="text-danger">*</span></label>
+                        <select class="form-control" name="status" required>
+                            <option value="working">Working</option>
+                            <option value="on_leave">On Leave</option>
+                            <option value="terminated">Terminated</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Leave / End Date</label>
+                        <input type="date" class="form-control" name="leave_date">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Address</label>
+                        <input type="text" class="form-control" name="address">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" type="submit">Save Employee</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
+{{-- ========== EDIT MODAL ========== --}}
+<div class="modal fade" id="editEmployeeModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
         <form id="editEmployeeForm">
             @csrf
             @method('PUT')
-            <input type="hidden" name="employee_id" id="editEmployeeId">
-            <div class="modal-body">
-                <input type="text" class="form-control mb-2" name="name" id="editName" placeholder="Name" required>
-                <input type="email" class="form-control mb-2" name="email" id="editEmail" placeholder="Email" required>
-                <input type="text" class="form-control mb-2" name="phone" id="editPhone" placeholder="Phone" required>
-                <input type="number" class="form-control mb-2" name="salary" id="editSalary" placeholder="Salary" required>
-                <input type="text" class="form-control mb-2" name="address" id="editAddress" placeholder="Address" required>
-                <select name="status" class="form-control mb-2" id="editStatus" required>
-                    <option value="">Select Status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-primary" type="submit">Update</button>
+            <input type="hidden" name="employee_id" id="editId">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title"><i class="fas fa-user-edit mr-2"></i>Edit Employee</h5>
+                    <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body row">
+                    <div class="col-md-6 mb-3">
+                        <label>Full Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="name" id="editName" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" name="email" id="editEmail" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Phone <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="phone" id="editPhone" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>CNIC</label>
+                        <input type="text" class="form-control" name="cnic" id="editCnic">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Designation</label>
+                        <input type="text" class="form-control" name="designation" id="editDesignation">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Monthly Salary (PKR) <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" name="salary" id="editSalary" min="0" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Joining Date</label>
+                        <input type="date" class="form-control" name="joining_date" id="editJoiningDate">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Status <span class="text-danger">*</span></label>
+                        <select class="form-control" name="status" id="editStatus" required>
+                            <option value="working">Working</option>
+                            <option value="on_leave">On Leave</option>
+                            <option value="terminated">Terminated</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Leave / End Date</label>
+                        <input type="date" class="form-control" name="leave_date" id="editLeaveDate">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Address</label>
+                        <input type="text" class="form-control" name="address" id="editAddress">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-warning" type="submit">Update Employee</button>
+                </div>
             </div>
         </form>
-        </div>
     </div>
-    </div>
-
-@include('admin.employees.create')
-@include('admin.employees.edit')
+</div>
 @endsection
 
 @section('scripts')
 <script>
-$(document).ready(function(){
+$(document).ready(function () {
 
-    $('#addEmployee').click(function(){
+    // --- Status filter ---
+    $('.filter-btn').on('click', function () {
+        $('.filter-btn').removeClass('active btn-secondary btn-success btn-warning btn-danger')
+            .addClass('btn-outline-secondary btn-outline-success btn-outline-warning btn-outline-danger');
+        $(this).removeClass('btn-outline-secondary btn-outline-success btn-outline-warning btn-outline-danger')
+            .addClass('active');
+
+        const filter = $(this).data('filter');
+        if (filter === 'all') {
+            $('.emp-row').show();
+        } else {
+            $('.emp-row').hide();
+            $('.emp-row[data-status="' + filter + '"]').show();
+        }
+    });
+
+    // --- Create ---
+    $('#addEmployee').on('click', function () {
         $('#createEmployeeForm')[0].reset();
         $('#createEmployeeModal').modal('show');
     });
 
-    $('#createEmployeeForm').on('submit', function(e){
+    $('#createEmployeeForm').on('submit', function (e) {
         e.preventDefault();
         $.ajax({
             url: "{{ route('admin.employees.store') }}",
             type: 'POST',
             data: $(this).serialize(),
-            success: function(response){
-                if(response.success){
+            success: function (res) {
+                if (res.success) {
                     $('#createEmployeeModal').modal('hide');
-                    alert('Employee saved successfully!');
                     location.reload();
                 }
             },
-            error: function(xhr){
-                if(xhr.status === 422){
-                    let errors = xhr.responseJSON.errors;
-                    let errorMessages = '';
-                    $.each(errors, function(key, value){
-                        errorMessages += value[0] + "\n";
-                    });
-                    alert(errorMessages);
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    let msgs = Object.values(xhr.responseJSON.errors).map(e => e[0]).join("\n");
+                    alert(msgs);
                 } else {
-                    alert('Error: '+xhr.status);
+                    alert('Error: ' + xhr.status);
                 }
             }
         });
     });
 
-    $(document).on('click', '.edit', function(){
-        let id = $(this).data('id');
-        $.get(APP_URL + "/admin/employees/" + id + "/edit", function(employee){
-            $('#editEmployeeId').val(employee.id);
-            $('#editName').val(employee.name);
-            $('#editEmail').val(employee.email);
-            $('#editPhone').val(employee.phone);
-            $('#editSalary').val(employee.salary);
-            $('#editAddress').val(employee.address);
-            $('#editStatus').val(employee.status);
+    // --- Edit ---
+    $(document).on('click', '.edit', function () {
+        const id = $(this).data('id');
+        $.get(APP_URL + '/employees/' + id + '/edit', function (emp) {
+            $('#editId').val(emp.id);
+            $('#editName').val(emp.name);
+            $('#editEmail').val(emp.email);
+            $('#editPhone').val(emp.phone);
+            $('#editCnic').val(emp.cnic);
+            $('#editDesignation').val(emp.designation);
+            $('#editSalary').val(emp.salary);
+            $('#editAddress').val(emp.address);
+            $('#editStatus').val(emp.status);
+            $('#editJoiningDate').val(emp.joining_date);
+            $('#editLeaveDate').val(emp.leave_date);
             $('#editEmployeeModal').modal('show');
         });
     });
 
-    $('#editEmployeeForm').on('submit', function(e){
+    $('#editEmployeeForm').on('submit', function (e) {
         e.preventDefault();
-        let id = $('#editEmployeeId').val();
+        const id = $('#editId').val();
         $.ajax({
-            url: APP_URL + "/admin/employees/" + id,
+            url: APP_URL + '/employees/' + id,
             type: 'POST',
             data: $(this).serialize(),
-            success: function(response){
-                if(response.success){
+            success: function (res) {
+                if (res.success) {
                     $('#editEmployeeModal').modal('hide');
-                    alert('Employee updated successfully!');
                     location.reload();
                 }
             },
-            error: function(xhr){
-                if(xhr.status === 422){
-                    let errors = xhr.responseJSON.errors;
-                    let errorMessages = '';
-                    $.each(errors, function(key, value){
-                        errorMessages += value[0] + "\n";
-                    });
-                    alert(errorMessages);
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    let msgs = Object.values(xhr.responseJSON.errors).map(e => e[0]).join("\n");
+                    alert(msgs);
                 } else {
-                    alert('Error: '+xhr.status);
+                    alert('Error: ' + xhr.status);
                 }
             }
         });
     });
 
-     $(document).on('click', '.delete', function(){
-        if(!confirm('Are you sure you want to delete this employee?')) return;
-
-        let id = $(this).data('id');
+    // --- Delete ---
+    $(document).on('click', '.delete', function () {
+        if (!confirm('Delete this employee? All salary records will also be removed.')) return;
+        const id = $(this).data('id');
         $.ajax({
-            url: APP_URL + "/admin/employees/" + id,
+            url: APP_URL + '/employees/' + id,
             type: 'POST',
-            data: {
-                _method: 'DELETE',
-                _token: "{{ csrf_token() }}"
+            data: { _method: 'DELETE', _token: "{{ csrf_token() }}" },
+            success: function (res) {
+                if (res.success) location.reload();
             },
-            success: function(response){
-                if(response.success){
-                    alert('Employee deleted successfully!');
-                    $('#row' + id).remove();
-                }
-            },
-            error: function(xhr){
-                console.log(xhr.responseText);
-                alert('Error: ' + xhr.status);
-            }
+            error: function (xhr) { alert('Error: ' + xhr.status); }
         });
     });
 
 });
-
 </script>
 @endsection

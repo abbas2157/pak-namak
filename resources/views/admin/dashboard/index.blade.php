@@ -1,195 +1,538 @@
 @extends('admin.layout.app')
 @section('title', 'Dashboard')
 @section('content')
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2 align-items-center">
-                <div class="col-sm-6">
-                    <h1>Dashboard</h1>
-                </div>
-                <div class="col-sm-6">
-                    <form method="GET" id="monthFilterForm" class="d-flex justify-content-end">
-                        <div class="form-group" style="width:250px;">
-                            <label>Select Month</label>
-                            <select name="month" class="form-control" onchange="document.getElementById('monthFilterForm').submit()">
-                                @foreach($months as $month)
-                                    <option value="{{ $month['value'] }}"
-                                        {{ $selectedMonth == $month['value'] ? 'selected' : '' }}>
-                                        {{ $month['label'] }}
-                                    </option>
-                                @endforeach
-                            </select>
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2 align-items-center">
+            <div class="col-sm-6">
+                <h1 class="m-0">Dashboard</h1>
+                <p class="text-muted mb-0" style="font-size:13px;">
+                    PAK NAMAK & MASALA JAAT PRIVATE LIMITED
+                </p>
+            </div>
+            <div class="col-sm-6">
+                <form method="GET" id="monthFilterForm" class="d-flex justify-content-end align-items-center">
+                    <label class="mb-0 mr-2 text-muted" style="font-size:13px;white-space:nowrap;">
+                        <i class="fas fa-calendar-alt mr-1"></i> Month
+                    </label>
+                    <select name="month" class="form-control" style="width:200px;border-radius:8px;"
+                            onchange="document.getElementById('monthFilterForm').submit()">
+                        @foreach($months as $month)
+                            <option value="{{ $month['value'] }}" {{ $selectedMonth == $month['value'] ? 'selected' : '' }}>
+                                {{ $month['label'] }}
+                            </option>
+                        @endforeach
+                    </select>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="container-fluid">
+
+        {{-- ── ENTITY QUICK COUNTS ────────────────────────────── --}}
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <a href="{{ route('admin.shops.index') }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #4e73df!important;border-radius:10px;">
+                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Active Shops</div>
+                                <div style="font-size:30px;font-weight:800;color:#4e73df;line-height:1.1;">{{ $activeShopsCount }}</div>
+                                <div style="font-size:11px;color:#b0b7c3;">of {{ $totalShops }} total</div>
+                            </div>
+                            <i class="fas fa-store" style="font-size:2.5rem;color:#4e73df;opacity:.15;"></i>
                         </div>
-                    </form>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <a href="{{ route('admin.vendors.index') }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #6f42c1!important;border-radius:10px;">
+                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Vendors / Suppliers</div>
+                                <div style="font-size:30px;font-weight:800;color:#6f42c1;line-height:1.1;">{{ $totalVendors }}</div>
+                                <div style="font-size:11px;color:#b0b7c3;">registered suppliers</div>
+                            </div>
+                            <i class="fas fa-truck" style="font-size:2.5rem;color:#6f42c1;opacity:.15;"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <a href="{{ route('admin.employees.index') }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1cc88a!important;border-radius:10px;">
+                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Working Employees</div>
+                                <div style="font-size:30px;font-weight:800;color:#1cc88a;line-height:1.1;">{{ $workingEmployees }}</div>
+                                <div style="font-size:11px;color:#b0b7c3;">currently working</div>
+                            </div>
+                            <i class="fas fa-users" style="font-size:2.5rem;color:#1cc88a;opacity:.15;"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <a href="{{ route('admin.sales.index') }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #f6c23e!important;border-radius:10px;">
+                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Sale Invoices</div>
+                                <div style="font-size:30px;font-weight:800;color:#e0a800;line-height:1.1;">{{ $totalSalesCount }}</div>
+                                <div style="font-size:11px;color:#b0b7c3;">all-time transactions</div>
+                            </div>
+                            <i class="fas fa-file-invoice" style="font-size:2.5rem;color:#e0a800;opacity:.15;"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        {{-- ── ALL-TIME SNAPSHOT ───────────────────────────────── --}}
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:1px;color:#b0b7c3;">Overall</div>
+                <h5 class="mb-0 font-weight-bold" style="color:#2d3748;">Total Snapshot</h5>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            {{-- Total Sales --}}
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                    <div class="card-body py-3 px-3">
+                        <div class="d-flex align-items-start">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
+                                 style="width:36px;height:36px;background:#e8f5e9;">
+                                <i class="fas fa-chart-line" style="color:#2e7d32;font-size:15px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Sales</div>
+                                <div style="font-size:15px;font-weight:700;color:#2e7d32;">{{ number_format($totalSales, 0) }}</div>
+                                <div style="font-size:10px;color:#aaa;">{{ $totalSalesCount }} invoices</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height:3px;background:#2e7d32;border-radius:0 0 10px 10px;"></div>
+                </div>
+            </div>
+
+            {{-- Total Purchases --}}
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                    <div class="card-body py-3 px-3">
+                        <div class="d-flex align-items-start">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
+                                 style="width:36px;height:36px;background:#fff8e1;">
+                                <i class="fas fa-shopping-cart" style="color:#f57f17;font-size:15px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Purchases</div>
+                                <div style="font-size:15px;font-weight:700;color:#f57f17;">{{ number_format($PurchasesTotal, 0) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height:3px;background:#f57f17;border-radius:0 0 10px 10px;"></div>
+                </div>
+            </div>
+
+            {{-- Total Expenses --}}
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                    <div class="card-body py-3 px-3">
+                        <div class="d-flex align-items-start">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
+                                 style="width:36px;height:36px;background:#fce4ec;">
+                                <i class="fas fa-receipt" style="color:#c62828;font-size:15px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Expenses</div>
+                                <div style="font-size:15px;font-weight:700;color:#c62828;">{{ number_format($totalExpenses, 0) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height:3px;background:#c62828;border-radius:0 0 10px 10px;"></div>
+                </div>
+            </div>
+
+            {{-- Total Salaries --}}
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                    <div class="card-body py-3 px-3">
+                        <div class="d-flex align-items-start">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
+                                 style="width:36px;height:36px;background:#e3f2fd;">
+                                <i class="fas fa-money-bill-wave" style="color:#1565c0;font-size:15px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Salaries</div>
+                                <div style="font-size:15px;font-weight:700;color:#1565c0;">{{ number_format($totalSalaryPaid, 0) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height:3px;background:#1565c0;border-radius:0 0 10px 10px;"></div>
+                </div>
+            </div>
+
+            {{-- Total Pending --}}
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                    <div class="card-body py-3 px-3">
+                        <div class="d-flex align-items-start">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
+                                 style="width:36px;height:36px;background:#fff3e0;">
+                                <i class="fas fa-clock" style="color:#e65100;font-size:15px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Pending اُدھار</div>
+                                <div style="font-size:15px;font-weight:700;color:#e65100;">{{ number_format($totalPending, 0) }}</div>
+                                @php $pendingPct = $totalSales > 0 ? round(($totalPending/$totalSales)*100,1) : 0; @endphp
+                                <div style="font-size:10px;color:#aaa;">{{ $pendingPct }}% of sales</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height:3px;background:#e65100;border-radius:0 0 10px 10px;"></div>
+                </div>
+            </div>
+
+            {{-- Total Profit / Loss --}}
+            @php
+                $tplColor  = $totalProfitLoss >= 0 ? '#1b5e20' : '#b71c1c';
+                $tplBg     = $totalProfitLoss >= 0 ? '#e8f5e9' : '#ffebee';
+                $tplBorder = $totalProfitLoss >= 0 ? '#2e7d32' : '#c62828';
+                $tplIcon   = $totalProfitLoss >= 0 ? 'fa-arrow-up' : 'fa-arrow-down';
+                $tplLabel  = $totalProfitLoss >= 0 ? 'Total Profit' : 'Total Loss';
+            @endphp
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;background:{{ $tplBg }};">
+                    <div class="card-body py-3 px-3">
+                        <div class="d-flex align-items-start">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
+                                 style="width:36px;height:36px;background:{{ $tplColor }}22;">
+                                <i class="fas {{ $tplIcon }}" style="color:{{ $tplColor }};font-size:15px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:{{ $tplColor }};">{{ $tplLabel }}</div>
+                                <div style="font-size:15px;font-weight:700;color:{{ $tplColor }};">{{ number_format(abs($totalProfitLoss), 0) }}</div>
+                                <div style="font-size:10px;color:{{ $tplColor }};opacity:.7;">all time</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height:3px;background:{{ $tplBorder }};border-radius:0 0 10px 10px;"></div>
                 </div>
             </div>
         </div>
-    </section>
-    <section class="content">
-        <div class="container-fluid">
-            <h5 class="mb-2">All Sales Data</h5>
-            <div class="row">
-                <div class="col-md-3 col-sm-6 col-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info">
-                            <i class="far fa-dollar-sign"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Total Sales</span>
-                            <span class="info-box-number">PKR.  {{ number_format($totalSales, 2) }}</span>
+        
+        {{-- ── MONTHLY FINANCIALS ──────────────────────────────── --}}
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:1px;color:#b0b7c3;">Monthly Snapshot</div>
+                <h5 class="mb-0 font-weight-bold" style="color:#2d3748;">
+                    {{ \Carbon\Carbon::createFromFormat('Y-m', $selectedMonth)->format('F Y') }}
+                </h5>
+            </div>
+            <a href="{{ route('admin.sales.index', ['month' => $selectedMonth]) }}"
+               class="btn btn-sm btn-outline-primary" style="border-radius:20px;font-size:12px;">
+                <i class="fas fa-external-link-alt mr-1"></i> View Sales
+            </a>
+        </div>
+
+        <div class="row mb-3">
+            {{-- Sales --}}
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                    <div class="card-body py-3 px-3">
+                        <div class="d-flex align-items-start">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
+                                 style="width:36px;height:36px;background:#e8f5e9;">
+                                <i class="fas fa-chart-line" style="color:#2e7d32;font-size:15px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Sales</div>
+                                <div style="font-size:15px;font-weight:700;color:#2e7d32;">{{ number_format($monthSalesTotal, 0) }}</div>
+                                <div style="font-size:10px;color:#aaa;">{{ $monthSalesCount }} invoices</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-3 col-sm-6 col-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info">
-                            <i class="fas fa-umbrella-beach"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Total Purchases</span>
-                            <span class="info-box-number">PKR. {{ number_format($PurchasesTotal, 2) }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-6 col-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info">
-                            <i class="nav-icon fas fa-money-bill-wave"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Total Expenses</span>
-                            <span class="info-box-number">PKR. {{ number_format($totalExpenses, 2) }}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-6 col-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info">
-                            <i class="far fa-dollar-sign"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Total Profit / Loss</span>
-                            <span class="info-box-number">PKR. {{ number_format($totalProfitLoss, 2) }}</span>
-                        </div>
-                    </div>
+                    <div style="height:3px;background:#2e7d32;border-radius:0 0 10px 10px;"></div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-3 col-sm-6 col-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info">
-                            <i class="far fa-dollar-sign"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">This Month Sales</span>
-                            <span class="info-box-number">PKR.  {{ number_format($monthSalesTotal, 2) }}</span>
+
+            {{-- Purchases --}}
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                    <div class="card-body py-3 px-3">
+                        <div class="d-flex align-items-start">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
+                                 style="width:36px;height:36px;background:#fff8e1;">
+                                <i class="fas fa-shopping-cart" style="color:#f57f17;font-size:15px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Purchases</div>
+                                <div style="font-size:15px;font-weight:700;color:#f57f17;">{{ number_format($monthPurchasesTotal, 0) }}</div>
+                            </div>
                         </div>
                     </div>
+                    <div style="height:3px;background:#f57f17;border-radius:0 0 10px 10px;"></div>
                 </div>
-                <div class="col-md-3 col-sm-6 col-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info">
-                            <i class="fas fa-umbrella-beach"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">This Month Purchases</span>
-                            <span class="info-box-number">PKR. {{ number_format($monthPurchasesTotal, 2) }}</span>
+            </div>
+
+            {{-- Expenses --}}
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                    <div class="card-body py-3 px-3">
+                        <div class="d-flex align-items-start">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
+                                 style="width:36px;height:36px;background:#fce4ec;">
+                                <i class="fas fa-receipt" style="color:#c62828;font-size:15px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Expenses</div>
+                                <div style="font-size:15px;font-weight:700;color:#c62828;">{{ number_format($monthExpensesTotal, 0) }}</div>
+                            </div>
                         </div>
                     </div>
+                    <div style="height:3px;background:#c62828;border-radius:0 0 10px 10px;"></div>
                 </div>
-                <div class="col-md-3 col-sm-6 col-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info">
-                            <i class="nav-icon fas fa-money-bill-wave"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">This Month Expenses</span>
-                            <span class="info-box-number">PKR. {{ number_format($monthExpensesTotal, 2) }}</span>
+            </div>
+
+            {{-- Salaries --}}
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                    <div class="card-body py-3 px-3">
+                        <div class="d-flex align-items-start">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
+                                 style="width:36px;height:36px;background:#e3f2fd;">
+                                <i class="fas fa-money-bill-wave" style="color:#1565c0;font-size:15px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Salaries</div>
+                                <div style="font-size:15px;font-weight:700;color:#1565c0;">{{ number_format($monthSalaryTotal, 0) }}</div>
+                            </div>
                         </div>
                     </div>
+                    <div style="height:3px;background:#1565c0;border-radius:0 0 10px 10px;"></div>
                 </div>
-                <div class="col-md-3 col-sm-6 col-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info">
-                            <i class="far fa-dollar-sign"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">This Month Profit / Loss</span>
-                            <span class="info-box-number">PKR. {{ number_format($profitLoss, 2) }}</span>
+            </div>
+
+            {{-- Pending / Udhaar --}}
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                    <div class="card-body py-3 px-3">
+                        <div class="d-flex align-items-start">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
+                                 style="width:36px;height:36px;background:#fff3e0;">
+                                <i class="fas fa-clock" style="color:#e65100;font-size:15px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Pending اُدھار</div>
+                                <div style="font-size:15px;font-weight:700;color:#e65100;">{{ number_format($monthPending, 0) }}</div>
+                            </div>
                         </div>
                     </div>
+                    <div style="height:3px;background:#e65100;border-radius:0 0 10px 10px;"></div>
                 </div>
-                <div class="col-md-3 col-sm-6 col-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-warning">
-                            <i class="fas fa-pepper-hot"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Best Namak Type</span>
-                            <span class="info-box-number">
-                                {{ $namakBest == 'dallas' ? 'Dalla' : ($namakBest == 'thailas' ? 'Thailas' : ($namakBest == 'packages' ? 'Packages' : $namakBest)) }}
+            </div>
+
+            {{-- Profit / Loss --}}
+            @php
+                $plColor  = $profitLoss >= 0 ? '#1b5e20' : '#b71c1c';
+                $plBg     = $profitLoss >= 0 ? '#e8f5e9' : '#ffebee';
+                $plBorder = $profitLoss >= 0 ? '#2e7d32' : '#c62828';
+                $plIcon   = $profitLoss >= 0 ? 'fa-arrow-up' : 'fa-arrow-down';
+                $plLabel  = $profitLoss >= 0 ? 'Profit' : 'Loss';
+            @endphp
+            <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;background:{{ $plBg }};">
+                    <div class="card-body py-3 px-3">
+                        <div class="d-flex align-items-start">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
+                                 style="width:36px;height:36px;background:{{ $plColor }}22;">
+                                <i class="fas {{ $plIcon }}" style="color:{{ $plColor }};font-size:15px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:{{ $plColor }};">{{ $plLabel }}</div>
+                                <div style="font-size:15px;font-weight:700;color:{{ $plColor }};">{{ number_format(abs($profitLoss), 0) }}</div>
+                                <div style="font-size:10px;color:{{ $plColor }};opacity:.7;">this month</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="height:3px;background:{{ $plBorder }};border-radius:0 0 10px 10px;"></div>
+                </div>
+            </div>
+        </div>
+
+        {{-- ── PRODUCT TYPE BREAKDOWN (MONTH) ────────────────── --}}
+        @php
+            $prodTotal = $monthDallaTotal + $monthThailaTotal + $monthPackageTotal ?: 1;
+        @endphp
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="card border-0 shadow-sm" style="border-radius:10px;">
+                    <div class="card-body py-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Dalla — ڈلہ</div>
+                                <div style="font-size:18px;font-weight:700;color:#4e73df;">PKR {{ number_format($monthDallaTotal, 0) }}</div>
+                            </div>
+                            <span class="badge badge-primary px-2 py-1" style="font-size:12px;border-radius:20px;">
+                                {{ number_format(($monthDallaTotal / $prodTotal) * 100, 1) }}%
                             </span>
                         </div>
+                        <div class="progress" style="height:5px;border-radius:5px;">
+                            <div class="progress-bar bg-primary"
+                                 style="width:{{ ($monthDallaTotal / $prodTotal) * 100 }}%;border-radius:5px;"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-6 col-sm-6 col-12">
-                    <div class="card card-outline card-primary">
-                        <div class="card-header">
-                            <h5 class="mb-0">Top 5 Shops by Sales</h5>
+            <div class="col-md-4 mb-3">
+                <div class="card border-0 shadow-sm" style="border-radius:10px;">
+                    <div class="card-body py-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Thaila — تھیلا</div>
+                                <div style="font-size:18px;font-weight:700;color:#1cc88a;">PKR {{ number_format($monthThailaTotal, 0) }}</div>
+                            </div>
+                            <span class="badge badge-success px-2 py-1" style="font-size:12px;border-radius:20px;">
+                                {{ number_format(($monthThailaTotal / $prodTotal) * 100, 1) }}%
+                            </span>
                         </div>
-                        <div class="card-body p-0">
-                            <ul class="list-group list-group-flush">
-                                @forelse($topShops as $row)
-                                    <li class="list-group-item">
-                                        <div class="d-flex justify-content-between align-items-start gap-2">
-                                            <div class="pr-2" style="min-width: 0;">
-                                                <div class="font-weight-bold">{{ $row->shop_name ?? $row->shop_id ?? '-' }}</div>
-                                                <div class="text-muted" style="font-size: 12px;">
-                                                    @if(!empty($row->shop_phone_number))
-                                                        Phone: {{ $row->shop_phone_number }}
-                                                    @endif
-                                                    @if(!empty($row->shop_address))
-                                                        {{ !empty($row->shop_phone_number) ? ' • ' : '' }}Address: {{ $row->shop_address }}
-                                                    @endif
-                                                </div>
-
-                                            </div>
-                                            <span class="badge badge-primary badge-pill">PKR. {{ number_format($row->total ?? 0, 2) }}</span>
-                                        </div>
-                                    </li>
-
-                                @empty
-                                    <li class="list-group-item text-center text-muted">No sales data</li>
-                                @endforelse
-                            </ul>
+                        <div class="progress" style="height:5px;border-radius:5px;">
+                            <div class="progress-bar bg-success"
+                                 style="width:{{ ($monthThailaTotal / $prodTotal) * 100 }}%;border-radius:5px;"></div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-sm-6 col-12">
-                    <div class="card card-outline card-success">
-                        <div class="card-header">
-                            <h5 class="mb-0">Top 5 Months by Sales</h5>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card border-0 shadow-sm" style="border-radius:10px;">
+                    <div class="card-body py-3">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Package — پیکٹ</div>
+                                <div style="font-size:18px;font-weight:700;color:#f6c23e;">PKR {{ number_format($monthPackageTotal, 0) }}</div>
+                            </div>
+                            <span class="badge badge-warning px-2 py-1" style="font-size:12px;border-radius:20px;">
+                                {{ number_format(($monthPackageTotal / $prodTotal) * 100, 1) }}%
+                            </span>
                         </div>
-                        <div class="card-body p-0">
-                            <ul class="list-group list-group-flush">
-                                @forelse($topDays as $row)
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <span>{{ $row->day ?? '-' }}</span>
-                                        <span class="badge badge-success badge-pill">PKR. {{ number_format($row->total ?? 0, 2) }}</span>
-                                    </li>
-
-                                @empty
-                                    <li class="list-group-item text-center text-muted">No sales data</li>
-                                @endforelse
-                            </ul>
+                        <div class="progress" style="height:5px;border-radius:5px;">
+                            <div class="progress-bar bg-warning"
+                                 style="width:{{ ($monthPackageTotal / $prodTotal) * 100 }}%;border-radius:5px;"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+
+        {{-- ── TOP SHOPS + TOP MONTHS ──────────────────────────── --}}
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3"
+                         style="background:#f0f4ff;border-radius:10px 10px 0 0;">
+                        <div>
+                            <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Top 5</div>
+                            <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">Shops by Revenue</h6>
+                        </div>
+                        <a href="{{ route('admin.shops.index') }}"
+                           class="btn btn-sm btn-outline-primary" style="border-radius:20px;font-size:12px;">
+                            All Shops
+                        </a>
+                    </div>
+                    <div class="card-body p-0">
+                        @php $maxShop = $topShops->first()->total ?? 1; @endphp
+                        @forelse($topShops as $i => $row)
+                            <div class="px-3 py-2 {{ !$loop->last ? 'border-bottom' : '' }}">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge badge-primary mr-2"
+                                              style="font-size:11px;min-width:22px;border-radius:50%;padding:4px 7px;">
+                                            {{ $i + 1 }}
+                                        </span>
+                                        <div>
+                                            <div class="font-weight-bold" style="font-size:13px;">{{ $row->shop_name }}</div>
+                                            @if($row->shop_phone_number)
+                                                <div class="text-muted" style="font-size:11px;">
+                                                    <i class="fas fa-phone mr-1" style="font-size:9px;"></i>{{ $row->shop_phone_number }}
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <span class="font-weight-bold" style="font-size:13px;color:#4e73df;">
+                                        PKR {{ number_format($row->total, 0) }}
+                                    </span>
+                                </div>
+                                <div class="progress" style="height:4px;border-radius:4px;">
+                                    <div class="progress-bar bg-primary"
+                                         style="width:{{ ($row->total / $maxShop) * 100 }}%;border-radius:4px;"></div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="text-center text-muted py-5">
+                                <i class="fas fa-store fa-2x mb-2 d-block" style="opacity:.3;"></i>
+                                No sales data yet
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3"
+                         style="background:#f0fff8;border-radius:10px 10px 0 0;">
+                        <div>
+                            <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Top 5</div>
+                            <h6 class="mb-0 font-weight-bold" style="color:#1cc88a;">Best Sales Months</h6>
+                        </div>
+                        <a href="{{ route('admin.sales.report') }}"
+                           class="btn btn-sm btn-outline-success" style="border-radius:20px;font-size:12px;">
+                            Full Report
+                        </a>
+                    </div>
+                    <div class="card-body p-0">
+                        @php $maxMonth = $topDays->first()->total ?? 1; @endphp
+                        @forelse($topDays as $i => $row)
+                            <div class="px-3 py-2 {{ !$loop->last ? 'border-bottom' : '' }}">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge badge-success mr-2"
+                                              style="font-size:11px;min-width:22px;border-radius:50%;padding:4px 7px;">
+                                            {{ $i + 1 }}
+                                        </span>
+                                        <div class="font-weight-bold" style="font-size:13px;">
+                                                {{ \Carbon\Carbon::createFromFormat('Y-m', $row->day)->format('F Y') }}
+                                        </div>
+                                    </div>
+                                    <span class="font-weight-bold" style="font-size:13px;color:#1cc88a;">
+                                        PKR {{ number_format($row->total, 0) }}
+                                    </span>
+                                </div>
+                                <div class="progress" style="height:4px;border-radius:4px;">
+                                    <div class="progress-bar bg-success"
+                                         style="width:{{ ($row->total / $maxMonth) * 100 }}%;border-radius:4px;"></div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="text-center text-muted py-5">
+                                <i class="fas fa-calendar fa-2x mb-2 d-block" style="opacity:.3;"></i>
+                                No sales data yet
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
 @endsection
 
 @section('scripts')

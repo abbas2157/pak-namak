@@ -9,10 +9,36 @@ use App\Models\{Sale, SaleDalla, SaleThaila, SalePackage, SalePayment, SaltType,
 
 class SaleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $sales = Sale::orderBy('id', 'desc')->get();
-        return view('admin.sales.index', compact('sales'));
+        $query = Sale::with(['shop', 'dalla', 'thailas', 'packages'])
+            ->orderByDesc('sale_date')
+            ->orderByDesc('id');
+
+        if ($request->month) {
+            [$year, $month] = explode('-', $request->month);
+            $query->whereYear('sale_date', $year)->whereMonth('sale_date', $month);
+        }
+
+        $sales = $query->get();
+
+        $totalRevenue  = $sales->sum('total_amount');
+        $totalReceived = $sales->sum('received_amount');
+        $totalPending  = $sales->sum('pending_amount');
+        $totalCount    = $sales->count();
+
+        $months = Sale::selectRaw("DATE_FORMAT(sale_date,'%Y-%m') as value, DATE_FORMAT(sale_date,'%M %Y') as label")
+            ->whereNotNull('sale_date')
+            ->groupBy('value', 'label')
+            ->orderByDesc('value')
+            ->get();
+
+        $selectedMonth = $request->month;
+
+        return view('admin.sales.index', compact(
+            'sales', 'totalRevenue', 'totalReceived', 'totalPending', 'totalCount',
+            'months', 'selectedMonth'
+        ));
     }
 
     public function create()
@@ -166,9 +192,11 @@ class SaleController extends Controller
             /* ---------------------------
              * UPDATE TOTALS
              * -------------------------- */
+            $receivedAmount = min((float) ($request->received_amount ?? 0), $grandTotal);
             $sale->update([
-                'total_amount'   => $grandTotal,
-                'pending_amount' => $grandTotal, // udhaar (no payment yet)
+                'total_amount'    => $grandTotal,
+                'received_amount' => $receivedAmount,
+                'pending_amount'  => $grandTotal - $receivedAmount,
             ]);
 
             DB::commit();
@@ -189,17 +217,23 @@ class SaleController extends Controller
 
     public function update(Request $request, Sale $sale)
     {
-        $sale->shop_id = $request->shop_id;
-        $sale->salt_type_id = $request->salt_type_id;
-        $sale->product_size = $request->product_size;
-        $sale->quantity_sold = $request->quantity_sold;
-        $sale->rate_per_pack = $request->rate_per_pack;
-        $sale->total_sales_amount = $request->total_sales_amount;
-        $sale->date = $request->date;
-        $sale->remarks = $request->remarks;
-        $sale->save();
+        $request->validate([
+            'shop_id'         => 'required|exists:shops,id',
+            'sale_date'       => 'required|date',
+            'received_amount' => 'nullable|numeric|min:0',
+            'remarks'         => 'nullable|string',
+        ]);
 
-        return response()->json(['success' => true,'data' => $sale ]);
+        $received = min((float) ($request->received_amount ?? $sale->received_amount), $sale->total_amount);
+        $sale->update([
+            'shop_id'         => $request->shop_id,
+            'sale_date'       => $request->sale_date,
+            'received_amount' => $received,
+            'pending_amount'  => $sale->total_amount - $received,
+            'remarks'         => $request->remarks,
+        ]);
+
+        return response()->json(['success' => true, 'data' => $sale]);
     }
 
     public function destroy(Sale $sale)

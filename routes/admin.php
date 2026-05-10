@@ -27,8 +27,10 @@ Route::middleware('web')->group(function () {
 
         Route::resource('types', App\Http\Controllers\Admin\TypeController::class, ['as' => 'admin']);
         Route::resource('employees', App\Http\Controllers\Admin\EmployeeController::class, ['as' => 'admin']);
+        Route::post('employees/{employee}/salaries', [App\Http\Controllers\Admin\EmployeeSalaryController::class, 'store'])->name('admin.employees.salaries.store');
+        Route::delete('employees/{employee}/salaries/{salary}', [App\Http\Controllers\Admin\EmployeeSalaryController::class, 'destroy'])->name('admin.employees.salaries.destroy');
         Route::resource('expenses', App\Http\Controllers\Admin\ExpenseController::class, ['as' => 'admin']);
-        Route::resource('assets', App\Http\Controllers\Admin\AssetController::class);
+        Route::resource('assets', App\Http\Controllers\Admin\AssetController::class, ['as' => 'admin']);
 
         // Receipt (new tab / print-friendly)
         Route::get('sales/{id}/receipt', \App\Http\Controllers\Admin\SaleReceiptController::class)

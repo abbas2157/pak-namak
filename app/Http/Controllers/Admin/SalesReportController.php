@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Sale;
-use App\Models\SaleDalla;
-use App\Models\SaleThaila;
-use App\Models\SalePackage;
+use App\Models\{Sale, SaleDalla, SaleThaila, SalePackage};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,86 +11,82 @@ class SalesReportController extends Controller
 {
     public function index(Request $request)
     {
-        $from = $request->get('from'); // Y-m-d
-        $to = $request->get('to');   // Y-m-d
+        $from = $request->get('from');
+        $to   = $request->get('to');
 
-        $salesQuery = Sale::query();
+        /* ── All Sales ───────────────────────────────── */
+        $salesQuery = Sale::with('shop:id,name,phone_number')
+            ->orderByDesc('sale_date');
 
         if ($from && $to) {
             $salesQuery->whereBetween('sale_date', [$from, $to]);
         }
 
-        $sales = $salesQuery
-            ->orderByDesc('sale_date')
-            ->get(['id', 'shop_id', 'sale_date', 'total_amount']);
+        $sales = $salesQuery->get([
+            'id', 'shop_id', 'sale_date',
+            'total_amount', 'received_amount', 'pending_amount',
+        ]);
 
-        // Namak totals (Filtered by Sale date)
+        /* ── Grand totals ────────────────────────────── */
+        $grandTotal    = $sales->sum('total_amount');
+        $grandReceived = $sales->sum('received_amount');
+        $grandPending  = $sales->sum('pending_amount');
+
+        /* ── Product type aggregates ─────────────────── */
         $dallaAgg = SaleDalla::query()->select([
             DB::raw('COUNT(*) as count'),
             DB::raw('COALESCE(SUM(sub_total),0) as total'),
         ]);
-
         $thailaAgg = SaleThaila::query()->select([
             DB::raw('COUNT(*) as count'),
             DB::raw('COALESCE(SUM(sub_total),0) as total'),
         ]);
-
         $packageAgg = SalePackage::query()->select([
             DB::raw('COUNT(*) as count'),
             DB::raw('COALESCE(SUM(sub_total),0) as total'),
         ]);
 
         if ($from && $to) {
-            $dallaAgg->whereHas('sale', function ($q) use ($from, $to) {
-                $q->whereBetween('sale_date', [$from, $to]);
-            });
-
-            $thailaAgg->whereHas('sale', function ($q) use ($from, $to) {
-                $q->whereBetween('sale_date', [$from, $to]);
-            });
-
-            $packageAgg->whereHas('sale', function ($q) use ($from, $to) {
-                $q->whereBetween('sale_date', [$from, $to]);
-            });
+            foreach ([$dallaAgg, $thailaAgg, $packageAgg] as $q) {
+                $q->whereHas('sale', fn($s) => $s->whereBetween('sale_date', [$from, $to]));
+            }
         }
 
-        $dallaStats = $dallaAgg->first();
-        $thailaStats = $thailaAgg->first();
+        $dallaStats   = $dallaAgg->first();
+        $thailaStats  = $thailaAgg->first();
         $packageStats = $packageAgg->first();
 
-        // Sales totals by shop (Count + Total price)
-        $shopAgg = Sale::query()
+        /* ── Sales by Shop (with name) ───────────────── */
+        $shopQuery = Sale::query()
+            ->join('shops', 'shops.id', '=', 'sales.shop_id')
             ->select([
-                'shop_id',
+                'sales.shop_id',
+                'shops.name as shop_name',
+                'shops.phone_number as shop_phone',
                 DB::raw('COUNT(*) as count'),
-                DB::raw('COALESCE(SUM(total_amount),0) as total'),
+                DB::raw('COALESCE(SUM(sales.total_amount),0) as total'),
+                DB::raw('COALESCE(SUM(sales.received_amount),0) as received'),
+                DB::raw('COALESCE(SUM(sales.pending_amount),0) as pending'),
             ])
-            ->groupBy('shop_id');
+            ->groupBy('sales.shop_id', 'shops.name', 'shops.phone_number')
+            ->orderByDesc('total');
 
         if ($from && $to) {
-            $shopAgg->whereBetween('sale_date', [$from, $to]);
+            $shopQuery->whereBetween('sales.sale_date', [$from, $to]);
         }
 
-        $salesByShop = $shopAgg->orderByDesc('total')->get();
+        $salesByShop = $shopQuery->get();
 
-
-        return view('admin.sales.report', [
-            'sales' => $sales,
-            'salesByShop' => $salesByShop,
-            'from' => $from,
-            'to' => $to,
-            'dallaStats' => $dallaStats,
-            'thailaStats' => $thailaStats,
-            'packageStats' => $packageStats,
-        ]);
-
+        return view('admin.sales.report', compact(
+            'sales', 'salesByShop',
+            'from', 'to',
+            'dallaStats', 'thailaStats', 'packageStats',
+            'grandTotal', 'grandReceived', 'grandPending',
+        ));
     }
 
     public function pdfAll(Request $request)
     {
-        // PDF method uses browser print/export (per user choice).
-        // We render the same report view; UI has a Print button.
         return $this->index($request);
     }
 }
-

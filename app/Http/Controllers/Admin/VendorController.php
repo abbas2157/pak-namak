@@ -3,67 +3,61 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
-use App\Models\Vendor;
+use App\Models\{Vendor, Purchase};
 use Illuminate\Http\Request;
 
 class VendorController extends Controller
 {
     public function index()
     {
-        $vendors = Vendor::orderBy('id', 'desc')->get();
-        return view('admin.vendors.index', compact('vendors'));
+        $vendors      = Vendor::withCount('purchases')->orderBy('name')->get();
+        $totalVendors = $vendors->count();
+        $totalSpent   = Purchase::sum('grand_total');
+        $topVendor    = $vendors->sortByDesc('purchases_count')->first();
+
+        return view('admin.vendors.index', compact('vendors', 'totalVendors', 'totalSpent', 'topVendor'));
     }
 
     public function create()
     {
-        return view('admin.vendors.create');
+        return redirect()->route('admin.vendors.index');
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'shop' => 'required',
-            'phone' => 'required',
-            'address' => 'required'
+            'name'    => 'required|string|max:255',
+            'shop'    => 'nullable|string|max:255',
+            'phone'   => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:500',
         ]);
-        $data = new Vendor();
-        $data->name = $request->name;
-        $data->shop = $request->shop;
-        $data->phone = $request->phone;
-        $data->address = $request->address;
-        $data->save();
-        return redirect()->route('admin.vendors.index')->with('success', 'Vendor created successfully!');
+
+        $vendor = Vendor::create($request->only(['name', 'shop', 'phone', 'address']));
+        return response()->json(['success' => true, 'vendor' => $vendor]);
     }
 
-    public function edit(Vendor $vendor)
+    public function edit($id)
     {
-        return view('admin.vendors.edit', compact('vendor'));
+        return response()->json(Vendor::findOrFail($id));
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required',
-            'shop' => 'required',
-            'phone' => 'required',
-            'address' => 'required'
-
+            'name'    => 'required|string|max:255',
+            'shop'    => 'nullable|string|max:255',
+            'phone'   => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:500',
         ]);
-        $data = Vendor::find($id);
-        $data->name = $request->name;
-        $data->shop = $request->shop;
-        $data->phone = $request->phone;
-        $data->address = $request->address;
-        $data->save();
-        return redirect()->route('admin.vendors.index')->with('success', 'Vendor updated successfully!');
+
+        $vendor = Vendor::findOrFail($id);
+        $vendor->update($request->only(['name', 'shop', 'phone', 'address']));
+        return response()->json(['success' => true, 'vendor' => $vendor]);
     }
 
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        $data = Vendor::find($id);
-        $data->delete();
-        return redirect()->route('admin.vendors.index')->with('success', 'Vendor deleted successfully!');
+        Vendor::findOrFail($id)->delete();
+        return response()->json(['success' => true]);
     }
 }

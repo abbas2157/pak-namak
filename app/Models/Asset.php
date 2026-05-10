@@ -8,9 +8,24 @@ class Asset extends Model
 {
     protected $fillable = [
         'asset_name',
+        'category',
         'quantity',
-        'purchase_date',
         'purchase_price',
-        'description'
+        'purchase_date',
+        'description',
+        'status',
+        'condition',
+        'location',
     ];
+
+    protected $casts = [
+        'purchase_date' => 'date',
+        'quantity'      => 'integer',
+        'purchase_price'=> 'decimal:2',
+    ];
+
+    public function totalValue(): float
+    {
+        return (float) $this->quantity * (float) $this->purchase_price;
+    }
 }

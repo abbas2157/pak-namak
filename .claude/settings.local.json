@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php artisan *)",
+      "Bash(grep -E \"\\\\.\\(php|blade\\\\.php\\)$\")",
+      "Bash(php -r \"require 'vendor/autoload.php'; echo 'OK';\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost/pak-namak/public/\")",
+      "Bash(cd c:\\\\\\\\laragon\\\\\\\\www\\\\\\\\pak-namak)",
+      "Bash(grep -n \"Route::resource\" /mnt/c/laragon/www/pak-namak/routes/admin.php)",
+      "Read(//mnt/c/laragon/www/pak-namak/routes/**)"
+    ]
+  }
+}

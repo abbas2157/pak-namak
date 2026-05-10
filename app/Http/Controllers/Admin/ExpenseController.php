@@ -5,13 +5,41 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Expense;
+use Carbon\Carbon;
 
 class ExpenseController extends Controller
 {
-     public function index()
+    public function index(Request $request)
     {
-        $expenses = Expense::orderBy('expense_date', 'desc')->get();
-        return view('admin.expenses.index', compact('expenses'));
+        $selectedMonth = $request->get('month');
+
+        $query = Expense::orderBy('expense_date', 'desc');
+
+        if ($selectedMonth) {
+            [$year, $month] = explode('-', $selectedMonth);
+            $query->whereYear('expense_date', $year)->whereMonth('expense_date', $month);
+        }
+
+        $expenses = $query->get();
+
+        $categoryTotals = $expenses->groupBy('category')
+            ->map(fn($group) => $group->sum('amount'))
+            ->sortDesc();
+
+        $grandTotal = $expenses->sum('amount');
+
+        // Months list from Oct 2025 to current month
+        $months = [];
+        $start   = Carbon::create(2025, 10, 1);
+        $current = $start->copy();
+        while ($current <= Carbon::now()) {
+            $months[] = ['value' => $current->format('Y-m'), 'label' => $current->format('F Y')];
+            $current->addMonth();
+        }
+
+        return view('admin.expenses.index', compact(
+            'expenses', 'categoryTotals', 'grandTotal', 'selectedMonth', 'months'
+        ));
     }
 
     public function create()
@@ -27,14 +55,15 @@ class ExpenseController extends Controller
             'payment_method' => 'required|in:Cash,Bank,JazzCash,EasyPaisa',
             'amount'         => 'required|numeric|min:0',
         ]);
-        $expense = new Expense();
-        $expense->expense_date = $request->expense_date;
-        $expense->category = $request->category;
-        $expense->payment_method = $request->payment_method;
-        $expense->amount = $request->amount;
-        $expense->description = $request->description;
-        $expense->remarks = $request->remarks;
-        $expense->save();
+
+        $expense = Expense::create([
+            'expense_date'   => $request->expense_date,
+            'category'       => $request->category,
+            'payment_method' => $request->payment_method,
+            'amount'         => $request->amount,
+            'description'    => $request->description,
+            'remarks'        => $request->remarks,
+        ]);
 
         return response()->json($expense);
     }
@@ -53,14 +82,14 @@ class ExpenseController extends Controller
             'amount'         => 'required|numeric|min:0',
         ]);
 
-        $expense = Expense::find($expense->id);
-        $expense->expense_date = $request->expense_date;
-        $expense->category = $request->category;
-        $expense->payment_method = $request->payment_method;
-        $expense->amount = $request->amount;
-        $expense->description = $request->description;
-        $expense->remarks = $request->remarks;
-        $expense->save();
+        $expense->update([
+            'expense_date'   => $request->expense_date,
+            'category'       => $request->category,
+            'payment_method' => $request->payment_method,
+            'amount'         => $request->amount,
+            'description'    => $request->description,
+            'remarks'        => $request->remarks,
+        ]);
 
         return response()->json($expense);
     }
@@ -68,10 +97,6 @@ class ExpenseController extends Controller
     public function destroy(Expense $expense)
     {
         $expense->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Expense deleted successfully.'
-        ]);
+        return response()->json(['success' => true]);
     }
 }

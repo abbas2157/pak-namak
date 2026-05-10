@@ -8,9 +8,12 @@ class Shop extends Model
 {
     protected $fillable = [
         'name',
+        'owner_name',
         'email',
         'phone_number',
         'address',
+        'city',
+        'status',
     ];
 
     public function sales()

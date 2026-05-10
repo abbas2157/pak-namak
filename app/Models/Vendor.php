@@ -4,12 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class vendor extends Model
+class Vendor extends Model
 {
-    protected $fillable =[
+    protected $fillable = [
         'name',
         'shop',
         'phone',
-        'address'
+        'address',
     ];
+
+    public function purchases()
+    {
+        return $this->hasMany(Purchase::class, 'vendor_id');
+    }
 }

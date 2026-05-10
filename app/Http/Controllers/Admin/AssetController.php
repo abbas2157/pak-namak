@@ -10,53 +10,79 @@ class AssetController extends Controller
 {
     public function index()
     {
-        $assets = Asset::latest()->get();
-        return view('admin.assets.index', compact('assets'));
+        $assets = Asset::latest('purchase_date')->get();
+
+        $totalValue  = $assets->sum(fn($a) => $a->quantity * $a->purchase_price);
+        $totalCount  = $assets->count();
+        $activeCount = $assets->where('status', 'active')->count();
+        $repairCount = $assets->where('status', 'under_repair')->count();
+
+        $categoryTotals = $assets
+            ->groupBy('category')
+            ->map(fn($group) => $group->sum(fn($a) => $a->quantity * $a->purchase_price))
+            ->sortByDesc(fn($v) => $v);
+
+        return view('admin.assets.index', compact(
+            'assets', 'totalValue', 'totalCount', 'activeCount', 'repairCount', 'categoryTotals'
+        ));
     }
+
     public function create()
     {
-        return view('admin.assets.index');
+        return redirect()->route('admin.assets.index');
     }
+
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     'quantity' => 'required|integer',
-        //     'purchase_price' => 'nullable|numeric',
-        //     'purchase_date' => 'nullable|date',
-        //     'description' => 'nullable|string',
-        // ]);
-        $asset = new Asset();
-        $asset->asset_name = $request->asset_name;
-        $asset->quantity = $request->quantity;
-        $asset->purchase_price = $request->purchase_price;
-        $asset->purchase_date = $request->purchase_date;
-        $asset->description = $request->description;
-        $asset->save();
-        return response()->json(['success' => true]);
+        $request->validate([
+            'asset_name'     => 'required|string|max:255',
+            'category'       => 'required|string',
+            'quantity'       => 'required|integer|min:1',
+            'purchase_price' => 'required|numeric|min:0',
+            'purchase_date'  => 'required|date',
+            'status'         => 'required|in:active,under_repair,disposed',
+            'condition'      => 'required|in:good,fair,poor',
+            'location'       => 'nullable|string|max:255',
+            'description'    => 'nullable|string',
+        ]);
+
+        $asset = Asset::create($request->only([
+            'asset_name', 'category', 'quantity', 'purchase_price',
+            'purchase_date', 'description', 'status', 'condition', 'location',
+        ]));
+
+        return response()->json(['success' => true, 'asset' => $asset]);
     }
 
     public function edit(Asset $asset)
     {
-        return response()->json($asset);
+        $data = $asset->toArray();
+        $data['purchase_date'] = $asset->purchase_date
+            ? $asset->purchase_date->format('Y-m-d')
+            : null;
+        return response()->json($data);
     }
 
     public function update(Request $request, Asset $asset)
     {
-        // $request->validate([
-        //     'name' => 'required|string|max:255',
-        //     'quantity' => 'required|integer',
-        //     'purchase_price' => 'nullable|numeric',
-        //     'purchase_date' => 'nullable|date',
-        //     'description' => 'nullable|string',
-        // ]);
-        $asset->asset_name = $request->asset_name;
-        $asset->quantity = $request->quantity;
-        $asset->purchase_price = $request->purchase_price;
-        $asset->purchase_date = $request->purchase_date;
-        $asset->description = $request->description;
-        $asset->save();
-        return response()->json(['success' => true]);
+        $request->validate([
+            'asset_name'     => 'required|string|max:255',
+            'category'       => 'required|string',
+            'quantity'       => 'required|integer|min:1',
+            'purchase_price' => 'required|numeric|min:0',
+            'purchase_date'  => 'required|date',
+            'status'         => 'required|in:active,under_repair,disposed',
+            'condition'      => 'required|in:good,fair,poor',
+            'location'       => 'nullable|string|max:255',
+            'description'    => 'nullable|string',
+        ]);
+
+        $asset->update($request->only([
+            'asset_name', 'category', 'quantity', 'purchase_price',
+            'purchase_date', 'description', 'status', 'condition', 'location',
+        ]));
+
+        return response()->json(['success' => true, 'asset' => $asset]);
     }
 
     public function destroy(Asset $asset)

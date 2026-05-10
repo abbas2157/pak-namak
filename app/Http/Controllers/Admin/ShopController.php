@@ -10,30 +10,48 @@ class ShopController extends Controller
 {
     public function index()
     {
-        $shops = Shop::orderBy('id', 'desc')->get();
-        return view('admin.shops.index', compact('shops'));
+        $shops = Shop::withCount('sales')
+            ->withSum('sales', 'total_amount')
+            ->withSum('sales', 'pending_amount')
+            ->orderBy('name')
+            ->get();
+
+        $totalShops    = $shops->count();
+        $activeShops   = $shops->where('status', 'active')->count();
+        $totalRevenue  = $shops->sum('sales_sum_total_amount');
+        $totalPending  = $shops->sum('sales_sum_pending_amount');
+
+        return view('admin.shops.index', compact(
+            'shops', 'totalShops', 'activeShops', 'totalRevenue', 'totalPending'
+        ));
     }
 
     public function create()
     {
-        return view('admin.shops.index');
+        return redirect()->route('admin.shops.index');
     }
 
     public function store(Request $request)
     {
-         $request->validate([
-            'name' => 'required|string|max:255',
+        $request->validate([
+            'name'         => 'required|string|max:255',
+            'owner_name'   => 'nullable|string|max:255',
             'phone_number' => 'required|string|max:20',
-            'address' => 'required|string|max:500',
+            'email'        => 'nullable|email|unique:shops,email|max:255',
+            'address'      => 'required|string|max:500',
+            'city'         => 'nullable|string|max:100',
+            'status'       => 'required|in:active,inactive',
         ]);
 
-        $shop = new Shop();
-        $shop->name = $request->name;
-        $shop->phone_number = $request->phone_number;
-        $shop->address = $request->address;
-        $shop->save();
+        $shop = Shop::create($request->only([
+            'name', 'owner_name', 'phone_number', 'email', 'address', 'city', 'status',
+        ]));
 
-        return response()->json($shop);
+        $shop->loadCount('sales');
+        $shop->sales_sum_total_amount   = 0;
+        $shop->sales_sum_pending_amount = 0;
+
+        return response()->json(['success' => true, 'shop' => $shop]);
     }
 
     public function show($id)
@@ -41,40 +59,41 @@ class ShopController extends Controller
         $shop = Shop::with([
             'sales.dalla',
             'sales.thailas',
-            'sales.packages'
+            'sales.packages',
         ])->findOrFail($id);
 
         return view('admin.shops.sales', compact('shop'));
     }
+
     public function edit($id)
     {
-        $shop = Shop::findOrFail($id);
-        return response()->json($shop);
+        return response()->json(Shop::findOrFail($id));
     }
 
     public function update(Request $request, $id)
     {
-         $shop = Shop::findOrFail($id);
+        $shop = Shop::findOrFail($id);
 
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name'         => 'required|string|max:255',
+            'owner_name'   => 'nullable|string|max:255',
             'phone_number' => 'required|string|max:20',
-            'address' => 'required|string|max:500',
+            'email'        => 'nullable|email|unique:shops,email,' . $id . '|max:255',
+            'address'      => 'required|string|max:500',
+            'city'         => 'nullable|string|max:100',
+            'status'       => 'required|in:active,inactive',
         ]);
 
-        $shop->name = $request->name;
-        $shop->phone_number = $request->phone_number;
-        $shop->address = $request->address;
-        $shop->save();
+        $shop->update($request->only([
+            'name', 'owner_name', 'phone_number', 'email', 'address', 'city', 'status',
+        ]));
 
-        return response()->json($shop);
+        return response()->json(['success' => true, 'shop' => $shop]);
     }
 
     public function destroy($id)
     {
-        $shop = Shop::findOrFail($id);
-        $shop->delete();
-
+        Shop::findOrFail($id)->delete();
         return response()->json(['success' => true]);
     }
 }

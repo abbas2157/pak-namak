@@ -5,7 +5,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Models\{Sale, Purchase, Shop, Expense, SaleDalla, SaleThaila, SalePackage};
+use App\Models\{Sale, Purchase, Shop, Expense, SaleDalla, SaleThaila, SalePackage, EmployeeSalary, Vendor, Employee};
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -54,10 +54,49 @@ class DashboardController extends Controller
         $totalExpenses = Expense::sum('amount');
 
         /* -------------------------
-        * PROFIT / LOSS
+        * MONTH SALARIES
         * ------------------------ */
-        $profitLoss = $monthSalesTotal - ($monthPurchasesTotal + $monthExpensesTotal);
-        $totalProfitLoss = $totalSales - ($PurchasesTotal + $totalExpenses);
+        $monthSalaryTotal = EmployeeSalary::whereYear('month', $monthStart->year)
+            ->whereMonth('month', $monthStart->month)
+            ->sum('amount');
+
+        $totalSalaryPaid = EmployeeSalary::sum('amount');
+
+        /* -------------------------
+        * PENDING (UDHAAR)
+        * ------------------------ */
+        $totalPending = Sale::sum('pending_amount');
+        $monthPending = Sale::whereBetween('sale_date', [$monthStart, $monthEnd])->sum('pending_amount');
+
+        /* -------------------------
+        * COUNTS
+        * ------------------------ */
+        $monthSalesCount  = Sale::whereBetween('sale_date', [$monthStart, $monthEnd])->count();
+        $totalSalesCount  = Sale::count();
+        $activeShopsCount = Shop::where('status', 'active')->count();
+        $totalVendors     = Vendor::count();
+        $workingEmployees = Employee::where('status', 'working')->count();
+
+        /* -------------------------
+        * MONTH PRODUCT BREAKDOWN
+        * ------------------------ */
+        $monthDallaTotal = SaleDalla::join('sales', 'sales.id', '=', 'sale_dallas.sale_id')
+            ->whereBetween('sales.sale_date', [$monthStart, $monthEnd])
+            ->sum('sale_dallas.sub_total');
+
+        $monthThailaTotal = SaleThaila::join('sales', 'sales.id', '=', 'sale_thailas.sale_id')
+            ->whereBetween('sales.sale_date', [$monthStart, $monthEnd])
+            ->sum('sale_thailas.sub_total');
+
+        $monthPackageTotal = SalePackage::join('sales', 'sales.id', '=', 'sale_packages.sale_id')
+            ->whereBetween('sales.sale_date', [$monthStart, $monthEnd])
+            ->sum('sale_packages.sub_total');
+
+        /* -------------------------
+        * PROFIT / LOSS (sales - purchases - expenses - salaries)
+        * ------------------------ */
+        $profitLoss = $monthSalesTotal - ($monthPurchasesTotal + $monthExpensesTotal + $monthSalaryTotal);
+        $totalProfitLoss = $totalSales - ($PurchasesTotal + $totalExpenses + $totalSalaryPaid);
 
         /* -------------------------
         * TOP SHOPS + TOP MONTHS + BEST NAMAK TYPE
@@ -130,16 +169,27 @@ class DashboardController extends Controller
         }
 
         return view('admin.dashboard.index', compact(
-
             'totalShops',
             'monthSalesTotal',
             'monthPurchasesTotal',
             'monthExpensesTotal',
+            'monthSalaryTotal',
             'profitLoss',
             'totalSales',
             'PurchasesTotal',
             'totalExpenses',
+            'totalSalaryPaid',
             'totalProfitLoss',
+            'totalPending',
+            'monthPending',
+            'monthSalesCount',
+            'totalSalesCount',
+            'activeShopsCount',
+            'totalVendors',
+            'workingEmployees',
+            'monthDallaTotal',
+            'monthThailaTotal',
+            'monthPackageTotal',
             'months',
             'selectedMonth',
             'topShops',

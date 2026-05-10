@@ -1,6 +1,6 @@
 <div class="row mb-3">
     <div class="col-md-4"><strong>Shop:</strong> {{ $sale->shop->name ?? '-' }}</div>
-    <div class="col-md-4"><strong>Phone:</strong> {{ $sale->shop->phone ?? '-' }}</div>
+    <div class="col-md-4"><strong>Phone:</strong> {{ $sale->shop->phone_number ?? '-' }}</div>
     <div class="col-md-4"><strong>Date:</strong> {{ $sale->sale_date ?? '-' }}</div>
 </div>
 @if($sale->dalla)

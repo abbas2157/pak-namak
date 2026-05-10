@@ -10,8 +10,22 @@ class Employee extends Model
         'name',
         'email',
         'phone',
+        'cnic',
+        'designation',
         'salary',
         'address',
-        'status'
+        'joining_date',
+        'leave_date',
+        'status',
     ];
+
+    protected $casts = [
+        'joining_date' => 'date:Y-m-d',
+        'leave_date'   => 'date:Y-m-d',
+    ];
+
+    public function salaries()
+    {
+        return $this->hasMany(EmployeeSalary::class)->orderByDesc('month');
+    }
 }
