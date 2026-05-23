@@ -463,23 +463,27 @@ const COND_META = {
 
 $(function () {
 
-    $('#assetsTable').DataTable({
-        paging: true,
-        pageLength: 15,
-        lengthChange: false,
-        searching: true,
-        ordering: true,
-        info: true,
-        autoWidth: false,
-        responsive: true,
-        columnDefs: [{ orderable: false, targets: [6] }],
-        language: {
-            search: '',
-            searchPlaceholder: 'Search assets...',
-            info: 'Showing _START_–_END_ of _TOTAL_',
-            paginate: { previous: '‹', next: '›' }
-        }
-    });
+    try {
+        $('#assetsTable').DataTable({
+            paging: true,
+            pageLength: 15,
+            lengthChange: false,
+            searching: true,
+            ordering: true,
+            info: true,
+            autoWidth: false,
+            responsive: true,
+            columnDefs: [{ orderable: false, targets: [6] }],
+            language: {
+                search: '',
+                searchPlaceholder: 'Search assets...',
+                info: 'Showing _START_–_END_ of _TOTAL_',
+                paginate: { previous: '‹', next: '›' }
+            }
+        });
+    } catch (e) {
+        console.warn('DataTables init error:', e);
+    }
 
     // Category filter
     $('.filter-btn').on('click', function () {
@@ -509,7 +513,7 @@ $(function () {
     $('#assetForm').on('submit', function (e) {
         e.preventDefault();
         const id  = $('#asset_id').val();
-        const url = id ? (APP_URL + '/assets/' + id) : (APP_URL + '/assets');
+        const url = id ? (APP_URL + '/assets/' + id) : "{{ route('admin.assets.store') }}";
         const btn = $('#submitBtn');
         btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Saving...');
 

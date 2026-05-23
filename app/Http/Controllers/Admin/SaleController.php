@@ -35,9 +35,11 @@ class SaleController extends Controller
 
         $selectedMonth = $request->month;
 
+        $shops = Shop::orderBy('name')->get();
+
         return view('admin.sales.index', compact(
             'sales', 'totalRevenue', 'totalReceived', 'totalPending', 'totalCount',
-            'months', 'selectedMonth'
+            'months', 'selectedMonth', 'shops'
         ));
     }
 
@@ -211,8 +213,9 @@ class SaleController extends Controller
 
     public function edit(Sale $sale)
     {
-        $sale->load('shop','saltType');
-        return response()->json($sale);
+        $sale->load(['shop', 'dalla', 'thailas', 'packages']);
+        $shops = Shop::orderBy('name')->get();
+        return view('admin.sales.edit', compact('sale', 'shops'));
     }
 
     public function update(Request $request, Sale $sale)
@@ -224,7 +227,121 @@ class SaleController extends Controller
             'remarks'         => 'nullable|string',
         ]);
 
-        $received = min((float) ($request->received_amount ?? $sale->received_amount), $sale->total_amount);
+        DB::beginTransaction();
+        try {
+            $grandTotal = 0;
+
+            // Bill image
+            $billImagePath = $sale->bill_image;
+            if ($request->hasFile('bill_image')) {
+                $request->validate(['bill_image' => 'image|mimes:jpg,jpeg,png,webp|max:4096']);
+                if ($billImagePath && file_exists(public_path($billImagePath))) {
+                    unlink(public_path($billImagePath));
+                }
+                $uploadDir = public_path('uploads/sales/bills');
+                if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+                $file = $request->file('bill_image');
+                $ext  = strtolower($file->getClientOriginalExtension() ?: 'jpg');
+                $fileName = 'sale_bill_' . time() . '_' . bin2hex(random_bytes(6)) . '.' . $ext;
+                $file->move($uploadDir, $fileName);
+                $billImagePath = 'uploads/sales/bills/' . $fileName;
+            }
+
+            // Update header (totals re-set below)
+            $sale->update([
+                'shop_id'    => $request->shop_id,
+                'sale_date'  => $request->sale_date,
+                'remarks'    => $request->remarks,
+                'bill_image' => $billImagePath,
+            ]);
+
+            // ── DALLA ──
+            $sale->dalla()->delete();
+            if (!empty($request->dalla)) {
+                $d = $request->dalla;
+                if (!empty($d['sold_quantity_mann']) || !empty($d['sold_quantity_kilo'])) {
+                    $subTotal = ($d['sold_quantity_mann'] ?? 0) * ($d['pirce_per_mann'] ?? 0);
+                    SaleDalla::create([
+                        'sale_id'        => $sale->id,
+                        'quantity_mann'  => $d['sold_quantity_mann'] ?? 0,
+                        'quantity_kg'    => $d['sold_quantity_kilo'] ?? 0,
+                        'price_per_mann' => $d['pirce_per_mann'] ?? 0,
+                        'price_per_kg'   => $d['pirce_per_kg'] ?? 0,
+                        'sub_total'      => $subTotal,
+                    ]);
+                    $grandTotal += $subTotal;
+                }
+            }
+
+            // ── THAILA ──
+            $sale->thailas()->delete();
+            if (!empty($request->thaila)) {
+                foreach ($request->thaila as $kg => $item) {
+                    $soldKg = $item["sold_quantity_kilo_{$kg}"] ?? null;
+                    if (empty($soldKg)) continue;
+                    $subTotal = $item['sub_total'] ?? ($soldKg * ($item['pirce_per_thaila'] ?? 0));
+                    SaleThaila::create([
+                        'sale_id'       => $sale->id,
+                        'bag_size_kg'   => $kg,
+                        'quantity'      => $soldKg,
+                        'total_kg'      => $soldKg * $kg,
+                        'price_per_bag' => $item['pirce_per_thaila'] ?? 0,
+                        'price_per_kg'  => $item['pirce_per_kg'] ?? 0,
+                        'sub_total'     => $subTotal,
+                    ]);
+                    $grandTotal += $subTotal;
+                }
+            }
+
+            // ── PACKAGES ──
+            $sale->packages()->delete();
+            if (!empty($request->package)) {
+                foreach ($request->package as $gram => $item) {
+                    $bundleQty = $item["sold_bundles_quantity_{$gram}_gram"] ?? null;
+                    if (empty($bundleQty)) continue;
+                    $bundleSize = $item["bundle_type_{$gram}_gram"];
+                    $totalKg    = ($gram / 1000) * $bundleSize * $bundleQty;
+                    $subTotal   = $item['sub_total'] ?? ($bundleQty * ($item['price_per_bundle'] ?? 0));
+                    SalePackage::create([
+                        'sale_id'          => $sale->id,
+                        'packet_gram'      => $gram,
+                        'bundle_size'      => $bundleSize,
+                        'bundle_quantity'  => $bundleQty,
+                        'total_kg'         => $totalKg,
+                        'price_per_bundle' => $item['price_per_bundle'] ?? 0,
+                        'sub_total'        => $subTotal,
+                    ]);
+                    $grandTotal += $subTotal;
+                }
+            }
+
+            // ── TOTALS ──
+            $receivedAmount = min((float) ($request->received_amount ?? 0), $grandTotal);
+            $sale->update([
+                'total_amount'    => $grandTotal,
+                'received_amount' => $receivedAmount,
+                'pending_amount'  => $grandTotal - $receivedAmount,
+            ]);
+
+            DB::commit();
+            return redirect()->route('admin.sales.index')->with('success', 'Sale updated successfully.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Could not update sale: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    public function quickUpdate(Request $request, Sale $sale)
+    {
+        $request->validate([
+            'shop_id'         => 'required|exists:shops,id',
+            'sale_date'       => 'required|date',
+            'received_amount' => 'nullable|numeric|min:0',
+            'remarks'         => 'nullable|string',
+        ]);
+
+        $received = min((float) ($request->received_amount ?? 0), $sale->total_amount);
         $sale->update([
             'shop_id'         => $request->shop_id,
             'sale_date'       => $request->sale_date,
@@ -233,7 +350,7 @@ class SaleController extends Controller
             'remarks'         => $request->remarks,
         ]);
 
-        return response()->json(['success' => true, 'data' => $sale]);
+        return response()->json(['success' => true]);
     }
 
     public function destroy(Sale $sale)

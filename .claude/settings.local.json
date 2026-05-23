@@ -7,7 +7,8 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost/pak-namak/public/\")",
       "Bash(cd c:\\\\\\\\laragon\\\\\\\\www\\\\\\\\pak-namak)",
       "Bash(grep -n \"Route::resource\" /mnt/c/laragon/www/pak-namak/routes/admin.php)",
-      "Read(//mnt/c/laragon/www/pak-namak/routes/**)"
+      "Read(//mnt/c/laragon/www/pak-namak/routes/**)",
+      "Bash(php -r ':*)"
     ]
   }
 }

@@ -203,6 +203,24 @@
                                                         <i class="fas fa-image"></i>
                                                     </a>
                                                 @endif
+                                                <button class="btn btn-sm quickEditBtn mr-1"
+                                                        data-id="{{ $sale->id }}"
+                                                        data-shop-id="{{ $sale->shop_id }}"
+                                                        data-sale-date="{{ $sale->sale_date }}"
+                                                        data-received="{{ $sale->received_amount }}"
+                                                        data-total="{{ $sale->total_amount }}"
+                                                        data-pending="{{ $sale->pending_amount }}"
+                                                        data-remarks="{{ $sale->remarks ?? '' }}"
+                                                        style="background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:6px;"
+                                                        title="Quick Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <a href="{{ route('admin.sales.edit', $sale->id) }}"
+                                                   class="btn btn-sm mr-1"
+                                                   style="background:#e8f0fe;color:#4e73df;border:1px solid #c3d3f7;border-radius:6px;"
+                                                   title="Full Edit">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </a>
                                                 <button class="btn btn-sm deleteBtn"
                                                         data-id="{{ $sale->id }}"
                                                         style="background:#fce8e6;color:#c62828;border:1px solid #ef9a9a;border-radius:6px;"
@@ -395,6 +413,91 @@
         </div>
     </div>
 </div>
+{{-- ===== EDIT MODAL ===== --}}
+<div class="modal fade" id="editSaleModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <form id="editSaleForm">
+            @csrf
+            <input type="hidden" id="edit_sale_id">
+            <input type="hidden" id="edit_total_amount">
+            <div class="modal-content border-0" style="border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15);">
+
+                <div class="modal-header border-0 text-white px-4 py-3"
+                     style="background:linear-gradient(135deg,#4e73df,#224abe);">
+                    <h5 class="modal-title">
+                        <i class="fas fa-edit mr-2"></i>Edit Sale
+                    </h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;">
+                        <span>&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body px-4 py-4">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                                Shop <span class="text-danger">*</span>
+                            </label>
+                            <select name="shop_id" id="edit_shop_id" class="form-control" style="border-radius:8px;border-color:#d1d5db;" required>
+                                @foreach($shops as $shop)
+                                    <option value="{{ $shop->id }}">{{ $shop->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                                Sale Date <span class="text-danger">*</span>
+                            </label>
+                            <input type="date" name="sale_date" id="edit_sale_date" class="form-control"
+                                   style="border-radius:8px;border-color:#d1d5db;" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                                Total Amount
+                            </label>
+                            <input type="text" id="edit_total_display" class="form-control"
+                                   style="border-radius:8px;border-color:#d1d5db;background:#f8f9fc;" readonly>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                                Received Amount
+                            </label>
+                            <input type="number" name="received_amount" id="edit_received_amount" class="form-control"
+                                   style="border-radius:8px;border-color:#d1d5db;" min="0" step="1" placeholder="0">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                                Pending Amount
+                            </label>
+                            <input type="text" id="edit_pending_display" class="form-control"
+                                   style="border-radius:8px;border-color:#d1d5db;background:#f8f9fc;" readonly>
+                        </div>
+                        <div class="col-12 mb-1">
+                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                                Remarks
+                            </label>
+                            <textarea name="remarks" id="edit_remarks" class="form-control" rows="2"
+                                      style="border-radius:8px;border-color:#d1d5db;" placeholder="Optional notes..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer border-0 px-4 py-3" style="background:#f8f9fc;">
+                    <button type="button" class="btn btn-light px-4"
+                            data-dismiss="modal" data-bs-dismiss="modal"
+                            style="border-radius:8px;border:1px solid #d1d5db;">
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary px-4" type="submit" id="editSubmitBtn"
+                            style="border-radius:8px;background:linear-gradient(135deg,#4e73df,#224abe);border:none;">
+                        <i class="fas fa-save mr-1"></i> Update Sale
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -429,6 +532,57 @@ $(function () {
             $('#saleDetailBody').html(html);
         }).fail(function () {
             $('#saleDetailBody').html('<p class="text-danger text-center py-4">Could not load sale details.</p>');
+        });
+    });
+
+    // Quick Edit — populate modal from data attributes (no AJAX needed)
+    $(document).on('click', '.quickEditBtn', function () {
+        const btn = $(this);
+        $('#edit_sale_id').val(btn.data('id'));
+        $('#edit_total_amount').val(btn.data('total'));
+        $('#edit_shop_id').val(btn.data('shop-id'));
+        $('#edit_sale_date').val(btn.data('sale-date'));
+        $('#edit_received_amount').val(btn.data('received'));
+        $('#edit_total_display').val(Number(btn.data('total')).toLocaleString());
+        $('#edit_pending_display').val(Number(btn.data('pending')).toLocaleString());
+        $('#edit_remarks').val(btn.data('remarks') ?? '');
+        $('#editSaleModal').modal('show');
+    });
+
+    // Edit — live pending calculation
+    $('#edit_received_amount').on('input', function () {
+        const total    = parseFloat($('#edit_total_amount').val()) || 0;
+        const received = Math.min(parseFloat($(this).val()) || 0, total);
+        $('#edit_pending_display').val((total - received).toLocaleString());
+    });
+
+    // Quick Edit — submit
+    $('#editSaleForm').on('submit', function (e) {
+        e.preventDefault();
+        const id  = $('#edit_sale_id').val();
+        const btn = $('#editSubmitBtn');
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Saving...');
+
+        $.ajax({
+            url: APP_URL + '/sales/' + id + '/quick-update',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function (res) {
+                toastr.success('Sale updated successfully!');
+                $('#editSaleModal').modal('hide');
+                setTimeout(() => location.reload(), 800);
+            },
+            error: function (xhr) {
+                if (xhr.status === 422) {
+                    const errors = xhr.responseJSON?.errors ?? {};
+                    alert(Object.values(errors).map(e => e[0]).join('\n'));
+                } else {
+                    toastr.error('Could not update sale.');
+                }
+            },
+            complete: function () {
+                btn.prop('disabled', false).html('<i class="fas fa-save mr-1"></i> Update Sale');
+            }
         });
     });
 

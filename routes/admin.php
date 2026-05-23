@@ -15,6 +15,7 @@ Route::middleware('web')->group(function () {
         Route::resource('productions', App\Http\Controllers\Admin\ProductionController::class, ['as' => 'admin']);
         Route::resource('vendors', App\Http\Controllers\Admin\VendorController::class, ['as' => 'admin']);
         Route::resource('sales', App\Http\Controllers\Admin\SaleController::class, ['as' => 'admin']);
+        Route::post('sales/{sale}/quick-update', [App\Http\Controllers\Admin\SaleController::class, 'quickUpdate'])->name('admin.sales.quick_update');
         Route::resource('shops', App\Http\Controllers\Admin\ShopController::class, ['as' => 'admin']);
 
         // Shop sales (new page for shop-wise sales list)
