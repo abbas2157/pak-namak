@@ -202,6 +202,14 @@ $condMeta = [
                                                         title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
+                                                @if($asset->image)
+                                                <a href="{{ asset($asset->image) }}" target="_blank"
+                                                   class="btn btn-sm mr-1"
+                                                   style="background:#d4edda;color:#155724;border:1px solid #c3e6cb;border-radius:6px;"
+                                                   title="View Image">
+                                                    <i class="fas fa-image"></i>
+                                                </a>
+                                                @endif
                                                 <button class="btn btn-sm deleteBtn"
                                                         data-id="{{ $asset->id }}"
                                                         style="background:#fce8e6;color:#c62828;border:1px solid #ef9a9a;border-radius:6px;"
@@ -313,7 +321,7 @@ $condMeta = [
 {{-- ===== MODAL ===== --}}
 <div class="modal fade" id="assetModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
-        <form id="assetForm">
+        <form id="assetForm" enctype="multipart/form-data">
             @csrf
             <input type="hidden" id="asset_id" name="_asset_id">
             <div class="modal-content border-0" style="border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15);">
@@ -412,13 +420,31 @@ $condMeta = [
                         </div>
 
                         {{-- Description --}}
-                        <div class="col-12 mb-1">
+                        <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
                                 Description / Notes
                             </label>
-                            <textarea name="description" id="aDesc" class="form-control" rows="2"
+                            <textarea name="description" id="aDesc" class="form-control" rows="3"
                                       style="border-radius:8px;border-color:#d1d5db;"
                                       placeholder="Model number, serial number, notes..."></textarea>
+                        </div>
+
+                        {{-- Image --}}
+                        <div class="col-md-6 mb-3">
+                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                                Asset Image
+                            </label>
+                            {{-- Current image preview (shown only in edit mode) --}}
+                            <div id="currentImageWrap" class="mb-2" style="display:none;">
+                                <a id="currentImageLink" href="#" target="_blank"
+                                   class="btn btn-sm btn-outline-secondary" style="border-radius:6px;">
+                                    <i class="fas fa-image mr-1"></i> View Current Image
+                                </a>
+                            </div>
+                            <input type="file" name="image" id="aImage" class="form-control"
+                                   accept="image/jpg,image/jpeg,image/png,image/webp"
+                                   style="border-radius:8px;border-color:#d1d5db;">
+                            <small class="text-muted" id="imageHint">JPG, PNG or WebP, max 4 MB.</small>
                         </div>
                     </div>
                 </div>
@@ -504,12 +530,14 @@ $(function () {
         $('#asset_id').val('');
         $('#aDate').val(new Date().toISOString().split('T')[0]);
         $('#aQty').val(1);
+        $('#currentImageWrap').hide();
+        $('#imageHint').text('JPG, PNG or WebP, max 4 MB.');
         $('#modalTitle').html('<i class="fas fa-layer-group mr-2"></i>Add Asset');
         $('#submitBtn').html('<i class="fas fa-save mr-1"></i> Save Asset');
         $('#assetModal').modal('show');
     });
 
-    // Submit (add + edit)
+    // Submit (add + edit) — uses FormData to support file upload
     $('#assetForm').on('submit', function (e) {
         e.preventDefault();
         const id  = $('#asset_id').val();
@@ -517,9 +545,14 @@ $(function () {
         const btn = $('#submitBtn');
         btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Saving...');
 
+        const fd = new FormData(this);
+        if (id) fd.append('_method', 'PUT');
+
         $.ajax({
             url, type: 'POST',
-            data: $(this).serialize() + (id ? '&_method=PUT' : ''),
+            data: fd,
+            processData: false,
+            contentType: false,
             success: function (res) {
                 toastr.success('Asset saved!');
                 $('#assetModal').modal('hide');
@@ -542,6 +575,7 @@ $(function () {
     $(document).on('click', '.editBtn', function () {
         const id = $(this).data('id');
         $.get(APP_URL + '/assets/' + id + '/edit', function (a) {
+            $('#assetForm')[0].reset();
             $('#asset_id').val(a.id);
             $('#aName').val(a.asset_name);
             $('#aCategory').val(a.category);
@@ -552,6 +586,17 @@ $(function () {
             $('#aStatus').val(a.status);
             $('#aCondition').val(a.condition);
             $('#aDesc').val(a.description);
+
+            // Show current image link if available
+            if (a.image) {
+                $('#currentImageLink').attr('href', ASSET_URL + a.image);
+                $('#currentImageWrap').show();
+                $('#imageHint').text('Upload a new image to replace the current one.');
+            } else {
+                $('#currentImageWrap').hide();
+                $('#imageHint').text('JPG, PNG or WebP, max 4 MB.');
+            }
+
             $('#modalTitle').html('<i class="fas fa-edit mr-2"></i>Edit Asset');
             $('#submitBtn').html('<i class="fas fa-save mr-1"></i> Update Asset');
             $('#assetModal').modal('show');

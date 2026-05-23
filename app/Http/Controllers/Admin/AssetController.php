@@ -44,12 +44,21 @@ class AssetController extends Controller
             'condition'      => 'required|in:good,fair,poor',
             'location'       => 'nullable|string|max:255',
             'description'    => 'nullable|string',
+            'image'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
         ]);
 
-        $asset = Asset::create($request->only([
-            'asset_name', 'category', 'quantity', 'purchase_price',
-            'purchase_date', 'description', 'status', 'condition', 'location',
-        ]));
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $this->saveImage($request->file('image'));
+        }
+
+        $asset = Asset::create(array_merge(
+            $request->only([
+                'asset_name', 'category', 'quantity', 'purchase_price',
+                'purchase_date', 'description', 'status', 'condition', 'location',
+            ]),
+            ['image' => $imagePath]
+        ));
 
         return response()->json(['success' => true, 'asset' => $asset]);
     }
@@ -75,19 +84,44 @@ class AssetController extends Controller
             'condition'      => 'required|in:good,fair,poor',
             'location'       => 'nullable|string|max:255',
             'description'    => 'nullable|string',
+            'image'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
         ]);
 
-        $asset->update($request->only([
+        $data = $request->only([
             'asset_name', 'category', 'quantity', 'purchase_price',
             'purchase_date', 'description', 'status', 'condition', 'location',
-        ]));
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($asset->image && file_exists(public_path($asset->image))) {
+                unlink(public_path($asset->image));
+            }
+            $data['image'] = $this->saveImage($request->file('image'));
+        }
+
+        $asset->update($data);
 
         return response()->json(['success' => true, 'asset' => $asset]);
     }
 
     public function destroy(Asset $asset)
     {
+        if ($asset->image && file_exists(public_path($asset->image))) {
+            unlink(public_path($asset->image));
+        }
         $asset->delete();
         return response()->json(['success' => true]);
+    }
+
+    private function saveImage($file): string
+    {
+        $uploadDir = public_path('uploads/assets');
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+        $ext      = strtolower($file->getClientOriginalExtension() ?: 'jpg');
+        $fileName = 'asset_' . time() . '_' . bin2hex(random_bytes(6)) . '.' . $ext;
+        $file->move($uploadDir, $fileName);
+        return 'uploads/assets/' . $fileName;
     }
 }
