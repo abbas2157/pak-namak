@@ -150,8 +150,7 @@ $condMeta = [
                             <table class="table mb-0" id="assetsTable" style="font-size:13.5px;">
                                 <thead>
                                     <tr style="background:#f8f9fc;border-bottom:2px solid #e3e6f0;">
-                                        <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">#</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Asset</th>
+                                        <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Asset</th>
                                         <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Category</th>
                                         <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Qty</th>
                                         <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Value (PKR)</th>
@@ -169,8 +168,7 @@ $condMeta = [
                                         @endphp
                                         <tr class="asset-row" data-cat="{{ $asset->category }}"
                                             id="row_{{ $asset->id }}" style="border-bottom:1px solid #f0f0f0;">
-                                            <td class="pl-3 py-3 align-middle text-muted">{{ $i + 1 }}</td>
-                                            <td class="py-3 align-middle">
+                                            <td class="pl-3 py-3 align-middle">
                                                 <span class="font-weight-bold d-block" style="color:#2d3748;">{{ $asset->asset_name }}</span>
                                                 @if($asset->location)
                                                     <small class="text-muted"><i class="fas fa-map-marker-alt mr-1"></i>{{ $asset->location }}</small>
@@ -220,7 +218,7 @@ $condMeta = [
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="7" class="text-center py-5">
+                                            <td colspan="6" class="text-center py-5">
                                                 <i class="fas fa-layer-group fa-3x mb-3 d-block" style="color:#d1d5db;"></i>
                                                 <p class="text-muted mb-0">No assets registered yet.</p>
                                                 <button class="btn btn-sm btn-primary mt-3" id="addBtnEmpty">
@@ -233,7 +231,7 @@ $condMeta = [
                                 @if($assets->count() > 0)
                                 <tfoot>
                                     <tr style="background:#f8f9fc;border-top:2px solid #e3e6f0;">
-                                        <td class="pl-3 py-3 font-weight-bold" colspan="4" style="color:#2d3748;">Total Book Value</td>
+                                        <td class="pl-3 py-3 font-weight-bold" colspan="3" style="color:#2d3748;">Total Book Value</td>
                                         <td class="py-3 text-right font-weight-bold" style="color:#e74a3b;font-size:15px;">
                                             {{ number_format($totalValue, 0) }}
                                         </td>
@@ -495,11 +493,11 @@ $(function () {
             pageLength: 15,
             lengthChange: false,
             searching: true,
-            ordering: true,
+            ordering: false,
             info: true,
             autoWidth: false,
             responsive: true,
-            columnDefs: [{ orderable: false, targets: [6] }],
+            columnDefs: [{ orderable: false, targets: [5] }, { responsivePriority: 1, targets: -1 }],
             language: {
                 search: '',
                 searchPlaceholder: 'Search assets...',

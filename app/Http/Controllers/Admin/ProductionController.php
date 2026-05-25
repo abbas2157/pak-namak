@@ -10,7 +10,7 @@ class ProductionController extends Controller
 {
     public function index()
     {
-        $productions = Production::orderByDesc('production_date')->get();
+        $productions = Production::orderByDesc('id')->get();
 
         $totalRaw      = $productions->sum('raw_salt_used');
         $totalFinished = $productions->sum('finished_salt');

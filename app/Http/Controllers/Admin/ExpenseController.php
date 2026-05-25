@@ -13,7 +13,7 @@ class ExpenseController extends Controller
     {
         $selectedMonth = $request->get('month');
 
-        $query = Expense::orderBy('expense_date', 'desc');
+        $query = Expense::orderByDesc('id');
 
         if ($selectedMonth) {
             [$year, $month] = explode('-', $selectedMonth);

@@ -90,8 +90,7 @@
                 <table class="table table-sm mb-0" id="productionsTable">
                     <thead>
                         <tr style="background:#f8f9fc;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#b0b7c3;">
-                            <th class="pl-3">#</th>
-                            <th>Date</th>
+                            <th class="pl-3">Date</th>
                             <th class="text-right">Raw Salt (KG)</th>
                             <th class="text-right">Finished (KG)</th>
                             <th class="text-right">Wastage (KG)</th>
@@ -110,8 +109,7 @@
                                 : 0;
                         @endphp
                         <tr id="prodRow{{ $p->id }}">
-                            <td class="pl-3 text-muted" style="font-size:12px;">{{ $i + 1 }}</td>
-                            <td>
+                            <td class="pl-3">
                                 <span class="font-weight-bold" style="font-size:13px;">
                                     {{ $p->production_date ? \Carbon\Carbon::parse($p->production_date)->format('d M Y') : '—' }}
                                 </span>
@@ -151,7 +149,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="10" class="text-center py-5 text-muted">
+                            <td colspan="9" class="text-center py-5 text-muted">
                                 <i class="fas fa-industry fa-2x mb-2 d-block" style="opacity:.3;"></i>
                                 No production records yet.
                             </td>
@@ -161,7 +159,7 @@
                     @if($productions->count() > 0)
                     <tfoot>
                         <tr style="background:#f8f9fc;font-weight:700;font-size:13px;">
-                            <td colspan="2" class="pl-3">Total</td>
+                            <td class="pl-3">Total</td>
                             <td class="text-right">{{ number_format($totalRaw, 0) }}</td>
                             <td class="text-right" style="color:#1cc88a;">{{ number_format($totalFinished, 0) }}</td>
                             <td class="text-right" style="color:#e74a3b;">{{ number_format($totalWastage, 0) }}</td>
@@ -262,12 +260,11 @@ $(document).ready(function () {
         pageLength: 25,
         lengthChange: false,
         searching: true,
-        ordering: true,
-        order: [[1, 'desc']],
+        ordering: false,
         info: true,
         autoWidth: false,
         responsive: true,
-        columnDefs: [{ orderable: false, targets: [9] }],
+        columnDefs: [{ orderable: false, targets: [8] }, { responsivePriority: 1, targets: -1 }],
     });
 
     // Live efficiency calculator

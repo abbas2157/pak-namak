@@ -10,7 +10,7 @@ class AssetController extends Controller
 {
     public function index()
     {
-        $assets = Asset::latest('purchase_date')->get();
+        $assets = Asset::orderByDesc('id')->get();
 
         $totalValue  = $assets->sum(fn($a) => $a->quantity * $a->purchase_price);
         $totalCount  = $assets->count();

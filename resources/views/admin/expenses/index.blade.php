@@ -599,14 +599,14 @@ $(function () {
         pageLength: 15,
         lengthChange: false,
         searching: true,
-        ordering: true,
+        ordering: false,
         info: true,
         autoWidth: false,
         responsive: true,
-        order: [[0, 'desc']],
         columnDefs: [
             { orderable: false, targets: [5] },
-            { className: 'text-right', targets: [3] }
+            { className: 'text-right', targets: [3] },
+            { responsivePriority: 1, targets: -1 }
         ],
         language: {
             search: '',

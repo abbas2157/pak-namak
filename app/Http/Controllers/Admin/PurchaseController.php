@@ -17,7 +17,7 @@ class PurchaseController extends Controller
             $query->whereYear('purchase_date', $year)->whereMonth('purchase_date', $month);
         }
 
-        $purchases = $query->latest('purchase_date')->get();
+        $purchases = $query->orderByDesc('id')->get();
         $vendors   = Vendor::orderBy('name')->get();
 
         $totalSpent   = $purchases->sum('grand_total');

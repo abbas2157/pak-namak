@@ -74,10 +74,10 @@
 
         <div class="card">
             <div class="card-body p-0">
+                <div class="table-responsive">
                 <table class="table table-bordered table-striped mb-0" id="employeesTable">
                     <thead class="thead-dark">
                         <tr>
-                            <th>#</th>
                             <th>Name</th>
                             <th>CNIC</th>
                             <th>Designation</th>
@@ -91,7 +91,6 @@
                     <tbody>
                     @forelse($employees as $i => $emp)
                         <tr class="emp-row" data-status="{{ $emp->status }}">
-                            <td>{{ $i + 1 }}</td>
                             <td><strong>{{ $emp->name }}</strong></td>
                             <td>{{ $emp->cnic ?? '-' }}</td>
                             <td>{{ $emp->designation ?? '-' }}</td>
@@ -120,10 +119,11 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="9" class="text-center py-4 text-muted">No employees found.</td></tr>
+                        <tr><td colspan="8" class="text-center py-4 text-muted">No employees found.</td></tr>
                     @endforelse
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     </div>

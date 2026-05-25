@@ -13,7 +13,7 @@ class ShopController extends Controller
         $shops = Shop::withCount('sales')
             ->withSum('sales', 'total_amount')
             ->withSum('sales', 'pending_amount')
-            ->orderBy('name')
+            ->orderByDesc('id')
             ->get();
 
         $totalShops    = $shops->count();

@@ -118,8 +118,7 @@
                     <table class="table mb-0" id="shopTable" style="font-size:13.5px;">
                         <thead>
                             <tr style="background:#f8f9fc;border-bottom:2px solid #e3e6f0;">
-                                <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">#</th>
-                                <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shop</th>
+                                <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shop</th>
                                 <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Contact</th>
                                 <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">City / Area</th>
                                 <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Sales</th>
@@ -133,8 +132,7 @@
                             @forelse($shops as $i => $shop)
                                 <tr class="shop-row" data-status="{{ $shop->status }}"
                                     id="row_{{ $shop->id }}" style="border-bottom:1px solid #f0f0f0;">
-                                    <td class="pl-3 py-3 align-middle text-muted">{{ $i + 1 }}</td>
-                                    <td class="py-3 align-middle">
+                                    <td class="pl-3 py-3 align-middle">
                                         <span class="font-weight-bold d-block" style="color:#2d3748;">{{ $shop->name }}</span>
                                         @if($shop->owner_name)
                                             <small class="text-muted"><i class="fas fa-user mr-1"></i>{{ $shop->owner_name }}</small>
@@ -211,7 +209,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="text-center py-5">
+                                    <td colspan="8" class="text-center py-5">
                                         <i class="fas fa-store fa-3x mb-3 d-block" style="color:#d1d5db;"></i>
                                         <p class="text-muted mb-0">No shops added yet.</p>
                                         <button class="btn btn-sm btn-primary mt-3" id="addBtnEmpty">
@@ -224,7 +222,7 @@
                         @if($shops->count() > 0)
                         <tfoot>
                             <tr style="background:#f8f9fc;border-top:2px solid #e3e6f0;">
-                                <td class="pl-3 py-3 font-weight-bold" colspan="5" style="color:#2d3748;">Totals</td>
+                                <td class="pl-3 py-3 font-weight-bold" colspan="4" style="color:#2d3748;">Totals</td>
                                 <td class="py-3 text-right font-weight-bold" style="color:#2d3748;font-size:15px;">
                                     {{ number_format($totalRevenue, 0) }}
                                 </td>
@@ -353,11 +351,11 @@ $(function () {
         pageLength: 15,
         lengthChange: false,
         searching: true,
-        ordering: true,
+        ordering: false,
         info: true,
         autoWidth: false,
         responsive: true,
-        columnDefs: [{ orderable: false, targets: [4, 8] }],
+        columnDefs: [{ orderable: false, targets: [3, 7] }, { responsivePriority: 1, targets: -1 }],
         language: {
             search: '',
             searchPlaceholder: 'Search shops...',

@@ -138,7 +138,7 @@
                     <div class="col-md-3"><small class="text-uppercase font-weight-bold text-muted" style="font-size:10px;">Sub Total</small></div>
                 </div>
 
-                @foreach([5,10,30,35,50] as $size)
+                @foreach([5,10,30,35,40,50] as $size)
                 @php $t = $thailasBySize->get($size); @endphp
                 <div class="row align-items-center mb-2 py-2" style="border-bottom:1px solid #f0f0f0;">
                     <div class="col-md-1 mb-2 mb-md-0">
@@ -417,7 +417,7 @@ $(document).ready(function () {
         $('#sub_total_' + size + '_killo_thaila').val(round(sub));
         calcGrandTotal();
     }
-    [5, 10, 30, 35, 50].forEach(function (size) {
+    [5, 10, 30, 35, 40, 50].forEach(function (size) {
         $('#sold_quantity_kilo_' + size + ', #pirce_per_' + size + '_killo_thaila')
             .on('input', function () { calcThaila(size); });
     });
@@ -460,7 +460,7 @@ $(document).ready(function () {
 
     /* ── Recalculate on load to sync readonly fields ── */
     calcDalla();
-    [5, 10, 30, 35, 50].forEach(function (size) { calcThaila(size); });
+    [5, 10, 30, 35, 40, 50].forEach(function (size) { calcThaila(size); });
     [250, 300, 400, 500, 600, 700].forEach(function (gram) { calcPackage(gram); });
 });
 </script>

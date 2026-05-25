@@ -92,7 +92,6 @@
                 <table class="table table-bordered table-striped mb-0" id="vendorsTable">
                     <thead class="thead-dark">
                         <tr>
-                            <th>#</th>
                             <th>Name</th>
                             <th>Shop / Business</th>
                             <th>Phone</th>
@@ -104,7 +103,6 @@
                     <tbody>
                     @forelse($vendors as $i => $vendor)
                         <tr id="row_{{ $vendor->id }}">
-                            <td>{{ $i + 1 }}</td>
                             <td><strong>{{ $vendor->name }}</strong></td>
                             <td>{{ $vendor->shop ?? '—' }}</td>
                             <td>{{ $vendor->phone ?? '—' }}</td>
@@ -129,7 +127,7 @@
                         </tr>
                     @empty
                         <tr id="emptyRow">
-                            <td colspan="7" class="text-center py-5">
+                            <td colspan="6" class="text-center py-5">
                                 <i class="fas fa-truck fa-3x mb-3 d-block" style="color:#d1d5db;"></i>
                                 <p class="text-muted mb-0">No vendors added yet.</p>
                                 <button class="btn btn-sm btn-primary mt-3" id="addBtnEmpty">
@@ -221,7 +219,6 @@ let rowCount = {{ $vendors->count() }};
 
 function buildRow(v, idx) {
     return `<tr id="row_${v.id}">
-        <td>${idx}</td>
         <td><strong>${v.name}</strong></td>
         <td>${v.shop || '—'}</td>
         <td>${v.phone || '—'}</td>
@@ -247,11 +244,11 @@ $(function () {
         pageLength: 15,
         lengthChange: false,
         searching: true,
-        ordering: true,
+        ordering: false,
         info: true,
         autoWidth: false,
         responsive: true,
-        columnDefs: [{ orderable: false, targets: [5, 6] }],
+        columnDefs: [{ orderable: false, targets: [4, 5] }, { responsivePriority: 1, targets: -1 }],
         language: {
             search: '',
             searchPlaceholder: 'Search vendors...',

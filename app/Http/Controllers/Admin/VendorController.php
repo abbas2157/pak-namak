@@ -10,7 +10,7 @@ class VendorController extends Controller
 {
     public function index()
     {
-        $vendors      = Vendor::withCount('purchases')->orderBy('name')->get();
+        $vendors      = Vendor::withCount('purchases')->orderByDesc('id')->get();
         $totalVendors = $vendors->count();
         $totalSpent   = Purchase::sum('grand_total');
         $topVendor    = $vendors->sortByDesc('purchases_count')->first();

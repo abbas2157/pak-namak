@@ -12,7 +12,6 @@ class SaleController extends Controller
     public function index(Request $request)
     {
         $query = Sale::with(['shop', 'dalla', 'thailas', 'packages'])
-            ->orderByDesc('sale_date')
             ->orderByDesc('id');
 
         if ($request->month) {
