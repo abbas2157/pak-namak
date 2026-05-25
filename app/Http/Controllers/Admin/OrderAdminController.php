@@ -12,18 +12,55 @@ class OrderAdminController extends Controller
 {
     public function index(Request $request)
     {
-        $status = $request->get('status', 'all');
+        // Single query for all status counts (avoids 3 separate COUNT queries)
+        $statusCounts = Order::selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
 
-        $query = Order::with(['shop', 'items'])->orderByDesc('id');
+        $counts = [
+            'pending'   => $statusCounts['pending']   ?? 0,
+            'confirmed' => $statusCounts['confirmed'] ?? 0,
+            'rejected'  => $statusCounts['rejected']  ?? 0,
+            'all'       => $statusCounts->sum(),
+            'today'     => Order::whereDate('created_at', today())->count(),
+        ];
 
+        $status    = $request->input('status', 'all');
+        $search    = $request->input('search');
+        $dateFrom  = $request->input('date_from');
+        $dateTo    = $request->input('date_to');
+        $perPage   = in_array($request->input('per_page'), [20, 50, 100]) ? (int) $request->input('per_page') : 20;
+
+        $query = Order::with(['shop:id,name,phone_number,city', 'items'])
+            ->orderByDesc('id');
+
+        // Status filter
         if ($status !== 'all') {
             $query->where('status', $status);
         }
 
-        $orders       = $query->paginate(20)->appends($request->only('status'));
-        $pendingCount = Order::where('status', 'pending')->count();
+        // Search: reference, customer name, phone, or linked shop name
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('reference', 'like', "%{$search}%")
+                  ->orWhere('customer_name', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhere('city', 'like', "%{$search}%")
+                  ->orWhereHas('shop', fn($s) => $s->where('name', 'like', "%{$search}%"));
+            });
+        }
 
-        return view('admin.orders.index', compact('orders', 'pendingCount', 'status'));
+        // Date range
+        if ($dateFrom) {
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
+        if ($dateTo) {
+            $query->whereDate('created_at', '<=', $dateTo);
+        }
+
+        $orders = $query->paginate($perPage)->appends($request->query());
+
+        return view('admin.orders.index', compact('orders', 'counts', 'status', 'search', 'dateFrom', 'dateTo', 'perPage'));
     }
 
     public function show(Order $order)
@@ -35,9 +72,14 @@ class OrderAdminController extends Controller
         $shopSalesCount   = null;
 
         if ($order->shop) {
-            $shopSalesTotal   = $order->shop->sales()->sum('total_amount');
-            $shopSalesPending = $order->shop->sales()->sum('pending_amount');
-            $shopSalesCount   = $order->shop->sales()->count();
+            // Single query instead of three
+            $shopStats = $order->shop->sales()
+                ->selectRaw('count(*) as cnt, sum(total_amount) as revenue, sum(pending_amount) as pending')
+                ->first();
+
+            $shopSalesCount   = $shopStats->cnt;
+            $shopSalesTotal   = $shopStats->revenue ?? 0;
+            $shopSalesPending = $shopStats->pending ?? 0;
         }
 
         return view('admin.orders.show', compact(
@@ -53,7 +95,8 @@ class OrderAdminController extends Controller
 
         DB::beginTransaction();
         try {
-            // Auto-register shop if unlinked
+            $autoRegistered = false;
+
             if (!$order->shop_id && $order->customer_name) {
                 $shop = Shop::create([
                     'name'         => $order->customer_name,
@@ -62,14 +105,20 @@ class OrderAdminController extends Controller
                     'address'      => $order->city ?? '',
                     'status'       => 'active',
                 ]);
-                $order->shop_id = $shop->id;
+                $order->shop_id    = $shop->id;
+                $autoRegistered    = true;
             }
 
             $order->status = 'confirmed';
             $order->save();
 
             DB::commit();
-            return back()->with('success', 'Order confirmed' . ($order->shop_id && !$order->wasRecentlyCreated ? ' and shop auto-registered' : '') . '.');
+
+            $msg = $autoRegistered
+                ? 'Order confirmed and shop auto-registered.'
+                : 'Order confirmed.';
+
+            return back()->with('success', $msg);
 
         } catch (\Throwable $e) {
             DB::rollBack();

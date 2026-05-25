@@ -1,6 +1,10 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <a href="{{ route('dashboard') }}" class="brand-link text-center">
-        <span class="brand-text font-weight-light">PN&MJ</span>
+    <a href="{{ route('dashboard') }}" class="brand-link d-flex align-items-center px-3" style="background:rgba(0,0,0,.15);">
+        <img src="{{ asset('assets/images/logo.png') }}" alt="Logo"
+             style="width:36px;height:36px;border-radius:50%;object-fit:contain;background:#fff;padding:2px;flex-shrink:0;">
+        <span class="brand-text font-weight-bold ml-2" style="font-size:13px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+            PAK NAMAK<br><small style="font-weight:400;opacity:.65;font-size:10px;">& MASALA JAAT</small>
+        </span>
     </a>
     <div class="sidebar">
         <nav class="mt-2">

@@ -37,14 +37,14 @@
         <div class="row mb-4">
             <div class="col-xl-3 col-md-6 mb-3">
                 <a href="{{ route('admin.shops.index') }}" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #4e73df!important;border-radius:10px;">
+                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1a5c35!important;border-radius:10px;">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
                             <div>
                                 <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Active Shops</div>
-                                <div style="font-size:30px;font-weight:800;color:#4e73df;line-height:1.1;">{{ $activeShopsCount }}</div>
+                                <div style="font-size:30px;font-weight:800;color:#1a5c35;line-height:1.1;">{{ $activeShopsCount }}</div>
                                 <div style="font-size:11px;color:#b0b7c3;">of {{ $totalShops }} total</div>
                             </div>
-                            <i class="fas fa-store" style="font-size:2.5rem;color:#4e73df;opacity:.15;"></i>
+                            <i class="fas fa-store" style="font-size:2.5rem;color:#1a5c35;opacity:.15;"></i>
                         </div>
                     </div>
                 </a>
@@ -125,14 +125,14 @@
             </div>
             <div class="col-xl-4 col-md-4 col-sm-6 mb-3">
                 <a href="{{ route('admin.orders.index') }}" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #4e73df!important;border-radius:10px;">
+                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1a5c35!important;border-radius:10px;">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
                             <div>
                                 <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Orders</div>
-                                <div style="font-size:30px;font-weight:800;color:#4e73df;line-height:1.1;">{{ $totalOrdersCount }}</div>
+                                <div style="font-size:30px;font-weight:800;color:#1a5c35;line-height:1.1;">{{ $totalOrdersCount }}</div>
                                 <div style="font-size:11px;color:#b0b7c3;">all time</div>
                             </div>
-                            <i class="fas fa-inbox" style="font-size:2.5rem;color:#4e73df;opacity:.15;"></i>
+                            <i class="fas fa-inbox" style="font-size:2.5rem;color:#1a5c35;opacity:.15;"></i>
                         </div>
                     </div>
                 </a>
@@ -424,7 +424,7 @@
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <div>
                                 <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Dalla — ڈلہ</div>
-                                <div style="font-size:18px;font-weight:700;color:#4e73df;">PKR {{ number_format($monthDallaTotal, 0) }}</div>
+                                <div style="font-size:18px;font-weight:700;color:#1a5c35;">PKR {{ number_format($monthDallaTotal, 0) }}</div>
                             </div>
                             <span class="badge badge-primary px-2 py-1" style="font-size:12px;border-radius:20px;">
                                 {{ number_format(($monthDallaTotal / $prodTotal) * 100, 1) }}%
@@ -513,7 +513,7 @@
                                     <tr style="border-bottom:1px solid #f0f0f0;">
                                         <td class="pl-3 py-2 align-middle">
                                             <a href="{{ route('admin.orders.show', $order) }}"
-                                               class="font-weight-bold" style="color:#4e73df;text-decoration:none;">
+                                               class="font-weight-bold" style="color:#1a5c35;text-decoration:none;">
                                                 {{ $order->reference }}
                                             </a>
                                         </td>
@@ -530,8 +530,8 @@
                                             @foreach($order->items->take(2) as $item)
                                                 <span class="badge mr-1"
                                                       style="font-size:10px;padding:3px 7px;border-radius:20px;
-                                                      background:{{ $item->type==='dalla'?'#e8f0fe':($item->type==='thaila'?'#d4edda':'#fff3cd') }};
-                                                      color:{{ $item->type==='dalla'?'#4e73df':($item->type==='thaila'?'#155724':'#856404') }};">
+                                                      background:{{ $item->type==='dalla'?'#d0e8d8':($item->type==='thaila'?'#d4edda':'#fff3cd') }};
+                                                      color:{{ $item->type==='dalla'?'#1a5c35':($item->type==='thaila'?'#155724':'#856404') }};">
                                                     {{ $item->quantity }}×
                                                     @if($item->type==='dalla') Dalla
                                                     @elseif($item->type==='thaila') {{ $item->size }}kg
@@ -549,7 +549,7 @@
                                         <td class="py-2 align-middle text-center" style="white-space:nowrap;">
                                             <a href="{{ route('admin.orders.show', $order) }}"
                                                class="btn btn-sm mr-1"
-                                               style="background:#e8f0fe;color:#4e73df;border:1px solid #c3d3f7;border-radius:6px;"
+                                               style="background:#d0e8d8;color:#1a5c35;border:1px solid #a8d4b8;border-radius:6px;"
                                                title="View">
                                                 <i class="fas fa-eye"></i>
                                             </a>
@@ -586,10 +586,10 @@
             <div class="col-lg-6 mb-4">
                 <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
                     <div class="card-header border-0 d-flex justify-content-between align-items-center py-3"
-                         style="background:#f0f4ff;border-radius:10px 10px 0 0;">
+                         style="background:#eaf3ee;border-radius:10px 10px 0 0;">
                         <div>
                             <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Top 5</div>
-                            <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">Shops by Revenue</h6>
+                            <h6 class="mb-0 font-weight-bold" style="color:#1a5c35;">Shops by Revenue</h6>
                         </div>
                         <a href="{{ route('admin.shops.index') }}"
                            class="btn btn-sm btn-outline-primary" style="border-radius:20px;font-size:12px;">
@@ -615,7 +615,7 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <span class="font-weight-bold" style="font-size:13px;color:#4e73df;">
+                                    <span class="font-weight-bold" style="font-size:13px;color:#1a5c35;">
                                         PKR {{ number_format($row->total, 0) }}
                                     </span>
                                 </div>

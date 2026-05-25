@@ -4,22 +4,36 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Place Order — {{ config('admin.shop_name') }}</title>
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/logo.png') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
     <style>
-        body { background: #f4f6fc; font-family: 'Segoe UI', sans-serif; }
+        body { background: #f2f5f3; font-family: 'Segoe UI', sans-serif; }
         .top-bar {
-            background: linear-gradient(135deg,#1a1f5e,#2d3494);
+            background: linear-gradient(135deg,#0a2e18,#1a5c35,#2d7a4f);
             color: #fff;
-            padding: 14px 0;
+            padding: 16px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,.3);
         }
-        .top-bar .brand { font-weight: 800; font-size: 16px; }
-        .top-bar .sub   { font-size: 12px; opacity: .65; }
+        .top-bar .logo-circle {
+            width: 48px; height: 48px;
+            background: #fff;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,.2);
+        }
+        .top-bar .logo-circle img { width: 42px; height: 42px; object-fit: contain; }
+        .top-bar .brand { font-weight: 800; font-size: 14px; line-height: 1.2; }
+        .top-bar .sub   { font-size: 11px; opacity: .6; margin-top: 2px; }
         .section-card {
             border-radius: 14px;
             border: none;
-            box-shadow: 0 2px 12px rgba(0,0,0,.06);
+            box-shadow: 0 2px 12px rgba(0,0,0,.07);
             margin-bottom: 18px;
         }
         .section-header {
@@ -31,10 +45,10 @@
             align-items: center;
             justify-content: space-between;
         }
-        .header-dalla   { background:#f0f4ff; color:#4e73df; }
-        .header-thaila  { background:#f0fff8; color:#1cc88a; }
+        .header-dalla   { background:#eaf3ee; color:#1a5c35; }
+        .header-thaila  { background:#e8f5e9; color:#2d7a4f; }
         .header-package { background:#fffdf0; color:#856404; }
-        .header-details { background:linear-gradient(135deg,#4e73df,#224abe); color:#fff; }
+        .header-details { background:linear-gradient(135deg,#1a5c35,#0a2e18); color:#fff; }
         .size-badge {
             display: inline-flex;
             align-items: center;
@@ -45,7 +59,7 @@
             padding: 6px 10px;
             min-width: 52px;
         }
-        .size-dalla   { background:#e8f0fe; color:#4e73df; }
+        .size-dalla   { background:#d0e8d8; color:#1a5c35; }
         .size-thaila  { background:#d4edda; color:#155724; }
         .size-package { background:#fff3cd; color:#856404; }
         .select2-container--default .select2-selection--single {
@@ -58,12 +72,12 @@
             height: 40px;
         }
         .submit-btn {
-            background: linear-gradient(135deg,#1cc88a,#17a673);
+            background: linear-gradient(135deg,#2d7a4f,#1a5c35);
             border: none; border-radius: 12px;
             padding: 14px 40px;
             font-size: 16px; font-weight: 700; color: #fff;
             width: 100%;
-            box-shadow: 0 4px 20px rgba(28,200,138,.35);
+            box-shadow: 0 4px 20px rgba(26,92,53,.4);
         }
         .submit-btn:hover { opacity: .92; color: #fff; }
         .back-link { color: rgba(255,255,255,.7); font-size: 13px; text-decoration: none; }
@@ -76,9 +90,18 @@
 <div class="top-bar">
     <div class="container">
         <div class="d-flex align-items-center justify-content-between">
-            <div>
-                <div class="brand"><i class="fas fa-cubes me-2"></i>{{ config('admin.shop_name') }}</div>
-                <div class="sub">آرڈر فارم — Order Form</div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="logo-circle">
+                    <img src="{{ asset('assets/images/logo.png') }}" alt="Logo">
+                </div>
+                <div>
+                    <div class="brand">{{ config('admin.shop_name') }}</div>
+                    <div class="sub">
+                        <i class="fas fa-file-alt me-1"></i>آرڈر فارم — Order Form
+                        &nbsp;·&nbsp;
+                        <i class="fas fa-phone me-1"></i>{{ config('admin.pak_namak.phone') }}
+                    </div>
+                </div>
             </div>
             <a href="{{ url('/') }}" class="back-link">
                 <i class="fas fa-arrow-left me-1"></i> Back
