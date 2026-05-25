@@ -25,6 +25,17 @@
 
 <section class="content">
     <div class="container-fluid">
+        @if($prefill)
+        <div class="alert border-0 shadow-sm mb-3 d-flex align-items-center"
+             style="background:#fff3cd;color:#856404;border-radius:10px;">
+            <i class="fas fa-exchange-alt fa-lg mr-3"></i>
+            <div>
+                <strong>Pre-filled from Order {{ $prefill->reference }}</strong> —
+                {{ $prefill->display_name }}.
+                Set pricing and save to create the sale.
+            </div>
+        </div>
+        @endif
         <form action="{{ route('admin.sales.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
@@ -50,8 +61,10 @@
                         <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
                             Quantity (Mann) — وزن: من
                         </label>
+                        @php $prefillDalla = $prefill?->items->firstWhere('type','dalla'); @endphp
                         <input type="number" name="dalla[sold_quantity_mann]" id="sold_quantity_mann"
-                               class="form-control" style="border-radius:8px;" placeholder="0">
+                               class="form-control" style="border-radius:8px;" placeholder="0"
+                               value="{{ $prefillDalla?->quantity ?? '' }}">
                     </div>
                     <div class="col-md-2 mb-3">
                         <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
@@ -120,6 +133,7 @@
                 </div>
 
                 @foreach([5,10,30,35,40,50] as $size)
+                @php $prefillThaila = $prefill?->items->where('type','thaila')->firstWhere('size',$size); @endphp
                 <div class="row align-items-center mb-2 py-2" style="border-bottom:1px solid #f0f0f0;">
                     <div class="col-md-1 mb-2 mb-md-0">
                         <input type="text" name="thaila[{{ $size }}][kilo_{{ $size }}]"
@@ -130,7 +144,8 @@
                     <div class="col-md-2 mb-2 mb-md-0">
                         <input type="number" name="thaila[{{ $size }}][sold_quantity_kilo_{{ $size }}]"
                                id="sold_quantity_kilo_{{ $size }}"
-                               class="form-control" style="border-radius:8px;" placeholder="0">
+                               class="form-control" style="border-radius:8px;" placeholder="0"
+                               value="{{ $prefillThaila?->quantity ?? '' }}">
                     </div>
                     <div class="col-md-2 mb-2 mb-md-0">
                         <input type="text" name="thaila[{{ $size }}][sold_quantity_kilo]"
@@ -260,7 +275,10 @@
                                 style="border-radius:8px;">
                             <option value="">Select Shop</option>
                             @foreach($shops as $shop)
-                                <option value="{{ $shop->id }}">{{ $shop->name }}</option>
+                                <option value="{{ $shop->id }}"
+                                    {{ ($prefill && $prefill->shop_id == $shop->id) ? 'selected' : '' }}>
+                                    {{ $shop->name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>

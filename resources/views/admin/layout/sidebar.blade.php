@@ -14,6 +14,19 @@
                 </li>
 
                 <li class="nav-item">
+                    <a href="{{ route('admin.orders.index') }}" class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-inbox"></i>
+                        <p>
+                            Orders
+                            @php $pendingOrders = \App\Models\Order::where('status','pending')->count(); @endphp
+                            @if($pendingOrders > 0)
+                                <span class="badge badge-warning right" style="font-size:10px;">{{ $pendingOrders }}</span>
+                            @endif
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
                     <a href="{{ route('admin.purchases.index') }}" class="nav-link {{ request()->routeIs('admin.purchases.*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-cart-shopping"></i>
                         <p>Purchases</p>

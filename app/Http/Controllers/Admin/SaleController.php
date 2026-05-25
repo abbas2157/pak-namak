@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use App\Models\{Sale, SaleDalla, SaleThaila, SalePackage, SalePayment, SaltType, Shop};
+use App\Models\{Sale, SaleDalla, SaleThaila, SalePackage, SalePayment, SaltType, Shop, Order};
 
 class SaleController extends Controller
 {
@@ -44,9 +44,16 @@ class SaleController extends Controller
 
     public function create()
     {
-        $shops = Shop::orderBy('id', 'desc')->get();
-        $types = SaltType::get();
-        return view('admin.sales.create', compact('shops','types'));
+        $shops  = Shop::orderBy('id', 'desc')->get();
+        $types  = SaltType::get();
+        $prefill = null;
+
+        if (session('prefill_order_id')) {
+            $prefill = Order::with('items')->find(session('prefill_order_id'));
+            session()->forget('prefill_order_id');
+        }
+
+        return view('admin.sales.create', compact('shops', 'types', 'prefill'));
     }
     public function show($id)
     {

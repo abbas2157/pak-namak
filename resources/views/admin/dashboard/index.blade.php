@@ -93,6 +93,52 @@
             </div>
         </div>
 
+        {{-- ── ORDERS SUMMARY ─────────────────────────────────── --}}
+        <div class="row mb-4">
+            <div class="col-xl-4 col-md-4 col-sm-6 mb-3">
+                <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #f6c23e!important;border-radius:10px;">
+                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Pending Orders</div>
+                                <div style="font-size:30px;font-weight:800;color:#e0a800;line-height:1.1;">{{ $pendingOrdersCount }}</div>
+                                <div style="font-size:11px;color:#b0b7c3;">awaiting action</div>
+                            </div>
+                            <i class="fas fa-clock" style="font-size:2.5rem;color:#e0a800;opacity:.15;"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-4 col-md-4 col-sm-6 mb-3">
+                <a href="{{ route('admin.orders.index', ['status' => 'confirmed']) }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1cc88a!important;border-radius:10px;">
+                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Confirmed Orders</div>
+                                <div style="font-size:30px;font-weight:800;color:#1cc88a;line-height:1.1;">{{ $confirmedOrdersCount }}</div>
+                                <div style="font-size:11px;color:#b0b7c3;">confirmed</div>
+                            </div>
+                            <i class="fas fa-check-circle" style="font-size:2.5rem;color:#1cc88a;opacity:.15;"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-4 col-md-4 col-sm-6 mb-3">
+                <a href="{{ route('admin.orders.index') }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #4e73df!important;border-radius:10px;">
+                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
+                            <div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Orders</div>
+                                <div style="font-size:30px;font-weight:800;color:#4e73df;line-height:1.1;">{{ $totalOrdersCount }}</div>
+                                <div style="font-size:11px;color:#b0b7c3;">all time</div>
+                            </div>
+                            <i class="fas fa-inbox" style="font-size:2.5rem;color:#4e73df;opacity:.15;"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
         {{-- ── ALL-TIME SNAPSHOT ───────────────────────────────── --}}
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
@@ -430,6 +476,110 @@
                 </div>
             </div>
         </div>
+
+        {{-- ── RECENT PENDING ORDERS ──────────────────────────── --}}
+        @if($recentPendingOrders->count() > 0)
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm" style="border-radius:10px;">
+                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3"
+                         style="background:#fffbf0;border-radius:10px 10px 0 0;">
+                        <div>
+                            <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Action Required</div>
+                            <h6 class="mb-0 font-weight-bold" style="color:#e0a800;">
+                                <i class="fas fa-clock mr-1"></i> Pending Orders
+                                <span class="badge badge-warning ml-1" style="font-size:11px;border-radius:20px;">{{ $pendingOrdersCount }}</span>
+                            </h6>
+                        </div>
+                        <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}"
+                           class="btn btn-sm btn-outline-warning" style="border-radius:20px;font-size:12px;">
+                            View All
+                        </a>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table mb-0" style="font-size:13px;">
+                                <thead>
+                                    <tr style="background:#f8f9fc;">
+                                        <th class="pl-3 py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Reference</th>
+                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shop / Customer</th>
+                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Items</th>
+                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Submitted</th>
+                                        <th class="py-2 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($recentPendingOrders as $order)
+                                    <tr style="border-bottom:1px solid #f0f0f0;">
+                                        <td class="pl-3 py-2 align-middle">
+                                            <a href="{{ route('admin.orders.show', $order) }}"
+                                               class="font-weight-bold" style="color:#4e73df;text-decoration:none;">
+                                                {{ $order->reference }}
+                                            </a>
+                                        </td>
+                                        <td class="py-2 align-middle">
+                                            <span class="font-weight-bold d-block" style="color:#2d3748;">
+                                                {{ $order->display_name }}
+                                                @if(!$order->shop_id)
+                                                    <span class="badge badge-secondary ml-1" style="font-size:9px;">New</span>
+                                                @endif
+                                            </span>
+                                            <small class="text-muted">{{ $order->display_phone }}</small>
+                                        </td>
+                                        <td class="py-2 align-middle">
+                                            @foreach($order->items->take(2) as $item)
+                                                <span class="badge mr-1"
+                                                      style="font-size:10px;padding:3px 7px;border-radius:20px;
+                                                      background:{{ $item->type==='dalla'?'#e8f0fe':($item->type==='thaila'?'#d4edda':'#fff3cd') }};
+                                                      color:{{ $item->type==='dalla'?'#4e73df':($item->type==='thaila'?'#155724':'#856404') }};">
+                                                    {{ $item->quantity }}×
+                                                    @if($item->type==='dalla') Dalla
+                                                    @elseif($item->type==='thaila') {{ $item->size }}kg
+                                                    @else {{ $item->size }}g
+                                                    @endif
+                                                </span>
+                                            @endforeach
+                                            @if($order->items->count() > 2)
+                                                <small class="text-muted">+{{ $order->items->count()-2 }} more</small>
+                                            @endif
+                                        </td>
+                                        <td class="py-2 align-middle">
+                                            <span style="color:#2d3748;">{{ $order->created_at->format('d M, h:i A') }}</span>
+                                        </td>
+                                        <td class="py-2 align-middle text-center" style="white-space:nowrap;">
+                                            <a href="{{ route('admin.orders.show', $order) }}"
+                                               class="btn btn-sm mr-1"
+                                               style="background:#e8f0fe;color:#4e73df;border:1px solid #c3d3f7;border-radius:6px;"
+                                               title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <form action="{{ route('admin.orders.confirm', $order) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm mr-1"
+                                                        style="background:#d4edda;color:#155724;border:1px solid #c3e6cb;border-radius:6px;"
+                                                        title="Confirm">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('admin.orders.reject', $order) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm"
+                                                        style="background:#fce8e6;color:#c62828;border:1px solid #ef9a9a;border-radius:6px;"
+                                                        title="Reject">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
 
         {{-- ── TOP SHOPS + TOP MONTHS ──────────────────────────── --}}
         <div class="row">

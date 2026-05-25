@@ -62,6 +62,11 @@
                     </div>
                 </form>
             </div>
+            <div class="card-footer text-center" style="background:#f8f9fc;border-radius:0 0 8px 8px;">
+                <a href="{{ route('order.form') }}" class="text-success" style="font-size:13px;">
+                    <i class="fas fa-shopping-cart mr-1"></i> Place an Order — آرڈر کریں
+                </a>
+            </div>
         </div>
     </div>
     <script src="plugins/jquery/jquery.min.js"></script>

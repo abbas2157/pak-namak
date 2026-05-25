@@ -5,7 +5,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Models\{Sale, Purchase, Shop, Expense, SaleDalla, SaleThaila, SalePackage, EmployeeSalary, Vendor, Employee};
+use App\Models\{Sale, Purchase, Shop, Expense, SaleDalla, SaleThaila, SalePackage, EmployeeSalary, Vendor, Employee, Order};
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -76,6 +76,18 @@ class DashboardController extends Controller
         $activeShopsCount = Shop::where('status', 'active')->count();
         $totalVendors     = Vendor::count();
         $workingEmployees = Employee::where('status', 'working')->count();
+
+        /* -------------------------
+        * ORDERS
+        * ------------------------ */
+        $pendingOrdersCount   = Order::where('status', 'pending')->count();
+        $confirmedOrdersCount = Order::where('status', 'confirmed')->count();
+        $totalOrdersCount     = Order::count();
+        $recentPendingOrders  = Order::with(['shop', 'items'])
+            ->where('status', 'pending')
+            ->orderByDesc('id')
+            ->limit(5)
+            ->get();
 
         /* -------------------------
         * MONTH PRODUCT BREAKDOWN
@@ -195,7 +207,11 @@ class DashboardController extends Controller
             'topShops',
             'topDays',
             'namakBest',
-            'namakBestValue'
+            'namakBestValue',
+            'pendingOrdersCount',
+            'confirmedOrdersCount',
+            'totalOrdersCount',
+            'recentPendingOrders'
         ));
     }
 }

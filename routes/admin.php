@@ -37,5 +37,12 @@ Route::middleware('web')->group(function () {
         Route::get('sales/{id}/receipt', \App\Http\Controllers\Admin\SaleReceiptController::class)
             ->name('admin.sales.receipt');
 
+        // Orders (from public order portal)
+        Route::get('orders',                    [App\Http\Controllers\Admin\OrderAdminController::class, 'index'])->name('admin.orders.index');
+        Route::get('orders/{order}',            [App\Http\Controllers\Admin\OrderAdminController::class, 'show'])->name('admin.orders.show');
+        Route::post('orders/{order}/confirm',   [App\Http\Controllers\Admin\OrderAdminController::class, 'confirm'])->name('admin.orders.confirm');
+        Route::post('orders/{order}/reject',    [App\Http\Controllers\Admin\OrderAdminController::class, 'reject'])->name('admin.orders.reject');
+        Route::get('orders/{order}/to-sale',    [App\Http\Controllers\Admin\OrderAdminController::class, 'toSale'])->name('admin.orders.to_sale');
+
     });
 });
