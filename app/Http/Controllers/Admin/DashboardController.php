@@ -175,7 +175,19 @@ class DashboardController extends Controller
             )
             ->groupBy('areas.id', 'areas.name', 'cities.name')
             ->orderByDesc('total')
-            ->limit(10)
+            ->limit(5)
+            ->get();
+
+        /* -------------------------
+        * INACTIVE SHOPS (no sale in last 30 days)
+        * ------------------------ */
+        $inactiveShops = Shop::where('status', 'active')
+            ->whereDoesntHave('sales', function ($q) {
+                $q->where('sale_date', '>=', Carbon::now()->subDays(30)->toDateString());
+            })
+            ->with('cityRecord', 'area')
+            ->withMax('sales', 'sale_date')
+            ->orderBy('sales_max_sale_date')
             ->get();
 
         // Determine which namak type sells more: dalla vs thailas vs packages
@@ -251,7 +263,8 @@ class DashboardController extends Controller
             'totalOrdersCount',
             'recentPendingOrders',
             'citySales',
-            'areaSales'
+            'areaSales',
+            'inactiveShops'
         ));
     }
 }
