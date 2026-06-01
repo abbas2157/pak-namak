@@ -13,7 +13,7 @@
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-home"></i>
-                        <p>Dashboard</p>
+                        <p>Dashboard <small class="d-block" style="font-size:9px;opacity:.65;font-family:inherit;">ڈیش بورڈ</small></p>
                     </a>
                 </li>
 
@@ -21,7 +21,7 @@
                     <a href="{{ route('admin.orders.index') }}" class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-inbox"></i>
                         <p>
-                            Orders
+                            Orders <small class="d-block" style="font-size:9px;opacity:.65;font-family:inherit;">آرڈرز</small>
                             @php $pendingOrders = \App\Models\Order::where('status','pending')->count(); @endphp
                             @if($pendingOrders > 0)
                                 <span class="badge badge-warning right" style="font-size:10px;">{{ $pendingOrders }}</span>
@@ -33,14 +33,14 @@
                 <li class="nav-item">
                     <a href="{{ route('admin.purchases.index') }}" class="nav-link {{ request()->routeIs('admin.purchases.*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-cart-shopping"></i>
-                        <p>Purchases</p>
+                        <p>Purchases <small class="d-block" style="font-size:9px;opacity:.65;font-family:inherit;">خریداری</small></p>
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('admin.productions.index') }}" class="nav-link {{ request()->routeIs('admin.productions.*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-industry"></i>
-                        <p>Production</p>
+                        <p>Production <small class="d-block" style="font-size:9px;opacity:.65;font-family:inherit;">پیداوار</small></p>
                     </a>
                 </li>
 
@@ -49,72 +49,97 @@
                 <li class="nav-item has-treeview {{ $salesActive ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ $salesActive ? 'active' : '' }}">
                         <i class="nav-icon fas fa-dollar-sign"></i>
-                        <p>Sales <i class="fas fa-angle-left right"></i></p>
+                        <p>Sales <small class="d-block" style="font-size:9px;opacity:.65;font-family:inherit;">فروخت</small> <i class="fas fa-angle-left right"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.sales.index') }}"
                                class="nav-link {{ request()->routeIs('admin.sales.index') || request()->routeIs('admin.sales.create') || request()->routeIs('admin.sales.store') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>All Sales</p>
+                                <p>All Sales <small class="d-block" style="font-size:9px;opacity:.65;">تمام فروخت</small></p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.sales.by_shop') }}"
                                class="nav-link {{ request()->routeIs('admin.sales.by_shop') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>By Shop</p>
+                                <p>By Shop <small class="d-block" style="font-size:9px;opacity:.65;">دکان کے مطابق</small></p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.sales.report') }}"
                                class="nav-link {{ request()->routeIs('admin.sales.report*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Sales Report</p>
+                                <p>Sales Report <small class="d-block" style="font-size:9px;opacity:.65;">فروخت رپورٹ</small></p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                {{-- Shops + Cities sub-menu --}}
+                @php $shopsActive = request()->routeIs('admin.shops.*') || request()->routeIs('admin.cities.*') || request()->routeIs('admin.areas.*'); @endphp
+                <li class="nav-item has-treeview {{ $shopsActive ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ $shopsActive ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-shop"></i>
+                        <p>Shops <small class="d-block" style="font-size:9px;opacity:.65;font-family:inherit;">دکانیں</small> <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.shops.index') }}"
+                               class="nav-link {{ request()->routeIs('admin.shops.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>All Shops <small class="d-block" style="font-size:9px;opacity:.65;">تمام دکانیں</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.cities.index') }}"
+                               class="nav-link {{ request()->routeIs('admin.cities.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Cities <small class="d-block" style="font-size:9px;opacity:.65;">شہر</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.areas.index') }}"
+                               class="nav-link {{ request()->routeIs('admin.areas.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Areas <small class="d-block" style="font-size:9px;opacity:.65;">علاقے</small></p>
                             </a>
                         </li>
                     </ul>
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('admin.shops.index') }}" class="nav-link {{ request()->routeIs('admin.shops.*') ? 'active' : '' }}">
-                        <i class="nav-icon fas fa-shop"></i>
-                        <p>Shops</p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
                     <a href="{{ route('admin.vendors.index') }}" class="nav-link {{ request()->routeIs('admin.vendors.*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-boxes-packing"></i>
-                        <p>Vendors / Supplier</p>
+                        <p>Vendors / Supplier <small class="d-block" style="font-size:9px;opacity:.65;font-family:inherit;">فروش کار / سپلائر</small></p>
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('admin.employees.index') }}" class="nav-link {{ request()->routeIs('admin.employees.*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-users"></i>
-                        <p>Employees</p>
+                        <p>Employees <small class="d-block" style="font-size:9px;opacity:.65;font-family:inherit;">ملازمین</small></p>
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('admin.expenses.index') }}" class="nav-link {{ request()->routeIs('admin.expenses.*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-money-bill-wave"></i>
-                        <p>Expenses</p>
+                        <p>Expenses <small class="d-block" style="font-size:9px;opacity:.65;font-family:inherit;">اخراجات</small></p>
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('admin.assets.index') }}" class="nav-link {{ request()->routeIs('admin.assets.*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-box"></i>
-                        <p>Assets</p>
+                        <p>Assets <small class="d-block" style="font-size:9px;opacity:.65;font-family:inherit;">اثاثے</small></p>
                     </a>
                 </li>
 
                 <li class="nav-item">
                     <a href="{{ route('admin.types.index') }}" class="nav-link {{ request()->routeIs('admin.types.*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-bars"></i>
-                        <p>Salt Types</p>
+                        <p>Salt Types <small class="d-block" style="font-size:9px;opacity:.65;font-family:inherit;">نمک کی اقسام</small></p>
                     </a>
                 </li>
 

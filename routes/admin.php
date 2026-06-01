@@ -17,6 +17,16 @@ Route::middleware('web')->group(function () {
         Route::resource('sales', App\Http\Controllers\Admin\SaleController::class, ['as' => 'admin']);
         Route::post('sales/{sale}/quick-update', [App\Http\Controllers\Admin\SaleController::class, 'quickUpdate'])->name('admin.sales.quick_update');
         Route::resource('shops', App\Http\Controllers\Admin\ShopController::class, ['as' => 'admin']);
+        Route::resource('cities', App\Http\Controllers\Admin\CityController::class, ['as' => 'admin'])->except(['create', 'show']);
+        Route::get('cities/{city}/sales', [App\Http\Controllers\Admin\CityController::class, 'sales'])->name('admin.cities.sales');
+
+        // Areas
+        Route::get('areas', [App\Http\Controllers\Admin\AreaController::class, 'index'])->name('admin.areas.index');
+        Route::get('cities/{city}/areas', [App\Http\Controllers\Admin\AreaController::class, 'byCity'])->name('admin.areas.by_city');
+        Route::post('areas', [App\Http\Controllers\Admin\AreaController::class, 'store'])->name('admin.areas.store');
+        Route::get('areas/{area}/edit', [App\Http\Controllers\Admin\AreaController::class, 'edit'])->name('admin.areas.edit');
+        Route::put('areas/{area}', [App\Http\Controllers\Admin\AreaController::class, 'update'])->name('admin.areas.update');
+        Route::delete('areas/{area}', [App\Http\Controllers\Admin\AreaController::class, 'destroy'])->name('admin.areas.destroy');
 
         // Shop sales (new page for shop-wise sales list)
         Route::get('sales-by-shop', [App\Http\Controllers\Admin\ShopSalesController::class, 'index'])->name('admin.sales.by_shop');

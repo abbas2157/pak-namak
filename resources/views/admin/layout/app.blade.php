@@ -47,6 +47,11 @@
         .sidebar-dark-primary .nav-treeview > .nav-item > .nav-link.active,
         .sidebar-dark-primary .nav-treeview > .nav-item > .nav-link:hover {
             background: rgba(255,255,255,.1) !important;
+            color: #fff !important;
+        }
+        .sidebar-dark-primary .nav-treeview > .nav-item > .nav-link.active .nav-icon,
+        .sidebar-dark-primary .nav-treeview > .nav-item > .nav-link:hover .nav-icon {
+            color: #fff !important;
         }
         .brand-link { border-bottom-color: rgba(255,255,255,.1) !important; }
 

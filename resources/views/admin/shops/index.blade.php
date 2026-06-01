@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Shops</h1>
+                <h1 class="m-0">Shops <small class="text-muted" style="font-size:14px;">دکانیں</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">Shops</li>
@@ -14,7 +14,7 @@
             </div>
             <div class="col-sm-6 d-flex justify-content-end">
                 <button class="btn btn-primary px-4" style="border-radius:8px;" id="addBtn">
-                    <i class="fas fa-plus mr-1"></i> Add Shop
+                    <i class="fas fa-plus mr-1"></i> Add Shop / دکان شامل کریں
                 </button>
             </div>
         </div>
@@ -31,7 +31,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Shops</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Shops / کل دکانیں</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $totalShops }}</div>
                                 <small class="text-muted">{{ $activeShops }} active</small>
                             </div>
@@ -48,7 +48,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Revenue</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Revenue / کل آمدن</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalRevenue, 0) }}</div>
                                 <small class="text-muted">PKR all sales</small>
                             </div>
@@ -65,7 +65,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Pending</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Pending / کل باقی</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalPending, 0) }}</div>
                                 <small class="text-muted">PKR udhaar</small>
                             </div>
@@ -82,7 +82,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Inactive Shops</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Inactive Shops / غیر فعال دکانیں</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $totalShops - $activeShops }}</div>
                                 <small class="text-muted">not buying</small>
                             </div>
@@ -107,7 +107,7 @@
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
                 <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
-                    <i class="fas fa-store mr-2"></i>Shop Directory
+                    <i class="fas fa-store mr-2"></i>Shop Directory / دکانوں کی فہرست
                 </h6>
                 <span class="badge" style="background:#e8f0fe;color:#4e73df;font-size:12px;padding:5px 10px;border-radius:20px;">
                     {{ $totalShops }} shops
@@ -118,14 +118,14 @@
                     <table class="table mb-0" id="shopTable" style="font-size:13.5px;">
                         <thead>
                             <tr style="background:#f8f9fc;border-bottom:2px solid #e3e6f0;">
-                                <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shop</th>
-                                <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Contact</th>
-                                <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">City / Area</th>
-                                <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Sales</th>
-                                <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Total (PKR)</th>
-                                <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Pending (PKR)</th>
-                                <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Status</th>
-                                <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions</th>
+                                <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shop / دکان</th>
+                                <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Contact / رابطہ</th>
+                                <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">City / Area / شہر</th>
+                                <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Sales / فروخت</th>
+                                <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Total (PKR) / کل</th>
+                                <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Pending (PKR) / باقی</th>
+                                <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Status / حیثیت</th>
+                                <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions / اقدامات</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -149,13 +149,19 @@
                                         @endif
                                     </td>
                                     <td class="py-3 align-middle">
-                                        @if($shop->city)
+                                        @if($shop->cityRecord)
                                             <span class="d-block" style="color:#374151;">
-                                                <i class="fas fa-map-marker-alt mr-1 text-muted" style="font-size:11px;"></i>{{ $shop->city }}
+                                                <i class="fas fa-city mr-1 text-muted" style="font-size:11px;"></i>{{ $shop->cityRecord->name }}
+                                            </span>
+                                        @elseif($shop->city)
+                                            <span class="d-block" style="color:#374151;">
+                                                <i class="fas fa-city mr-1 text-muted" style="font-size:11px;"></i>{{ $shop->city }}
                                             </span>
                                         @endif
-                                        @if($shop->address)
-                                            <small class="text-muted">{{ Str::limit($shop->address, 30) }}</small>
+                                        @if($shop->area)
+                                            <small class="text-muted">
+                                                <i class="fas fa-map-marker-alt mr-1" style="font-size:10px;"></i>{{ $shop->area->name }}
+                                            </small>
                                         @endif
                                     </td>
                                     <td class="py-3 align-middle text-center">
@@ -222,7 +228,7 @@
                         @if($shops->count() > 0)
                         <tfoot>
                             <tr style="background:#f8f9fc;border-top:2px solid #e3e6f0;">
-                                <td class="pl-3 py-3 font-weight-bold" colspan="4" style="color:#2d3748;">Totals</td>
+                                <td class="pl-3 py-3 font-weight-bold" colspan="4" style="color:#2d3748;">Totals / کل</td>
                                 <td class="py-3 text-right font-weight-bold" style="color:#2d3748;font-size:15px;">
                                     {{ number_format($totalRevenue, 0) }}
                                 </td>
@@ -252,7 +258,7 @@
                 <div class="modal-header border-0 text-white px-4 py-3"
                      style="background:linear-gradient(135deg,#4e73df,#224abe);">
                     <h5 class="modal-title" id="modalTitle">
-                        <i class="fas fa-store mr-2"></i>Add Shop
+                        <i class="fas fa-store mr-2"></i>Add Shop / دکان شامل کریں
                     </h5>
                     <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;">
                         <span>&times;</span>
@@ -264,14 +270,14 @@
                         {{-- Shop Name + Owner --}}
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Shop Name <span class="text-danger">*</span>
+                                Shop Name / دکان کا نام <span class="text-danger">*</span>
                             </label>
                             <input type="text" name="name" id="sName" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;" placeholder="Shop / business name" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Owner Name
+                                Owner Name / مالک کا نام
                             </label>
                             <input type="text" name="owner_name" id="sOwner" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;" placeholder="Owner / contact person">
@@ -280,30 +286,52 @@
                         {{-- Phone + Email --}}
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Phone <span class="text-danger">*</span>
+                                Phone / فون <span class="text-danger">*</span>
                             </label>
                             <input type="text" name="phone_number" id="sPhone" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;" placeholder="03xx-xxxxxxx" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Email
+                                Email / ای میل
                             </label>
                             <input type="email" name="email" id="sEmail" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;" placeholder="shop@example.com">
                         </div>
 
-                        {{-- City + Status --}}
+                        {{-- City + Area --}}
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                City / Area
+                                City / شہر
                             </label>
-                            <input type="text" name="city" id="sCity" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;" placeholder="e.g. Lahore, Khewra">
+                            <div class="d-flex" style="gap:8px;">
+                                <select name="city_id" id="sCity" class="form-control"
+                                        style="border-radius:8px;border-color:#d1d5db;">
+                                    <option value="">— Select City —</option>
+                                    @foreach($cities as $c)
+                                        <option value="{{ $c->id }}" data-areas="{{ $c->areas->toJson() }}">{{ $c->name }}</option>
+                                    @endforeach
+                                </select>
+                                <a href="{{ route('admin.cities.index') }}" target="_blank"
+                                   class="btn btn-light flex-shrink-0"
+                                   style="border-radius:8px;border:1px solid #d1d5db;"
+                                   title="Manage Cities">
+                                    <i class="fas fa-city"></i>
+                                </a>
+                            </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Status <span class="text-danger">*</span>
+                                Area / علاقہ
+                            </label>
+                            <select name="area_id" id="sArea" class="form-control"
+                                    style="border-radius:8px;border-color:#d1d5db;">
+                                <option value="">— Select Area —</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                                Status / حیثیت <span class="text-danger">*</span>
                             </label>
                             <select name="status" id="sStatus" class="form-control"
                                     style="border-radius:8px;border-color:#d1d5db;" required>
@@ -315,7 +343,7 @@
                         {{-- Address --}}
                         <div class="col-12 mb-1">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Address <span class="text-danger">*</span>
+                                Address / پتہ <span class="text-danger">*</span>
                             </label>
                             <input type="text" name="address" id="sAddress" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;" placeholder="Full street address" required>
@@ -327,11 +355,11 @@
                     <button type="button" class="btn btn-light px-4"
                             data-dismiss="modal" data-bs-dismiss="modal"
                             style="border-radius:8px;border:1px solid #d1d5db;">
-                        Cancel
+                        Cancel / منسوخ
                     </button>
                     <button class="btn btn-primary px-4" type="submit" id="submitBtn"
                             style="border-radius:8px;background:linear-gradient(135deg,#4e73df,#224abe);border:none;">
-                        <i class="fas fa-save mr-1"></i> Save Shop
+                        <i class="fas fa-save mr-1"></i> Save Shop / محفوظ کریں
                     </button>
                 </div>
 
@@ -377,11 +405,35 @@ $(function () {
         }
     });
 
+    // Populate area dropdown when city changes
+    function populateAreas(areas, selectedAreaId) {
+        const sel = $('#sArea');
+        sel.html('<option value="">— Select Area —</option>');
+        if (areas && areas.length) {
+            areas.forEach(function (a) {
+                const opt = $('<option>').val(a.id).text(a.name);
+                if (selectedAreaId && a.id == selectedAreaId) opt.prop('selected', true);
+                sel.append(opt);
+            });
+            sel.closest('.col-md-6').show();
+        } else {
+            sel.closest('.col-md-6').hide();
+        }
+    }
+
+    $('#sCity').on('change', function () {
+        const selected = $(this).find(':selected');
+        const areas = selected.data('areas') || [];
+        populateAreas(areas, null);
+    });
+
     // Open add modal
     $('#addBtn, #addBtnEmpty').on('click', function () {
         $('#shopForm')[0].reset();
         $('#shop_id').val('');
         $('#sStatus').val('active');
+        $('#sArea').html('<option value="">— Select Area —</option>');
+        $('#sArea').closest('.col-md-6').hide();
         $('#modalTitle').html('<i class="fas fa-store mr-2"></i>Add Shop');
         $('#submitBtn').html('<i class="fas fa-save mr-1"></i> Save Shop');
         $('#shopModal').modal('show');
@@ -411,9 +463,11 @@ $(function () {
                         + (s.email ? `<small class="text-muted"><i class="fas fa-envelope mr-1" style="font-size:10px;"></i>${s.email}</small>` : '');
                     $('#row_' + id + ' td:nth-child(3)').html(contactCell);
 
-                    // Update city cell
-                    const cityCell = (s.city ? `<span class="d-block" style="color:#374151;"><i class="fas fa-map-marker-alt mr-1 text-muted" style="font-size:11px;"></i>${s.city}</span>` : '')
-                        + (s.address ? `<small class="text-muted">${s.address.substring(0, 30)}</small>` : '');
+                    // Update city/area cell
+                    const cityName = s.city_record ? s.city_record.name : (s.city || '');
+                    const areaName = s.area ? s.area.name : null;
+                    const cityCell = (cityName ? `<span class="d-block" style="color:#374151;"><i class="fas fa-city mr-1 text-muted" style="font-size:11px;"></i>${cityName}</span>` : '')
+                        + (areaName ? `<small class="text-muted"><i class="fas fa-map-marker-alt mr-1" style="font-size:10px;"></i>${areaName}</small>` : '');
                     $('#row_' + id + ' td:nth-child(4)').html(cityCell);
 
                     // Status badge
@@ -452,7 +506,11 @@ $(function () {
             $('#sOwner').val(s.owner_name);
             $('#sPhone').val(s.phone_number);
             $('#sEmail').val(s.email);
-            $('#sCity').val(s.city);
+            $('#sCity').val(s.city_id || '');
+            // populate areas for selected city then set area
+            const cityOption = $('#sCity').find(':selected');
+            const areas = cityOption.data('areas') || [];
+            populateAreas(areas, s.area_id);
             $('#sAddress').val(s.address);
             $('#sStatus').val(s.status || 'active');
             $('#modalTitle').html('<i class="fas fa-edit mr-2"></i>Edit Shop');
