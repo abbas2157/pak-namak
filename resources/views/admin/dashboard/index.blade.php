@@ -681,123 +681,6 @@
             </div>
         </div>
 
-        {{-- ── INACTIVE SHOPS (no sale in last 30 days) ──────── --}}
-        @if($inactiveShops->count() > 0)
-        <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
-            <div>
-                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:1px;color:#b0b7c3;">Attention Required / توجہ درکار</div>
-                <h5 class="mb-0 font-weight-bold" style="color:#2d3748;">
-                    Inactive Shops
-                    <small class="text-muted" style="font-size:13px;">— no sale in last 30 days</small>
-                </h5>
-            </div>
-            <a href="{{ route('admin.shops.index') }}"
-               class="btn btn-sm btn-outline-warning" style="border-radius:20px;font-size:12px;">
-                <i class="fas fa-store mr-1"></i> All Shops
-            </a>
-        </div>
-
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card border-0 shadow-sm" style="border-radius:10px;border-left:4px solid #f6c23e !important;">
-                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3"
-                         style="background:#fffbf0;border-radius:10px 10px 0 0;">
-                        <h6 class="mb-0 font-weight-bold" style="color:#856404;">
-                            <i class="fas fa-store-slash mr-2"></i>Active shops with no recent sale / فعال دکانیں جن میں حالیہ فروخت نہیں
-                        </h6>
-                        <span class="badge badge-warning" style="font-size:12px;padding:5px 12px;border-radius:20px;">
-                            {{ $inactiveShops->count() }} shops
-                        </span>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table mb-0" style="font-size:13px;">
-                                <thead>
-                                    <tr style="background:#f8f9fc;border-bottom:2px solid #e3e6f0;">
-                                        <th class="pl-3 py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">#</th>
-                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shop / دکان</th>
-                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Contact / رابطہ</th>
-                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">City / Area</th>
-                                        <th class="py-2 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Last Sale / آخری فروخت</th>
-                                        <th class="py-2 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Days Silent</th>
-                                        <th class="py-2 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($inactiveShops as $i => $shop)
-                                    @php
-                                        $lastSale   = $shop->sales_max_sale_date;
-                                        $daysSilent = $lastSale
-                                            ? \Carbon\Carbon::parse($lastSale)->diffInDays(now())
-                                            : null;
-                                        $urgency = $daysSilent === null ? 'danger'
-                                            : ($daysSilent >= 60 ? 'danger' : ($daysSilent >= 30 ? 'warning' : 'secondary'));
-                                        $urgencyColor = $urgency === 'danger' ? '#c62828' : ($urgency === 'warning' ? '#856404' : '#6c757d');
-                                        $urgencyBg    = $urgency === 'danger' ? '#fce8e6' : ($urgency === 'warning' ? '#fff3cd' : '#f3f4f6');
-                                    @endphp
-                                    <tr style="border-bottom:1px solid #f0f0f0;">
-                                        <td class="pl-3 py-2 align-middle text-muted" style="font-size:12px;">{{ $i + 1 }}</td>
-                                        <td class="py-2 align-middle">
-                                            <span class="font-weight-bold d-block" style="color:#2d3748;">{{ $shop->name }}</span>
-                                            @if($shop->owner_name)
-                                                <small class="text-muted"><i class="fas fa-user mr-1" style="font-size:9px;"></i>{{ $shop->owner_name }}</small>
-                                            @endif
-                                        </td>
-                                        <td class="py-2 align-middle">
-                                            <span style="color:#374151;">
-                                                <i class="fas fa-phone mr-1 text-muted" style="font-size:10px;"></i>{{ $shop->phone_number ?? '—' }}
-                                            </span>
-                                        </td>
-                                        <td class="py-2 align-middle">
-                                            @if($shop->cityRecord)
-                                                <span class="d-block" style="font-size:12px;color:#374151;">
-                                                    <i class="fas fa-city mr-1 text-muted" style="font-size:10px;"></i>{{ $shop->cityRecord->name }}
-                                                </span>
-                                            @endif
-                                            @if($shop->area)
-                                                <small class="text-muted">
-                                                    <i class="fas fa-map-marker-alt mr-1" style="font-size:9px;"></i>{{ $shop->area->name }}
-                                                </small>
-                                            @endif
-                                            @if(!$shop->cityRecord && !$shop->area)
-                                                <span class="text-muted">—</span>
-                                            @endif
-                                        </td>
-                                        <td class="py-2 align-middle text-center">
-                                            @if($lastSale)
-                                                <span style="color:#374151;">{{ \Carbon\Carbon::parse($lastSale)->format('d M Y') }}</span>
-                                            @else
-                                                <span class="badge" style="background:#fce8e6;color:#c62828;font-size:11px;padding:3px 8px;border-radius:20px;">Never</span>
-                                            @endif
-                                        </td>
-                                        <td class="py-2 align-middle text-center">
-                                            <span class="badge" style="background:{{ $urgencyBg }};color:{{ $urgencyColor }};font-size:12px;padding:4px 10px;border-radius:20px;font-weight:700;">
-                                                @if($daysSilent !== null)
-                                                    {{ $daysSilent }}d
-                                                @else
-                                                    —
-                                                @endif
-                                            </span>
-                                        </td>
-                                        <td class="py-2 align-middle text-center">
-                                            <a href="{{ route('admin.sales.by_shop', ['shop_id' => $shop->id]) }}"
-                                               class="btn btn-sm"
-                                               style="background:#e8f0fe;color:#4e73df;border:1px solid #c3d3f7;border-radius:6px;"
-                                               title="View Sales">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endif
-
         {{-- ── CITY & AREA SALES BREAKDOWN ────────────────────── --}}
         @if($citySales->count() > 0 || $areaSales->count() > 0)
         <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
@@ -963,6 +846,111 @@
                 </div>
             </div>
 
+        </div>
+        @endif
+
+        {{-- ── INACTIVE SHOPS (no sale in last 30 days) ──────── --}}
+        @if($inactiveShops->count() > 0)
+        <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+            <div>
+                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:1px;color:#b0b7c3;">Attention Required / توجہ درکار</div>
+                <h5 class="mb-0 font-weight-bold" style="color:#2d3748;">
+                    Inactive Shops
+                    <small class="text-muted" style="font-size:13px;">— no sale in last 30 days (top 15)</small>
+                </h5>
+            </div>
+            <a href="{{ route('admin.shops.index') }}"
+               class="btn btn-sm btn-outline-warning" style="border-radius:20px;font-size:12px;">
+                <i class="fas fa-store mr-1"></i> All Shops
+            </a>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm" style="border-radius:10px;border-left:4px solid #f6c23e !important;">
+                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3"
+                         style="background:#fffbf0;border-radius:10px 10px 0 0;">
+                        <h6 class="mb-0 font-weight-bold" style="color:#856404;">
+                            <i class="fas fa-store-slash mr-2"></i>Active shops with no recent sale / فعال دکانیں جن میں حالیہ فروخت نہیں
+                        </h6>
+                        <span class="badge badge-warning" style="font-size:12px;padding:5px 12px;border-radius:20px;">
+                            {{ $inactiveShops->count() }} shops
+                        </span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table mb-0" style="font-size:13px;">
+                                <thead>
+                                    <tr style="background:#f8f9fc;border-bottom:2px solid #e3e6f0;">
+                                        <th class="pl-3 py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">#</th>
+                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shop / دکان</th>
+                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Contact / رابطہ</th>
+                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">City / Area</th>
+                                        <th class="py-2 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Last Sale / آخری فروخت</th>
+                                        <th class="py-2 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Days Silent</th>
+                                        <th class="py-2 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($inactiveShops as $i => $shop)
+                                    @php
+                                        $lastSale   = $shop->sales_max_sale_date;
+                                        $daysSilent = $lastSale ? \Carbon\Carbon::parse($lastSale)->diffInDays(now()) : null;
+                                        $urgencyColor = ($daysSilent === null || $daysSilent >= 60) ? '#c62828' : ($daysSilent >= 30 ? '#856404' : '#6c757d');
+                                        $urgencyBg    = ($daysSilent === null || $daysSilent >= 60) ? '#fce8e6' : ($daysSilent >= 30 ? '#fff3cd' : '#f3f4f6');
+                                    @endphp
+                                    <tr style="border-bottom:1px solid #f0f0f0;">
+                                        <td class="pl-3 py-2 align-middle text-muted" style="font-size:12px;">{{ $i + 1 }}</td>
+                                        <td class="py-2 align-middle">
+                                            <span class="font-weight-bold d-block" style="color:#2d3748;">{{ $shop->name }}</span>
+                                            @if($shop->owner_name)
+                                                <small class="text-muted"><i class="fas fa-user mr-1" style="font-size:9px;"></i>{{ $shop->owner_name }}</small>
+                                            @endif
+                                        </td>
+                                        <td class="py-2 align-middle">
+                                            <i class="fas fa-phone mr-1 text-muted" style="font-size:10px;"></i>{{ $shop->phone_number ?? '—' }}
+                                        </td>
+                                        <td class="py-2 align-middle">
+                                            @if($shop->cityRecord)
+                                                <span class="d-block" style="font-size:12px;color:#374151;">
+                                                    <i class="fas fa-city mr-1 text-muted" style="font-size:10px;"></i>{{ $shop->cityRecord->name }}
+                                                </span>
+                                            @endif
+                                            @if($shop->area)
+                                                <small class="text-muted"><i class="fas fa-map-marker-alt mr-1" style="font-size:9px;"></i>{{ $shop->area->name }}</small>
+                                            @endif
+                                            @if(!$shop->cityRecord && !$shop->area)
+                                                <span class="text-muted">—</span>
+                                            @endif
+                                        </td>
+                                        <td class="py-2 align-middle text-center">
+                                            @if($lastSale)
+                                                {{ \Carbon\Carbon::parse($lastSale)->format('d M Y') }}
+                                            @else
+                                                <span class="badge" style="background:#fce8e6;color:#c62828;font-size:11px;padding:3px 8px;border-radius:20px;">Never</span>
+                                            @endif
+                                        </td>
+                                        <td class="py-2 align-middle text-center">
+                                            <span class="badge" style="background:{{ $urgencyBg }};color:{{ $urgencyColor }};font-size:12px;padding:4px 10px;border-radius:20px;font-weight:700;">
+                                                {{ $daysSilent !== null ? $daysSilent.'d' : '—' }}
+                                            </span>
+                                        </td>
+                                        <td class="py-2 align-middle text-center">
+                                            <a href="{{ route('admin.sales.by_shop', ['shop_id' => $shop->id]) }}"
+                                               class="btn btn-sm"
+                                               style="background:#e8f0fe;color:#4e73df;border:1px solid #c3d3f7;border-radius:6px;"
+                                               title="View Sales">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         @endif
 
