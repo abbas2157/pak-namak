@@ -681,6 +681,174 @@
             </div>
         </div>
 
+        {{-- ── CITY & AREA SALES BREAKDOWN ────────────────────── --}}
+        @if($citySales->count() > 0 || $areaSales->count() > 0)
+        <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+            <div>
+                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:1px;color:#b0b7c3;">Location Breakdown / علاقائی جائزہ</div>
+                <h5 class="mb-0 font-weight-bold" style="color:#2d3748;">
+                    Sales by City & Area
+                    <small class="text-muted" style="font-size:13px;">
+                        — {{ \Carbon\Carbon::createFromFormat('Y-m', $selectedMonth)->format('F Y') }}
+                    </small>
+                </h5>
+            </div>
+            <a href="{{ route('admin.cities.index') }}"
+               class="btn btn-sm btn-outline-primary" style="border-radius:20px;font-size:12px;">
+                <i class="fas fa-city mr-1"></i> Manage Cities
+            </a>
+        </div>
+
+        <div class="row mb-4">
+
+            {{-- CITY BREAKDOWN --}}
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3"
+                         style="background:#eaf3ee;border-radius:10px 10px 0 0;">
+                        <div>
+                            <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">By City / شہر کے مطابق</div>
+                            <h6 class="mb-0 font-weight-bold" style="color:#1a5c35;">
+                                <i class="fas fa-city mr-1"></i> City-wise Sales / شہر وار فروخت
+                            </h6>
+                        </div>
+                        <span class="badge" style="background:#d4edda;color:#155724;font-size:11px;padding:5px 10px;border-radius:20px;">
+                            {{ $citySales->count() }} {{ Str::plural('city', $citySales->count()) }}
+                        </span>
+                    </div>
+                    @if($citySales->count() > 0)
+                    @php $maxCity = $citySales->first()->total ?: 1; @endphp
+                    <div class="card-body p-0">
+                        @foreach($citySales as $i => $row)
+                        <div class="px-3 py-2 {{ !$loop->last ? 'border-bottom' : '' }}">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge mr-2"
+                                          style="font-size:11px;min-width:22px;border-radius:50%;padding:4px 7px;background:#1a5c35;color:#fff;">
+                                        {{ $i + 1 }}
+                                    </span>
+                                    <div>
+                                        <a href="{{ route('admin.cities.sales', $row->city_id) }}"
+                                           class="font-weight-bold d-block" style="font-size:13px;color:#1a5c35;text-decoration:none;">
+                                            {{ $row->city_name }}
+                                            <i class="fas fa-external-link-alt ml-1" style="font-size:9px;opacity:.5;"></i>
+                                        </a>
+                                        <div style="font-size:11px;color:#b0b7c3;">
+                                            {{ $row->count }} {{ Str::plural('invoice', $row->count) }}
+                                            &nbsp;·&nbsp;
+                                            <span style="color:#e65100;">PKR {{ number_format($row->pending, 0) }} pending</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-weight-bold" style="font-size:13px;color:#1a5c35;">
+                                        PKR {{ number_format($row->total, 0) }}
+                                    </div>
+                                    <div style="font-size:11px;color:#b0b7c3;">
+                                        {{ $maxCity > 0 ? round(($row->total / $citySales->sum('total')) * 100, 1) : 0 }}% of total
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="progress" style="height:5px;border-radius:4px;">
+                                <div class="progress-bar"
+                                     style="width:{{ $maxCity > 0 ? ($row->total / $maxCity) * 100 : 0 }}%;border-radius:4px;background:#1a5c35;"></div>
+                            </div>
+                        </div>
+                        @endforeach
+
+                        {{-- Grand total row --}}
+                        <div class="px-3 py-2" style="background:#f8f9fc;border-top:2px solid #e3e6f0;border-radius:0 0 10px 10px;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="font-weight-bold text-muted" style="font-size:12px;">TOTAL / کل</span>
+                                <span class="font-weight-bold" style="font-size:14px;color:#1a5c35;">
+                                    PKR {{ number_format($citySales->sum('total'), 0) }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    @else
+                    <div class="card-body text-center py-5 text-muted">
+                        <i class="fas fa-city fa-2x mb-2 d-block" style="opacity:.3;"></i>
+                        No city-linked sales this month
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            {{-- AREA BREAKDOWN --}}
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3"
+                         style="background:#e8f0fe;border-radius:10px 10px 0 0;">
+                        <div>
+                            <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">By Area / علاقے کے مطابق</div>
+                            <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
+                                <i class="fas fa-map-marker-alt mr-1"></i> Top Areas / بہترین علاقے
+                            </h6>
+                        </div>
+                        <span class="badge" style="background:#c3d3f7;color:#224abe;font-size:11px;padding:5px 10px;border-radius:20px;">
+                            Top {{ $areaSales->count() }}
+                        </span>
+                    </div>
+                    @if($areaSales->count() > 0)
+                    @php $maxArea = $areaSales->first()->total ?: 1; @endphp
+                    <div class="card-body p-0">
+                        @foreach($areaSales as $i => $row)
+                        <div class="px-3 py-2 {{ !$loop->last ? 'border-bottom' : '' }}">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge mr-2"
+                                          style="font-size:11px;min-width:22px;border-radius:50%;padding:4px 7px;background:#4e73df;color:#fff;">
+                                        {{ $i + 1 }}
+                                    </span>
+                                    <div>
+                                        <div class="font-weight-bold" style="font-size:13px;color:#2d3748;">{{ $row->area_name }}</div>
+                                        <div style="font-size:11px;color:#b0b7c3;">
+                                            <i class="fas fa-city mr-1" style="font-size:9px;"></i>{{ $row->city_name }}
+                                            &nbsp;·&nbsp;{{ $row->count }} {{ Str::plural('invoice', $row->count) }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-weight-bold" style="font-size:13px;color:#4e73df;">
+                                        PKR {{ number_format($row->total, 0) }}
+                                    </div>
+                                    @if($row->pending > 0)
+                                    <div style="font-size:11px;color:#e65100;">
+                                        {{ number_format($row->pending, 0) }} pending
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="progress" style="height:5px;border-radius:4px;">
+                                <div class="progress-bar"
+                                     style="width:{{ $maxArea > 0 ? ($row->total / $maxArea) * 100 : 0 }}%;border-radius:4px;background:#4e73df;"></div>
+                            </div>
+                        </div>
+                        @endforeach
+
+                        {{-- Grand total row --}}
+                        <div class="px-3 py-2" style="background:#f8f9fc;border-top:2px solid #e3e6f0;border-radius:0 0 10px 10px;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="font-weight-bold text-muted" style="font-size:12px;">TOTAL / کل</span>
+                                <span class="font-weight-bold" style="font-size:14px;color:#4e73df;">
+                                    PKR {{ number_format($areaSales->sum('total'), 0) }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    @else
+                    <div class="card-body text-center py-5 text-muted">
+                        <i class="fas fa-map-marker-alt fa-2x mb-2 d-block" style="opacity:.3;"></i>
+                        No area-linked sales this month
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+        </div>
+        @endif
+
     </div>
 </section>
 @endsection

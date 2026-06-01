@@ -5,7 +5,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Models\{Sale, Purchase, Shop, Expense, SaleDalla, SaleThaila, SalePackage, EmployeeSalary, Vendor, Employee, Order};
+use App\Models\{Sale, Purchase, Shop, Expense, SaleDalla, SaleThaila, SalePackage, EmployeeSalary, Vendor, Employee, Order, City};
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -140,6 +140,44 @@ class DashboardController extends Controller
 
 
 
+        /* -------------------------
+        * CITY & AREA SALES BREAKDOWN
+        * ------------------------ */
+        $citySales = Sale::query()
+            ->join('shops', 'shops.id', '=', 'sales.shop_id')
+            ->join('cities', 'cities.id', '=', 'shops.city_id')
+            ->whereBetween('sales.sale_date', [$monthStart, $monthEnd])
+            ->select(
+                'cities.id as city_id',
+                'cities.name as city_name',
+                DB::raw('SUM(sales.total_amount) as total'),
+                DB::raw('SUM(sales.pending_amount) as pending'),
+                DB::raw('SUM(sales.received_amount) as received'),
+                DB::raw('COUNT(sales.id) as count')
+            )
+            ->groupBy('cities.id', 'cities.name')
+            ->orderByDesc('total')
+            ->get();
+
+        $areaSales = Sale::query()
+            ->join('shops', 'shops.id', '=', 'sales.shop_id')
+            ->join('areas', 'areas.id', '=', 'shops.area_id')
+            ->join('cities', 'cities.id', '=', 'areas.city_id')
+            ->whereBetween('sales.sale_date', [$monthStart, $monthEnd])
+            ->select(
+                'areas.id as area_id',
+                'areas.name as area_name',
+                'cities.name as city_name',
+                DB::raw('SUM(sales.total_amount) as total'),
+                DB::raw('SUM(sales.pending_amount) as pending'),
+                DB::raw('SUM(sales.received_amount) as received'),
+                DB::raw('COUNT(sales.id) as count')
+            )
+            ->groupBy('areas.id', 'areas.name', 'cities.name')
+            ->orderByDesc('total')
+            ->limit(10)
+            ->get();
+
         // Determine which namak type sells more: dalla vs thailas vs packages
         $topDalla = SaleDalla::query()
             ->whereHas('sale', function ($q) use ($monthStart, $monthEnd) {
@@ -211,7 +249,9 @@ class DashboardController extends Controller
             'pendingOrdersCount',
             'confirmedOrdersCount',
             'totalOrdersCount',
-            'recentPendingOrders'
+            'recentPendingOrders',
+            'citySales',
+            'areaSales'
         ));
     }
 }
