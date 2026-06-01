@@ -83,8 +83,8 @@
         <div class="orders-header">
             <div class="d-flex align-items-start justify-content-between flex-wrap mb-4">
                 <div>
-                    <h4 class="mb-1 font-weight-bold"><i class="fas fa-inbox mr-2" style="opacity:.8;"></i>Orders</h4>
-                    <div style="font-size:12px;opacity:.6;">Manage and process incoming customer orders</div>
+                    <h4 class="mb-1 font-weight-bold"><i class="fas fa-inbox mr-2" style="opacity:.8;"></i>Orders / آرڈرز</h4>
+                    <div style="font-size:12px;opacity:.6;">Manage and process incoming customer orders / آنے والے آرڈرز</div>
                 </div>
                 <div class="d-flex align-items-center gap-2 mt-2 mt-sm-0">
                     @if($counts['today'] > 0)
@@ -101,9 +101,9 @@
             <div class="row g-2">
                 @foreach([
                     ['all',       'All Orders',  $counts['all'],       '#fff',    'fa-layer-group'],
-                    ['pending',   'Pending',      $counts['pending'],   '#f6c23e', 'fa-clock'],
-                    ['confirmed', 'Confirmed',    $counts['confirmed'], '#1cc88a', 'fa-check-circle'],
-                    ['rejected',  'Rejected',     $counts['rejected'],  '#e74a3b', 'fa-times-circle'],
+                    ['pending',   'Pending',     $counts['pending'],   '#f6c23e', 'fa-clock'],
+                    ['confirmed', 'Confirmed',   $counts['confirmed'], '#1cc88a', 'fa-check-circle'],
+                    ['rejected',  'Rejected',    $counts['rejected'],  '#e74a3b', 'fa-times-circle'],
                 ] as [$s, $lbl, $cnt, $color, $icon])
                 <div class="col-6 col-md-3 mb-2">
                     <a href="{{ request()->fullUrlWithQuery(['status' => $s, 'page' => 1]) }}"
@@ -124,7 +124,7 @@
                 <input type="hidden" name="status" value="{{ $status }}">
                 <div class="row g-2 align-items-end">
                     <div class="col-md-4 col-sm-6">
-                        <label class="d-block" style="font-size:11px;font-weight:700;color:#6c757d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Search</label>
+                        <label class="d-block" style="font-size:11px;font-weight:700;color:#6c757d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Search / تلاش</label>
                         <div class="input-group input-group-sm">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" style="background:#f2f5f3;border-color:#dee2e6;">
@@ -137,17 +137,17 @@
                         </div>
                     </div>
                     <div class="col-md-2 col-sm-6">
-                        <label class="d-block" style="font-size:11px;font-weight:700;color:#6c757d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">From</label>
+                        <label class="d-block" style="font-size:11px;font-weight:700;color:#6c757d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">From / سے</label>
                         <input type="date" name="date_from" value="{{ $dateFrom }}"
                                class="form-control form-control-sm" style="border-radius:8px;font-size:13px;">
                     </div>
                     <div class="col-md-2 col-sm-6">
-                        <label class="d-block" style="font-size:11px;font-weight:700;color:#6c757d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">To</label>
+                        <label class="d-block" style="font-size:11px;font-weight:700;color:#6c757d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">To / تک</label>
                         <input type="date" name="date_to" value="{{ $dateTo }}"
                                class="form-control form-control-sm" style="border-radius:8px;font-size:13px;">
                     </div>
                     <div class="col-md-2 col-sm-6">
-                        <label class="d-block" style="font-size:11px;font-weight:700;color:#6c757d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Per page</label>
+                        <label class="d-block" style="font-size:11px;font-weight:700;color:#6c757d;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Per page / فی صفحہ</label>
                         <select name="per_page" class="per-page-select form-control form-control-sm" onchange="this.form.submit()" style="border-radius:8px;">
                             @foreach([20, 50, 100] as $n)
                                 <option value="{{ $n }}" {{ $perPage == $n ? 'selected' : '' }}>{{ $n }} rows</option>
@@ -203,12 +203,12 @@
                 <table class="table orders-table mb-0">
                     <thead>
                         <tr>
-                            <th>Reference</th>
-                            <th>Shop / Customer</th>
-                            <th>Items Ordered</th>
-                            <th>Date</th>
-                            <th class="text-center">Status</th>
-                            <th class="text-center">Actions</th>
+                            <th>Reference / حوالہ</th>
+                            <th>Shop / Customer / دکان</th>
+                            <th>Items Ordered / آرڈر کردہ اشیاء</th>
+                            <th>Date / تاریخ</th>
+                            <th class="text-center">Status / حیثیت</th>
+                            <th class="text-center">Actions / اقدامات</th>
                         </tr>
                     </thead>
                     <tbody>

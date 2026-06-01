@@ -216,8 +216,8 @@
 
         <div class="login-card">
 
-            <div class="card-title">Welcome back</div>
-            <div class="card-hint">Sign in to access the admin panel</div>
+            <div class="card-title">Welcome back <small style="font-size:13px;font-weight:400;opacity:.7;">/ خوش آمدید</small></div>
+            <div class="card-hint">Sign in to access the admin panel / ایڈمن پینل تک رسائی کے لیے لاگ ان کریں</div>
 
             @if(Session::has('success'))
                 <div class="alert alert-success">
@@ -239,7 +239,7 @@
                 @csrf
 
                 <div class="field-group">
-                    <label class="field-label">Email Address</label>
+                    <label class="field-label">Email Address / ای میل پتہ</label>
                     <div class="input-wrap">
                         <i class="fas fa-envelope"></i>
                         <input type="email" name="email" value="{{ old('email') }}"
@@ -248,7 +248,7 @@
                 </div>
 
                 <div class="field-group">
-                    <label class="field-label">Password</label>
+                    <label class="field-label">Password / پاس ورڈ</label>
                     <div class="input-wrap">
                         <i class="fas fa-lock"></i>
                         <input type="password" name="password" placeholder="••••••••" required>
@@ -256,7 +256,7 @@
                 </div>
 
                 <button type="submit" class="btn-signin">
-                    <i class="fas fa-sign-in-alt" style="margin-right:8px;"></i> Sign In
+                    <i class="fas fa-sign-in-alt" style="margin-right:8px;"></i> Sign In / لاگ ان
                 </button>
             </form>
 

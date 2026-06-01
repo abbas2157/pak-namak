@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <div class="row mb-2 align-items-center">
                 <div class="col-sm-6">
-                    <h1>Types List</h1>
+                    <h1>Types List <small class="text-muted" style="font-size:14px;">اقسام کی فہرست</small></h1>
                 </div>
                 <div class="row mb-2 align-items-center">
                     <div class="col-sm-6">
@@ -17,7 +17,7 @@
                     </div>
                     <div class="col-sm-6 d-flex justify-content-end">
                         <button class="btn btn-primary mb-3 float-right mt-3 px-3 mr-3 rounded-pill" id="addBtn">
-                            <i class="fas fa-plus"></i> Add Type
+                            <i class="fas fa-plus"></i> Add Type / قسم شامل کریں
                         </button>
                     </div>
                 </div>
@@ -30,9 +30,9 @@
             <table class="table table-bordered table-striped" id="typesTable">
                 <thead class="thead-dark">
                     <tr>
-                        <th>Type</th>
-                        <th>Created At</th>
-                        <th>Action</th>
+                        <th>Type / قسم</th>
+                        <th>Created At / تاریخ</th>
+                        <th>Action / اقدام</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,18 +63,18 @@
             <input type="hidden" name="id" id="id">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add/Edit Type</h5>
+                    <h5 class="modal-title">Add/Edit Type / قسم شامل/ترمیم</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Title</label>
+                        <label>Title / عنوان</label>
                         <input type="text" name="title" id="title" class="form-control" required placeholder="Enter Type Title">
                         <span class="text-danger" id="titleError"></span>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-success" type="submit">Save</button>
+                    <button class="btn btn-success" type="submit">Save / محفوظ کریں</button>
                 </div>
             </div>
 

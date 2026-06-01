@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Sales by Shop</h1>
+                <h1 class="m-0">Sales by Shop <small class="text-muted" style="font-size:14px;">دکان کی فروخت</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('admin.shops.index') }}">Shops</a></li>
@@ -17,12 +17,12 @@
                 @if($shop)
                     <a href="{{ route('admin.sales.create') }}"
                        class="btn btn-success px-3" style="border-radius:8px;">
-                        <i class="fas fa-plus mr-1"></i> New Sale
+                        <i class="fas fa-plus mr-1"></i> New Sale / نئی فروخت
                     </a>
                 @endif
                 <a href="{{ route('admin.shops.index') }}"
                    class="btn btn-light px-3" style="border-radius:8px;border:1px solid #d1d5db;">
-                    <i class="fas fa-arrow-left mr-1"></i> All Shops
+                    <i class="fas fa-arrow-left mr-1"></i> All Shops / تمام دکانیں
                 </a>
             </div>
         </div>
@@ -37,7 +37,7 @@
             <div class="card-body py-3">
                 <form method="GET" class="d-flex align-items-center flex-wrap" style="gap:12px;">
                     <label class="text-uppercase font-weight-bold text-muted mb-0" style="font-size:11px;letter-spacing:.5px;white-space:nowrap;">
-                        <i class="fas fa-store mr-1"></i> Select Shop
+                        <i class="fas fa-store mr-1"></i> Select Shop / دکان منتخب کریں
                     </label>
                     <select name="shop_id" class="form-control" style="max-width:280px;border-radius:8px;border-color:#d1d5db;"
                             onchange="this.form.submit()">
@@ -137,7 +137,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Sales</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Sales / کل فروخت</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $sales->count() }}</div>
                                 <small class="text-muted">transactions</small>
                             </div>
@@ -154,7 +154,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Revenue</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Revenue / کل آمدن</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalRevenue, 0) }}</div>
                                 <small class="text-muted">PKR</small>
                             </div>
@@ -171,7 +171,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Received</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Received / وصول شدہ</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalReceived, 0) }}</div>
                                 <small class="text-muted">PKR paid</small>
                             </div>
@@ -188,7 +188,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Pending / Udhaar</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Pending / Udhaar / باقی اُدھار</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalPending, 0) }}</div>
                                 <small class="text-muted">PKR outstanding</small>
                             </div>
@@ -211,7 +211,7 @@
                     <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
                         <div>
                             <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
-                                <i class="fas fa-table mr-2"></i>Sale Transactions
+                                <i class="fas fa-table mr-2"></i>Sale Transactions / فروخت کی فہرست
                             </h6>
                             @if($selectedMonth)
                                 <small class="text-muted">
@@ -230,12 +230,12 @@
                             <table class="table mb-0" id="shopSalesTable" style="font-size:13.5px;">
                                 <thead>
                                     <tr style="background:#f8f9fc;border-bottom:2px solid #e3e6f0;">
-                                        <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Date</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Types</th>
-                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Total</th>
-                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Received</th>
-                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Pending</th>
-                                        <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions</th>
+                                        <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Date / تاریخ</th>
+                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Types / اقسام</th>
+                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Total / کل</th>
+                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Received / وصول</th>
+                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Pending / باقی</th>
+                                        <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions / اقدامات</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -316,7 +316,7 @@
                                 @if($sales->count() > 0)
                                 <tfoot>
                                     <tr style="background:#f8f9fc;border-top:2px solid #e3e6f0;">
-                                        <td class="pl-3 py-3 font-weight-bold" colspan="2" style="color:#2d3748;">Totals</td>
+                                        <td class="pl-3 py-3 font-weight-bold" colspan="2" style="color:#2d3748;">Totals / کل</td>
                                         <td class="py-3 text-right font-weight-bold" style="color:#2d3748;font-size:15px;">
                                             {{ number_format($totalRevenue, 0) }}
                                         </td>
@@ -343,7 +343,7 @@
                 <div class="card border-0 shadow-sm mb-3">
                     <div class="card-header bg-white border-bottom py-3">
                         <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
-                            <i class="fas fa-calendar-alt mr-2"></i>Filter by Month
+                            <i class="fas fa-calendar-alt mr-2"></i>Filter by Month / مہینے کے مطابق فلٹر
                         </h6>
                     </div>
                     <div class="card-body py-3">
@@ -378,7 +378,7 @@
                 <div class="card border-0 shadow-sm mb-3">
                     <div class="card-header bg-white border-bottom py-3">
                         <h6 class="mb-0 font-weight-bold" style="color:#e74a3b;">
-                            <i class="fas fa-chart-pie mr-2"></i>Product Breakdown
+                            <i class="fas fa-chart-pie mr-2"></i>Product Breakdown / مصنوعات کی تفصیل
                         </h6>
                     </div>
                     <div class="card-body py-3 px-3">
@@ -410,7 +410,7 @@
                         @endforeach
                         <div class="d-flex justify-content-between align-items-center pt-2 mt-1"
                              style="border-top:2px solid #f0f0f0;">
-                            <span class="font-weight-bold" style="color:#374151;">Grand Total</span>
+                            <span class="font-weight-bold" style="color:#374151;">Grand Total / کل مجموعہ</span>
                             <span class="font-weight-bold" style="color:#e74a3b;font-size:15px;">
                                 PKR {{ number_format($grandBreak, 0) }}
                             </span>
@@ -424,7 +424,7 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white border-bottom py-3">
                         <h6 class="mb-0 font-weight-bold" style="color:#1cc88a;">
-                            <i class="fas fa-wallet mr-2"></i>Payment Summary
+                            <i class="fas fa-wallet mr-2"></i>Payment Summary / ادائیگی کا خلاصہ
                         </h6>
                     </div>
                     <div class="card-body py-3 px-3">
@@ -434,7 +434,7 @@
                         @endphp
                         <div class="mb-3">
                             <div class="d-flex justify-content-between mb-1">
-                                <span style="font-size:13px;color:#374151;"><strong>Received</strong></span>
+                                <span style="font-size:13px;color:#374151;"><strong>Received / وصول شدہ</strong></span>
                                 <span style="font-size:12px;color:#1cc88a;font-weight:600;">{{ number_format($totalReceived, 0) }} <small class="text-muted">({{ $recPct }}%)</small></span>
                             </div>
                             <div class="progress" style="height:7px;border-radius:10px;background:#f0f0f0;">
@@ -443,7 +443,7 @@
                         </div>
                         <div class="mb-1">
                             <div class="d-flex justify-content-between mb-1">
-                                <span style="font-size:13px;color:#374151;"><strong>Pending</strong></span>
+                                <span style="font-size:13px;color:#374151;"><strong>Pending / باقی</strong></span>
                                 <span style="font-size:12px;color:#e74a3b;font-weight:600;">{{ number_format($totalPending, 0) }} <small class="text-muted">({{ $penPct }}%)</small></span>
                             </div>
                             <div class="progress" style="height:7px;border-radius:10px;background:#f0f0f0;">
@@ -468,7 +468,7 @@
         <div class="modal-content border-0" style="border-radius:12px;overflow:hidden;">
             <div class="modal-header border-0 text-white px-4 py-3"
                  style="background:linear-gradient(135deg,#4e73df,#224abe);">
-                <h5 class="modal-title"><i class="fas fa-file-invoice mr-2"></i>Sale Details</h5>
+                <h5 class="modal-title"><i class="fas fa-file-invoice mr-2"></i>Sale Details / فروخت کی تفصیل</h5>
                 <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;">
                     <span>&times;</span>
                 </button>

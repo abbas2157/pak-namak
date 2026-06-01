@@ -64,7 +64,7 @@
 <body>
 
 <div class="no-print" style="text-align:right; margin-bottom:10px;">
-    <button onclick="window.print()" style="padding:8px 12px; cursor:pointer;">Print</button>
+    <button onclick="window.print()" style="padding:8px 12px; cursor:pointer;">Print / پرنٹ</button>
 </div>
 
 <div class="receipt-wrap">
@@ -75,10 +75,10 @@
         <div style="flex:1;">
             <p class="receipt-title">Sales Receipt / Bill</p>
             <div class="receipt-meta">
-                <div><strong>Shop Name:</strong> {{ $shop?->name ?? '-' }}</div>
-                <div><strong>Shop Phone:</strong> {{ $shop?->phone_number ?? $shop?->phone ?? '-' }}</div>
-                <div><strong>Date:</strong> {{ $sale->sale_date ?? '-' }}</div>
-                <div><strong>Receipt No:</strong> #{{ $sale->id }}</div>
+                <div><strong>Shop Name / دکان کا نام:</strong> {{ $shop?->name ?? '-' }}</div>
+                <div><strong>Shop Phone / فون:</strong> {{ $shop?->phone_number ?? $shop?->phone ?? '-' }}</div>
+                <div><strong>Date / تاریخ:</strong> {{ $sale->sale_date ?? '-' }}</div>
+                <div><strong>Receipt No / رسید نمبر:</strong> #{{ $sale->id }}</div>
             </div>
         </div>
     </div>
@@ -131,25 +131,25 @@
                     <td class="text-right">Rs. {{ number_format((float)$line['amount'], 2) }}</td>
                 </tr>
             @empty
-                <tr><td colspan="3" class="text-right">No items</td></tr>
+                <tr><td colspan="3" class="text-right">No items / کوئی آئٹم نہیں</td></tr>
             @endforelse
         </tbody>
     </table>
 
     <div class="receipt-total">
         <div>
-            <strong>Shop Address:</strong>
+            <strong>Shop Address / پتہ:</strong>
             <div>{{ $shop?->address ?? '-' }}</div>
         </div>
             <div style="text-align:right;">
-                <strong>Total Price:</strong>
+                <strong>Total Price / کل قیمت:</strong>
                 <div class="grand">Rs. {{ number_format((float)($sale->total_amount ?? 0), 2) }}</div>
             </div>
         </div>
 
         @if(!empty($sale->bill_image))
             <div style="margin-top:12px;">
-                <div style="font-weight:700; font-size:13px; margin-bottom:6px;">Bill Image</div>
+                <div style="font-weight:700; font-size:13px; margin-bottom:6px;">Bill Image / بل تصویر</div>
                 <img src="{{ asset($sale->bill_image) }}" alt="Bill" style="max-width:100%; border:1px solid #e9ecef; border-radius:8px;" />
             </div>
         @endif
@@ -166,8 +166,8 @@
         <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
             <div>
                 <strong>{{ $appName }}</strong>
-                <div>Phone: {{ $pakPhone ?: '-' }}</div>
-                <div>Website: {{ $pakWebsite ?: '-' }}</div>
+                <div>Phone / فون: {{ $pakPhone ?: '-' }}</div>
+                <div>Website / ویب سائٹ: {{ $pakWebsite ?: '-' }}</div>
             </div>
         </div>
     </div>

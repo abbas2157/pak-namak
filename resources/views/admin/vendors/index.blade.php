@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Vendors / Suppliers</h1>
+                <h1 class="m-0">Vendors / Suppliers <small class="text-muted" style="font-size:14px;">فروش کار / سپلائر</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">Vendors</li>
@@ -14,7 +14,7 @@
             </div>
             <div class="col-sm-6 d-flex justify-content-end">
                 <button class="btn btn-primary px-4" style="border-radius:8px;" id="addBtn">
-                    <i class="fas fa-plus mr-1"></i> Add Vendor
+                    <i class="fas fa-plus mr-1"></i> Add Vendor / فروش کار شامل کریں
                 </button>
             </div>
         </div>
@@ -31,7 +31,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Vendors</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Vendors / کل فروش کار</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $totalVendors }}</div>
                                 <small class="text-muted">registered suppliers</small>
                             </div>
@@ -48,7 +48,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Purchased</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Purchased / کل خریداری</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalSpent, 0) }}</div>
                                 <small class="text-muted">PKR all time</small>
                             </div>
@@ -65,7 +65,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Top Supplier</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Top Supplier / سب سے بڑا سپلائر</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark" style="font-size:15px !important;">
                                     {{ $topVendor?->name ?? '—' }}
                                 </div>
@@ -85,19 +85,19 @@
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-white border-bottom py-3">
                 <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
-                    <i class="fas fa-list mr-2"></i>Suppliers List
+                    <i class="fas fa-list mr-2"></i>Suppliers List / سپلائروں کی فہرست
                 </h6>
             </div>
             <div class="card-body p-0">
                 <table class="table table-bordered table-striped mb-0" id="vendorsTable">
                     <thead class="thead-dark">
                         <tr>
-                            <th>Name</th>
-                            <th>Shop / Business</th>
-                            <th>Phone</th>
-                            <th>Address</th>
-                            <th class="text-center">Purchases</th>
-                            <th class="text-center">Actions</th>
+                            <th>Name / نام</th>
+                            <th>Shop / Business / دکان</th>
+                            <th>Phone / فون</th>
+                            <th>Address / پتہ</th>
+                            <th class="text-center">Purchases / خریداری</th>
+                            <th class="text-center">Actions / اقدامات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -155,7 +155,7 @@
                 <div class="modal-header border-0 text-white px-4 py-3"
                      style="background:linear-gradient(135deg,#4e73df,#224abe);">
                     <h5 class="modal-title" id="modalTitle">
-                        <i class="fas fa-truck mr-2"></i>Add Vendor
+                        <i class="fas fa-truck mr-2"></i>Add Vendor / فروش کار شامل کریں
                     </h5>
                     <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;">
                         <span>&times;</span>
@@ -166,28 +166,28 @@
                     <div class="row">
                         <div class="col-12 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Name <span class="text-danger">*</span>
+                                Name / نام <span class="text-danger">*</span>
                             </label>
                             <input type="text" id="vName" name="name" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;" placeholder="Supplier full name" required>
                         </div>
                         <div class="col-12 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Shop / Business
+                                Shop / Business / دکان
                             </label>
                             <input type="text" id="vShop" name="shop" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;" placeholder="Business or shop name">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Phone
+                                Phone / فون
                             </label>
                             <input type="text" id="vPhone" name="phone" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;" placeholder="03xx-xxxxxxx">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Address
+                                Address / پتہ
                             </label>
                             <input type="text" id="vAddress" name="address" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;" placeholder="City / area">
@@ -199,11 +199,11 @@
                     <button type="button" class="btn btn-light px-4"
                             data-dismiss="modal" data-bs-dismiss="modal"
                             style="border-radius:8px;border:1px solid #d1d5db;">
-                        Cancel
+                        Cancel / منسوخ
                     </button>
                     <button class="btn btn-primary px-4" type="submit" id="submitBtn"
                             style="border-radius:8px;background:linear-gradient(135deg,#4e73df,#224abe);border:none;">
-                        <i class="fas fa-save mr-1"></i> Save Vendor
+                        <i class="fas fa-save mr-1"></i> Save Vendor / محفوظ کریں
                     </button>
                 </div>
 

@@ -15,10 +15,10 @@
             </div>
             <div class="col-sm-6 d-flex justify-content-end gap-2">
                 <button class="btn btn-warning rounded-pill px-3 mr-2" id="editEmpBtn">
-                    <i class="fas fa-edit mr-1"></i> Edit
+                    <i class="fas fa-edit mr-1"></i> Edit / ترمیم
                 </button>
                 <a href="{{ route('admin.employees.index') }}" class="btn btn-secondary rounded-pill px-3">
-                    <i class="fas fa-arrow-left mr-1"></i> Back
+                    <i class="fas fa-arrow-left mr-1"></i> Back / واپس
                 </a>
             </div>
         </div>
@@ -69,12 +69,12 @@
                             </li>
                             <li class="list-group-item">
                                 <i class="fas fa-calendar-plus mr-2 text-success"></i>
-                                Joined: <strong>{{ $employee->joining_date ? $employee->joining_date->format('d M Y') : '-' }}</strong>
+                                Joined / شمولیت: <strong>{{ $employee->joining_date ? $employee->joining_date->format('d M Y') : '-' }}</strong>
                             </li>
                             @if($employee->leave_date)
                             <li class="list-group-item">
                                 <i class="fas fa-calendar-minus mr-2 text-danger"></i>
-                                Left: <strong>{{ $employee->leave_date->format('d M Y') }}</strong>
+                                Left / رخصت: <strong>{{ $employee->leave_date->format('d M Y') }}</strong>
                             </li>
                             @endif
                         </ul>
@@ -91,7 +91,7 @@
                         <div class="info-box bg-success">
                             <span class="info-box-icon"><i class="fas fa-money-bill-wave"></i></span>
                             <div class="info-box-content">
-                                <span class="info-box-text">Monthly Salary</span>
+                                <span class="info-box-text">Monthly Salary / ماہانہ تنخواہ</span>
                                 <span class="info-box-number">{{ number_format($employee->salary, 0) }}</span>
                             </div>
                         </div>
@@ -100,7 +100,7 @@
                         <div class="info-box bg-info">
                             <span class="info-box-icon"><i class="fas fa-coins"></i></span>
                             <div class="info-box-content">
-                                <span class="info-box-text">Total Paid</span>
+                                <span class="info-box-text">Total Paid / کل ادا شدہ</span>
                                 <span class="info-box-number">{{ number_format($totalPaid, 0) }}</span>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                         <div class="info-box bg-warning">
                             <span class="info-box-icon"><i class="fas fa-calendar-check"></i></span>
                             <div class="info-box-content">
-                                <span class="info-box-text">Months Paid</span>
+                                <span class="info-box-text">Months Paid / ادا شدہ مہینے</span>
                                 <span class="info-box-number">{{ $employee->salaries->count() }}</span>
                             </div>
                         </div>
@@ -119,9 +119,9 @@
                 {{-- Salary History Table --}}
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="card-title mb-0">Salary History</h4>
+                        <h4 class="card-title mb-0">Salary History / تنخواہ کی تاریخ</h4>
                         <button class="btn btn-primary btn-sm" id="addSalaryBtn">
-                            <i class="fas fa-plus mr-1"></i> Record Payment
+                            <i class="fas fa-plus mr-1"></i> Record Payment / ادائیگی درج کریں
                         </button>
                     </div>
                     <div class="card-body p-0">
@@ -129,11 +129,11 @@
                             <thead class="thead-dark">
                                 <tr>
                                     <th>#</th>
-                                    <th>Month</th>
-                                    <th>Amount (PKR)</th>
-                                    <th>Paid On</th>
-                                    <th>Note</th>
-                                    <th>Action</th>
+                                    <th>Month / مہینہ</th>
+                                    <th>Amount (PKR) / رقم</th>
+                                    <th>Paid On / ادائیگی تاریخ</th>
+                                    <th>Note / نوٹ</th>
+                                    <th>Action / اقدام</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -171,30 +171,30 @@
             @csrf
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title"><i class="fas fa-coins mr-2"></i>Record Salary Payment</h5>
+                    <h5 class="modal-title"><i class="fas fa-coins mr-2"></i>Record Salary Payment / تنخواہ ادائیگی درج کریں</h5>
                     <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label>Month <span class="text-danger">*</span></label>
+                        <label>Month / مہینہ <span class="text-danger">*</span></label>
                         <input type="month" class="form-control" name="month" required>
                     </div>
                     <div class="mb-3">
-                        <label>Amount (PKR) <span class="text-danger">*</span></label>
+                        <label>Amount (PKR) / رقم <span class="text-danger">*</span></label>
                         <input type="number" class="form-control" name="amount" value="{{ $employee->salary }}" min="0" required>
                     </div>
                     <div class="mb-3">
-                        <label>Paid On</label>
+                        <label>Paid On / ادائیگی تاریخ</label>
                         <input type="date" class="form-control" name="paid_at" value="{{ date('Y-m-d') }}">
                     </div>
                     <div class="mb-3">
-                        <label>Note</label>
+                        <label>Note / نوٹ</label>
                         <textarea class="form-control" name="note" rows="2" placeholder="Optional note (e.g. advance, deduction)..."></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary" type="submit">Save Payment</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel / منسوخ</button>
+                    <button class="btn btn-primary" type="submit">Save Payment / ادائیگی محفوظ کریں</button>
                 </div>
             </div>
         </form>
@@ -209,40 +209,40 @@
             @method('PUT')
             <div class="modal-content">
                 <div class="modal-header bg-warning">
-                    <h5 class="modal-title"><i class="fas fa-user-edit mr-2"></i>Edit Employee</h5>
+                    <h5 class="modal-title"><i class="fas fa-user-edit mr-2"></i>Edit Employee / ملازم ترمیم</h5>
                     <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
                 </div>
                 <div class="modal-body row">
                     <div class="col-md-6 mb-3">
-                        <label>Full Name <span class="text-danger">*</span></label>
+                        <label>Full Name / پورا نام <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="name" id="editName" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label>Email <span class="text-danger">*</span></label>
+                        <label>Email / ای میل <span class="text-danger">*</span></label>
                         <input type="email" class="form-control" name="email" id="editEmail" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label>Phone <span class="text-danger">*</span></label>
+                        <label>Phone / فون <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="phone" id="editPhone" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label>CNIC</label>
+                        <label>CNIC / شناختی کارڈ</label>
                         <input type="text" class="form-control" name="cnic" id="editCnic">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label>Designation</label>
+                        <label>Designation / عہدہ</label>
                         <input type="text" class="form-control" name="designation" id="editDesignation">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label>Monthly Salary (PKR) <span class="text-danger">*</span></label>
+                        <label>Monthly Salary (PKR) / ماہانہ تنخواہ <span class="text-danger">*</span></label>
                         <input type="number" class="form-control" name="salary" id="editSalary" min="0" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label>Joining Date</label>
+                        <label>Joining Date / شمولیت کی تاریخ</label>
                         <input type="date" class="form-control" name="joining_date" id="editJoiningDate">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label>Status <span class="text-danger">*</span></label>
+                        <label>Status / حیثیت <span class="text-danger">*</span></label>
                         <select class="form-control" name="status" id="editStatus" required>
                             <option value="working">Working</option>
                             <option value="on_leave">On Leave</option>
@@ -250,17 +250,17 @@
                         </select>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label>Leave / End Date</label>
+                        <label>Leave / End Date / چھٹی تاریخ</label>
                         <input type="date" class="form-control" name="leave_date" id="editLeaveDate">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label>Address</label>
+                        <label>Address / پتہ</label>
                         <input type="text" class="form-control" name="address" id="editAddress">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn btn-warning" type="submit">Update Employee</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel / منسوخ</button>
+                    <button class="btn btn-warning" type="submit">Update Employee / ملازم اپ ڈیٹ کریں</button>
                 </div>
             </div>
         </form>

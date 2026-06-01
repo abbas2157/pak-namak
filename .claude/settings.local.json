@@ -8,7 +8,10 @@
       "Bash(cd c:\\\\\\\\laragon\\\\\\\\www\\\\\\\\pak-namak)",
       "Bash(grep -n \"Route::resource\" /mnt/c/laragon/www/pak-namak/routes/admin.php)",
       "Read(//mnt/c/laragon/www/pak-namak/routes/**)",
-      "Bash(php -r ':*)"
+      "Bash(php -r ':*)",
+      "Bash(mv:*)",
+      "Bash(grep:*)",
+      "Bash(php -r \"echo 'PHP OK';\")"
     ]
   }
 }

@@ -30,7 +30,7 @@ $condMeta = [
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Assets</h1>
+                <h1 class="m-0">Assets <small class="text-muted" style="font-size:14px;">اثاثے</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">Assets</li>
@@ -38,7 +38,7 @@ $condMeta = [
             </div>
             <div class="col-sm-6 d-flex justify-content-end">
                 <button class="btn btn-primary px-4" style="border-radius:8px;" id="addBtn">
-                    <i class="fas fa-plus mr-1"></i> Add Asset
+                    <i class="fas fa-plus mr-1"></i> Add Asset / اثاثہ شامل کریں
                 </button>
             </div>
         </div>
@@ -55,7 +55,7 @@ $condMeta = [
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Assets</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Assets / کل اثاثے</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $totalCount }}</div>
                                 <small class="text-muted">items registered</small>
                             </div>
@@ -72,7 +72,7 @@ $condMeta = [
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Value</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Value / کل مالیت</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalValue, 0) }}</div>
                                 <small class="text-muted">PKR (purchase cost)</small>
                             </div>
@@ -89,7 +89,7 @@ $condMeta = [
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Active</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Active / فعال</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $activeCount }}</div>
                                 <small class="text-muted">in service</small>
                             </div>
@@ -106,7 +106,7 @@ $condMeta = [
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Under Repair</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Under Repair / مرمت میں</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $repairCount }}</div>
                                 <small class="text-muted">need attention</small>
                             </div>
@@ -128,7 +128,7 @@ $condMeta = [
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white border-bottom py-3">
                         <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
-                            <i class="fas fa-table mr-2"></i>Asset Register
+                            <i class="fas fa-table mr-2"></i>Asset Register / اثاثوں کی فہرست
                         </h6>
                     </div>
 
@@ -150,12 +150,12 @@ $condMeta = [
                             <table class="table mb-0" id="assetsTable" style="font-size:13.5px;">
                                 <thead>
                                     <tr style="background:#f8f9fc;border-bottom:2px solid #e3e6f0;">
-                                        <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Asset</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Category</th>
-                                        <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Qty</th>
-                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Value (PKR)</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Status</th>
-                                        <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions</th>
+                                        <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Asset / اثاثہ</th>
+                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Category / زمرہ</th>
+                                        <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Qty / تعداد</th>
+                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Value (PKR) / مالیت</th>
+                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Status / حیثیت</th>
+                                        <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions / اقدامات</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -231,7 +231,7 @@ $condMeta = [
                                 @if($assets->count() > 0)
                                 <tfoot>
                                     <tr style="background:#f8f9fc;border-top:2px solid #e3e6f0;">
-                                        <td class="pl-3 py-3 font-weight-bold" colspan="3" style="color:#2d3748;">Total Book Value</td>
+                                        <td class="pl-3 py-3 font-weight-bold" colspan="3" style="color:#2d3748;">Total Book Value / کل کتابی مالیت</td>
                                         <td class="py-3 text-right font-weight-bold" style="color:#e74a3b;font-size:15px;">
                                             {{ number_format($totalValue, 0) }}
                                         </td>
@@ -252,7 +252,7 @@ $condMeta = [
                 <div class="card border-0 shadow-sm mb-3">
                     <div class="card-header bg-white border-bottom py-3">
                         <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
-                            <i class="fas fa-circle-notch mr-2"></i>Status Overview
+                            <i class="fas fa-circle-notch mr-2"></i>Status Overview / حیثیت کا جائزہ
                         </h6>
                     </div>
                     <div class="card-body py-3 px-3">
@@ -274,7 +274,7 @@ $condMeta = [
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white border-bottom py-3">
                         <h6 class="mb-0 font-weight-bold" style="color:#e74a3b;">
-                            <i class="fas fa-chart-pie mr-2"></i>Value by Category
+                            <i class="fas fa-chart-pie mr-2"></i>Value by Category / زمرہ وار مالیت
                         </h6>
                     </div>
                     <div class="card-body py-3 px-3">
@@ -301,7 +301,7 @@ $condMeta = [
                         @endforeach
                         <div class="d-flex justify-content-between align-items-center pt-2 mt-1"
                              style="border-top:2px solid #f0f0f0;">
-                            <span class="font-weight-bold" style="color:#374151;">Total Book Value</span>
+                            <span class="font-weight-bold" style="color:#374151;">Total Book Value / کل کتابی مالیت</span>
                             <span class="font-weight-bold" style="color:#e74a3b;font-size:15px;">
                                 PKR {{ number_format($totalValue, 0) }}
                             </span>
@@ -327,7 +327,7 @@ $condMeta = [
                 <div class="modal-header border-0 text-white px-4 py-3"
                      style="background:linear-gradient(135deg,#4e73df,#224abe);">
                     <h5 class="modal-title" id="modalTitle">
-                        <i class="fas fa-layer-group mr-2"></i>Add Asset
+                        <i class="fas fa-layer-group mr-2"></i>Add Asset / اثاثہ شامل کریں
                     </h5>
                     <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;">
                         <span>&times;</span>
@@ -339,14 +339,14 @@ $condMeta = [
                         {{-- Row 1: Name + Category --}}
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Asset Name <span class="text-danger">*</span>
+                                Asset Name / اثاثے کا نام <span class="text-danger">*</span>
                             </label>
                             <input type="text" name="asset_name" id="aName" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;" placeholder="e.g. Truck, Crusher, Scale" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Category <span class="text-danger">*</span>
+                                Category / زمرہ <span class="text-danger">*</span>
                             </label>
                             <select name="category" id="aCategory" class="form-control"
                                     style="border-radius:8px;border-color:#d1d5db;" required>
@@ -359,14 +359,14 @@ $condMeta = [
                         {{-- Row 2: Qty + Price --}}
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Quantity <span class="text-danger">*</span>
+                                Quantity / تعداد <span class="text-danger">*</span>
                             </label>
                             <input type="number" name="quantity" id="aQty" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;" min="1" value="1" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Purchase Price (PKR each) <span class="text-danger">*</span>
+                                Purchase Price (PKR each) / خریداری قیمت <span class="text-danger">*</span>
                             </label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -380,14 +380,14 @@ $condMeta = [
                         {{-- Row 3: Date + Location --}}
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Purchase Date <span class="text-danger">*</span>
+                                Purchase Date / خریداری تاریخ <span class="text-danger">*</span>
                             </label>
                             <input type="date" name="purchase_date" id="aDate" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Location
+                                Location / مقام
                             </label>
                             <input type="text" name="location" id="aLocation" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;" placeholder="e.g. Factory, Office, Warehouse">
@@ -396,7 +396,7 @@ $condMeta = [
                         {{-- Row 4: Status + Condition --}}
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Status <span class="text-danger">*</span>
+                                Status / حیثیت <span class="text-danger">*</span>
                             </label>
                             <select name="status" id="aStatus" class="form-control"
                                     style="border-radius:8px;border-color:#d1d5db;" required>
@@ -407,7 +407,7 @@ $condMeta = [
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Condition <span class="text-danger">*</span>
+                                Condition / حالت <span class="text-danger">*</span>
                             </label>
                             <select name="condition" id="aCondition" class="form-control"
                                     style="border-radius:8px;border-color:#d1d5db;" required>
@@ -420,7 +420,7 @@ $condMeta = [
                         {{-- Description --}}
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Description / Notes
+                                Description / Notes / تفصیل
                             </label>
                             <textarea name="description" id="aDesc" class="form-control" rows="3"
                                       style="border-radius:8px;border-color:#d1d5db;"
@@ -430,7 +430,7 @@ $condMeta = [
                         {{-- Image --}}
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Asset Image
+                                Asset Image / اثاثے کی تصویر
                             </label>
                             {{-- Current image preview (shown only in edit mode) --}}
                             <div id="currentImageWrap" class="mb-2" style="display:none;">
@@ -451,11 +451,11 @@ $condMeta = [
                     <button type="button" class="btn btn-light px-4"
                             data-dismiss="modal" data-bs-dismiss="modal"
                             style="border-radius:8px;border:1px solid #d1d5db;">
-                        Cancel
+                        Cancel / منسوخ
                     </button>
                     <button class="btn btn-primary px-4" type="submit" id="submitBtn"
                             style="border-radius:8px;background:linear-gradient(135deg,#4e73df,#224abe);border:none;">
-                        <i class="fas fa-save mr-1"></i> Save Asset
+                        <i class="fas fa-save mr-1"></i> Save Asset / محفوظ کریں
                     </button>
                 </div>
 

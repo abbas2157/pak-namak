@@ -33,7 +33,7 @@ $payMeta = [
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Expenses</h1>
+                <h1 class="m-0">Expenses <small class="text-muted" style="font-size:14px;">اخراجات</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">Expenses</li>
@@ -41,7 +41,7 @@ $payMeta = [
             </div>
             <div class="col-sm-6 d-flex justify-content-end">
                 <button class="btn btn-primary px-4" style="border-radius:8px;" id="addBtn">
-                    <i class="fas fa-plus mr-1"></i> Add Expense
+                    <i class="fas fa-plus mr-1"></i> Add Expense / خرچ شامل کریں
                 </button>
             </div>
         </div>
@@ -58,7 +58,7 @@ $payMeta = [
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Spent</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Spent / کل خرچ</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($grandTotal, 0) }}</div>
                                 <small class="text-muted">PKR</small>
                             </div>
@@ -75,7 +75,7 @@ $payMeta = [
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Transactions</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Transactions / لین دین</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $expenses->count() }}</div>
                                 <small class="text-muted">entries</small>
                             </div>
@@ -92,7 +92,7 @@ $payMeta = [
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Largest Expense</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Largest Expense / سب سے بڑا خرچ</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($expenses->max('amount') ?? 0, 0) }}</div>
                                 <small class="text-muted">PKR</small>
                             </div>
@@ -109,7 +109,7 @@ $payMeta = [
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Top Category</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Top Category / سب سے بڑی زمرہ</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark" style="font-size:15px !important;">
                                     {{ $categoryTotals->keys()->first() ?? '-' }}
                                 </div>
@@ -134,7 +134,7 @@ $payMeta = [
                     <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
                         <div>
                             <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
-                                <i class="fas fa-table mr-2"></i>Expense Records
+                                <i class="fas fa-table mr-2"></i>Expense Records / اخراجات کی فہرست
                             </h6>
                             @if($selectedMonth)
                                 <small class="text-muted">
@@ -153,12 +153,12 @@ $payMeta = [
                             <table class="table mb-0" id="expenseTable" style="font-size:13.5px;">
                                 <thead>
                                     <tr style="background:#f8f9fc;border-bottom:2px solid #e3e6f0;">
-                                        <th class="pl-4 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Date</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Category</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Description</th>
-                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Amount</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Payment</th>
-                                        <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions</th>
+                                        <th class="pl-4 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Date / تاریخ</th>
+                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Category / زمرہ</th>
+                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Description / تفصیل</th>
+                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Amount / رقم</th>
+                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Payment / ادائیگی</th>
+                                        <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions / اقدامات</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -227,7 +227,7 @@ $payMeta = [
                                 @if($expenses->count() > 0)
                                 <tfoot>
                                     <tr style="background:#f8f9fc;border-top:2px solid #e3e6f0;">
-                                        <td class="pl-4 py-3 font-weight-bold" colspan="3" style="color:#2d3748;">Grand Total</td>
+                                        <td class="pl-4 py-3 font-weight-bold" colspan="3" style="color:#2d3748;">Grand Total / کل مجموعہ</td>
                                         <td class="py-3 text-right font-weight-bold" style="color:#e74a3b;font-size:15px;">
                                             {{ number_format($grandTotal, 0) }}
                                         </td>
@@ -248,7 +248,7 @@ $payMeta = [
                 <div class="card border-0 shadow-sm mb-3">
                     <div class="card-header bg-white border-bottom py-3">
                         <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
-                            <i class="fas fa-calendar-alt mr-2"></i>Filter by Month
+                            <i class="fas fa-calendar-alt mr-2"></i>Filter by Month / مہینے کے مطابق فلٹر
                         </h6>
                     </div>
                     <div class="card-body py-3">
@@ -278,7 +278,7 @@ $payMeta = [
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white border-bottom py-3">
                         <h6 class="mb-0 font-weight-bold" style="color:#e74a3b;">
-                            <i class="fas fa-chart-pie mr-2"></i>Breakdown
+                            <i class="fas fa-chart-pie mr-2"></i>Breakdown / زمرہ وار تفصیل
                         </h6>
                     </div>
                     <div class="card-body py-3 px-3">
@@ -308,7 +308,7 @@ $payMeta = [
                         @endforeach
                         <div class="d-flex justify-content-between align-items-center pt-2 mt-1"
                              style="border-top:2px solid #f0f0f0;">
-                            <span class="font-weight-bold" style="color:#374151;">Grand Total</span>
+                            <span class="font-weight-bold" style="color:#374151;">Grand Total / کل مجموعہ</span>
                             <span class="font-weight-bold" style="color:#e74a3b;font-size:15px;">
                                 PKR {{ number_format($grandTotal, 0) }}
                             </span>
@@ -337,7 +337,7 @@ $payMeta = [
                 <div class="modal-header border-0 text-white px-4 py-3"
                      style="background:linear-gradient(135deg,#4e73df,#224abe);">
                     <h5 class="modal-title" id="modalTitle">
-                        <i class="fas fa-receipt mr-2"></i>Add Expense
+                        <i class="fas fa-receipt mr-2"></i>Add Expense / خرچ شامل کریں
                     </h5>
                     <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;">
                         <span>&times;</span>
@@ -349,14 +349,14 @@ $payMeta = [
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Date <span class="text-danger">*</span>
+                                Date / تاریخ <span class="text-danger">*</span>
                             </label>
                             <input type="date" id="expense_date" name="expense_date" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Category <span class="text-danger">*</span>
+                                Category / زمرہ <span class="text-danger">*</span>
                             </label>
                             <select name="category" id="category" class="form-control"
                                     style="border-radius:8px;border-color:#d1d5db;" required>
@@ -372,7 +372,7 @@ $payMeta = [
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Amount (PKR) <span class="text-danger">*</span>
+                                Amount (PKR) / رقم <span class="text-danger">*</span>
                             </label>
                             <div class="input-group" style="border-radius:8px;">
                                 <div class="input-group-prepend">
@@ -385,7 +385,7 @@ $payMeta = [
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Payment Method <span class="text-danger">*</span>
+                                Payment Method / ادائیگی کا طریقہ <span class="text-danger">*</span>
                             </label>
                             <select name="payment_method" id="payment_method" class="form-control"
                                     style="border-radius:8px;border-color:#d1d5db;" required>
@@ -397,7 +397,7 @@ $payMeta = [
                         </div>
                         <div class="col-12 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Description
+                                Description / تفصیل
                             </label>
                             <input type="text" id="description" name="description" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;"
@@ -405,7 +405,7 @@ $payMeta = [
                         </div>
                         <div class="col-12 mb-1">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Remarks
+                                Remarks / ملاحظات
                             </label>
                             <textarea name="remarks" id="remarks" class="form-control" rows="2"
                                       style="border-radius:8px;border-color:#d1d5db;"
@@ -419,11 +419,11 @@ $payMeta = [
                     <button type="button" class="btn btn-light px-4"
                             data-dismiss="modal" data-bs-dismiss="modal"
                             style="border-radius:8px;border:1px solid #d1d5db;">
-                        Cancel
+                        Cancel / منسوخ
                     </button>
                     <button class="btn btn-primary px-4" type="submit" id="submitBtn"
                             style="border-radius:8px;background:linear-gradient(135deg,#4e73df,#224abe);border:none;">
-                        <i class="fas fa-save mr-1"></i> Save Expense
+                        <i class="fas fa-save mr-1"></i> Save Expense / محفوظ کریں
                     </button>
                 </div>
 

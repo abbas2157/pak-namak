@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Purchases</h1>
+                <h1 class="m-0">Purchases <small class="text-muted" style="font-size:14px;">خریداری</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">Purchases</li>
@@ -14,7 +14,7 @@
             </div>
             <div class="col-sm-6 d-flex justify-content-end">
                 <button class="btn btn-primary px-4" style="border-radius:8px;" id="addBtn">
-                    <i class="fas fa-plus mr-1"></i> Add Purchase
+                    <i class="fas fa-plus mr-1"></i> Add Purchase / خریداری شامل کریں
                 </button>
             </div>
         </div>
@@ -31,7 +31,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Spent</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Spent / کل خرچ</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalSpent, 0) }}</div>
                                 <small class="text-muted">PKR</small>
                             </div>
@@ -48,9 +48,9 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Qty</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Qty / کل مقدار</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalQtyTon, 2) }}</div>
-                                <small class="text-muted">Tons / {{ number_format($totalQtyKg, 0) }} KG</small>
+                                <small class="text-muted">Tons / ٹن - {{ number_format($totalQtyKg, 0) }} KG / کلو</small>
                             </div>
                             <div class="rounded-circle d-flex align-items-center justify-content-center"
                                  style="width:46px;height:46px;background:rgba(78,115,223,.12);">
@@ -65,7 +65,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Transactions</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Transactions / لین دین</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $totalEntries }}</div>
                                 <small class="text-muted">purchase records</small>
                             </div>
@@ -82,7 +82,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Avg per Purchase</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Avg per Purchase / اوسط فی خریداری</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">
                                     {{ $totalEntries > 0 ? number_format($totalSpent / $totalEntries, 0) : '0' }}
                                 </div>
@@ -126,13 +126,13 @@
                             <table class="table mb-0" id="purchasesTable" style="font-size:13.5px;">
                                 <thead>
                                     <tr style="background:#f8f9fc;border-bottom:2px solid #e3e6f0;">
-                                        <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Date</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Supplier</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Qty (Ton)</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Qty (KG)</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Rate/KG</th>
-                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Grand Total</th>
-                                        <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions</th>
+                                        <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Date / تاریخ</th>
+                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Supplier / سپلائر</th>
+                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Qty (Ton) / مقدار (ٹن)</th>
+                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Qty (KG) / مقدار (کلو)</th>
+                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Rate/KG / نرخ/کلو</th>
+                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Grand Total / کل مجموعہ</th>
+                                        <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions / اقدامات</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -190,7 +190,7 @@
                                 @if($purchases->count() > 0)
                                 <tfoot>
                                     <tr style="background:#f8f9fc;border-top:2px solid #e3e6f0;">
-                                        <td class="pl-3 py-3 font-weight-bold" colspan="5" style="color:#2d3748;">Grand Total</td>
+                                        <td class="pl-3 py-3 font-weight-bold" colspan="5" style="color:#2d3748;">Grand Total / کل مجموعہ</td>
                                         <td class="py-3 text-right font-weight-bold" style="color:#e74a3b;font-size:15px;">
                                             {{ number_format($totalSpent, 0) }}
                                         </td>
@@ -298,7 +298,7 @@
                 <div class="modal-header border-0 text-white px-4 py-3"
                      style="background:linear-gradient(135deg,#4e73df,#224abe);">
                     <h5 class="modal-title" id="modalTitle">
-                        <i class="fas fa-shopping-cart mr-2"></i>Add Purchase
+                        <i class="fas fa-shopping-cart mr-2"></i>Add Purchase / خریداری شامل کریں
                     </h5>
                     <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;">
                         <span>&times;</span>
@@ -309,7 +309,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Supplier <span class="text-danger">*</span>
+                                Supplier / سپلائر <span class="text-danger">*</span>
                             </label>
                             <select name="vendor_id" id="vendor_id" class="form-control"
                                     style="border-radius:8px;border-color:#d1d5db;" required>
@@ -321,56 +321,56 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Purchase Date
+                                Purchase Date / خریداری کی تاریخ
                             </label>
                             <input type="date" name="purchase_date" id="purchase_date" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Salt Quantity (Ton) <span class="text-danger">*</span>
+                                Salt Quantity (Ton) / نمک کی مقدار (ٹن) <span class="text-danger">*</span>
                             </label>
                             <input type="number" step="0.01" name="salt_quantity" id="salt_quantity" class="form-control calc-input"
                                    style="border-radius:8px;border-color:#d1d5db;" min="0" placeholder="0.00" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Salt Quantity (KG)
+                                Salt Quantity (KG) / نمک کی مقدار (کلو)
                             </label>
                             <input type="number" step="0.01" name="salt_quantity_kg" id="salt_quantity_kg" class="form-control calc-input"
                                    style="border-radius:8px;border-color:#d1d5db;" min="0" placeholder="0">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Rate per KG (PKR) <span class="text-danger">*</span>
+                                Rate per KG (PKR) / نرخ فی کلو <span class="text-danger">*</span>
                             </label>
                             <input type="number" step="0.01" name="rate_per_kg" id="rate_per_kg" class="form-control calc-input"
                                    style="border-radius:8px;border-color:#d1d5db;" min="0" placeholder="0.00" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Total Cost (PKR) <span class="text-danger">*</span>
+                                Total Cost (PKR) / کل لاگت <span class="text-danger">*</span>
                             </label>
                             <input type="number" step="0.01" name="total_cost" id="total_cost" class="form-control calc-input"
                                    style="border-radius:8px;border-color:#d1d5db;" min="0" placeholder="Auto-calculated" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Transport Cost (PKR)
+                                Transport Cost (PKR) / نقل و حمل
                             </label>
                             <input type="number" step="0.01" name="transport_cost" id="transport_cost" class="form-control calc-input"
                                    style="border-radius:8px;border-color:#d1d5db;" min="0" placeholder="0">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Loading / Unloading (PKR)
+                                Loading / Unloading (PKR) / لوڈنگ / اَن لوڈنگ
                             </label>
                             <input type="number" step="0.01" name="loading_unloading_cost" id="loading_unloading_cost" class="form-control calc-input"
                                    style="border-radius:8px;border-color:#d1d5db;" min="0" placeholder="0">
                         </div>
                         <div class="col-md-12 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Grand Total (PKR) <span class="text-danger">*</span>
+                                Grand Total (PKR) / کل مجموعہ <span class="text-danger">*</span>
                             </label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -383,7 +383,7 @@
                         </div>
                         <div class="col-12 mb-1">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Remarks
+                                Remarks / ملاحظات
                             </label>
                             <textarea name="remarks" id="remarks" class="form-control" rows="2"
                                       style="border-radius:8px;border-color:#d1d5db;"
@@ -396,11 +396,11 @@
                     <button type="button" class="btn btn-light px-4"
                             data-dismiss="modal" data-bs-dismiss="modal"
                             style="border-radius:8px;border:1px solid #d1d5db;">
-                        Cancel
+                        Cancel / منسوخ
                     </button>
                     <button class="btn btn-primary px-4" type="submit" id="submitBtn"
                             style="border-radius:8px;background:linear-gradient(135deg,#4e73df,#224abe);border:none;">
-                        <i class="fas fa-save mr-1"></i> Save Purchase
+                        <i class="fas fa-save mr-1"></i> Save Purchase / محفوظ کریں
                     </button>
                 </div>
 

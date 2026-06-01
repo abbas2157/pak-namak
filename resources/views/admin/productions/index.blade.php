@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Productions</h1>
+                <h1 class="m-0">Productions <small class="text-muted" style="font-size:14px;">پیداوار</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">Productions</li>
@@ -14,7 +14,7 @@
             </div>
             <div class="col-sm-6 d-flex justify-content-end">
                 <button class="btn btn-primary px-4" style="border-radius:8px;" id="addBtn">
-                    <i class="fas fa-plus mr-1"></i> Add Production
+                    <i class="fas fa-plus mr-1"></i> Add Production / پیداوار شامل کریں
                 </button>
             </div>
         </div>
@@ -29,7 +29,7 @@
             <div class="col-xl col-md-4 col-sm-6 mb-3">
                 <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #4e73df!important;border-radius:10px;">
                     <div class="card-body py-3 px-4">
-                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Batches</div>
+                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Batches / کل بیچز</div>
                         <div style="font-size:28px;font-weight:800;color:#4e73df;line-height:1.1;">{{ $productions->count() }}</div>
                         <div style="font-size:11px;color:#b0b7c3;">production runs</div>
                     </div>
@@ -38,7 +38,7 @@
             <div class="col-xl col-md-4 col-sm-6 mb-3">
                 <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #858796!important;border-radius:10px;">
                     <div class="card-body py-3 px-4">
-                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Raw Salt Used</div>
+                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Raw Salt Used / خام نمک استعمال</div>
                         <div style="font-size:28px;font-weight:800;color:#858796;line-height:1.1;">{{ number_format($totalRaw, 0) }}</div>
                         <div style="font-size:11px;color:#b0b7c3;">KG processed</div>
                     </div>
@@ -47,7 +47,7 @@
             <div class="col-xl col-md-4 col-sm-6 mb-3">
                 <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1cc88a!important;border-radius:10px;">
                     <div class="card-body py-3 px-4">
-                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Finished Salt</div>
+                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Finished Salt / تیار نمک</div>
                         <div style="font-size:28px;font-weight:800;color:#1cc88a;line-height:1.1;">{{ number_format($totalFinished, 0) }}</div>
                         <div style="font-size:11px;color:#b0b7c3;">KG produced</div>
                     </div>
@@ -56,7 +56,7 @@
             <div class="col-xl col-md-4 col-sm-6 mb-3">
                 <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #e74a3b!important;border-radius:10px;">
                     <div class="card-body py-3 px-4">
-                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Wastage</div>
+                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Wastage / کل ضیاع</div>
                         <div style="font-size:28px;font-weight:800;color:#e74a3b;line-height:1.1;">{{ number_format($totalWastage, 0) }}</div>
                         <div style="font-size:11px;color:#b0b7c3;">KG lost</div>
                     </div>
@@ -65,7 +65,7 @@
             <div class="col-xl col-md-4 col-sm-6 mb-3">
                 <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1cc88a!important;border-radius:10px;">
                     <div class="card-body py-3 px-4">
-                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Efficiency</div>
+                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Efficiency / کارکردگی</div>
                         <div style="font-size:28px;font-weight:800;color:#1cc88a;line-height:1.1;">{{ $efficiency }}%</div>
                         <div class="progress mt-1" style="height:4px;border-radius:4px;">
                             <div class="progress-bar bg-success" style="width:{{ $efficiency }}%"></div>
@@ -76,7 +76,7 @@
             <div class="col-xl col-md-4 col-sm-6 mb-3">
                 <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #f6c23e!important;border-radius:10px;">
                     <div class="card-body py-3 px-4">
-                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Cost</div>
+                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Cost / کل لاگت</div>
                         <div style="font-size:24px;font-weight:800;color:#e0a800;line-height:1.1;">{{ number_format($totalCost, 0) }}</div>
                         <div style="font-size:11px;color:#b0b7c3;">PKR fuel/electricity</div>
                     </div>
@@ -90,15 +90,15 @@
                 <table class="table table-sm mb-0" id="productionsTable">
                     <thead>
                         <tr style="background:#f8f9fc;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#b0b7c3;">
-                            <th class="pl-3">Date</th>
-                            <th class="text-right">Raw Salt (KG)</th>
-                            <th class="text-right">Finished (KG)</th>
-                            <th class="text-right">Wastage (KG)</th>
-                            <th class="text-center">Efficiency</th>
-                            <th>Machine</th>
-                            <th class="text-right">Cost (PKR)</th>
-                            <th>Remarks</th>
-                            <th class="text-center pr-3">Actions</th>
+                            <th class="pl-3">Date / تاریخ</th>
+                            <th class="text-right">Raw Salt (KG) / خام نمک</th>
+                            <th class="text-right">Finished (KG) / تیار</th>
+                            <th class="text-right">Wastage (KG) / ضیاع</th>
+                            <th class="text-center">Efficiency / کارکردگی</th>
+                            <th>Machine / مشین</th>
+                            <th class="text-right">Cost (PKR) / لاگت</th>
+                            <th>Remarks / ملاحظات</th>
+                            <th class="text-center pr-3">Actions / اقدامات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -159,7 +159,7 @@
                     @if($productions->count() > 0)
                     <tfoot>
                         <tr style="background:#f8f9fc;font-weight:700;font-size:13px;">
-                            <td class="pl-3">Total</td>
+                            <td class="pl-3">Total / کل</td>
                             <td class="text-right">{{ number_format($totalRaw, 0) }}</td>
                             <td class="text-right" style="color:#1cc88a;">{{ number_format($totalFinished, 0) }}</td>
                             <td class="text-right" style="color:#e74a3b;">{{ number_format($totalWastage, 0) }}</td>
@@ -188,43 +188,43 @@
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="modalTitle">
-                        <i class="fas fa-industry mr-2"></i>Add Production
+                        <i class="fas fa-industry mr-2"></i>Add Production / پیداوار شامل کریں
                     </h5>
                     <button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
                 </div>
                 <div class="modal-body row">
                     <div class="col-md-6 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;">Production Date <span class="text-danger">*</span></label>
+                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;">Production Date / پیداواری تاریخ <span class="text-danger">*</span></label>
                         <input type="date" class="form-control" name="production_date" id="production_date"
                                value="{{ date('Y-m-d') }}" required style="border-radius:8px;">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;">Machine Used</label>
+                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;">Machine Used / مشین</label>
                         <input type="text" class="form-control" name="machine_used" id="machine_used"
                                placeholder="e.g. Machine #1" style="border-radius:8px;">
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;">Raw Salt (KG) <span class="text-danger">*</span></label>
+                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;">Raw Salt (KG) / خام نمک <span class="text-danger">*</span></label>
                         <input type="number" class="form-control" name="raw_salt_used" id="raw_salt_used"
                                min="0" step="0.01" placeholder="0" required style="border-radius:8px;">
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;">Finished Salt (KG) <span class="text-danger">*</span></label>
+                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;">Finished Salt (KG) / تیار نمک <span class="text-danger">*</span></label>
                         <input type="number" class="form-control" name="finished_salt" id="finished_salt"
                                min="0" step="0.01" placeholder="0" required style="border-radius:8px;">
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;">Wastage (KG)</label>
+                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;">Wastage (KG) / ضیاع</label>
                         <input type="number" class="form-control" name="wastage" id="wastage"
                                min="0" step="0.01" placeholder="0" style="border-radius:8px;">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;">Electricity / Fuel Cost (PKR)</label>
+                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;">Electricity / Fuel Cost (PKR) / بجلی/ایندھن لاگت</label>
                         <input type="number" class="form-control" name="electricity_fuel_cost" id="electricity_fuel_cost"
                                min="0" step="0.01" placeholder="0" style="border-radius:8px;">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;">Efficiency</label>
+                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;">Efficiency / کارکردگی</label>
                         <div class="input-group">
                             <input type="text" class="form-control" id="efficiency_display" readonly
                                    placeholder="—" style="border-radius:8px 0 0 8px;background:#f8f9fc;">
@@ -234,15 +234,15 @@
                         </div>
                     </div>
                     <div class="col-12 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;">Remarks</label>
+                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;">Remarks / ملاحظات</label>
                         <textarea class="form-control" name="remarks" id="remarks" rows="2"
                                   placeholder="Optional notes..." style="border-radius:8px;"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel / منسوخ</button>
                     <button class="btn btn-primary" type="submit" id="submitBtn">
-                        <i class="fas fa-save mr-1"></i> Save
+                        <i class="fas fa-save mr-1"></i> Save / محفوظ کریں
                     </button>
                 </div>
             </div>

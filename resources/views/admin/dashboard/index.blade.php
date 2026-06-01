@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Dashboard</h1>
+                <h1 class="m-0">Dashboard <small class="text-muted" style="font-size:14px;">ڈیش بورڈ</small></h1>
                 <p class="text-muted mb-0" style="font-size:13px;">
                     PAK NAMAK & MASALA JAAT PRIVATE LIMITED
                 </p>
@@ -14,7 +14,7 @@
             <div class="col-sm-6">
                 <form method="GET" id="monthFilterForm" class="d-flex justify-content-end align-items-center">
                     <label class="mb-0 mr-2 text-muted" style="font-size:13px;white-space:nowrap;">
-                        <i class="fas fa-calendar-alt mr-1"></i> Month
+                        <i class="fas fa-calendar-alt mr-1"></i> Month / مہینہ
                     </label>
                     <select name="month" class="form-control" style="width:200px;border-radius:8px;"
                             onchange="document.getElementById('monthFilterForm').submit()">
@@ -40,7 +40,7 @@
                     <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1a5c35!important;border-radius:10px;">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Active Shops</div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Active Shops / فعال دکانیں</div>
                                 <div style="font-size:30px;font-weight:800;color:#1a5c35;line-height:1.1;">{{ $activeShopsCount }}</div>
                                 <div style="font-size:11px;color:#b0b7c3;">of {{ $totalShops }} total</div>
                             </div>
@@ -54,7 +54,7 @@
                     <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #6f42c1!important;border-radius:10px;">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Vendors / Suppliers</div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Vendors / Suppliers / فروش کار</div>
                                 <div style="font-size:30px;font-weight:800;color:#6f42c1;line-height:1.1;">{{ $totalVendors }}</div>
                                 <div style="font-size:11px;color:#b0b7c3;">registered suppliers</div>
                             </div>
@@ -68,7 +68,7 @@
                     <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1cc88a!important;border-radius:10px;">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Working Employees</div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Working Employees / کام کرنے والے ملازمین</div>
                                 <div style="font-size:30px;font-weight:800;color:#1cc88a;line-height:1.1;">{{ $workingEmployees }}</div>
                                 <div style="font-size:11px;color:#b0b7c3;">currently working</div>
                             </div>
@@ -82,7 +82,7 @@
                     <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #f6c23e!important;border-radius:10px;">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Sale Invoices</div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Sale Invoices / کل فروخت بل</div>
                                 <div style="font-size:30px;font-weight:800;color:#e0a800;line-height:1.1;">{{ $totalSalesCount }}</div>
                                 <div style="font-size:11px;color:#b0b7c3;">all-time transactions</div>
                             </div>
@@ -100,7 +100,7 @@
                     <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #f6c23e!important;border-radius:10px;">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Pending Orders</div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Pending Orders / زیر التواء آرڈرز</div>
                                 <div style="font-size:30px;font-weight:800;color:#e0a800;line-height:1.1;">{{ $pendingOrdersCount }}</div>
                                 <div style="font-size:11px;color:#b0b7c3;">awaiting action</div>
                             </div>
@@ -114,7 +114,7 @@
                     <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1cc88a!important;border-radius:10px;">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Confirmed Orders</div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Confirmed Orders / تصدیق شدہ آرڈرز</div>
                                 <div style="font-size:30px;font-weight:800;color:#1cc88a;line-height:1.1;">{{ $confirmedOrdersCount }}</div>
                                 <div style="font-size:11px;color:#b0b7c3;">confirmed</div>
                             </div>
@@ -128,7 +128,7 @@
                     <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1a5c35!important;border-radius:10px;">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Orders</div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Orders / کل آرڈرز</div>
                                 <div style="font-size:30px;font-weight:800;color:#1a5c35;line-height:1.1;">{{ $totalOrdersCount }}</div>
                                 <div style="font-size:11px;color:#b0b7c3;">all time</div>
                             </div>
@@ -142,8 +142,8 @@
         {{-- ── ALL-TIME SNAPSHOT ───────────────────────────────── --}}
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
-                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:1px;color:#b0b7c3;">Overall</div>
-                <h5 class="mb-0 font-weight-bold" style="color:#2d3748;">Total Snapshot</h5>
+                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:1px;color:#b0b7c3;">Overall / مجموعی</div>
+                <h5 class="mb-0 font-weight-bold" style="color:#2d3748;">Total Snapshot <small class="text-muted" style="font-size:13px;">کل جائزہ</small></h5>
             </div>
         </div>
 
@@ -158,7 +158,7 @@
                                 <i class="fas fa-chart-line" style="color:#2e7d32;font-size:15px;"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Sales</div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Sales / کل فروخت</div>
                                 <div style="font-size:15px;font-weight:700;color:#2e7d32;">{{ number_format($totalSales, 0) }}</div>
                                 <div style="font-size:10px;color:#aaa;">{{ $totalSalesCount }} invoices</div>
                             </div>
@@ -178,7 +178,7 @@
                                 <i class="fas fa-shopping-cart" style="color:#f57f17;font-size:15px;"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Purchases</div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Purchases / کل خریداری</div>
                                 <div style="font-size:15px;font-weight:700;color:#f57f17;">{{ number_format($PurchasesTotal, 0) }}</div>
                             </div>
                         </div>
@@ -197,7 +197,7 @@
                                 <i class="fas fa-receipt" style="color:#c62828;font-size:15px;"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Expenses</div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Expenses / کل اخراجات</div>
                                 <div style="font-size:15px;font-weight:700;color:#c62828;">{{ number_format($totalExpenses, 0) }}</div>
                             </div>
                         </div>
@@ -216,7 +216,7 @@
                                 <i class="fas fa-money-bill-wave" style="color:#1565c0;font-size:15px;"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Salaries</div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Salaries / کل تنخواہیں</div>
                                 <div style="font-size:15px;font-weight:700;color:#1565c0;">{{ number_format($totalSalaryPaid, 0) }}</div>
                             </div>
                         </div>
@@ -277,14 +277,14 @@
         {{-- ── MONTHLY FINANCIALS ──────────────────────────────── --}}
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
-                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:1px;color:#b0b7c3;">Monthly Snapshot</div>
+                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:1px;color:#b0b7c3;">Monthly Snapshot / ماہانہ جائزہ</div>
                 <h5 class="mb-0 font-weight-bold" style="color:#2d3748;">
                     {{ \Carbon\Carbon::createFromFormat('Y-m', $selectedMonth)->format('F Y') }}
                 </h5>
             </div>
             <a href="{{ route('admin.sales.index', ['month' => $selectedMonth]) }}"
                class="btn btn-sm btn-outline-primary" style="border-radius:20px;font-size:12px;">
-                <i class="fas fa-external-link-alt mr-1"></i> View Sales
+                <i class="fas fa-external-link-alt mr-1"></i> View Sales / فروخت دیکھیں
             </a>
         </div>
 
@@ -299,7 +299,7 @@
                                 <i class="fas fa-chart-line" style="color:#2e7d32;font-size:15px;"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Sales</div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Sales / فروخت</div>
                                 <div style="font-size:15px;font-weight:700;color:#2e7d32;">{{ number_format($monthSalesTotal, 0) }}</div>
                                 <div style="font-size:10px;color:#aaa;">{{ $monthSalesCount }} invoices</div>
                             </div>
@@ -319,7 +319,7 @@
                                 <i class="fas fa-shopping-cart" style="color:#f57f17;font-size:15px;"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Purchases</div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Purchases / خریداری</div>
                                 <div style="font-size:15px;font-weight:700;color:#f57f17;">{{ number_format($monthPurchasesTotal, 0) }}</div>
                             </div>
                         </div>
@@ -338,7 +338,7 @@
                                 <i class="fas fa-receipt" style="color:#c62828;font-size:15px;"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Expenses</div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Expenses / اخراجات</div>
                                 <div style="font-size:15px;font-weight:700;color:#c62828;">{{ number_format($monthExpensesTotal, 0) }}</div>
                             </div>
                         </div>
@@ -357,7 +357,7 @@
                                 <i class="fas fa-money-bill-wave" style="color:#1565c0;font-size:15px;"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Salaries</div>
+                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Salaries / تنخواہیں</div>
                                 <div style="font-size:15px;font-weight:700;color:#1565c0;">{{ number_format($monthSalaryTotal, 0) }}</div>
                             </div>
                         </div>
@@ -485,15 +485,15 @@
                     <div class="card-header border-0 d-flex justify-content-between align-items-center py-3"
                          style="background:#fffbf0;border-radius:10px 10px 0 0;">
                         <div>
-                            <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Action Required</div>
+                            <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Action Required / کارروائی درکار</div>
                             <h6 class="mb-0 font-weight-bold" style="color:#e0a800;">
-                                <i class="fas fa-clock mr-1"></i> Pending Orders
+                                <i class="fas fa-clock mr-1"></i> Pending Orders / زیر التواء آرڈرز
                                 <span class="badge badge-warning ml-1" style="font-size:11px;border-radius:20px;">{{ $pendingOrdersCount }}</span>
                             </h6>
                         </div>
                         <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}"
                            class="btn btn-sm btn-outline-warning" style="border-radius:20px;font-size:12px;">
-                            View All
+                            View All / سب دیکھیں
                         </a>
                     </div>
                     <div class="card-body p-0">
@@ -501,11 +501,11 @@
                             <table class="table mb-0" style="font-size:13px;">
                                 <thead>
                                     <tr style="background:#f8f9fc;">
-                                        <th class="pl-3 py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Reference</th>
-                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shop / Customer</th>
-                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Items</th>
-                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Submitted</th>
-                                        <th class="py-2 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions</th>
+                                        <th class="pl-3 py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Reference / حوالہ</th>
+                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shop / Customer / دکان</th>
+                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Items / اشیاء</th>
+                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Submitted / جمع تاریخ</th>
+                                        <th class="py-2 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions / اقدامات</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -589,11 +589,11 @@
                          style="background:#eaf3ee;border-radius:10px 10px 0 0;">
                         <div>
                             <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Top 5</div>
-                            <h6 class="mb-0 font-weight-bold" style="color:#1a5c35;">Shops by Revenue</h6>
+                            <h6 class="mb-0 font-weight-bold" style="color:#1a5c35;">Shops by Revenue / آمدن کے مطابق دکانیں</h6>
                         </div>
                         <a href="{{ route('admin.shops.index') }}"
                            class="btn btn-sm btn-outline-primary" style="border-radius:20px;font-size:12px;">
-                            All Shops
+                            All Shops / تمام دکانیں
                         </a>
                     </div>
                     <div class="card-body p-0">
@@ -640,11 +640,11 @@
                          style="background:#f0fff8;border-radius:10px 10px 0 0;">
                         <div>
                             <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Top 5</div>
-                            <h6 class="mb-0 font-weight-bold" style="color:#1cc88a;">Best Sales Months</h6>
+                            <h6 class="mb-0 font-weight-bold" style="color:#1cc88a;">Best Sales Months / بہترین فروخت کے مہینے</h6>
                         </div>
                         <a href="{{ route('admin.sales.report') }}"
                            class="btn btn-sm btn-outline-success" style="border-radius:20px;font-size:12px;">
-                            Full Report
+                            Full Report / مکمل رپورٹ
                         </a>
                     </div>
                     <div class="card-body p-0">

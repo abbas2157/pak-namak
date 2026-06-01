@@ -1,10 +1,10 @@
 <div class="row mb-3">
-    <div class="col-md-4"><strong>Shop:</strong> {{ $sale->shop->name ?? '-' }}</div>
-    <div class="col-md-4"><strong>Phone:</strong> {{ $sale->shop->phone_number ?? '-' }}</div>
-    <div class="col-md-4"><strong>Date:</strong> {{ $sale->sale_date ?? '-' }}</div>
+    <div class="col-md-4"><strong>Shop / دکان:</strong> {{ $sale->shop->name ?? '-' }}</div>
+    <div class="col-md-4"><strong>Phone / فون:</strong> {{ $sale->shop->phone_number ?? '-' }}</div>
+    <div class="col-md-4"><strong>Date / تاریخ:</strong> {{ $sale->sale_date ?? '-' }}</div>
 </div>
 @if($sale->dalla)
-<h5 class="text-primary">Dalla</h5>
+<h5 class="text-primary">Dalla / ڈلہ</h5>
 <table class="table table-sm table-bordered">
     <thead class="thead-light">
         <tr>
@@ -12,7 +12,7 @@
             <th>کل وزن(KG)</th>
             <th>Rate (فی من قیمت)</th>
             <th>Rate (فی کلو قیمت)</th>
-            <th>Subtotal</th>
+            <th>Subtotal / ذیلی کل</th>
         </tr>
     </thead>
     <tr>
@@ -25,7 +25,7 @@
 </table>
 @endif
 @if($sale->thailas->count())
-<h5 class="text-success">Thaila</h5>
+<h5 class="text-success">Thaila / تھیلا</h5>
 <table class="table table-sm table-bordered">
     <thead class="thead-light">
         <tr>
@@ -34,7 +34,7 @@
             <th>کل وزن(KG)</th>
             <th>Rate (فی کلو قیمت)</th>
             <th>Rate (فی تھیلا قیمت)</th>
-            <th>Subtotal</th>
+            <th>Subtotal / ذیلی کل</th>
         </tr>
     </thead>
     @foreach($sale->thailas as $t)
@@ -52,7 +52,7 @@
 
 {{-- PACKAGES --}}
 @if($sale->packages->count())
-<h5 class="text-warning">Packages</h5>
+<h5 class="text-warning">Packages / پیکٹ</h5>
 <table class="table table-sm table-bordered">
     <thead class="thead-light">
         <tr>
@@ -61,7 +61,7 @@
             <th>Bundle Type (بنڈل)</th>
             <th>کل وزن(KG)</th>
             <th>Rate (فی تھیلا قیمت)</th>
-            <th>Subtotal</th>
+            <th>Subtotal / ذیلی کل</th>
         </tr>
     </thead>
     @foreach($sale->packages as $p)
@@ -80,9 +80,9 @@
 @endif
 
 <div class="mb-3 d-flex justify-content-between align-items-center gap-2">
-    <div><strong>Total Price:</strong> Rs. {{ number_format($sale->total_amount ?? 0, 2) }}</div>
+    <div><strong>Total Price / کل قیمت:</strong> Rs. {{ number_format($sale->total_amount ?? 0, 2) }}</div>
     <button class="btn btn-sm btn-outline-secondary no-print" onclick="window.open('{{ route('admin.sales.receipt', ['id' => $sale->id]) }}', '_blank')">
-        <i class="fas fa-print"></i> Print
+        <i class="fas fa-print"></i> Print / پرنٹ
     </button>
 
 </div>

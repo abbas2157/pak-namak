@@ -4,9 +4,9 @@
 @section('content')
 
 <div class="row mb-3">
-    <div class="col-md-3"><strong>Shop:</strong> {{ $shop->name }}</div>
-    <div class="col-md-3"><strong>Phone:</strong> {{ $shop->phone_number }}</div>
-    <div class="col-md-3"><strong>Address:</strong> {{ $shop->address }}</div>
+    <div class="col-md-3"><strong>Shop / دکان:</strong> {{ $shop->name }}</div>
+    <div class="col-md-3"><strong>Phone / فون:</strong> {{ $shop->phone_number }}</div>
+    <div class="col-md-3"><strong>Address / پتہ:</strong> {{ $shop->address }}</div>
 </div>
 
 <hr>
@@ -15,16 +15,16 @@
 
 <div class="card mb-4">
     <div class="card-header bg-light">
-        <strong>Date:</strong> {{ $sale->sale_date }}
+        <strong>Date / تاریخ:</strong> {{ $sale->sale_date }}
         |
-        <strong>Total:</strong> Rs. {{ number_format($sale->total_amount, 2) }}
+        <strong>Total / کل:</strong> Rs. {{ number_format($sale->total_amount, 2) }}
     </div>
 
     <div class="card-body">
 
         {{-- DALLA --}}
         @if($sale->dalla)
-        <h5 class="text-primary">Dalla</h5>
+        <h5 class="text-primary">Dalla / ڈلہ</h5>
         <table class="table table-sm table-bordered">
             <tr>
                 <td>{{ $sale->dalla->quantity_mann }} Mann</td>
@@ -36,7 +36,7 @@
 
         {{-- THAILA --}}
         @if($sale->thailas->count())
-        <h5 class="text-success">Thaila</h5>
+        <h5 class="text-success">Thaila / تھیلا</h5>
         <table class="table table-sm table-bordered">
             @foreach($sale->thailas as $t)
             <tr>
@@ -50,7 +50,7 @@
 
         {{-- PACKAGES --}}
         @if($sale->packages->count())
-        <h5 class="text-warning">Packages</h5>
+        <h5 class="text-warning">Packages / پیکٹ</h5>
         <table class="table table-sm table-bordered">
             @foreach($sale->packages as $p)
             <tr>

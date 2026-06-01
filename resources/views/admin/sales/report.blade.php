@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Sales Report</h1>
+                <h1 class="m-0">Sales Report <small class="text-muted" style="font-size:14px;">فروخت رپورٹ</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">Sales Report</li>
@@ -29,16 +29,16 @@
             <div class="card-body py-3">
                 <div class="row align-items-end">
                     <div class="col-md-3 mb-2 mb-md-0">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">From Date</label>
+                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">From Date / آغاز تاریخ</label>
                         <input type="date" class="form-control" id="from" value="{{ $from }}" style="border-radius:8px;">
                     </div>
                     <div class="col-md-3 mb-2 mb-md-0">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">To Date</label>
+                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">To Date / اختتام تاریخ</label>
                         <input type="date" class="form-control" id="to" value="{{ $to }}" style="border-radius:8px;">
                     </div>
                     <div class="col-md-3 mb-2 mb-md-0">
                         <button class="btn btn-primary px-4" onclick="applyFilter()" style="border-radius:8px;">
-                            <i class="fas fa-search mr-1"></i> Apply Filter
+                            <i class="fas fa-search mr-1"></i> Apply Filter / فلٹر لگائیں
                         </button>
                         @if($from || $to)
                             <a href="{{ route('admin.sales.report') }}" class="btn btn-outline-secondary ml-2" style="border-radius:8px;">
@@ -63,7 +63,7 @@
             <div class="col-md-3 col-sm-6 mb-3">
                 <div class="card border-0 shadow-sm h-100" style="border-radius:10px;border-left:4px solid #4e73df!important;">
                     <div class="card-body py-3 px-4">
-                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Revenue</div>
+                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Revenue / کل آمدن</div>
                         <div style="font-size:22px;font-weight:800;color:#4e73df;">{{ number_format($grandTotal, 0) }}</div>
                         <div style="font-size:11px;color:#b0b7c3;">PKR across {{ $sales->count() }} invoices</div>
                     </div>
@@ -72,7 +72,7 @@
             <div class="col-md-3 col-sm-6 mb-3">
                 <div class="card border-0 shadow-sm h-100" style="border-radius:10px;border-left:4px solid #1cc88a!important;">
                     <div class="card-body py-3 px-4">
-                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Received</div>
+                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Received / وصول شدہ</div>
                         <div style="font-size:22px;font-weight:800;color:#1cc88a;">{{ number_format($grandReceived, 0) }}</div>
                         <div style="font-size:11px;color:#b0b7c3;">
                             {{ $grandTotal > 0 ? number_format(($grandReceived/$grandTotal)*100,1) : 0 }}% collected
@@ -94,7 +94,7 @@
             <div class="col-md-3 col-sm-6 mb-3">
                 <div class="card border-0 shadow-sm h-100" style="border-radius:10px;background:#f8f9fc;">
                     <div class="card-body py-3 px-4">
-                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Product Breakdown</div>
+                        <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Product Breakdown / مصنوعات کی تفصیل</div>
                         <div class="mt-1">
                             <div class="d-flex justify-content-between" style="font-size:12px;">
                                 <span class="text-primary font-weight-bold">Dalla</span>
@@ -120,7 +120,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Summary</div>
-                        <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">Sales by Shop</h6>
+                        <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">Sales by Shop / دکان کے مطابق فروخت</h6>
                     </div>
                     <span class="badge badge-primary" style="border-radius:20px;font-size:12px;">
                         {{ $salesByShop->count() }} shops
@@ -133,11 +133,11 @@
                     <thead>
                         <tr style="background:#f8f9fc;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#b0b7c3;">
                             <th class="pl-3">#</th>
-                            <th>Shop</th>
-                            <th class="text-center">Invoices</th>
-                            <th class="text-right">Total (PKR)</th>
-                            <th class="text-right">Received</th>
-                            <th class="text-right pr-3">Pending</th>
+                            <th>Shop / دکان</th>
+                            <th class="text-center">Invoices / بل</th>
+                            <th class="text-right">Total (PKR) / کل</th>
+                            <th class="text-right">Received / وصول</th>
+                            <th class="text-right pr-3">Pending / باقی</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -180,7 +180,7 @@
                     @if($salesByShop->count() > 1)
                     <tfoot>
                         <tr style="background:#f8f9fc;font-weight:700;font-size:13px;">
-                            <td colspan="2" class="pl-3">Total</td>
+                            <td colspan="2" class="pl-3">Total / کل</td>
                             <td class="text-center">{{ $sales->count() }}</td>
                             <td class="text-right" style="color:#4e73df;">{{ number_format($grandTotal, 0) }}</td>
                             <td class="text-right" style="color:#1cc88a;">{{ number_format($grandReceived, 0) }}</td>
@@ -198,7 +198,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Detail</div>
-                        <h6 class="mb-0 font-weight-bold" style="color:#1cc88a;">All Sales</h6>
+                        <h6 class="mb-0 font-weight-bold" style="color:#1cc88a;">All Sales / تمام فروخت</h6>
                     </div>
                     <span class="badge badge-success" style="border-radius:20px;font-size:12px;">
                         {{ $sales->count() }} records
@@ -210,12 +210,12 @@
                     <thead>
                         <tr style="background:#f8f9fc;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#b0b7c3;">
                             <th class="pl-3">#</th>
-                            <th>Shop</th>
-                            <th>Date</th>
-                            <th class="text-right">Total</th>
-                            <th class="text-right">Received</th>
-                            <th class="text-right">Pending</th>
-                            <th class="text-center pr-3 no-print">Action</th>
+                            <th>Shop / دکان</th>
+                            <th>Date / تاریخ</th>
+                            <th class="text-right">Total / کل</th>
+                            <th class="text-right">Received / وصول</th>
+                            <th class="text-right">Pending / باقی</th>
+                            <th class="text-center pr-3 no-print">Action / اقدام</th>
                         </tr>
                     </thead>
                     <tbody>

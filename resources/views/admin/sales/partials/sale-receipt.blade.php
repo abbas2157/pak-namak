@@ -72,10 +72,10 @@
             <div style="flex:1;">
                 <p class="receipt-title">Sales Receipt / Bill</p>
                 <div class="receipt-meta">
-                    <div><strong>Shop Name:</strong> {{ $shop?->name ?? '-' }}</div>
-                    <div><strong>Shop Phone:</strong> {{ $shop?->phone_number ?? $shop?->phone ?? '-' }}</div>
-                    <div><strong>Date:</strong> {{ $sale->sale_date ?? '-' }}</div>
-                    <div><strong>Receipt No:</strong> #{{ $sale->id }}</div>
+                    <div><strong>Shop Name / دکان کا نام:</strong> {{ $shop?->name ?? '-' }}</div>
+                    <div><strong>Shop Phone / فون:</strong> {{ $shop?->phone_number ?? $shop?->phone ?? '-' }}</div>
+                    <div><strong>Date / تاریخ:</strong> {{ $sale->sale_date ?? '-' }}</div>
+                    <div><strong>Receipt No / رسید نمبر:</strong> #{{ $sale->id }}</div>
                 </div>
             </div>
         </div>
@@ -85,9 +85,9 @@
         <table class="receipt-table">
             <thead>
                 <tr>
-                    <th style="width: 55%;">Item</th>
-                    <th class="text-right" style="width: 25%;">Quantity</th>
-                    <th class="text-right" style="width: 20%;">Amount</th>
+                    <th style="width: 55%;">Item / آئٹم</th>
+                    <th class="text-right" style="width: 25%;">Quantity / مقدار</th>
+                    <th class="text-right" style="width: 20%;">Amount / رقم</th>
                 </tr>
             </thead>
             <tbody>
@@ -128,7 +128,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="3" class="text-right">No items</td>
+                        <td colspan="3" class="text-right">No items / کوئی آئٹم نہیں</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -136,10 +136,10 @@
 
         <div class="receipt-total">
             <div>
-                <div><strong>Shop Address:</strong> {{ $shop?->address ?? '-' }}</div>
+                <div><strong>Shop Address / پتہ:</strong> {{ $shop?->address ?? '-' }}</div>
             </div>
             <div style="text-align:right;">
-                <div><strong>Total Price:</strong></div>
+                <div><strong>Total Price / کل قیمت:</strong></div>
                 <div style="font-size:18px; font-weight:800;">Rs. {{ number_format((float)($sale->total_amount ?? 0), 2) }}</div>
             </div>
         </div>

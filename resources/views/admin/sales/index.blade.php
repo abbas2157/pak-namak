@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Sales</h1>
+                <h1 class="m-0">Sales <small class="text-muted" style="font-size:14px;">فروخت</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">Sales</li>
@@ -15,7 +15,7 @@
             <div class="col-sm-6 d-flex justify-content-end">
                 <a href="{{ route('admin.sales.create') }}"
                    class="btn btn-primary px-4" style="border-radius:8px;">
-                    <i class="fas fa-plus mr-1"></i> New Sale
+                    <i class="fas fa-plus mr-1"></i> New Sale / نئی فروخت
                 </a>
             </div>
         </div>
@@ -32,7 +32,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Sales</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Sales / کل فروخت</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $totalCount }}</div>
                                 <small class="text-muted">transactions</small>
                             </div>
@@ -49,7 +49,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Revenue</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Revenue / کل آمدن</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalRevenue, 0) }}</div>
                                 <small class="text-muted">PKR</small>
                             </div>
@@ -66,7 +66,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Received</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Received / وصول شدہ</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalReceived, 0) }}</div>
                                 <small class="text-muted">PKR paid</small>
                             </div>
@@ -83,7 +83,7 @@
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Pending / Udhaar</div>
+                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Pending / Udhaar / باقی اُدھار</div>
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalPending, 0) }}</div>
                                 <small class="text-muted">PKR outstanding</small>
                             </div>
@@ -125,13 +125,13 @@
                             <table class="table mb-0" id="salesTable" style="font-size:13.5px;">
                                 <thead>
                                     <tr style="background:#f8f9fc;border-bottom:2px solid #e3e6f0;">
-                                        <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Date</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shop</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Types</th>
-                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Total</th>
-                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Received</th>
-                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Pending</th>
-                                        <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions</th>
+                                        <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Date / تاریخ</th>
+                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shop / دکان</th>
+                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Types / اقسام</th>
+                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Total / کل</th>
+                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Received / وصول</th>
+                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Pending / باقی</th>
+                                        <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions / اقدامات</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -244,7 +244,7 @@
                                 @if($sales->count() > 0)
                                 <tfoot>
                                     <tr style="background:#f8f9fc;border-top:2px solid #e3e6f0;">
-                                        <td class="pl-3 py-3 font-weight-bold" colspan="3" style="color:#2d3748;">Totals</td>
+                                        <td class="pl-3 py-3 font-weight-bold" colspan="3" style="color:#2d3748;">Totals / کل</td>
                                         <td class="py-3 text-right font-weight-bold" style="color:#2d3748;font-size:15px;">
                                             {{ number_format($totalRevenue, 0) }}
                                         </td>
@@ -271,7 +271,7 @@
                 <div class="card border-0 shadow-sm mb-3">
                     <div class="card-header bg-white border-bottom py-3">
                         <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
-                            <i class="fas fa-calendar-alt mr-2"></i>Filter by Month
+                            <i class="fas fa-calendar-alt mr-2"></i>Filter by Month / مہینے کے مطابق فلٹر
                         </h6>
                     </div>
                     <div class="card-body py-3">
@@ -302,7 +302,7 @@
                 <div class="card border-0 shadow-sm mb-3">
                     <div class="card-header bg-white border-bottom py-3">
                         <h6 class="mb-0 font-weight-bold" style="color:#1cc88a;">
-                            <i class="fas fa-wallet mr-2"></i>Payment Summary
+                            <i class="fas fa-wallet mr-2"></i>Payment Summary / ادائیگی کا خلاصہ
                         </h6>
                     </div>
                     <div class="card-body py-3 px-3">
@@ -312,7 +312,7 @@
                         @endphp
                         <div class="mb-3">
                             <div class="d-flex justify-content-between mb-1">
-                                <span style="font-size:13px;color:#374151;"><strong>Received</strong></span>
+                                <span style="font-size:13px;color:#374151;"><strong>Received / وصول</strong></span>
                                 <span style="font-size:12px;color:#1cc88a;font-weight:600;">
                                     {{ number_format($totalReceived, 0) }}
                                     <small class="text-muted">({{ $recPct }}%)</small>
@@ -324,7 +324,7 @@
                         </div>
                         <div>
                             <div class="d-flex justify-content-between mb-1">
-                                <span style="font-size:13px;color:#374151;"><strong>Pending</strong></span>
+                                <span style="font-size:13px;color:#374151;"><strong>Pending / باقی</strong></span>
                                 <span style="font-size:12px;color:#e74a3b;font-weight:600;">
                                     {{ number_format($totalPending, 0) }}
                                     <small class="text-muted">({{ $penPct }}%)</small>
@@ -336,7 +336,7 @@
                         </div>
                         <div class="d-flex justify-content-between align-items-center pt-3 mt-2"
                              style="border-top:2px solid #f0f0f0;">
-                            <span class="font-weight-bold" style="color:#374151;">Total</span>
+                            <span class="font-weight-bold" style="color:#374151;">Total / کل</span>
                             <span class="font-weight-bold" style="color:#2d3748;font-size:15px;">
                                 PKR {{ number_format($totalRevenue, 0) }}
                             </span>
@@ -357,7 +357,7 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white border-bottom py-3">
                         <h6 class="mb-0 font-weight-bold" style="color:#e74a3b;">
-                            <i class="fas fa-chart-pie mr-2"></i>Product Breakdown
+                            <i class="fas fa-chart-pie mr-2"></i>Product Breakdown / مصنوعات کی تفصیل
                         </h6>
                     </div>
                     <div class="card-body py-3 px-3">
@@ -425,7 +425,7 @@
                 <div class="modal-header border-0 text-white px-4 py-3"
                      style="background:linear-gradient(135deg,#4e73df,#224abe);">
                     <h5 class="modal-title">
-                        <i class="fas fa-edit mr-2"></i>Edit Sale
+                        <i class="fas fa-edit mr-2"></i>Edit Sale / فروخت ترمیم
                     </h5>
                     <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;">
                         <span>&times;</span>
@@ -436,7 +436,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Shop <span class="text-danger">*</span>
+                                Shop / دکان <span class="text-danger">*</span>
                             </label>
                             <select name="shop_id" id="edit_shop_id" class="form-control" style="border-radius:8px;border-color:#d1d5db;" required>
                                 @foreach($shops as $shop)
@@ -446,35 +446,35 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Sale Date <span class="text-danger">*</span>
+                                Sale Date / فروخت کی تاریخ <span class="text-danger">*</span>
                             </label>
                             <input type="date" name="sale_date" id="edit_sale_date" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;" required>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Total Amount
+                                Total Amount / کل رقم
                             </label>
                             <input type="text" id="edit_total_display" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;background:#f8f9fc;" readonly>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Received Amount
+                                Received Amount / وصول شدہ رقم
                             </label>
                             <input type="number" name="received_amount" id="edit_received_amount" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;" min="0" step="1" placeholder="0">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Pending Amount
+                                Pending Amount / باقی رقم
                             </label>
                             <input type="text" id="edit_pending_display" class="form-control"
                                    style="border-radius:8px;border-color:#d1d5db;background:#f8f9fc;" readonly>
                         </div>
                         <div class="col-12 mb-1">
                             <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                                Remarks
+                                Remarks / ملاحظات
                             </label>
                             <textarea name="remarks" id="edit_remarks" class="form-control" rows="2"
                                       style="border-radius:8px;border-color:#d1d5db;" placeholder="Optional notes..."></textarea>
@@ -486,11 +486,11 @@
                     <button type="button" class="btn btn-light px-4"
                             data-dismiss="modal" data-bs-dismiss="modal"
                             style="border-radius:8px;border:1px solid #d1d5db;">
-                        Cancel
+                        Cancel / منسوخ
                     </button>
                     <button class="btn btn-primary px-4" type="submit" id="editSubmitBtn"
                             style="border-radius:8px;background:linear-gradient(135deg,#4e73df,#224abe);border:none;">
-                        <i class="fas fa-save mr-1"></i> Update Sale
+                        <i class="fas fa-save mr-1"></i> Update Sale / فروخت اپ ڈیٹ
                     </button>
                 </div>
 

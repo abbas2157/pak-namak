@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">New Sale</h1>
+                <h1 class="m-0">New Sale <small class="text-muted" style="font-size:14px;">نئی فروخت</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('admin.sales.index') }}">Sales</a></li>
@@ -16,7 +16,7 @@
             <div class="col-sm-6 d-flex justify-content-end">
                 <a href="{{ route('admin.sales.index') }}"
                    class="btn btn-light px-4" style="border-radius:8px;border:1px solid #d1d5db;">
-                    <i class="fas fa-arrow-left mr-1"></i> Back to Sales
+                    <i class="fas fa-arrow-left mr-1"></i> Back to Sales / فروخت پر واپس
                 </a>
             </div>
         </div>
@@ -262,14 +262,14 @@
             <div class="card-header border-bottom py-3"
                  style="background:linear-gradient(135deg,#4e73df,#224abe);">
                 <h6 class="mb-0 font-weight-bold text-white">
-                    <i class="fas fa-store mr-2"></i>Sale Details
+                    <i class="fas fa-store mr-2"></i>Sale Details / فروخت کی تفصیل
                 </h6>
             </div>
             <div class="card-body py-4">
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                            Shop <span class="text-danger">*</span>
+                            Shop / دکان <span class="text-danger">*</span>
                         </label>
                         <select name="shop_id" id="shop_id" class="form-control select2" required
                                 style="border-radius:8px;">
@@ -284,14 +284,14 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                            Sale Date <span class="text-danger">*</span>
+                            Sale Date / فروخت کی تاریخ <span class="text-danger">*</span>
                         </label>
                         <input type="date" name="sale_date" id="date" class="form-control"
                                value="{{ date('Y-m-d') }}" required style="border-radius:8px;">
                     </div>
                     <div class="col-md-2 mb-3">
                         <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                            Grand Total (PKR)
+                            Grand Total (PKR) / کل رقم
                         </label>
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -305,7 +305,7 @@
                     </div>
                     <div class="col-md-2 mb-3">
                         <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                            Received (PKR)
+                            Received (PKR) / وصول شدہ
                         </label>
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -319,14 +319,14 @@
                     </div>
                     <div class="col-md-8 mb-3">
                         <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                            Remarks
+                            Remarks / ملاحظات
                         </label>
                         <textarea name="remarks" id="remarks" class="form-control" rows="2"
                                   style="border-radius:8px;" placeholder="Optional notes..."></textarea>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
-                            Upload Bill Image
+                            Upload Bill Image / بل تصویر اپلوڈ کریں
                         </label>
                         <input type="file" name="bill_image" id="bill_image"
                                class="form-control" accept="image/*"
@@ -337,11 +337,11 @@
                 <div class="d-flex justify-content-end pt-2">
                     <a href="{{ route('admin.sales.index') }}"
                        class="btn btn-light px-4 mr-2" style="border-radius:8px;border:1px solid #d1d5db;">
-                        Cancel
+                        Cancel / منسوخ
                     </a>
                     <button class="btn btn-primary px-5" type="submit"
                             style="border-radius:8px;background:linear-gradient(135deg,#4e73df,#224abe);border:none;font-weight:600;">
-                        <i class="fas fa-save mr-2"></i> Create Sale
+                        <i class="fas fa-save mr-2"></i> Create Sale / فروخت بنائیں
                     </button>
                 </div>
             </div>
