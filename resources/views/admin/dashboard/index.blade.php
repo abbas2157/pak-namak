@@ -856,7 +856,7 @@
                 <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:1px;color:#b0b7c3;">Attention Required / توجہ درکار</div>
                 <h5 class="mb-0 font-weight-bold" style="color:#2d3748;">
                     Inactive Shops
-                    <small class="text-muted" style="font-size:13px;">— no sale in last 30 days (top 15)</small>
+                    <small class="text-muted" style="font-size:13px;">— no sale in last 30 days</small>
                 </h5>
             </div>
             <a href="{{ route('admin.shops.index') }}"

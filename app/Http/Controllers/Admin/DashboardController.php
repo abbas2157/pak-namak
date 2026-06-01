@@ -188,7 +188,6 @@ class DashboardController extends Controller
             ->with('cityRecord', 'area')
             ->withMax('sales', 'sale_date')
             ->orderBy('sales_max_sale_date')
-            ->limit(15)
             ->get();
 
         // Determine which namak type sells more: dalla vs thailas vs packages
