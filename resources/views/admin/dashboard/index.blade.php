@@ -895,7 +895,7 @@
                                     @foreach($inactiveShops as $i => $shop)
                                     @php
                                         $lastSale   = $shop->sales_max_sale_date;
-                                        $daysSilent = $lastSale ? \Carbon\Carbon::parse($lastSale)->diffInDays(now()) : null;
+                                        $daysSilent = $lastSale ? (int) \Carbon\Carbon::parse($lastSale)->diffInDays(now()) : null;
                                         $urgencyColor = ($daysSilent === null || $daysSilent >= 60) ? '#c62828' : ($daysSilent >= 30 ? '#856404' : '#6c757d');
                                         $urgencyBg    = ($daysSilent === null || $daysSilent >= 60) ? '#fce8e6' : ($daysSilent >= 30 ? '#fff3cd' : '#f3f4f6');
                                     @endphp
