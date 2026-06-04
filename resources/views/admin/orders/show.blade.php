@@ -109,49 +109,74 @@
                         </h6>
                     </div>
                     <div class="card-body p-0">
-                        <table class="table mb-0" style="font-size:14px;">
+                        <table class="table mb-0" style="font-size:13px;">
                             <thead>
-                                <tr style="background:#f8f9fc;">
+                                <tr style="background:#f2f5f3;">
                                     <th class="pl-4 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Type</th>
                                     <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Size</th>
                                     <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Quantity</th>
+                                    <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Rate</th>
+                                    <th class="py-3 text-right pr-4 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Sub Total</th>
                                 </tr>
                             </thead>
                             <tbody>
+                            @php $orderTotal = 0; @endphp
                             @foreach($order->items as $item)
                                 @php
-                                    $typeColor = match($item->type) {
-                                        'dalla'   => ['bg'=>'#e8f0fe','color'=>'#4e73df','label'=>'Dalla'],
+                                    $tc = match($item->type) {
+                                        'dalla'   => ['bg'=>'#d0e8d8','color'=>'#1a5c35','label'=>'Dalla'],
                                         'thaila'  => ['bg'=>'#d4edda','color'=>'#155724','label'=>'Thaila'],
                                         'package' => ['bg'=>'#fff3cd','color'=>'#856404','label'=>'Package'],
                                         default   => ['bg'=>'#f0f0f0','color'=>'#555','label'=>$item->type],
                                     };
+                                    $orderTotal += $item->sub_total ?? 0;
                                 @endphp
                                 <tr style="border-bottom:1px solid #f0f0f0;">
                                     <td class="pl-4 py-3 align-middle">
-                                        <span class="badge" style="background:{{ $typeColor['bg'] }};color:{{ $typeColor['color'] }};font-size:12px;padding:4px 10px;border-radius:20px;">
-                                            {{ $typeColor['label'] }}
+                                        <span class="badge" style="background:{{ $tc['bg'] }};color:{{ $tc['color'] }};font-size:11px;padding:3px 10px;border-radius:20px;">
+                                            {{ $tc['label'] }}
                                         </span>
                                     </td>
-                                    <td class="py-3 align-middle font-weight-bold" style="color:#2d3748;">
-                                        @if($item->type === 'dalla')
-                                            — (Bulk)
-                                        @elseif($item->type === 'thaila')
-                                            {{ $item->size }} KG bag
-                                        @else
-                                            {{ $item->size }} gram pack
+                                    <td class="py-3 align-middle" style="color:#2d3748;">
+                                        @if($item->type === 'dalla') Bulk (Mann)
+                                        @elseif($item->type === 'thaila') {{ $item->size }} KG bag
+                                        @else {{ $item->size }}g pack
                                         @endif
                                     </td>
                                     <td class="py-3 align-middle font-weight-bold" style="color:#2d3748;">
                                         {{ $item->quantity }}
-                                        @if($item->type === 'dalla') Mann
-                                        @elseif($item->type === 'thaila') bags
-                                        @else bundles
+                                        <span class="text-muted font-weight-normal" style="font-size:11px;">
+                                            @if($item->type === 'dalla') Mann
+                                            @elseif($item->type === 'thaila') bags
+                                            @else bundles
+                                            @endif
+                                        </span>
+                                    </td>
+                                    <td class="py-3 align-middle" style="color:#555;">
+                                        @if($item->price)
+                                            PKR {{ number_format($item->price, 0) }}
+                                        @else
+                                            <span class="text-muted">—</span>
+                                        @endif
+                                    </td>
+                                    <td class="py-3 align-middle text-right pr-4 font-weight-bold" style="color:#1a5c35;">
+                                        @if($item->sub_total)
+                                            PKR {{ number_format($item->sub_total, 0) }}
+                                        @else
+                                            <span class="text-muted font-weight-normal">—</span>
                                         @endif
                                     </td>
                                 </tr>
                             @endforeach
                             </tbody>
+                            @if($orderTotal > 0)
+                            <tfoot>
+                                <tr style="background:#eaf3ee;">
+                                    <td colspan="4" class="pl-4 py-3 font-weight-bold text-right" style="color:#1a5c35;font-size:13px;">Grand Total — کل رقم</td>
+                                    <td class="py-3 text-right pr-4 font-weight-bold" style="color:#1a5c35;font-size:15px;">PKR {{ number_format($orderTotal, 0) }}</td>
+                                </tr>
+                            </tfoot>
+                            @endif
                         </table>
                     </div>
                 </div>

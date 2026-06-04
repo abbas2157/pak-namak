@@ -42,12 +42,12 @@ class OrderController extends Controller
 
         // Ensure at least one item has quantity > 0
         $hasItem = false;
-        if ($request->input('dalla_qty') > 0) $hasItem = true;
+        if ((float) $request->input('dalla_qty', 0) > 0) $hasItem = true;
         foreach ([5, 10, 30, 35, 40, 50] as $s) {
-            if ($request->input("thaila.$s", 0) > 0) { $hasItem = true; break; }
+            if ((float) $request->input("thaila.$s.qty", 0) > 0) { $hasItem = true; break; }
         }
         foreach (array_keys(config('admin.packages')) as $g) {
-            if ($request->input("package.$g", 0) > 0) { $hasItem = true; break; }
+            if ((float) $request->input("package.$g.qty", 0) > 0) { $hasItem = true; break; }
         }
 
         if (!$hasItem) {
@@ -68,34 +68,44 @@ class OrderController extends Controller
             ]);
 
             // Dalla
-            if ($request->input('dalla_qty', 0) > 0) {
+            $dallaQty = (float) $request->input('dalla_qty', 0);
+            if ($dallaQty > 0) {
+                $price    = (float) $request->input('dalla_price', 0) ?: null;
                 $order->items()->create([
-                    'type'     => 'dalla',
-                    'size'     => null,
-                    'quantity' => $request->dalla_qty,
+                    'type'      => 'dalla',
+                    'size'      => null,
+                    'quantity'  => $dallaQty,
+                    'price'     => $price,
+                    'sub_total' => $price ? round($dallaQty * $price, 2) : null,
                 ]);
             }
 
             // Thaila
             foreach ([5, 10, 30, 35, 40, 50] as $size) {
-                $qty = (float) $request->input("thaila.$size", 0);
+                $qty = (float) $request->input("thaila.$size.qty", 0);
                 if ($qty > 0) {
+                    $price = (float) $request->input("thaila.$size.price", 0) ?: null;
                     $order->items()->create([
-                        'type'     => 'thaila',
-                        'size'     => $size,
-                        'quantity' => $qty,
+                        'type'      => 'thaila',
+                        'size'      => $size,
+                        'quantity'  => $qty,
+                        'price'     => $price,
+                        'sub_total' => $price ? round($qty * $price, 2) : null,
                     ]);
                 }
             }
 
             // Package
             foreach (array_keys(config('admin.packages')) as $gram) {
-                $qty = (float) $request->input("package.$gram", 0);
+                $qty = (float) $request->input("package.$gram.qty", 0);
                 if ($qty > 0) {
+                    $price = (float) $request->input("package.$gram.price", 0) ?: null;
                     $order->items()->create([
-                        'type'     => 'package',
-                        'size'     => $gram,
-                        'quantity' => $qty,
+                        'type'      => 'package',
+                        'size'      => $gram,
+                        'quantity'  => $qty,
+                        'price'     => $price,
+                        'sub_total' => $price ? round($qty * $price, 2) : null,
                     ]);
                 }
             }

@@ -49,7 +49,7 @@ class SaleController extends Controller
         $prefill = null;
 
         if (session('prefill_order_id')) {
-            $prefill = Order::with('items')->find(session('prefill_order_id'));
+            $prefill = Order::with(['items', 'shop'])->find(session('prefill_order_id'));
             session()->forget('prefill_order_id');
         }
 

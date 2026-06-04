@@ -32,7 +32,7 @@
             <div>
                 <strong>Pre-filled from Order {{ $prefill->reference }}</strong> —
                 {{ $prefill->display_name }}.
-                Set pricing and save to create the sale.
+                Quantities and prices are pre-filled — review and save.
             </div>
         </div>
         @endif
@@ -78,7 +78,8 @@
                             Rate / Mann — فی من
                         </label>
                         <input type="number" name="dalla[pirce_per_mann]" id="pirce_per_mann"
-                               class="form-control" style="border-radius:8px;" placeholder="0">
+                               class="form-control" style="border-radius:8px;" placeholder="0"
+                               value="{{ $prefillDalla?->price ?? '' }}">
                     </div>
                     <div class="col-md-2 mb-3">
                         <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
@@ -155,7 +156,8 @@
                     <div class="col-md-2 mb-2 mb-md-0">
                         <input type="number" name="thaila[{{ $size }}][pirce_per_thaila]"
                                id="pirce_per_{{ $size }}_killo_thaila"
-                               class="form-control" style="border-radius:8px;" placeholder="0">
+                               class="form-control" style="border-radius:8px;" placeholder="0"
+                               value="{{ $prefillThaila?->price ?? '' }}">
                     </div>
                     <div class="col-md-2 mb-2 mb-md-0">
                         <input type="number" name="thaila[{{ $size }}][pirce_per_kg]"
@@ -208,6 +210,7 @@
                 </div>
 
                 @foreach([250,300,400,500,600,700] as $gram)
+                @php $prefillPackage = $prefill?->items->where('type','package')->firstWhere('size',$gram); @endphp
                 <div class="row align-items-center mb-2 py-2" style="border-bottom:1px solid #f0f0f0;">
                     <div class="col-md-1 mb-2 mb-md-0">
                         <input type="text" name="package[{{ $gram }}][gram_{{ $gram }}]"
@@ -218,7 +221,8 @@
                     <div class="col-md-2 mb-2 mb-md-0">
                         <input type="number" name="package[{{ $gram }}][sold_bundles_quantity_{{ $gram }}_gram]"
                                id="sold_bundles_quantity_{{ $gram }}_gram"
-                               class="form-control" style="border-radius:8px;" placeholder="0">
+                               class="form-control" style="border-radius:8px;" placeholder="0"
+                               value="{{ $prefillPackage?->quantity ?? '' }}">
                     </div>
                     <div class="col-md-2 mb-2 mb-md-0">
                         <select name="package[{{ $gram }}][bundle_type_{{ $gram }}_gram]"
@@ -236,7 +240,8 @@
                     <div class="col-md-2 mb-2 mb-md-0">
                         <input type="number" name="package[{{ $gram }}][price_per_bundle]"
                                id="price_per_bundle_{{ $gram }}_gram"
-                               class="form-control" style="border-radius:8px;" placeholder="0">
+                               class="form-control" style="border-radius:8px;" placeholder="0"
+                               value="{{ $prefillPackage?->price ?? '' }}">
                     </div>
                     <div class="col-md-3 mb-2 mb-md-0">
                         <div class="input-group">
@@ -436,6 +441,11 @@ $(document).ready(function () {
     /* ── SELECT2 ── */
     $('.select2').select2({ placeholder: 'Select a shop', allowClear: true });
     $('.select2').next('.select2-container').find('.select2-selection').css({ height: '39px' });
+
+    /* ── Run calculations on load (for prefilled values) ── */
+    calcDalla();
+    [5, 10, 30, 35, 40, 50].forEach(function (s) { calcThaila(s); });
+    [250, 300, 400, 500, 600, 700].forEach(function (g) { calcPackage(g); });
 });
 </script>
 @endsection
