@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <div class="row mb-2 align-items-center">
                 <div class="col-sm-6">
-                    <h1>Types List <small class="text-muted" style="font-size:14px;">اقسام کی فہرست</small></h1>
+                    <h1>Types List <small class="text-muted">اقسام کی فہرست</small></h1>
                 </div>
                 <div class="row mb-2 align-items-center">
                     <div class="col-sm-6">

@@ -23,61 +23,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <style>
-        /* ── PAK NAMAK GREEN THEME OVERRIDE ── */
-        :root {
-            --pn-dark:   #0a2e18;
-            --pn-mid:    #1a5c35;
-            --pn-light:  #2d7a4f;
-            --pn-pale:   #e8f5ee;
-        }
-
-        /* Sidebar */
-        .main-sidebar, .sidebar-dark-primary { background: var(--pn-dark) !important; }
-        .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
-        .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link:focus,
-        .sidebar-dark-primary .nav-sidebar > .nav-item.menu-open > .nav-link {
-            background: var(--pn-light) !important;
-            color: #fff !important;
-        }
-        .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link:hover {
-            background: var(--pn-mid) !important;
-            color: #fff !important;
-        }
-        .sidebar-dark-primary .nav-treeview > .nav-item > .nav-link.active,
-        .sidebar-dark-primary .nav-treeview > .nav-item > .nav-link:hover {
-            background: rgba(255,255,255,.1) !important;
-            color: #fff !important;
-        }
-        .sidebar-dark-primary .nav-treeview > .nav-item > .nav-link.active .nav-icon,
-        .sidebar-dark-primary .nav-treeview > .nav-item > .nav-link:hover .nav-icon {
-            color: #fff !important;
-        }
-        .brand-link { border-bottom-color: rgba(255,255,255,.1) !important; }
-
-        /* Top navbar */
-        .main-header.navbar { border-bottom: 2px solid var(--pn-pale) !important; }
-
-        /* Buttons */
-        .btn-primary { background: var(--pn-mid) !important; border-color: var(--pn-mid) !important; }
-        .btn-primary:hover { background: var(--pn-light) !important; border-color: var(--pn-light) !important; }
-        .btn-outline-primary { color: var(--pn-mid) !important; border-color: var(--pn-mid) !important; }
-        .btn-outline-primary:hover { background: var(--pn-mid) !important; color: #fff !important; }
-
-        /* Badges & accents */
-        .badge-primary, .bg-primary { background: var(--pn-mid) !important; }
-        .text-primary { color: var(--pn-mid) !important; }
-        .border-left-primary { border-left-color: var(--pn-mid) !important; }
-
-        /* Progress bars */
-        .progress-bar.bg-primary { background: var(--pn-mid) !important; }
-
-        /* Links */
-        a.text-primary, a[style*="4e73df"], a[style*="224abe"] { color: var(--pn-mid) !important; }
-
-        /* Content wrapper background */
-        .content-wrapper { background: #f2f5f3 !important; }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/pn-admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pn-receipt.css') }}">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">

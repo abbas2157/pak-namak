@@ -6,18 +6,18 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Cities & Areas <small class="text-muted" style="font-size:14px;">شہر اور علاقے</small></h1>
+                <h1 class="m-0">Cities & Areas <small class="text-muted">شہر اور علاقے</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">Cities</li>
                 </ol>
             </div>
-            <div class="col-sm-6 d-flex justify-content-end" style="gap:8px;">
+            <div class="col-sm-6 d-flex justify-content-end">
                 <a href="{{ route('admin.shops.index') }}"
-                   class="btn btn-light px-3" style="border-radius:8px;border:1px solid #d1d5db;">
+                   class="btn btn-light px-3 mr-2 btn-modal-cancel">
                     <i class="fas fa-store mr-1"></i> Shops
                 </a>
-                <button class="btn btn-primary px-4" style="border-radius:8px;" id="addCityBtn">
+                <button class="btn btn-primary px-4 btn-modal-save" id="addCityBtn">
                     <i class="fas fa-plus mr-1"></i> Add City / شہر شامل کریں
                 </button>
             </div>
@@ -31,7 +31,7 @@
         {{-- Stats --}}
         <div class="row mb-3">
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #4e73df !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-blue">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -39,16 +39,15 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $totalCities }}</div>
                                 <small class="text-muted">{{ $totalShops }} shops</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(78,115,223,.12);">
-                                <i class="fas fa-city" style="color:#4e73df;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-blue">
+                                <i class="fas fa-city"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1cc88a !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-teal">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -56,16 +55,15 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalRevenue, 0) }}</div>
                                 <small class="text-muted">PKR all cities</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(28,200,138,.12);">
-                                <i class="fas fa-chart-line" style="color:#1cc88a;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-teal">
+                                <i class="fas fa-chart-line"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #e74a3b !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-red">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -73,16 +71,15 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalPending, 0) }}</div>
                                 <small class="text-muted">PKR udhaar</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(231,74,59,.12);">
-                                <i class="fas fa-clock" style="color:#e74a3b;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-red">
+                                <i class="fas fa-clock"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #36b9cc !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-cyan">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -90,9 +87,8 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $totalShops }}</div>
                                 <small class="text-muted">across all cities</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(54,185,204,.12);">
-                                <i class="fas fa-store" style="color:#36b9cc;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-cyan">
+                                <i class="fas fa-store"></i>
                             </div>
                         </div>
                     </div>
@@ -106,14 +102,13 @@
 
             {{-- City header --}}
             <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center" style="gap:12px;">
-                    <button class="toggle-btn btn btn-sm"
-                            data-city="{{ $city->id }}"
-                            style="background:#e8f0fe;color:#4e73df;border:1px solid #c3d3f7;border-radius:6px;width:30px;height:30px;padding:0;">
+                <div class="d-flex align-items-center">
+                    <button class="toggle-btn btn btn-sm btn-city-toggle mr-3"
+                            data-city="{{ $city->id }}">
                         <i class="fas fa-chevron-right" id="toggle_icon_{{ $city->id }}"></i>
                     </button>
                     <div>
-                        <h6 class="mb-0 font-weight-bold" id="city_name_{{ $city->id }}" style="color:#2d3748;font-size:15px;">
+                        <h6 class="mb-0 font-weight-bold pn-text-heading" id="city_name_{{ $city->id }}">
                             {{ $city->name }}
                         </h6>
                         <small class="text-muted" id="city_meta_{{ $city->id }}">
@@ -123,29 +118,25 @@
                         </small>
                     </div>
                 </div>
-                <div class="d-flex" style="gap:6px;">
+                <div class="d-flex">
                     <a href="{{ route('admin.cities.sales', $city->id) }}"
-                       class="btn btn-sm"
-                       style="background:#d4edda;color:#155724;border:1px solid #c3e6cb;border-radius:6px;"
+                       class="btn btn-sm btn-pn btn-act-confirm mr-1"
                        title="Sales Report">
                         <i class="fas fa-chart-bar mr-1"></i> Sales
                     </a>
-                    <button class="btn btn-sm add-area-btn"
+                    <button class="btn btn-sm btn-pn btn-act-view add-area-btn mr-1"
                             data-city="{{ $city->id }}"
                             data-city-name="{{ $city->name }}"
-                            style="background:#e8f0fe;color:#4e73df;border:1px solid #c3d3f7;border-radius:6px;"
                             title="Add Area">
                         <i class="fas fa-plus mr-1"></i> Add Area
                     </button>
-                    <button class="btn btn-sm edit-city-btn"
+                    <button class="btn btn-sm btn-pn btn-act-edit edit-city-btn mr-1"
                             data-id="{{ $city->id }}"
-                            style="background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:6px;"
                             title="Edit City">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn btn-sm delete-city-btn"
+                    <button class="btn btn-sm btn-pn btn-act-delete delete-city-btn"
                             data-id="{{ $city->id }}"
-                            style="background:#fce8e6;color:#c62828;border:1px solid #ef9a9a;border-radius:6px;"
                             title="Delete City">
                         <i class="fas fa-trash"></i>
                     </button>
@@ -154,42 +145,40 @@
 
             {{-- Areas panel --}}
             <div id="areas_panel_{{ $city->id }}" style="display:none;">
-                <table class="table mb-0" style="font-size:13px;">
+                <table class="table mb-0 pn-table pn-table-font">
                     <thead>
-                        <tr style="background:#f8f9fc;border-bottom:1px solid #e3e6f0;">
-                            <th class="pl-4 py-2 text-uppercase" style="font-size:10px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Area / علاقہ</th>
-                            <th class="py-2 text-center text-uppercase" style="font-size:10px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shops / دکانیں</th>
-                            <th class="py-2 text-center text-uppercase" style="font-size:10px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions</th>
+                        <tr>
+                            <th class="pl-4 py-2 text-uppercase">Area / علاقہ</th>
+                            <th class="py-2 text-center text-uppercase">Shops / دکانیں</th>
+                            <th class="py-2 text-center text-uppercase">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="areas_tbody_{{ $city->id }}">
                         @forelse($city->areas as $area)
-                        <tr id="area_row_{{ $area->id }}" style="border-bottom:1px solid #f5f5f5;">
+                        <tr id="area_row_{{ $area->id }}" class="pn-table-row">
                             <td class="pl-4 py-2 align-middle">
-                                <span id="area_name_{{ $area->id }}" style="color:#374151;">{{ $area->name }}</span>
+                                <span id="area_name_{{ $area->id }}" class="text-c-dark">{{ $area->name }}</span>
                             </td>
                             <td class="py-2 align-middle text-center">
-                                <span class="badge" style="background:#e8f0fe;color:#4e73df;font-size:11px;padding:3px 8px;border-radius:20px;">
+                                <span class="badge bdg-blue bdg-sm">
                                     {{ $area->shops->count() }}
                                 </span>
                             </td>
-                            <td class="py-2 align-middle text-center" style="white-space:nowrap;">
-                                <button class="btn btn-sm edit-area-btn mr-1"
-                                        data-id="{{ $area->id }}"
-                                        style="background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:5px;padding:2px 7px;">
+                            <td class="py-2 align-middle text-center text-nowrap">
+                                <button class="btn btn-sm btn-pn btn-act-edit edit-area-btn mr-1"
+                                        data-id="{{ $area->id }}">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-sm delete-area-btn"
+                                <button class="btn btn-sm btn-pn btn-act-delete delete-area-btn"
                                         data-id="{{ $area->id }}"
-                                        data-city="{{ $city->id }}"
-                                        style="background:#fce8e6;color:#c62828;border:1px solid #ef9a9a;border-radius:5px;padding:2px 7px;">
+                                        data-city="{{ $city->id }}">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
                         </tr>
                         @empty
                         <tr id="no_areas_{{ $city->id }}">
-                            <td colspan="3" class="pl-4 py-3 text-muted" style="font-size:12px;">
+                            <td colspan="3" class="pl-4 py-3 text-muted">
                                 No areas yet. Click <strong>Add Area</strong> to add one.
                             </td>
                         </tr>
@@ -201,7 +190,7 @@
         @empty
         <div class="card border-0 shadow-sm">
             <div class="card-body text-center py-5">
-                <i class="fas fa-city fa-3x mb-3 d-block" style="color:#d1d5db;"></i>
+                <i class="fas fa-city fa-3x mb-3 d-block text-muted"></i>
                 <p class="text-muted mb-0">No cities added yet.</p>
                 <button class="btn btn-sm btn-primary mt-3" id="addCityBtnEmpty">
                     <i class="fas fa-plus mr-1"></i> Add First City
@@ -216,13 +205,12 @@
 {{-- City Modal --}}
 <div class="modal fade" id="cityModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="max-width:440px;" role="document">
-        <div class="modal-content border-0" style="border-radius:12px;overflow:hidden;">
-            <div class="modal-header border-0 text-white px-4 py-3"
-                 style="background:linear-gradient(135deg,#4e73df,#224abe);">
+        <div class="modal-content border-0 modal-pn">
+            <div class="modal-header border-0 text-white px-4 py-3">
                 <h5 class="modal-title">
                     <i class="fas fa-city mr-2"></i><span id="cityModalTitle">Add City / شہر شامل کریں</span>
                 </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;" aria-label="Close">
+                <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
                     <span>&times;</span>
                 </button>
             </div>
@@ -230,18 +218,16 @@
                 @csrf
                 <input type="hidden" id="cityId">
                 <div class="modal-body px-4 py-4">
-                    <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                    <label class="pn-label text-uppercase font-weight-bold text-muted">
                         City Name / شہر کا نام <span class="text-danger">*</span>
                     </label>
-                    <input type="text" id="cName" class="form-control"
-                           style="border-radius:8px;border-color:#d1d5db;" placeholder="e.g. Lahore, Khewra" required>
+                    <input type="text" id="cName" class="form-control fc-pn"
+                           placeholder="e.g. Lahore, Khewra" required>
                     <div id="cityNameError" class="text-danger mt-1" style="font-size:12px;display:none;"></div>
                 </div>
-                <div class="modal-footer border-0 px-4 py-3" style="background:#f8f9fc;">
-                    <button type="button" class="btn btn-light px-4" data-dismiss="modal" data-bs-dismiss="modal"
-                            style="border-radius:8px;border:1px solid #d1d5db;">Cancel / منسوخ</button>
-                    <button type="submit" class="btn btn-primary px-4" id="citySubmitBtn"
-                            style="border-radius:8px;background:linear-gradient(135deg,#4e73df,#224abe);border:none;">
+                <div class="modal-footer border-0 px-4 py-3">
+                    <button type="button" class="btn btn-light px-4 btn-modal-cancel" data-dismiss="modal" data-bs-dismiss="modal">Cancel / منسوخ</button>
+                    <button type="submit" class="btn btn-primary px-4 btn-modal-save" id="citySubmitBtn">
                         <i class="fas fa-save mr-1"></i> <span id="citySubmitText">Save City / محفوظ کریں</span>
                     </button>
                 </div>
@@ -253,13 +239,12 @@
 {{-- Area Modal --}}
 <div class="modal fade" id="areaModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="max-width:440px;" role="document">
-        <div class="modal-content border-0" style="border-radius:12px;overflow:hidden;">
-            <div class="modal-header border-0 text-white px-4 py-3"
-                 style="background:linear-gradient(135deg,#36b9cc,#1a8fa0);">
+        <div class="modal-content border-0 modal-pn">
+            <div class="modal-header border-0 text-white px-4 py-3">
                 <h5 class="modal-title">
                     <i class="fas fa-map-marker-alt mr-2"></i><span id="areaModalTitle">Add Area / علاقہ شامل کریں</span>
                 </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;" aria-label="Close">
+                <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
                     <span>&times;</span>
                 </button>
             </div>
@@ -268,22 +253,20 @@
                 <input type="hidden" id="areaId">
                 <input type="hidden" id="areaCityId">
                 <div class="modal-body px-4 py-4">
-                    <div class="mb-3 p-2 rounded" style="background:#f0f9ff;border:1px solid #bae6fd;">
+                    <div class="mb-3 p-2 rounded btn-area-info">
                         <small class="text-muted d-block">City / شہر:</small>
-                        <strong id="areaModalCityName" style="color:#0369a1;"></strong>
+                        <strong id="areaModalCityName" class="text-c-blue2"></strong>
                     </div>
-                    <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                    <label class="pn-label text-uppercase font-weight-bold text-muted">
                         Area Name / علاقے کا نام <span class="text-danger">*</span>
                     </label>
-                    <input type="text" id="aName" class="form-control"
-                           style="border-radius:8px;border-color:#d1d5db;" placeholder="e.g. Main Bazaar, Near Masjid" required>
+                    <input type="text" id="aName" class="form-control fc-pn"
+                           placeholder="e.g. Main Bazaar, Near Masjid" required>
                     <div id="areaNameError" class="text-danger mt-1" style="font-size:12px;display:none;"></div>
                 </div>
-                <div class="modal-footer border-0 px-4 py-3" style="background:#f8f9fc;">
-                    <button type="button" class="btn btn-light px-4" data-dismiss="modal" data-bs-dismiss="modal"
-                            style="border-radius:8px;border:1px solid #d1d5db;">Cancel / منسوخ</button>
-                    <button type="submit" class="btn btn-primary px-4" id="areaSubmitBtn"
-                            style="border-radius:8px;background:linear-gradient(135deg,#36b9cc,#1a8fa0);border:none;">
+                <div class="modal-footer border-0 px-4 py-3">
+                    <button type="button" class="btn btn-light px-4 btn-modal-cancel" data-dismiss="modal" data-bs-dismiss="modal">Cancel / منسوخ</button>
+                    <button type="submit" class="btn btn-primary px-4 btn-modal-save" id="areaSubmitBtn">
                         <i class="fas fa-save mr-1"></i> <span id="areaSubmitText">Save Area / محفوظ کریں</span>
                     </button>
                 </div>
@@ -490,20 +473,18 @@ $(function () {
 
                     // Append new row
                     $('#areas_tbody_' + cityId).append(
-                        `<tr id="area_row_${a.id}" style="border-bottom:1px solid #f5f5f5;">
+                        `<tr id="area_row_${a.id}" class="pn-table-row">
                             <td class="pl-4 py-2 align-middle">
-                                <span id="area_name_${a.id}" style="color:#374151;">${a.name}</span>
+                                <span id="area_name_${a.id}" class="text-c-dark">${a.name}</span>
                             </td>
                             <td class="py-2 align-middle text-center">
-                                <span class="badge" style="background:#e8f0fe;color:#4e73df;font-size:11px;padding:3px 8px;border-radius:20px;">0</span>
+                                <span class="badge bdg-blue bdg-sm">0</span>
                             </td>
-                            <td class="py-2 align-middle text-center" style="white-space:nowrap;">
-                                <button class="btn btn-sm edit-area-btn mr-1" data-id="${a.id}"
-                                        style="background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:5px;padding:2px 7px;">
+                            <td class="py-2 align-middle text-center text-nowrap">
+                                <button class="btn btn-sm btn-pn btn-act-edit edit-area-btn mr-1" data-id="${a.id}">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-sm delete-area-btn" data-id="${a.id}" data-city="${cityId}"
-                                        style="background:#fce8e6;color:#c62828;border:1px solid #ef9a9a;border-radius:5px;padding:2px 7px;">
+                                <button class="btn btn-sm btn-pn btn-act-delete delete-area-btn" data-id="${a.id}" data-city="${cityId}">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
@@ -570,7 +551,7 @@ $(function () {
                         if ($('#areas_tbody_' + cityId + ' tr').length === 0) {
                             $('#areas_tbody_' + cityId).append(
                                 `<tr id="no_areas_${cityId}">
-                                    <td colspan="3" class="pl-4 py-3 text-muted" style="font-size:12px;">
+                                    <td colspan="3" class="pl-4 py-3 text-muted">
                                         No areas yet. Click <strong>Add Area</strong> to add one.
                                     </td>
                                 </tr>`

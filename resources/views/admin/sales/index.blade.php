@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Sales <small class="text-muted" style="font-size:14px;">فروخت</small></h1>
+                <h1 class="m-0">Sales <small class="text-muted pn-stat-sub">فروخت</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">Sales</li>
@@ -14,7 +14,7 @@
             </div>
             <div class="col-sm-6 d-flex justify-content-end">
                 <a href="{{ route('admin.sales.create') }}"
-                   class="btn btn-primary px-4" style="border-radius:8px;">
+                   class="btn btn-primary px-4 btn-pn">
                     <i class="fas fa-plus mr-1"></i> New Sale / نئی فروخت
                 </a>
             </div>
@@ -28,7 +28,7 @@
         {{-- ===== STATS ===== --}}
         <div class="row mb-3">
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #4e73df !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-blue">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -36,16 +36,15 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $totalCount }}</div>
                                 <small class="text-muted">transactions</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(78,115,223,.12);">
-                                <i class="fas fa-file-invoice" style="color:#4e73df;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-blue">
+                                <i class="fas fa-file-invoice"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1cc88a !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-teal">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -53,16 +52,15 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalRevenue, 0) }}</div>
                                 <small class="text-muted">PKR</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(28,200,138,.12);">
-                                <i class="fas fa-chart-line" style="color:#1cc88a;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-teal">
+                                <i class="fas fa-chart-line"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #36b9cc !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-cyan">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -70,16 +68,15 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalReceived, 0) }}</div>
                                 <small class="text-muted">PKR paid</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(54,185,204,.12);">
-                                <i class="fas fa-check-circle" style="color:#36b9cc;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-cyan">
+                                <i class="fas fa-check-circle"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #e74a3b !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-red">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -87,9 +84,8 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalPending, 0) }}</div>
                                 <small class="text-muted">PKR outstanding</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(231,74,59,.12);">
-                                <i class="fas fa-clock" style="color:#e74a3b;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-red">
+                                <i class="fas fa-clock"></i>
                             </div>
                         </div>
                     </div>
@@ -102,10 +98,10 @@
 
             {{-- TABLE --}}
             <div class="col-lg-9 mb-3">
-                <div class="card border-0 shadow-sm">
+                <div class="card border-0 shadow-sm card-pn">
                     <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
                         <div>
-                            <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
+                            <h6 class="mb-0 font-weight-bold text-c-blue2">
                                 <i class="fas fa-table mr-2"></i>Sale Records
                             </h6>
                             @if($selectedMonth)
@@ -116,94 +112,84 @@
                                 <small class="text-muted">All time</small>
                             @endif
                         </div>
-                        <span class="badge" style="background:#e8f0fe;color:#4e73df;font-size:12px;padding:5px 10px;border-radius:20px;">
-                            {{ $totalCount }} records
-                        </span>
+                        <span class="badge pn-bdg pn-bdg-blue">{{ $totalCount }} records</span>
                     </div>
                     <div class="card-body p-2">
                         <div class="table-responsive">
-                            <table class="table mb-0" id="salesTable" style="font-size:13.5px;">
+                            <table class="table mb-0 pn-table pn-table-font" id="salesTable">
                                 <thead>
-                                    <tr style="background:#f8f9fc;border-bottom:2px solid #e3e6f0;">
-                                        <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Date / تاریخ</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shop / دکان</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Types / اقسام</th>
-                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Total / کل</th>
-                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Received / وصول</th>
-                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Pending / باقی</th>
-                                        <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions / اقدامات</th>
+                                    <tr>
+                                        <th class="pl-3">Date / تاریخ</th>
+                                        <th>Shop / دکان</th>
+                                        <th>Types / اقسام</th>
+                                        <th class="text-right">Total / کل</th>
+                                        <th class="text-right">Received / وصول</th>
+                                        <th class="text-right">Pending / باقی</th>
+                                        <th class="text-center">Actions / اقدامات</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse($sales as $sale)
-                                        <tr id="row_{{ $sale->id }}" style="border-bottom:1px solid #f0f0f0;">
-                                            <td class="pl-3 py-3 align-middle">
-                                                <span class="font-weight-bold d-block" style="color:#2d3748;">
+                                        <tr id="row_{{ $sale->id }}">
+                                            <td class="pl-3 align-middle">
+                                                <span class="font-weight-bold d-block pn-text-heading">
                                                     {{ \Carbon\Carbon::parse($sale->sale_date)->format('d M') }}
                                                 </span>
                                                 <small class="text-muted">{{ \Carbon\Carbon::parse($sale->sale_date)->format('Y') }}</small>
                                             </td>
-                                            <td class="py-3 align-middle">
-                                                <span class="font-weight-bold d-block" style="color:#2d3748;">
+                                            <td class="align-middle">
+                                                <span class="font-weight-bold d-block pn-text-heading">
                                                     {{ $sale->shop->name ?? '—' }}
                                                 </span>
                                                 @if($sale->shop?->phone_number)
                                                     <small class="text-muted">{{ $sale->shop->phone_number }}</small>
                                                 @endif
                                             </td>
-                                            <td class="py-3 align-middle" style="white-space:nowrap;">
+                                            <td class="align-middle text-nowrap">
                                                 @if($sale->dalla)
-                                                    <span class="badge mr-1" style="background:#e8f0fe;color:#4e73df;font-size:10px;padding:3px 7px;border-radius:20px;">Dalla</span>
+                                                    <span class="badge badge-item-dalla mr-1">Dalla</span>
                                                 @endif
                                                 @if($sale->thailas->count())
-                                                    <span class="badge mr-1" style="background:#d4edda;color:#155724;font-size:10px;padding:3px 7px;border-radius:20px;">Thaila</span>
+                                                    <span class="badge badge-item-thaila mr-1">Thaila</span>
                                                 @endif
                                                 @if($sale->packages->count())
-                                                    <span class="badge" style="background:#fff3cd;color:#856404;font-size:10px;padding:3px 7px;border-radius:20px;">Packages</span>
+                                                    <span class="badge badge-item-package">Packages</span>
                                                 @endif
                                             </td>
-                                            <td class="py-3 align-middle text-right">
-                                                <span class="font-weight-bold" style="color:#2d3748;">
-                                                    {{ number_format($sale->total_amount, 0) }}
-                                                </span>
+                                            <td class="align-middle text-right font-weight-bold pn-text-heading">
+                                                {{ number_format($sale->total_amount, 0) }}
                                             </td>
-                                            <td class="py-3 align-middle text-right">
-                                                <span style="color:#1cc88a;font-weight:600;">
-                                                    {{ number_format($sale->received_amount, 0) }}
-                                                </span>
+                                            <td class="align-middle text-right font-weight-600 text-c-teal">
+                                                {{ number_format($sale->received_amount, 0) }}
                                             </td>
-                                            <td class="py-3 align-middle text-right">
+                                            <td class="align-middle text-right">
                                                 @if($sale->pending_amount > 0)
-                                                    <span class="font-weight-bold" style="color:#e74a3b;">
+                                                    <span class="font-weight-bold text-c-red">
                                                         {{ number_format($sale->pending_amount, 0) }}
                                                     </span>
                                                 @else
                                                     <span class="text-muted">—</span>
                                                 @endif
                                             </td>
-                                            <td class="py-3 align-middle text-center" style="white-space:nowrap;">
-                                                <button class="btn btn-sm viewBtn mr-1"
-                                                        data-id="{{ $sale->id }}"
-                                                        style="background:#e8f0fe;color:#4e73df;border:1px solid #c3d3f7;border-radius:6px;"
-                                                        title="View Details">
+                                            <td class="align-middle text-center text-nowrap">
+                                                <button class="btn btn-sm btn-pn btn-act-view viewBtn mr-1"
+                                                        data-id="{{ $sale->id }}" title="View Details">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
                                                 <a href="{{ route('admin.sales.receipt', ['id' => $sale->id]) }}"
                                                    target="_blank"
-                                                   class="btn btn-sm mr-1"
-                                                   style="background:#f3f4f6;color:#374151;border:1px solid #d1d5db;border-radius:6px;"
+                                                   class="btn btn-sm btn-pn btn-act-print mr-1"
                                                    title="Print Receipt">
                                                     <i class="fas fa-print"></i>
                                                 </a>
                                                 @if(!empty($sale->bill_image))
                                                     <a href="{{ asset($sale->bill_image) }}" target="_blank"
-                                                       class="btn btn-sm mr-1"
-                                                       style="background:#d4edda;color:#155724;border:1px solid #c3e6cb;border-radius:6px;"
+                                                       class="btn btn-sm btn-pn btn-act-bill mr-1"
                                                        title="View Bill">
                                                         <i class="fas fa-image"></i>
                                                     </a>
                                                 @endif
-                                                <button class="btn btn-sm quickEditBtn mr-1"
+                                                <button class="btn btn-sm btn-pn btn-act-edit quickEditBtn mr-1"
                                                         data-id="{{ $sale->id }}"
                                                         data-shop-id="{{ $sale->shop_id }}"
                                                         data-sale-date="{{ $sale->sale_date }}"
@@ -211,20 +197,16 @@
                                                         data-total="{{ $sale->total_amount }}"
                                                         data-pending="{{ $sale->pending_amount }}"
                                                         data-remarks="{{ $sale->remarks ?? '' }}"
-                                                        style="background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:6px;"
                                                         title="Quick Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                                 <a href="{{ route('admin.sales.edit', $sale->id) }}"
-                                                   class="btn btn-sm mr-1"
-                                                   style="background:#e8f0fe;color:#4e73df;border:1px solid #c3d3f7;border-radius:6px;"
+                                                   class="btn btn-sm btn-pn btn-act-view mr-1"
                                                    title="Full Edit">
                                                     <i class="fas fa-pencil-alt"></i>
                                                 </a>
-                                                <button class="btn btn-sm deleteBtn"
-                                                        data-id="{{ $sale->id }}"
-                                                        style="background:#fce8e6;color:#c62828;border:1px solid #ef9a9a;border-radius:6px;"
-                                                        title="Delete">
+                                                <button class="btn btn-sm btn-pn btn-act-delete deleteBtn"
+                                                        data-id="{{ $sale->id }}" title="Delete">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </td>
@@ -232,9 +214,9 @@
                                     @empty
                                         <tr>
                                             <td colspan="7" class="text-center py-5">
-                                                <i class="fas fa-file-invoice fa-3x mb-3 d-block" style="color:#d1d5db;"></i>
+                                                <i class="fas fa-file-invoice fa-3x mb-3 d-block icon-fade"></i>
                                                 <p class="text-muted mb-0">No sales found for this period.</p>
-                                                <a href="{{ route('admin.sales.create') }}" class="btn btn-sm btn-primary mt-3">
+                                                <a href="{{ route('admin.sales.create') }}" class="btn btn-sm btn-primary btn-pn mt-3">
                                                     <i class="fas fa-plus mr-1"></i> Create Sale
                                                 </a>
                                             </td>
@@ -243,15 +225,15 @@
                                 </tbody>
                                 @if($sales->count() > 0)
                                 <tfoot>
-                                    <tr style="background:#f8f9fc;border-top:2px solid #e3e6f0;">
-                                        <td class="pl-3 py-3 font-weight-bold" colspan="3" style="color:#2d3748;">Totals / کل</td>
-                                        <td class="py-3 text-right font-weight-bold" style="color:#2d3748;font-size:15px;">
+                                    <tr class="pn-total-row">
+                                        <td class="pl-3 py-3 font-weight-bold pn-text-heading" colspan="3">Totals / کل</td>
+                                        <td class="py-3 text-right font-weight-bold pn-text-heading pn-stat-num-sm">
                                             {{ number_format($totalRevenue, 0) }}
                                         </td>
-                                        <td class="py-3 text-right font-weight-bold" style="color:#1cc88a;font-size:15px;">
+                                        <td class="py-3 text-right font-weight-bold text-c-teal pn-stat-num-sm">
                                             {{ number_format($totalReceived, 0) }}
                                         </td>
-                                        <td class="py-3 text-right font-weight-bold" style="color:#e74a3b;font-size:15px;">
+                                        <td class="py-3 text-right font-weight-bold text-c-red pn-stat-num-sm">
                                             {{ number_format($totalPending, 0) }}
                                         </td>
                                         <td></td>
@@ -268,17 +250,15 @@
             <div class="col-lg-3">
 
                 {{-- Month Filter --}}
-                <div class="card border-0 shadow-sm mb-3">
+                <div class="card border-0 shadow-sm mb-3 card-pn">
                     <div class="card-header bg-white border-bottom py-3">
-                        <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
+                        <h6 class="mb-0 font-weight-bold text-c-blue2">
                             <i class="fas fa-calendar-alt mr-2"></i>Filter by Month / مہینے کے مطابق فلٹر
                         </h6>
                     </div>
                     <div class="card-body py-3">
                         <form method="GET">
-                            <select name="month" class="form-control mb-2"
-                                    onchange="this.form.submit()"
-                                    style="border-radius:8px;border-color:#d1d5db;">
+                            <select name="month" class="form-control mb-2 fc-pn" onchange="this.form.submit()">
                                 <option value="">All Time</option>
                                 @foreach($months as $m)
                                     <option value="{{ $m->value }}" {{ $selectedMonth == $m->value ? 'selected' : '' }}>
@@ -289,8 +269,7 @@
                         </form>
                         @if($selectedMonth)
                             <a href="{{ route('admin.sales.index') }}"
-                               class="btn btn-block btn-sm mt-1"
-                               style="background:#f3f4f6;color:#6b7280;border-radius:8px;border:1px solid #d1d5db;">
+                               class="btn btn-block btn-sm btn-pn btn-clear-filter mt-1">
                                 <i class="fas fa-times mr-1"></i> Show All Time
                             </a>
                         @endif
@@ -299,9 +278,9 @@
 
                 {{-- Payment summary --}}
                 @if($totalRevenue > 0)
-                <div class="card border-0 shadow-sm mb-3">
+                <div class="card border-0 shadow-sm mb-3 card-pn">
                     <div class="card-header bg-white border-bottom py-3">
-                        <h6 class="mb-0 font-weight-bold" style="color:#1cc88a;">
+                        <h6 class="mb-0 font-weight-bold text-c-teal">
                             <i class="fas fa-wallet mr-2"></i>Payment Summary / ادائیگی کا خلاصہ
                         </h6>
                     </div>
@@ -312,32 +291,31 @@
                         @endphp
                         <div class="mb-3">
                             <div class="d-flex justify-content-between mb-1">
-                                <span style="font-size:13px;color:#374151;"><strong>Received / وصول</strong></span>
-                                <span style="font-size:12px;color:#1cc88a;font-weight:600;">
+                                <span class="breakdown-item"><strong>Received / وصول</strong></span>
+                                <span class="breakdown-amount text-c-teal font-weight-bold">
                                     {{ number_format($totalReceived, 0) }}
                                     <small class="text-muted">({{ $recPct }}%)</small>
                                 </span>
                             </div>
-                            <div class="progress" style="height:7px;border-radius:10px;background:#f0f0f0;">
-                                <div class="progress-bar" style="width:{{ $recPct }}%;background:#1cc88a;border-radius:10px;"></div>
+                            <div class="progress breakdown-bar-md">
+                                <div class="progress-bar pbar pbar-teal" style="--w:{{ $recPct }}%"></div>
                             </div>
                         </div>
                         <div>
                             <div class="d-flex justify-content-between mb-1">
-                                <span style="font-size:13px;color:#374151;"><strong>Pending / باقی</strong></span>
-                                <span style="font-size:12px;color:#e74a3b;font-weight:600;">
+                                <span class="breakdown-item"><strong>Pending / باقی</strong></span>
+                                <span class="breakdown-amount text-c-red font-weight-bold">
                                     {{ number_format($totalPending, 0) }}
                                     <small class="text-muted">({{ $penPct }}%)</small>
                                 </span>
                             </div>
-                            <div class="progress" style="height:7px;border-radius:10px;background:#f0f0f0;">
-                                <div class="progress-bar" style="width:{{ $penPct }}%;background:#e74a3b;border-radius:10px;"></div>
+                            <div class="progress breakdown-bar-md">
+                                <div class="progress-bar pbar pbar-red" style="--w:{{ $penPct }}%"></div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center pt-3 mt-2"
-                             style="border-top:2px solid #f0f0f0;">
-                            <span class="font-weight-bold" style="color:#374151;">Total / کل</span>
-                            <span class="font-weight-bold" style="color:#2d3748;font-size:15px;">
+                        <div class="d-flex justify-content-between align-items-center pt-3 mt-2 breakdown-grand-total-bar">
+                            <span class="font-weight-bold breakdown-item">Total / کل</span>
+                            <span class="font-weight-bold pn-text-heading pn-stat-num-sm">
                                 PKR {{ number_format($totalRevenue, 0) }}
                             </span>
                         </div>
@@ -354,32 +332,32 @@
                     $typeGrand    = $dallaTotal + $thailaTotal + $packageTotal;
                 @endphp
                 @if($typeGrand > 0)
-                <div class="card border-0 shadow-sm">
+                <div class="card border-0 shadow-sm card-pn">
                     <div class="card-header bg-white border-bottom py-3">
-                        <h6 class="mb-0 font-weight-bold" style="color:#e74a3b;">
+                        <h6 class="mb-0 font-weight-bold text-c-red">
                             <i class="fas fa-chart-pie mr-2"></i>Product Breakdown / مصنوعات کی تفصیل
                         </h6>
                     </div>
                     <div class="card-body py-3 px-3">
                         @foreach([
-                            ['Dalla',    $dallaTotal,   '#4e73df', 'fa-tint'],
-                            ['Thaila',   $thailaTotal,  '#1cc88a', 'fa-shopping-bag'],
-                            ['Packages', $packageTotal, '#f6c23e', 'fa-box'],
-                        ] as [$label, $amount, $color, $icon])
+                            ['Dalla',    $dallaTotal,   'text-c-blue2', 'pbar-blue',   'fa-tint'],
+                            ['Thaila',   $thailaTotal,  'text-c-teal',  'pbar-teal',   'fa-shopping-bag'],
+                            ['Packages', $packageTotal, 'text-c-warn',  'pbar-yellow', 'fa-box'],
+                        ] as [$label, $amount, $textClass, $barClass, $icon])
                             @php $pct = $typeGrand > 0 ? round(($amount / $typeGrand) * 100) : 0; @endphp
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <span style="font-size:13px;color:#374151;">
-                                        <i class="fas {{ $icon }} mr-1" style="color:{{ $color }};"></i>
+                                    <span class="breakdown-item">
+                                        <i class="fas {{ $icon }} mr-1 {{ $textClass }}"></i>
                                         <strong>{{ $label }}</strong>
                                     </span>
-                                    <span style="font-size:12px;">
-                                        <span style="color:#374151;font-weight:600;">{{ number_format($amount, 0) }}</span>
+                                    <span class="breakdown-amount">
+                                        <span class="breakdown-val">{{ number_format($amount, 0) }}</span>
                                         <span class="text-muted ml-1">{{ $pct }}%</span>
                                     </span>
                                 </div>
-                                <div class="progress" style="height:5px;border-radius:10px;background:#f0f0f0;">
-                                    <div class="progress-bar" style="width:{{ $pct }}%;background:{{ $color }};border-radius:10px;"></div>
+                                <div class="progress breakdown-bar">
+                                    <div class="progress-bar pbar {{ $barClass }}" style="--w:{{ $pct }}%"></div>
                                 </div>
                             </div>
                         @endforeach
@@ -395,39 +373,38 @@
 </section>
 
 {{-- ===== SALE DETAIL MODAL ===== --}}
-<div class="modal fade" id="saleDetailModal" tabindex="-1">
+<div class="modal fade modal-pn" id="saleDetailModal" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content border-0" style="border-radius:12px;overflow:hidden;">
-            <div class="modal-header border-0 text-white px-4 py-3"
-                 style="background:linear-gradient(135deg,#4e73df,#224abe);">
+        <div class="modal-content">
+            <div class="modal-header px-4 py-3">
                 <h5 class="modal-title"><i class="fas fa-file-invoice mr-2"></i>Sale Details</h5>
-                <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;">
+                <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal">
                     <span>&times;</span>
                 </button>
             </div>
             <div class="modal-body px-4 py-4" id="saleDetailBody">
                 <div class="text-center py-5">
-                    <span class="spinner-border" style="color:#4e73df;"></span>
+                    <span class="spinner-border text-c-blue2"></span>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{{-- ===== EDIT MODAL ===== --}}
-<div class="modal fade" id="editSaleModal" tabindex="-1">
+
+{{-- ===== QUICK EDIT MODAL ===== --}}
+<div class="modal fade modal-pn" id="editSaleModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <form id="editSaleForm">
             @csrf
             <input type="hidden" id="edit_sale_id">
             <input type="hidden" id="edit_total_amount">
-            <div class="modal-content border-0" style="border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15);">
+            <div class="modal-content">
 
-                <div class="modal-header border-0 text-white px-4 py-3"
-                     style="background:linear-gradient(135deg,#4e73df,#224abe);">
+                <div class="modal-header px-4 py-3">
                     <h5 class="modal-title">
                         <i class="fas fa-edit mr-2"></i>Edit Sale / فروخت ترمیم
                     </h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;">
+                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal">
                         <span>&times;</span>
                     </button>
                 </div>
@@ -435,61 +412,57 @@
                 <div class="modal-body px-4 py-4">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Shop / دکان <span class="text-danger">*</span>
                             </label>
-                            <select name="shop_id" id="edit_shop_id" class="form-control" style="border-radius:8px;border-color:#d1d5db;" required>
+                            <select name="shop_id" id="edit_shop_id" class="form-control fc-pn" required>
                                 @foreach($shops as $shop)
                                     <option value="{{ $shop->id }}">{{ $shop->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Sale Date / فروخت کی تاریخ <span class="text-danger">*</span>
                             </label>
-                            <input type="date" name="sale_date" id="edit_sale_date" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;" required>
+                            <input type="date" name="sale_date" id="edit_sale_date"
+                                   class="form-control fc-pn" required>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Total Amount / کل رقم
                             </label>
-                            <input type="text" id="edit_total_display" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;background:#f8f9fc;" readonly>
+                            <input type="text" id="edit_total_display" class="form-control fc-ro-pn" readonly>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Received Amount / وصول شدہ رقم
                             </label>
-                            <input type="number" name="received_amount" id="edit_received_amount" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;" min="0" step="1" placeholder="0">
+                            <input type="number" name="received_amount" id="edit_received_amount"
+                                   class="form-control fc-pn" min="0" step="1" placeholder="0">
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Pending Amount / باقی رقم
                             </label>
-                            <input type="text" id="edit_pending_display" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;background:#f8f9fc;" readonly>
+                            <input type="text" id="edit_pending_display" class="form-control fc-ro-pn" readonly>
                         </div>
                         <div class="col-12 mb-1">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Remarks / ملاحظات
                             </label>
-                            <textarea name="remarks" id="edit_remarks" class="form-control" rows="2"
-                                      style="border-radius:8px;border-color:#d1d5db;" placeholder="Optional notes..."></textarea>
+                            <textarea name="remarks" id="edit_remarks" class="form-control fc-pn" rows="2"
+                                      placeholder="Optional notes..."></textarea>
                         </div>
                     </div>
                 </div>
 
-                <div class="modal-footer border-0 px-4 py-3" style="background:#f8f9fc;">
-                    <button type="button" class="btn btn-light px-4"
-                            data-dismiss="modal" data-bs-dismiss="modal"
-                            style="border-radius:8px;border:1px solid #d1d5db;">
+                <div class="modal-footer px-4 py-3">
+                    <button type="button" class="btn btn-light px-4 btn-modal-cancel"
+                            data-dismiss="modal" data-bs-dismiss="modal">
                         Cancel / منسوخ
                     </button>
-                    <button class="btn btn-primary px-4" type="submit" id="editSubmitBtn"
-                            style="border-radius:8px;background:linear-gradient(135deg,#4e73df,#224abe);border:none;">
+                    <button class="btn btn-primary px-4 btn-modal-save" type="submit" id="editSubmitBtn">
                         <i class="fas fa-save mr-1"></i> Update Sale / فروخت اپ ڈیٹ
                     </button>
                 </div>
@@ -525,7 +498,7 @@ $(function () {
     // View detail
     $(document).on('click', '.viewBtn', function () {
         const id = $(this).data('id');
-        $('#saleDetailBody').html('<div class="text-center py-5"><span class="spinner-border" style="color:#4e73df;"></span></div>');
+        $('#saleDetailBody').html('<div class="text-center py-5"><span class="spinner-border text-c-blue2"></span></div>');
         $('#saleDetailModal').modal('show');
         $.get(APP_URL + '/sales/' + id, function (html) {
             $('#saleDetailBody').html(html);

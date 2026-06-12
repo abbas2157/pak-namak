@@ -6,14 +6,14 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Purchases <small class="text-muted" style="font-size:14px;">خریداری</small></h1>
+                <h1 class="m-0">Purchases <small class="text-muted pn-stat-sub">خریداری</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">Purchases</li>
                 </ol>
             </div>
             <div class="col-sm-6 d-flex justify-content-end">
-                <button class="btn btn-primary px-4" style="border-radius:8px;" id="addBtn">
+                <button class="btn btn-primary px-4 btn-pn" id="addBtn">
                     <i class="fas fa-plus mr-1"></i> Add Purchase / خریداری شامل کریں
                 </button>
             </div>
@@ -27,7 +27,7 @@
         {{-- Stats --}}
         <div class="row mb-3">
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #e74a3b !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-red">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -35,16 +35,15 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalSpent, 0) }}</div>
                                 <small class="text-muted">PKR</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(231,74,59,.12);">
-                                <i class="fas fa-shopping-cart" style="color:#e74a3b;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-red">
+                                <i class="fas fa-shopping-cart"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #4e73df !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-blue">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -52,16 +51,15 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalQtyTon, 2) }}</div>
                                 <small class="text-muted">Tons / ٹن - {{ number_format($totalQtyKg, 0) }} KG / کلو</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(78,115,223,.12);">
-                                <i class="fas fa-weight" style="color:#4e73df;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-blue">
+                                <i class="fas fa-weight"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1cc88a !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-teal">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -69,16 +67,15 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $totalEntries }}</div>
                                 <small class="text-muted">purchase records</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(28,200,138,.12);">
-                                <i class="fas fa-file-invoice" style="color:#1cc88a;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-teal">
+                                <i class="fas fa-file-invoice"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #f6c23e !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-yellow">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -88,9 +85,8 @@
                                 </div>
                                 <small class="text-muted">PKR</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(246,194,62,.12);">
-                                <i class="fas fa-chart-line" style="color:#f6c23e;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-yellow">
+                                <i class="fas fa-chart-line"></i>
                             </div>
                         </div>
                     </div>
@@ -103,10 +99,10 @@
 
             {{-- Table --}}
             <div class="col-lg-9 mb-3">
-                <div class="card border-0 shadow-sm">
+                <div class="card border-0 shadow-sm card-pn">
                     <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
                         <div>
-                            <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
+                            <h6 class="mb-0 font-weight-bold text-c-blue2">
                                 <i class="fas fa-table mr-2"></i>Purchase Records
                             </h6>
                             @if($selectedMonth)
@@ -117,30 +113,28 @@
                                 <small class="text-muted">All time</small>
                             @endif
                         </div>
-                        <span class="badge" style="background:#e8f0fe;color:#4e73df;font-size:12px;padding:5px 10px;border-radius:20px;">
-                            {{ $totalEntries }} records
-                        </span>
+                        <span class="badge pn-bdg pn-bdg-blue">{{ $totalEntries }} records</span>
                     </div>
                     <div class="card-body p-2">
                         <div class="table-responsive">
-                            <table class="table mb-0" id="purchasesTable" style="font-size:13.5px;">
+                            <table class="table mb-0 pn-table pn-table-font" id="purchasesTable">
                                 <thead>
-                                    <tr style="background:#f8f9fc;border-bottom:2px solid #e3e6f0;">
-                                        <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Date / تاریخ</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Supplier / سپلائر</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Qty (Ton) / مقدار (ٹن)</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Qty (KG) / مقدار (کلو)</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Rate/KG / نرخ/کلو</th>
-                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Grand Total / کل مجموعہ</th>
-                                        <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions / اقدامات</th>
+                                    <tr>
+                                        <th class="pl-3">Date / تاریخ</th>
+                                        <th>Supplier / سپلائر</th>
+                                        <th>Qty (Ton) / مقدار (ٹن)</th>
+                                        <th>Qty (KG) / مقدار (کلو)</th>
+                                        <th>Rate/KG / نرخ/کلو</th>
+                                        <th class="text-right">Grand Total / کل مجموعہ</th>
+                                        <th class="text-center">Actions / اقدامات</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse($purchases as $row)
-                                        <tr id="row_{{ $row->id }}" style="border-bottom:1px solid #f0f0f0;">
-                                            <td class="pl-3 py-3 align-middle">
+                                        <tr id="row_{{ $row->id }}">
+                                            <td class="pl-3 align-middle">
                                                 @if($row->purchase_date)
-                                                    <span class="font-weight-bold d-block" style="color:#2d3748;">
+                                                    <span class="font-weight-bold d-block pn-text-heading">
                                                         {{ $row->purchase_date->format('d M') }}
                                                     </span>
                                                     <small class="text-muted">{{ $row->purchase_date->format('Y') }}</small>
@@ -148,29 +142,25 @@
                                                     <span class="text-muted">—</span>
                                                 @endif
                                             </td>
-                                            <td class="py-3 align-middle">
-                                                <span class="font-weight-bold d-block" style="color:#2d3748;">{{ $row->vendor->name ?? '—' }}</span>
+                                            <td class="align-middle">
+                                                <span class="font-weight-bold d-block pn-text-heading">{{ $row->vendor->name ?? '—' }}</span>
                                                 <small class="text-muted">{{ $row->vendor->phone ?? '' }}</small>
                                             </td>
-                                            <td class="py-3 align-middle">{{ $row->salt_quantity ?? '—' }}</td>
-                                            <td class="py-3 align-middle">{{ $row->salt_quantity_kg ?? '—' }}</td>
-                                            <td class="py-3 align-middle">{{ number_format($row->rate_per_kg, 2) }}</td>
-                                            <td class="py-3 align-middle text-right">
-                                                <span class="font-weight-bold" style="color:#e74a3b;font-size:14px;">
+                                            <td class="align-middle">{{ $row->salt_quantity ?? '—' }}</td>
+                                            <td class="align-middle">{{ $row->salt_quantity_kg ?? '—' }}</td>
+                                            <td class="align-middle">{{ number_format($row->rate_per_kg, 2) }}</td>
+                                            <td class="align-middle text-right">
+                                                <span class="font-weight-bold text-c-red pn-stat-num-sm">
                                                     {{ number_format($row->grand_total, 0) }}
                                                 </span>
                                             </td>
-                                            <td class="py-3 align-middle text-center">
-                                                <button class="btn btn-sm editBtn mr-1"
-                                                        data-id="{{ $row->id }}"
-                                                        style="background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:6px;"
-                                                        title="Edit">
+                                            <td class="align-middle text-center">
+                                                <button class="btn btn-sm btn-pn btn-act-edit editBtn mr-1"
+                                                        data-id="{{ $row->id }}" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <button class="btn btn-sm deleteBtn"
-                                                        data-id="{{ $row->id }}"
-                                                        style="background:#fce8e6;color:#c62828;border:1px solid #ef9a9a;border-radius:6px;"
-                                                        title="Delete">
+                                                <button class="btn btn-sm btn-pn btn-act-delete deleteBtn"
+                                                        data-id="{{ $row->id }}" title="Delete">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </td>
@@ -178,9 +168,9 @@
                                     @empty
                                         <tr>
                                             <td colspan="7" class="text-center py-5">
-                                                <i class="fas fa-shopping-cart fa-3x mb-3 d-block" style="color:#d1d5db;"></i>
+                                                <i class="fas fa-shopping-cart fa-3x mb-3 d-block icon-fade"></i>
                                                 <p class="text-muted mb-0">No purchases found for this period.</p>
-                                                <button class="btn btn-sm btn-primary mt-3" id="addBtnEmpty">
+                                                <button class="btn btn-sm btn-primary btn-pn mt-3" id="addBtnEmpty">
                                                     <i class="fas fa-plus mr-1"></i> Add First Purchase
                                                 </button>
                                             </td>
@@ -189,9 +179,9 @@
                                 </tbody>
                                 @if($purchases->count() > 0)
                                 <tfoot>
-                                    <tr style="background:#f8f9fc;border-top:2px solid #e3e6f0;">
-                                        <td class="pl-3 py-3 font-weight-bold" colspan="5" style="color:#2d3748;">Grand Total / کل مجموعہ</td>
-                                        <td class="py-3 text-right font-weight-bold" style="color:#e74a3b;font-size:15px;">
+                                    <tr class="pn-total-row">
+                                        <td class="pl-3 py-3 font-weight-bold pn-text-heading" colspan="5">Grand Total / کل مجموعہ</td>
+                                        <td class="py-3 text-right font-weight-bold text-c-red pn-stat-num-sm">
                                             {{ number_format($totalSpent, 0) }}
                                         </td>
                                         <td></td>
@@ -206,16 +196,15 @@
 
             {{-- Sidebar --}}
             <div class="col-lg-3">
-                <div class="card border-0 shadow-sm mb-3">
+                <div class="card border-0 shadow-sm mb-3 card-pn">
                     <div class="card-header bg-white border-bottom py-3">
-                        <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
+                        <h6 class="mb-0 font-weight-bold text-c-blue2">
                             <i class="fas fa-calendar-alt mr-2"></i>Filter by Month
                         </h6>
                     </div>
                     <div class="card-body py-3">
                         <form method="GET">
-                            <select name="month" class="form-control mb-2" onchange="this.form.submit()"
-                                    style="border-radius:8px;border-color:#d1d5db;">
+                            <select name="month" class="form-control mb-2 fc-pn" onchange="this.form.submit()">
                                 <option value="">All Time</option>
                                 @foreach($months as $m)
                                     <option value="{{ $m->value }}" {{ $selectedMonth == $m->value ? 'selected' : '' }}>
@@ -226,8 +215,7 @@
                         </form>
                         @if($selectedMonth)
                             <a href="{{ route('admin.purchases.index') }}"
-                               class="btn btn-block btn-sm mt-1"
-                               style="background:#f3f4f6;color:#6b7280;border-radius:8px;border:1px solid #d1d5db;">
+                               class="btn btn-block btn-sm btn-pn btn-clear-filter mt-1">
                                 <i class="fas fa-times mr-1"></i> Show All Time
                             </a>
                         @endif
@@ -236,9 +224,9 @@
 
                 {{-- Summary breakdown --}}
                 @if($purchases->count() > 0)
-                <div class="card border-0 shadow-sm">
+                <div class="card border-0 shadow-sm card-pn">
                     <div class="card-header bg-white border-bottom py-3">
-                        <h6 class="mb-0 font-weight-bold" style="color:#e74a3b;">
+                        <h6 class="mb-0 font-weight-bold text-c-red">
                             <i class="fas fa-chart-pie mr-2"></i>Cost Breakdown
                         </h6>
                     </div>
@@ -250,31 +238,30 @@
                             $grandSum    = $purchases->sum('grand_total');
                         @endphp
                         @foreach([
-                            ['Salt Cost',      $saltCost,  '#4e73df', 'fa-cube'],
-                            ['Transport',      $transCost, '#1cc88a', 'fa-truck'],
-                            ['Loading',        $loadCost,  '#f6c23e', 'fa-dolly'],
-                        ] as [$label, $amount, $color, $icon])
+                            ['Salt Cost', $saltCost,  'text-c-blue2', 'pbar-blue',   'fa-cube'],
+                            ['Transport', $transCost, 'text-c-teal',  'pbar-teal',   'fa-truck'],
+                            ['Loading',   $loadCost,  'text-c-warn',  'pbar-yellow', 'fa-dolly'],
+                        ] as [$label, $amount, $textClass, $barClass, $icon])
                         @php $pct = $grandSum > 0 ? round(($amount / $grandSum) * 100) : 0; @endphp
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                                <span style="font-size:13px;color:#374151;">
-                                    <i class="fas {{ $icon }} mr-1" style="color:{{ $color }};width:14px;text-align:center;"></i>
+                                <span class="breakdown-item">
+                                    <i class="fas {{ $icon }} mr-1 icon-fw14 {{ $textClass }}"></i>
                                     <strong>{{ $label }}</strong>
                                 </span>
-                                <span style="font-size:12px;">
-                                    <span style="color:#374151;font-weight:600;">{{ number_format($amount, 0) }}</span>
+                                <span class="breakdown-amount">
+                                    <span class="breakdown-val">{{ number_format($amount, 0) }}</span>
                                     <span class="text-muted ml-1">{{ $pct }}%</span>
                                 </span>
                             </div>
-                            <div class="progress" style="height:5px;border-radius:10px;background:#f0f0f0;">
-                                <div class="progress-bar" style="width:{{ $pct }}%;background:{{ $color }};border-radius:10px;transition:width .6s ease;"></div>
+                            <div class="progress breakdown-bar">
+                                <div class="progress-bar pbar {{ $barClass }}" style="--w:{{ $pct }}%"></div>
                             </div>
                         </div>
                         @endforeach
-                        <div class="d-flex justify-content-between align-items-center pt-2 mt-1"
-                             style="border-top:2px solid #f0f0f0;">
-                            <span class="font-weight-bold" style="color:#374151;">Grand Total</span>
-                            <span class="font-weight-bold" style="color:#e74a3b;font-size:15px;">
+                        <div class="d-flex justify-content-between align-items-center pt-2 mt-1 breakdown-grand-total-bar">
+                            <span class="font-weight-bold pn-text-heading">Grand Total</span>
+                            <span class="font-weight-bold text-c-red pn-stat-num-sm">
                                 PKR {{ number_format($grandSum, 0) }}
                             </span>
                         </div>
@@ -288,19 +275,18 @@
 </section>
 
 {{-- ===== MODAL ===== --}}
-<div class="modal fade" id="purchaseModal" tabindex="-1">
+<div class="modal fade modal-pn" id="purchaseModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <form id="purchaseForm">
             @csrf
             <input type="hidden" id="purchase_id" name="_purchase_id">
-            <div class="modal-content border-0" style="border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15);">
+            <div class="modal-content">
 
-                <div class="modal-header border-0 text-white px-4 py-3"
-                     style="background:linear-gradient(135deg,#4e73df,#224abe);">
+                <div class="modal-header px-4 py-3">
                     <h5 class="modal-title" id="modalTitle">
                         <i class="fas fa-shopping-cart mr-2"></i>Add Purchase / خریداری شامل کریں
                     </h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;">
+                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal">
                         <span>&times;</span>
                     </button>
                 </div>
@@ -308,11 +294,10 @@
                 <div class="modal-body px-4 py-4">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Supplier / سپلائر <span class="text-danger">*</span>
                             </label>
-                            <select name="vendor_id" id="vendor_id" class="form-control"
-                                    style="border-radius:8px;border-color:#d1d5db;" required>
+                            <select name="vendor_id" id="vendor_id" class="form-control fc-pn" required>
                                 <option value="">— Select Supplier —</option>
                                 @foreach($vendors as $vendor)
                                     <option value="{{ $vendor->id }}">{{ $vendor->name }}{{ $vendor->shop ? ' ('.$vendor->shop.')' : '' }}</option>
@@ -320,86 +305,82 @@
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Purchase Date / خریداری کی تاریخ
                             </label>
-                            <input type="date" name="purchase_date" id="purchase_date" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;">
+                            <input type="date" name="purchase_date" id="purchase_date" class="form-control fc-pn">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Salt Quantity (Ton) / نمک کی مقدار (ٹن) <span class="text-danger">*</span>
                             </label>
-                            <input type="number" step="0.01" name="salt_quantity" id="salt_quantity" class="form-control calc-input"
-                                   style="border-radius:8px;border-color:#d1d5db;" min="0" placeholder="0.00" required>
+                            <input type="number" step="0.01" name="salt_quantity" id="salt_quantity"
+                                   class="form-control fc-pn calc-input" min="0" placeholder="0.00" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Salt Quantity (KG) / نمک کی مقدار (کلو)
                             </label>
-                            <input type="number" step="0.01" name="salt_quantity_kg" id="salt_quantity_kg" class="form-control calc-input"
-                                   style="border-radius:8px;border-color:#d1d5db;" min="0" placeholder="0">
+                            <input type="number" step="0.01" name="salt_quantity_kg" id="salt_quantity_kg"
+                                   class="form-control fc-pn calc-input" min="0" placeholder="0">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Rate per KG (PKR) / نرخ فی کلو <span class="text-danger">*</span>
                             </label>
-                            <input type="number" step="0.01" name="rate_per_kg" id="rate_per_kg" class="form-control calc-input"
-                                   style="border-radius:8px;border-color:#d1d5db;" min="0" placeholder="0.00" required>
+                            <input type="number" step="0.01" name="rate_per_kg" id="rate_per_kg"
+                                   class="form-control fc-pn calc-input" min="0" placeholder="0.00" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Total Cost (PKR) / کل لاگت <span class="text-danger">*</span>
                             </label>
-                            <input type="number" step="0.01" name="total_cost" id="total_cost" class="form-control calc-input"
-                                   style="border-radius:8px;border-color:#d1d5db;" min="0" placeholder="Auto-calculated" required>
+                            <input type="number" step="0.01" name="total_cost" id="total_cost"
+                                   class="form-control fc-pn calc-input" min="0" placeholder="Auto-calculated" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Transport Cost (PKR) / نقل و حمل
                             </label>
-                            <input type="number" step="0.01" name="transport_cost" id="transport_cost" class="form-control calc-input"
-                                   style="border-radius:8px;border-color:#d1d5db;" min="0" placeholder="0">
+                            <input type="number" step="0.01" name="transport_cost" id="transport_cost"
+                                   class="form-control fc-pn calc-input" min="0" placeholder="0">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Loading / Unloading (PKR) / لوڈنگ / اَن لوڈنگ
                             </label>
-                            <input type="number" step="0.01" name="loading_unloading_cost" id="loading_unloading_cost" class="form-control calc-input"
-                                   style="border-radius:8px;border-color:#d1d5db;" min="0" placeholder="0">
+                            <input type="number" step="0.01" name="loading_unloading_cost" id="loading_unloading_cost"
+                                   class="form-control fc-pn calc-input" min="0" placeholder="0">
                         </div>
                         <div class="col-md-12 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Grand Total (PKR) / کل مجموعہ <span class="text-danger">*</span>
                             </label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" style="background:#f3f4f6;border-color:#d1d5db;border-radius:8px 0 0 8px;font-weight:600;color:#6b7280;">PKR</span>
+                                    <span class="input-group-text input-pre">PKR</span>
                                 </div>
-                                <input type="number" step="0.01" name="grand_total" id="grand_total" class="form-control"
-                                       style="border-color:#d1d5db;border-radius:0 8px 8px 0;font-weight:bold;font-size:16px;" min="0" required>
+                                <input type="number" step="0.01" name="grand_total" id="grand_total"
+                                       class="form-control fc-lg-pn" min="0" required>
                             </div>
                             <small class="text-muted">= Total Cost + Transport + Loading</small>
                         </div>
                         <div class="col-12 mb-1">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Remarks / ملاحظات
                             </label>
-                            <textarea name="remarks" id="remarks" class="form-control" rows="2"
-                                      style="border-radius:8px;border-color:#d1d5db;"
+                            <textarea name="remarks" id="remarks" class="form-control fc-pn" rows="2"
                                       placeholder="Optional notes..."></textarea>
                         </div>
                     </div>
                 </div>
 
-                <div class="modal-footer border-0 px-4 py-3" style="background:#f8f9fc;">
-                    <button type="button" class="btn btn-light px-4"
-                            data-dismiss="modal" data-bs-dismiss="modal"
-                            style="border-radius:8px;border:1px solid #d1d5db;">
+                <div class="modal-footer px-4 py-3">
+                    <button type="button" class="btn btn-light px-4 btn-modal-cancel"
+                            data-dismiss="modal" data-bs-dismiss="modal">
                         Cancel / منسوخ
                     </button>
-                    <button class="btn btn-primary px-4" type="submit" id="submitBtn"
-                            style="border-radius:8px;background:linear-gradient(135deg,#4e73df,#224abe);border:none;">
+                    <button class="btn btn-primary px-4 btn-modal-save" type="submit" id="submitBtn">
                         <i class="fas fa-save mr-1"></i> Save Purchase / محفوظ کریں
                     </button>
                 </div>

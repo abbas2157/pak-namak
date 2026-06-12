@@ -6,14 +6,14 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Vendors / Suppliers <small class="text-muted" style="font-size:14px;">فروش کار / سپلائر</small></h1>
+                <h1 class="m-0">Vendors / Suppliers <small class="text-muted ch-sub">فروش کار / سپلائر</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">Vendors</li>
                 </ol>
             </div>
             <div class="col-sm-6 d-flex justify-content-end">
-                <button class="btn btn-primary px-4" style="border-radius:8px;" id="addBtn">
+                <button class="btn btn-primary btn-pn px-4" id="addBtn">
                     <i class="fas fa-plus mr-1"></i> Add Vendor / فروش کار شامل کریں
                 </button>
             </div>
@@ -27,53 +27,50 @@
         {{-- Stats --}}
         <div class="row mb-3">
             <div class="col-6 col-md-4 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #4e73df !important;">
+                <div class="card card-pn border-0 shadow-sm h-100 pn-bl-blue">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Vendors / کل فروش کار</div>
-                                <div class="h5 mb-0 font-weight-bold text-dark">{{ $totalVendors }}</div>
-                                <small class="text-muted">registered suppliers</small>
+                                <div class="pn-stat-lbl mb-1">Total Vendors / کل فروش کار</div>
+                                <div class="pn-stat-num-md pn-text-heading mb-0">{{ $totalVendors }}</div>
+                                <div class="pn-stat-sub">registered suppliers</div>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(78,115,223,.12);">
-                                <i class="fas fa-truck" style="color:#4e73df;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-blue">
+                                <i class="fas fa-truck"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-4 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1cc88a !important;">
+                <div class="card card-pn border-0 shadow-sm h-100 pn-bl-teal">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Total Purchased / کل خریداری</div>
-                                <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalSpent, 0) }}</div>
-                                <small class="text-muted">PKR all time</small>
+                                <div class="pn-stat-lbl mb-1">Total Purchased / کل خریداری</div>
+                                <div class="pn-stat-num-md pn-text-heading mb-0">{{ number_format($totalSpent, 0) }}</div>
+                                <div class="pn-stat-sub">PKR all time</div>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(28,200,138,.12);">
-                                <i class="fas fa-money-bill-wave" style="color:#1cc88a;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-teal">
+                                <i class="fas fa-money-bill-wave"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-4 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #f6c23e !important;">
+                <div class="card card-pn border-0 shadow-sm h-100 pn-bl-yellow">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
-                                <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Top Supplier / سب سے بڑا سپلائر</div>
-                                <div class="h5 mb-0 font-weight-bold text-dark" style="font-size:15px !important;">
+                                <div class="pn-stat-lbl mb-1">Top Supplier / سب سے بڑا سپلائر</div>
+                                <div class="pn-stat-num-sm pn-text-heading mb-0">
                                     {{ $topVendor?->name ?? '—' }}
                                 </div>
-                                <small class="text-muted">{{ $topVendor?->purchases_count ?? 0 }} purchases</small>
+                                <div class="pn-stat-sub">{{ $topVendor?->purchases_count ?? 0 }} purchases</div>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(246,194,62,.12);">
-                                <i class="fas fa-star" style="color:#f6c23e;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-yellow">
+                                <i class="fas fa-star"></i>
                             </div>
                         </div>
                     </div>
@@ -82,14 +79,14 @@
         </div>
 
         {{-- Table --}}
-        <div class="card border-0 shadow-sm">
+        <div class="card card-pn border-0 shadow-sm">
             <div class="card-header bg-white border-bottom py-3">
-                <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
+                <h6 class="mb-0 font-weight-bold text-c-blue2">
                     <i class="fas fa-list mr-2"></i>Suppliers List / سپلائروں کی فہرست
                 </h6>
             </div>
             <div class="card-body p-0">
-                <table class="table table-bordered table-striped mb-0" id="vendorsTable">
+                <table class="table table-bordered table-striped pn-table pn-table-font mb-0" id="vendorsTable">
                     <thead class="thead-dark">
                         <tr>
                             <th>Name / نام</th>
@@ -111,15 +108,13 @@
                                 <span class="badge badge-info">{{ $vendor->purchases_count }}</span>
                             </td>
                             <td class="text-center">
-                                <button class="btn btn-sm editBtn mr-1"
+                                <button class="btn btn-sm btn-pn btn-act-edit editBtn mr-1"
                                         data-id="{{ $vendor->id }}"
-                                        style="background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:6px;"
                                         title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-sm deleteBtn"
+                                <button class="btn btn-sm btn-pn btn-act-delete deleteBtn"
                                         data-id="{{ $vendor->id }}"
-                                        style="background:#fce8e6;color:#c62828;border:1px solid #ef9a9a;border-radius:6px;"
                                         title="Delete">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -128,7 +123,7 @@
                     @empty
                         <tr id="emptyRow">
                             <td colspan="6" class="text-center py-5">
-                                <i class="fas fa-truck fa-3x mb-3 d-block" style="color:#d1d5db;"></i>
+                                <i class="fas fa-truck fa-3x mb-3 d-block icon-fade"></i>
                                 <p class="text-muted mb-0">No vendors added yet.</p>
                                 <button class="btn btn-sm btn-primary mt-3" id="addBtnEmpty">
                                     <i class="fas fa-plus mr-1"></i> Add First Vendor
@@ -145,19 +140,18 @@
 </section>
 
 {{-- ===== MODAL ===== --}}
-<div class="modal fade" id="vendorModal" tabindex="-1">
+<div class="modal fade modal-pn" id="vendorModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <form id="vendorForm">
             @csrf
             <input type="hidden" id="vendor_id" name="_vendor_id">
-            <div class="modal-content border-0" style="border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15);">
+            <div class="modal-content border-0">
 
-                <div class="modal-header border-0 text-white px-4 py-3"
-                     style="background:linear-gradient(135deg,#4e73df,#224abe);">
+                <div class="modal-header border-0 text-white px-4 py-3">
                     <h5 class="modal-title" id="modalTitle">
                         <i class="fas fa-truck mr-2"></i>Add Vendor / فروش کار شامل کریں
                     </h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;">
+                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal">
                         <span>&times;</span>
                     </button>
                 </div>
@@ -165,44 +159,42 @@
                 <div class="modal-body px-4 py-4">
                     <div class="row">
                         <div class="col-12 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="filter-lbl">
                                 Name / نام <span class="text-danger">*</span>
                             </label>
-                            <input type="text" id="vName" name="name" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;" placeholder="Supplier full name" required>
+                            <input type="text" id="vName" name="name" class="form-control fc-pn"
+                                   placeholder="Supplier full name" required>
                         </div>
                         <div class="col-12 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="filter-lbl">
                                 Shop / Business / دکان
                             </label>
-                            <input type="text" id="vShop" name="shop" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;" placeholder="Business or shop name">
+                            <input type="text" id="vShop" name="shop" class="form-control fc-pn"
+                                   placeholder="Business or shop name">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="filter-lbl">
                                 Phone / فون
                             </label>
-                            <input type="text" id="vPhone" name="phone" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;" placeholder="03xx-xxxxxxx">
+                            <input type="text" id="vPhone" name="phone" class="form-control fc-pn"
+                                   placeholder="03xx-xxxxxxx">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="filter-lbl">
                                 Address / پتہ
                             </label>
-                            <input type="text" id="vAddress" name="address" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;" placeholder="City / area">
+                            <input type="text" id="vAddress" name="address" class="form-control fc-pn"
+                                   placeholder="City / area">
                         </div>
                     </div>
                 </div>
 
-                <div class="modal-footer border-0 px-4 py-3" style="background:#f8f9fc;">
-                    <button type="button" class="btn btn-light px-4"
-                            data-dismiss="modal" data-bs-dismiss="modal"
-                            style="border-radius:8px;border:1px solid #d1d5db;">
+                <div class="modal-footer border-0 px-4 py-3">
+                    <button type="button" class="btn btn-light btn-modal-cancel px-4"
+                            data-dismiss="modal" data-bs-dismiss="modal">
                         Cancel / منسوخ
                     </button>
-                    <button class="btn btn-primary px-4" type="submit" id="submitBtn"
-                            style="border-radius:8px;background:linear-gradient(135deg,#4e73df,#224abe);border:none;">
+                    <button class="btn btn-primary btn-modal-save px-4" type="submit" id="submitBtn">
                         <i class="fas fa-save mr-1"></i> Save Vendor / محفوظ کریں
                     </button>
                 </div>
@@ -225,12 +217,10 @@ function buildRow(v, idx) {
         <td>${v.address || '—'}</td>
         <td class="text-center"><span class="badge badge-info">0</span></td>
         <td class="text-center">
-            <button class="btn btn-sm editBtn mr-1" data-id="${v.id}"
-                    style="background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:6px;" title="Edit">
+            <button class="btn btn-sm btn-pn btn-act-edit editBtn mr-1" data-id="${v.id}" title="Edit">
                 <i class="fas fa-edit"></i>
             </button>
-            <button class="btn btn-sm deleteBtn" data-id="${v.id}"
-                    style="background:#fce8e6;color:#c62828;border:1px solid #ef9a9a;border-radius:6px;" title="Delete">
+            <button class="btn btn-sm btn-pn btn-act-delete deleteBtn" data-id="${v.id}" title="Delete">
                 <i class="fas fa-trash"></i>
             </button>
         </td>

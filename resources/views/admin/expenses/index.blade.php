@@ -2,14 +2,14 @@
 @section('title', 'Expenses')
 
 @php
-$catColors = [
-    'Fuel'                => '#fd7e14',
-    'Vehicle Maintenance' => '#4e73df',
-    'Food'                => '#1cc88a',
-    'Rent'                => '#6f42c1',
-    'Utilities'           => '#36b9cc',
-    'Repair'              => '#e74a3b',
-    'Others'              => '#858796',
+$catClass = [
+    'Fuel'                => 'fuel',
+    'Vehicle Maintenance' => 'vehicle',
+    'Food'                => 'food',
+    'Rent'                => 'rent',
+    'Utilities'           => 'utilities',
+    'Repair'              => 'repair',
+    'Others'              => 'others',
 ];
 $catIcons = [
     'Fuel'                => 'fa-gas-pump',
@@ -20,11 +20,29 @@ $catIcons = [
     'Repair'              => 'fa-tools',
     'Others'              => 'fa-ellipsis-h',
 ];
-$payMeta = [
-    'Cash'      => ['bg' => '#1cc88a', 'icon' => 'fa-money-bill-wave'],
-    'JazzCash'  => ['bg' => '#fd7e14', 'icon' => 'fa-mobile-alt'],
-    'EasyPaisa' => ['bg' => '#28a745', 'icon' => 'fa-mobile'],
-    'Bank'      => ['bg' => '#4e73df', 'icon' => 'fa-university'],
+$payClass = [
+    'Cash'      => 'cash',
+    'JazzCash'  => 'jazzcash',
+    'EasyPaisa' => 'easypaisa',
+    'Bank'      => 'bank',
+];
+$catBarClass = [
+    'Fuel'                => 'pbar-orange',
+    'Vehicle Maintenance' => 'pbar-blue',
+    'Food'                => 'pbar-teal',
+    'Rent'                => 'pbar-purple',
+    'Utilities'           => 'pbar-cyan',
+    'Repair'              => 'pbar-red',
+    'Others'              => 'pbar-grey',
+];
+$catIconClass = [
+    'Fuel'                => 'text-c-orange',
+    'Vehicle Maintenance' => 'text-c-blue2',
+    'Food'                => 'text-c-teal',
+    'Rent'                => 'text-c-purple2',
+    'Utilities'           => 'text-c-cyan',
+    'Repair'              => 'text-c-red',
+    'Others'              => 'text-c-grey',
 ];
 @endphp
 
@@ -33,14 +51,14 @@ $payMeta = [
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Expenses <small class="text-muted" style="font-size:14px;">اخراجات</small></h1>
+                <h1 class="m-0">Expenses <small class="text-muted pn-stat-sub">اخراجات</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">Expenses</li>
                 </ol>
             </div>
             <div class="col-sm-6 d-flex justify-content-end">
-                <button class="btn btn-primary px-4" style="border-radius:8px;" id="addBtn">
+                <button class="btn btn-primary px-4 btn-pn" id="addBtn">
                     <i class="fas fa-plus mr-1"></i> Add Expense / خرچ شامل کریں
                 </button>
             </div>
@@ -54,7 +72,7 @@ $payMeta = [
         {{-- ===== STAT CARDS ===== --}}
         <div class="row mb-3">
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #e74a3b !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-red">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -62,16 +80,15 @@ $payMeta = [
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($grandTotal, 0) }}</div>
                                 <small class="text-muted">PKR</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(231,74,59,.12);">
-                                <i class="fas fa-receipt" style="color:#e74a3b;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-red">
+                                <i class="fas fa-receipt"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #36b9cc !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-cyan">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -79,16 +96,15 @@ $payMeta = [
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $expenses->count() }}</div>
                                 <small class="text-muted">entries</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(54,185,204,.12);">
-                                <i class="fas fa-list-alt" style="color:#36b9cc;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-cyan">
+                                <i class="fas fa-list-alt"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #f6c23e !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-yellow">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -96,28 +112,26 @@ $payMeta = [
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($expenses->max('amount') ?? 0, 0) }}</div>
                                 <small class="text-muted">PKR</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(246,194,62,.12);">
-                                <i class="fas fa-arrow-up" style="color:#f6c23e;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-yellow">
+                                <i class="fas fa-arrow-up"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1cc88a !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-teal">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
                                 <div class="text-xs text-uppercase font-weight-bold text-muted mb-1">Top Category / سب سے بڑی زمرہ</div>
-                                <div class="h5 mb-0 font-weight-bold text-dark" style="font-size:15px !important;">
+                                <div class="h5 mb-0 font-weight-bold text-dark pn-stat-num-sm">
                                     {{ $categoryTotals->keys()->first() ?? '-' }}
                                 </div>
                                 <small class="text-muted">highest spend</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(28,200,138,.12);">
-                                <i class="fas fa-tags" style="color:#1cc88a;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-teal">
+                                <i class="fas fa-tags"></i>
                             </div>
                         </div>
                     </div>
@@ -130,10 +144,10 @@ $payMeta = [
 
             {{-- TABLE --}}
             <div class="col-lg-8 mb-3">
-                <div class="card border-0 shadow-sm ">
+                <div class="card border-0 shadow-sm card-pn">
                     <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
                         <div>
-                            <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
+                            <h6 class="mb-0 font-weight-bold text-c-blue2">
                                 <i class="fas fa-table mr-2"></i>Expense Records / اخراجات کی فہرست
                             </h6>
                             @if($selectedMonth)
@@ -144,70 +158,62 @@ $payMeta = [
                                 <small class="text-muted">All time</small>
                             @endif
                         </div>
-                        <span class="badge" style="background:#e8f0fe;color:#4e73df;font-size:12px;padding:5px 10px;border-radius:20px;">
-                            {{ $expenses->count() }} records
-                        </span>
+                        <span class="badge pn-bdg pn-bdg-blue">{{ $expenses->count() }} records</span>
                     </div>
                     <div class="card-body p-2">
                         <div class="table-responsive">
-                            <table class="table mb-0" id="expenseTable" style="font-size:13.5px;">
+                            <table class="table mb-0 pn-table pn-table-font" id="expenseTable">
                                 <thead>
-                                    <tr style="background:#f8f9fc;border-bottom:2px solid #e3e6f0;">
-                                        <th class="pl-4 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Date / تاریخ</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Category / زمرہ</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Description / تفصیل</th>
-                                        <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Amount / رقم</th>
-                                        <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Payment / ادائیگی</th>
-                                        <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions / اقدامات</th>
+                                    <tr>
+                                        <th class="pl-4">Date / تاریخ</th>
+                                        <th>Category / زمرہ</th>
+                                        <th>Description / تفصیل</th>
+                                        <th class="text-right">Amount / رقم</th>
+                                        <th>Payment / ادائیگی</th>
+                                        <th class="text-center">Actions / اقدامات</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse($expenses as $expense)
                                         @php
-                                            $cc = $catColors[$expense->category] ?? '#858796';
-                                            $ci = $catIcons[$expense->category]  ?? 'fa-tag';
-                                            $pm = $payMeta[$expense->payment_method] ?? ['bg'=>'#858796','icon'=>'fa-credit-card'];
+                                            $cc  = $catClass[$expense->category]  ?? 'others';
+                                            $ci  = $catIcons[$expense->category]  ?? 'fa-tag';
+                                            $pc  = $payClass[$expense->payment_method] ?? 'bank';
                                         @endphp
-                                        <tr id="row_{{ $expense->id }}" style="border-bottom:1px solid #f0f0f0;">
-                                            <td class="pl-4 py-3 align-middle">
-                                                <span class="font-weight-bold d-block" style="color:#2d3748;">
+                                        <tr id="row_{{ $expense->id }}">
+                                            <td class="pl-4 align-middle">
+                                                <span class="font-weight-bold d-block pn-text-heading">
                                                     {{ \Carbon\Carbon::parse($expense->expense_date)->format('d M') }}
                                                 </span>
                                                 <small class="text-muted">{{ \Carbon\Carbon::parse($expense->expense_date)->format('Y') }}</small>
                                             </td>
-                                            <td class="py-3 align-middle">
-                                                <span class="d-inline-flex align-items-center px-2 py-1 rounded-pill"
-                                                      style="background:{{ $cc }}18;color:{{ $cc }};font-size:12px;font-weight:600;white-space:nowrap;">
+                                            <td class="align-middle">
+                                                <span class="exp-pill exp-pill-{{ $cc }}">
                                                     <i class="fas {{ $ci }} mr-1"></i>{{ $expense->category }}
                                                 </span>
                                             </td>
-                                            <td class="py-3 align-middle" style="max-width:180px;">
-                                                <span class="text-truncate d-block" style="color:#444;">
+                                            <td class="align-middle col-desc">
+                                                <span class="text-truncate d-block pn-table-font">
                                                     {{ $expense->description ?: ($expense->remarks ?: '—') }}
                                                 </span>
                                             </td>
-                                            <td class="py-3 align-middle text-right">
-                                                <span class="font-weight-bold" style="color:#e74a3b;font-size:14px;">
+                                            <td class="align-middle text-right">
+                                                <span class="font-weight-bold text-c-red pn-stat-num-sm">
                                                     {{ number_format($expense->amount, 0) }}
                                                 </span>
                                             </td>
-                                            <td class="py-3 align-middle">
-                                                <span class="d-inline-flex align-items-center px-2 py-1 rounded-pill"
-                                                      style="background:{{ $pm['bg'] }}18;color:{{ $pm['bg'] }};font-size:12px;font-weight:600;white-space:nowrap;">
-                                                    <i class="fas {{ $pm['icon'] }} mr-1"></i>{{ $expense->payment_method }}
+                                            <td class="align-middle">
+                                                <span class="exp-pill pay-pill-{{ $pc }}">
+                                                    <i class="fas {{ $ci }} mr-1"></i>{{ $expense->payment_method }}
                                                 </span>
                                             </td>
-                                            <td class="py-3 align-middle text-center">
-                                                <button class="btn btn-sm editBtn mr-1"
-                                                        data-id="{{ $expense->id }}"
-                                                        style="background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:6px;"
-                                                        title="Edit">
+                                            <td class="align-middle text-center">
+                                                <button class="btn btn-sm btn-pn btn-act-edit editBtn mr-1"
+                                                        data-id="{{ $expense->id }}" title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <button class="btn btn-sm deleteBtn"
-                                                        data-id="{{ $expense->id }}"
-                                                        style="background:#fce8e6;color:#c62828;border:1px solid #ef9a9a;border-radius:6px;"
-                                                        title="Delete">
+                                                <button class="btn btn-sm btn-pn btn-act-delete deleteBtn"
+                                                        data-id="{{ $expense->id }}" title="Delete">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </td>
@@ -215,9 +221,9 @@ $payMeta = [
                                     @empty
                                         <tr>
                                             <td colspan="6" class="text-center py-5">
-                                                <i class="fas fa-receipt fa-3x mb-3 d-block" style="color:#d1d5db;"></i>
+                                                <i class="fas fa-receipt fa-3x mb-3 d-block icon-fade"></i>
                                                 <p class="text-muted mb-0">No expenses found for this period.</p>
-                                                <button class="btn btn-sm btn-primary mt-3" id="addBtnEmpty">
+                                                <button class="btn btn-sm btn-primary btn-pn mt-3" id="addBtnEmpty">
                                                     <i class="fas fa-plus mr-1"></i> Add First Expense
                                                 </button>
                                             </td>
@@ -226,9 +232,9 @@ $payMeta = [
                                 </tbody>
                                 @if($expenses->count() > 0)
                                 <tfoot>
-                                    <tr style="background:#f8f9fc;border-top:2px solid #e3e6f0;">
-                                        <td class="pl-4 py-3 font-weight-bold" colspan="3" style="color:#2d3748;">Grand Total / کل مجموعہ</td>
-                                        <td class="py-3 text-right font-weight-bold" style="color:#e74a3b;font-size:15px;">
+                                    <tr class="pn-total-row">
+                                        <td class="pl-4 py-3 font-weight-bold pn-text-heading" colspan="3">Grand Total / کل مجموعہ</td>
+                                        <td class="py-3 text-right font-weight-bold text-c-red pn-stat-num-sm">
                                             {{ number_format($grandTotal, 0) }}
                                         </td>
                                         <td colspan="2"></td>
@@ -245,16 +251,15 @@ $payMeta = [
             <div class="col-lg-4">
 
                 {{-- Month Filter --}}
-                <div class="card border-0 shadow-sm mb-3">
+                <div class="card border-0 shadow-sm mb-3 card-pn">
                     <div class="card-header bg-white border-bottom py-3">
-                        <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
+                        <h6 class="mb-0 font-weight-bold text-c-blue2">
                             <i class="fas fa-calendar-alt mr-2"></i>Filter by Month / مہینے کے مطابق فلٹر
                         </h6>
                     </div>
                     <div class="card-body py-3">
                         <form method="GET">
-                            <select name="month" class="form-control mb-2" onchange="this.form.submit()"
-                                    style="border-radius:8px;border-color:#d1d5db;">
+                            <select name="month" class="form-control mb-2 fc-pn" onchange="this.form.submit()">
                                 <option value="">All Time</option>
                                 @foreach($months as $m)
                                     <option value="{{ $m['value'] }}" {{ $selectedMonth == $m['value'] ? 'selected' : '' }}>
@@ -265,8 +270,7 @@ $payMeta = [
                         </form>
                         @if($selectedMonth)
                             <a href="{{ route('admin.expenses.index') }}"
-                               class="btn btn-block btn-sm mt-1"
-                               style="background:#f3f4f6;color:#6b7280;border-radius:8px;border:1px solid #d1d5db;">
+                               class="btn btn-block btn-sm btn-pn btn-clear-filter mt-1">
                                 <i class="fas fa-times mr-1"></i> Show All Time
                             </a>
                         @endif
@@ -275,41 +279,40 @@ $payMeta = [
 
                 {{-- Category Breakdown --}}
                 @if($categoryTotals->count())
-                <div class="card border-0 shadow-sm">
+                <div class="card border-0 shadow-sm card-pn">
                     <div class="card-header bg-white border-bottom py-3">
-                        <h6 class="mb-0 font-weight-bold" style="color:#e74a3b;">
+                        <h6 class="mb-0 font-weight-bold text-c-red">
                             <i class="fas fa-chart-pie mr-2"></i>Breakdown / زمرہ وار تفصیل
                         </h6>
                     </div>
                     <div class="card-body py-3 px-3">
                         @foreach($categoryTotals as $cat => $total)
                             @php
-                                $pct = $grandTotal > 0 ? round(($total / $grandTotal) * 100) : 0;
-                                $cc  = $catColors[$cat] ?? '#858796';
-                                $ci  = $catIcons[$cat]  ?? 'fa-tag';
+                                $pct   = $grandTotal > 0 ? round(($total / $grandTotal) * 100) : 0;
+                                $cc    = $catClass[$cat]    ?? 'others';
+                                $ci    = $catIcons[$cat]    ?? 'fa-tag';
+                                $bc    = $catBarClass[$cat] ?? 'pbar-grey';
+                                $iclr  = $catIconClass[$cat] ?? 'text-c-grey';
                             @endphp
                             <div class="mb-3">
                                 <div class="d-flex justify-content-between align-items-center mb-1">
-                                    <span style="font-size:13px;color:#374151;">
-                                        <i class="fas {{ $ci }} mr-1" style="color:{{ $cc }};width:14px;text-align:center;"></i>
+                                    <span class="breakdown-item">
+                                        <i class="fas {{ $ci }} mr-1 icon-fw14 {{ $iclr }}"></i>
                                         <strong>{{ $cat }}</strong>
                                     </span>
-                                    <span style="font-size:12px;">
-                                        <span style="color:#374151;font-weight:600;">{{ number_format($total, 0) }}</span>
+                                    <span class="breakdown-amount">
+                                        <span class="breakdown-val">{{ number_format($total, 0) }}</span>
                                         <span class="text-muted ml-1">{{ $pct }}%</span>
                                     </span>
                                 </div>
-                                <div class="progress" style="height:5px;border-radius:10px;background:#f0f0f0;">
-                                    <div class="progress-bar" role="progressbar"
-                                         style="width:{{ $pct }}%;background:{{ $cc }};border-radius:10px;transition:width .6s ease;">
-                                    </div>
+                                <div class="progress breakdown-bar">
+                                    <div class="progress-bar pbar {{ $bc }}" style="--w:{{ $pct }}%"></div>
                                 </div>
                             </div>
                         @endforeach
-                        <div class="d-flex justify-content-between align-items-center pt-2 mt-1"
-                             style="border-top:2px solid #f0f0f0;">
-                            <span class="font-weight-bold" style="color:#374151;">Grand Total / کل مجموعہ</span>
-                            <span class="font-weight-bold" style="color:#e74a3b;font-size:15px;">
+                        <div class="d-flex justify-content-between align-items-center pt-2 mt-1 breakdown-grand-total-bar">
+                            <span class="font-weight-bold pn-text-heading">Grand Total / کل مجموعہ</span>
+                            <span class="font-weight-bold text-c-red pn-stat-num-sm">
                                 PKR {{ number_format($grandTotal, 0) }}
                             </span>
                         </div>
@@ -326,20 +329,19 @@ $payMeta = [
 {{-- ============================================================
      MODAL
      ============================================================ --}}
-<div class="modal fade" id="ExpenseModal" tabindex="-1">
+<div class="modal fade modal-pn" id="ExpenseModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <form id="ExpenseForm">
             @csrf
             <input type="hidden" id="expense_id" name="id">
-            <div class="modal-content border-0" style="border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15);">
+            <div class="modal-content">
 
                 {{-- Header --}}
-                <div class="modal-header border-0 text-white px-4 py-3"
-                     style="background:linear-gradient(135deg,#4e73df,#224abe);">
+                <div class="modal-header px-4 py-3">
                     <h5 class="modal-title" id="modalTitle">
                         <i class="fas fa-receipt mr-2"></i>Add Expense / خرچ شامل کریں
                     </h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;">
+                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal">
                         <span>&times;</span>
                     </button>
                 </div>
@@ -348,18 +350,17 @@ $payMeta = [
                 <div class="modal-body px-4 py-4">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Date / تاریخ <span class="text-danger">*</span>
                             </label>
-                            <input type="date" id="expense_date" name="expense_date" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;" required>
+                            <input type="date" id="expense_date" name="expense_date"
+                                   class="form-control fc-pn" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Category / زمرہ <span class="text-danger">*</span>
                             </label>
-                            <select name="category" id="category" class="form-control"
-                                    style="border-radius:8px;border-color:#d1d5db;" required>
+                            <select name="category" id="category" class="form-control fc-pn" required>
                                 <option value="">— Select —</option>
                                 <option value="Fuel">⛽ Fuel</option>
                                 <option value="Vehicle Maintenance">🚗 Vehicle Maintenance</option>
@@ -371,24 +372,22 @@ $payMeta = [
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Amount (PKR) / رقم <span class="text-danger">*</span>
                             </label>
-                            <div class="input-group" style="border-radius:8px;">
+                            <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" style="background:#f3f4f6;border-color:#d1d5db;border-radius:8px 0 0 8px;font-weight:600;color:#6b7280;">PKR</span>
+                                    <span class="input-group-text input-pre">PKR</span>
                                 </div>
                                 <input type="number" id="amount" step="0.01" name="amount"
-                                       class="form-control" style="border-color:#d1d5db;border-radius:0 8px 8px 0;"
-                                       min="0" placeholder="0" required>
+                                       class="form-control fc-lg-pn" min="0" placeholder="0" required>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Payment Method / ادائیگی کا طریقہ <span class="text-danger">*</span>
                             </label>
-                            <select name="payment_method" id="payment_method" class="form-control"
-                                    style="border-radius:8px;border-color:#d1d5db;" required>
+                            <select name="payment_method" id="payment_method" class="form-control fc-pn" required>
                                 <option value="Cash">💵 Cash</option>
                                 <option value="JazzCash">📱 JazzCash</option>
                                 <option value="EasyPaisa">📲 EasyPaisa</option>
@@ -396,33 +395,29 @@ $payMeta = [
                             </select>
                         </div>
                         <div class="col-12 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Description / تفصیل
                             </label>
-                            <input type="text" id="description" name="description" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;"
+                            <input type="text" id="description" name="description" class="form-control fc-pn"
                                    placeholder="e.g. Diesel for delivery truck...">
                         </div>
                         <div class="col-12 mb-1">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Remarks / ملاحظات
                             </label>
-                            <textarea name="remarks" id="remarks" class="form-control" rows="2"
-                                      style="border-radius:8px;border-color:#d1d5db;"
+                            <textarea name="remarks" id="remarks" class="form-control fc-pn" rows="2"
                                       placeholder="Optional notes..."></textarea>
                         </div>
                     </div>
                 </div>
 
                 {{-- Footer --}}
-                <div class="modal-footer border-0 px-4 py-3" style="background:#f8f9fc;">
-                    <button type="button" class="btn btn-light px-4"
-                            data-dismiss="modal" data-bs-dismiss="modal"
-                            style="border-radius:8px;border:1px solid #d1d5db;">
+                <div class="modal-footer px-4 py-3">
+                    <button type="button" class="btn btn-light px-4 btn-modal-cancel"
+                            data-dismiss="modal" data-bs-dismiss="modal">
                         Cancel / منسوخ
                     </button>
-                    <button class="btn btn-primary px-4" type="submit" id="submitBtn"
-                            style="border-radius:8px;background:linear-gradient(135deg,#4e73df,#224abe);border:none;">
+                    <button class="btn btn-primary px-4 btn-modal-save" type="submit" id="submitBtn">
                         <i class="fas fa-save mr-1"></i> Save Expense / محفوظ کریں
                     </button>
                 </div>
@@ -435,15 +430,6 @@ $payMeta = [
 
 @section('scripts')
 <script>
-const CAT_COLORS = {
-    'Fuel':                '#fd7e14',
-    'Vehicle Maintenance': '#4e73df',
-    'Food':                '#1cc88a',
-    'Rent':                '#6f42c1',
-    'Utilities':           '#36b9cc',
-    'Repair':              '#e74a3b',
-    'Others':              '#858796',
-};
 const CAT_ICONS = {
     'Fuel':                'fa-gas-pump',
     'Vehicle Maintenance': 'fa-car',
@@ -453,12 +439,18 @@ const CAT_ICONS = {
     'Repair':              'fa-tools',
     'Others':              'fa-ellipsis-h',
 };
-const PAY_META = {
-    'Cash':           { bg: '#1cc88a', icon: 'fa-money-bill-wave' },
-    'JazzCash':       { bg: '#fd7e14', icon: 'fa-mobile-alt' },
-    'EasyPaisa':      { bg: '#28a745', icon: 'fa-mobile' },
-    'Bank':           { bg: '#4e73df', icon: 'fa-university' },
-    'Bank Transfer':  { bg: '#4e73df', icon: 'fa-university' },
+const CAT_CLASS = {
+    'Fuel': 'fuel', 'Vehicle Maintenance': 'vehicle',
+    'Food': 'food', 'Rent': 'rent',
+    'Utilities': 'utilities', 'Repair': 'repair', 'Others': 'others',
+};
+const PAY_ICONS = {
+    'Cash': 'fa-money-bill-wave', 'JazzCash': 'fa-mobile-alt',
+    'EasyPaisa': 'fa-mobile', 'Bank': 'fa-university', 'Bank Transfer': 'fa-university',
+};
+const PAY_CLASS = {
+    'Cash': 'cash', 'JazzCash': 'jazzcash',
+    'EasyPaisa': 'easypaisa', 'Bank': 'bank', 'Bank Transfer': 'bank',
 };
 
 function buildRow(exp) {
@@ -466,36 +458,33 @@ function buildRow(exp) {
     const day  = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
     const year = d.getFullYear();
     const amt  = Number(exp.amount).toLocaleString('en-PK', { maximumFractionDigits: 0 });
-    const cc   = CAT_COLORS[exp.category]        || '#858796';
-    const ci   = CAT_ICONS[exp.category]         || 'fa-tag';
-    const pm   = PAY_META[exp.payment_method]    || { bg: '#858796', icon: 'fa-credit-card' };
-    const desc = exp.description || exp.remarks  || '—';
-    return `<tr id="row_${exp.id}" style="border-bottom:1px solid #f0f0f0;">
-        <td class="pl-4 py-3 align-middle">
-            <span class="font-weight-bold d-block" style="color:#2d3748;">${day}</span>
+    const cc   = CAT_CLASS[exp.category]        || 'others';
+    const ci   = CAT_ICONS[exp.category]        || 'fa-tag';
+    const pc   = PAY_CLASS[exp.payment_method]  || 'bank';
+    const pi   = PAY_ICONS[exp.payment_method]  || 'fa-credit-card';
+    const desc = exp.description || exp.remarks || '—';
+    return `<tr id="row_${exp.id}">
+        <td class="pl-4 align-middle">
+            <span class="font-weight-bold d-block pn-text-heading">${day}</span>
             <small class="text-muted">${year}</small>
         </td>
-        <td class="py-3 align-middle">
-            <span class="d-inline-flex align-items-center px-2 py-1 rounded-pill"
-                  style="background:${cc}18;color:${cc};font-size:12px;font-weight:600;white-space:nowrap;">
+        <td class="align-middle">
+            <span class="exp-pill exp-pill-${cc}">
                 <i class="fas ${ci} mr-1"></i>${exp.category}
             </span>
         </td>
-        <td class="py-3 align-middle" style="max-width:180px;color:#444;">${desc}</td>
-        <td class="py-3 align-middle text-right font-weight-bold" style="color:#e74a3b;font-size:14px;">${amt}</td>
-        <td class="py-3 align-middle">
-            <span class="d-inline-flex align-items-center px-2 py-1 rounded-pill"
-                  style="background:${pm.bg}18;color:${pm.bg};font-size:12px;font-weight:600;white-space:nowrap;">
-                <i class="fas ${pm.icon} mr-1"></i>${exp.payment_method}
+        <td class="align-middle col-desc pn-table-font">${desc}</td>
+        <td class="align-middle text-right font-weight-bold text-c-red pn-stat-num-sm">${amt}</td>
+        <td class="align-middle">
+            <span class="exp-pill pay-pill-${pc}">
+                <i class="fas ${pi} mr-1"></i>${exp.payment_method}
             </span>
         </td>
-        <td class="py-3 align-middle text-center">
-            <button class="btn btn-sm editBtn mr-1" data-id="${exp.id}"
-                    style="background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:6px;">
+        <td class="align-middle text-center">
+            <button class="btn btn-sm btn-pn btn-act-edit editBtn mr-1" data-id="${exp.id}">
                 <i class="fas fa-edit"></i>
             </button>
-            <button class="btn btn-sm deleteBtn" data-id="${exp.id}"
-                    style="background:#fce8e6;color:#c62828;border:1px solid #ef9a9a;border-radius:6px;">
+            <button class="btn btn-sm btn-pn btn-act-delete deleteBtn" data-id="${exp.id}">
                 <i class="fas fa-trash"></i>
             </button>
         </td>

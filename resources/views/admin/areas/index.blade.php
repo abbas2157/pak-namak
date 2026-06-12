@@ -6,19 +6,19 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Areas <small class="text-muted" style="font-size:14px;">علاقے</small></h1>
+                <h1 class="m-0">Areas <small class="text-muted">علاقے</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('admin.cities.index') }}">Cities</a></li>
                     <li class="breadcrumb-item active">Areas</li>
                 </ol>
             </div>
-            <div class="col-sm-6 d-flex justify-content-end" style="gap:8px;">
+            <div class="col-sm-6 d-flex justify-content-end">
                 <a href="{{ route('admin.cities.index') }}"
-                   class="btn btn-light px-3" style="border-radius:8px;border:1px solid #d1d5db;">
+                   class="btn btn-light px-3 mr-2 btn-modal-cancel">
                     <i class="fas fa-city mr-1"></i> Cities
                 </a>
-                <button class="btn btn-primary px-4" style="border-radius:8px;" id="addBtn">
+                <button class="btn btn-primary px-4 btn-modal-save" id="addBtn">
                     <i class="fas fa-plus mr-1"></i> Add Area / علاقہ شامل کریں
                 </button>
             </div>
@@ -32,7 +32,7 @@
         {{-- Stats --}}
         <div class="row mb-3">
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #4e73df !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-blue">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -40,16 +40,15 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $totalAreas }}</div>
                                 <small class="text-muted">{{ $totalShops }} shops</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(78,115,223,.12);">
-                                <i class="fas fa-map-marker-alt" style="color:#4e73df;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-blue">
+                                <i class="fas fa-map-marker-alt"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1cc88a !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-teal">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -57,16 +56,15 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalRevenue, 0) }}</div>
                                 <small class="text-muted">PKR all areas</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(28,200,138,.12);">
-                                <i class="fas fa-chart-line" style="color:#1cc88a;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-teal">
+                                <i class="fas fa-chart-line"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #e74a3b !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-red">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -74,16 +72,15 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalPending, 0) }}</div>
                                 <small class="text-muted">PKR udhaar</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(231,74,59,.12);">
-                                <i class="fas fa-clock" style="color:#e74a3b;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-red">
+                                <i class="fas fa-clock"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #36b9cc !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-cyan">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -91,9 +88,8 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $totalShops }}</div>
                                 <small class="text-muted">across all areas</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(54,185,204,.12);">
-                                <i class="fas fa-store" style="color:#36b9cc;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-cyan">
+                                <i class="fas fa-store"></i>
                             </div>
                         </div>
                     </div>
@@ -102,83 +98,79 @@
         </div>
 
         {{-- City filter tabs --}}
-        <div class="mb-3 d-flex flex-wrap" style="gap:6px;">
+        <div class="mb-3 d-flex flex-wrap">
             <a href="{{ route('admin.areas.index') }}"
-               class="btn btn-sm {{ !$selectedCity ? 'btn-secondary' : 'btn-outline-secondary' }}"
-               style="border-radius:20px;">All Cities</a>
+               class="btn btn-sm rounded-pill mr-1 mb-1 {{ !$selectedCity ? 'btn-secondary' : 'btn-outline-secondary' }}">All Cities</a>
             @foreach($cities as $c)
                 <a href="{{ route('admin.areas.index', ['city_id' => $c->id]) }}"
-                   class="btn btn-sm {{ $selectedCity == $c->id ? 'btn-primary' : 'btn-outline-primary' }}"
-                   style="border-radius:20px;">{{ $c->name }}</a>
+                   class="btn btn-sm rounded-pill mr-1 mb-1 {{ $selectedCity == $c->id ? 'btn-primary' : 'btn-outline-primary' }}">{{ $c->name }}</a>
             @endforeach
         </div>
 
         {{-- Table --}}
         <div class="card border-0 shadow-sm">
             <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
-                <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
+                <h6 class="mb-0 font-weight-bold text-c-blue2">
                     <i class="fas fa-map-marker-alt mr-2"></i>Areas Directory / علاقوں کی فہرست
                 </h6>
-                <span class="badge" style="background:#e8f0fe;color:#4e73df;font-size:12px;padding:5px 10px;border-radius:20px;">
+                <span class="badge bdg-blue bdg-md">
                     {{ $totalAreas }} areas
                 </span>
             </div>
             <div class="card-body p-0">
                 @if($areas->count() > 0)
                 <div class="table-responsive">
-                    <table class="table mb-0" id="areaTable" style="font-size:13.5px;">
+                    <table class="table mb-0 pn-table pn-table-font" id="areaTable">
                         <thead>
-                            <tr style="background:#f8f9fc;border-bottom:2px solid #e3e6f0;">
-                                <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Area / علاقہ</th>
-                                <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">City / شہر</th>
-                                <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shops</th>
-                                <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Sales</th>
-                                <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Revenue (PKR)</th>
-                                <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Pending (PKR)</th>
-                                <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions</th>
+                            <tr>
+                                <th class="pl-3 py-3 text-uppercase">Area / علاقہ</th>
+                                <th class="py-3 text-uppercase">City / شہر</th>
+                                <th class="py-3 text-center text-uppercase">Shops</th>
+                                <th class="py-3 text-center text-uppercase">Sales</th>
+                                <th class="py-3 text-right text-uppercase">Revenue (PKR)</th>
+                                <th class="py-3 text-right text-uppercase">Pending (PKR)</th>
+                                <th class="py-3 text-center text-uppercase">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($areas as $area)
-                            <tr id="row_{{ $area->id }}" style="border-bottom:1px solid #f0f0f0;">
+                            <tr id="row_{{ $area->id }}" class="pn-table-row">
                                 <td class="pl-3 py-3 align-middle">
-                                    <span class="font-weight-bold" style="color:#2d3748;" id="area_name_{{ $area->id }}">{{ $area->name }}</span>
+                                    <span class="font-weight-bold text-c-dark" id="area_name_{{ $area->id }}">{{ $area->name }}</span>
                                 </td>
                                 <td class="py-3 align-middle">
-                                    <span class="badge" style="background:#e8f0fe;color:#4e73df;font-size:11px;padding:4px 10px;border-radius:20px;" id="area_city_{{ $area->id }}">
+                                    <span class="badge bdg-blue bdg-sm" id="area_city_{{ $area->id }}">
                                         {{ $area->city->name ?? '—' }}
                                     </span>
                                 </td>
                                 <td class="py-3 align-middle text-center">
-                                    <span class="badge" style="background:#f3f4f6;color:#374151;font-size:12px;padding:5px 10px;border-radius:20px;">
+                                    <span class="badge bdg-neutral bdg-md">
                                         {{ $area->shops_count }}
                                     </span>
                                 </td>
                                 <td class="py-3 align-middle text-center">
-                                    <span class="badge" style="background:#d4edda;color:#155724;font-size:12px;padding:5px 10px;border-radius:20px;">
+                                    <span class="badge bdg-teal bdg-md">
                                         {{ $area->total_sales }}
                                     </span>
                                 </td>
-                                <td class="py-3 align-middle text-right font-weight-bold" style="color:#2d3748;">
+                                <td class="py-3 align-middle text-right font-weight-bold text-c-dark">
                                     {{ number_format($area->total_revenue, 0) }}
                                 </td>
                                 <td class="py-3 align-middle text-right">
                                     @if($area->total_pending > 0)
-                                        <span class="font-weight-bold" style="color:#e74a3b;">{{ number_format($area->total_pending, 0) }}</span>
+                                        <span class="font-weight-bold text-c-red">{{ number_format($area->total_pending, 0) }}</span>
                                     @else
                                         <span class="text-muted">—</span>
                                     @endif
                                 </td>
-                                <td class="py-3 align-middle text-center" style="white-space:nowrap;">
-                                    <button class="btn btn-sm edit-btn mr-1"
+                                <td class="py-3 align-middle text-center text-nowrap">
+                                    <button class="btn btn-sm btn-pn btn-act-edit edit-btn mr-1"
                                             data-id="{{ $area->id }}"
-                                            style="background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:6px;"
                                             title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="btn btn-sm delete-btn"
+                                    <button class="btn btn-sm btn-pn btn-act-delete delete-btn"
                                             data-id="{{ $area->id }}"
-                                            style="background:#fce8e6;color:#c62828;border:1px solid #ef9a9a;border-radius:6px;"
                                             title="Delete">
                                         <i class="fas fa-trash"></i>
                                     </button>
@@ -187,10 +179,10 @@
                             @endforeach
                         </tbody>
                         <tfoot>
-                            <tr style="background:#f8f9fc;border-top:2px solid #e3e6f0;">
-                                <td class="pl-3 py-3 font-weight-bold" colspan="4" style="color:#2d3748;">Totals / کل</td>
-                                <td class="py-3 text-right font-weight-bold" style="color:#2d3748;font-size:15px;">{{ number_format($totalRevenue, 0) }}</td>
-                                <td class="py-3 text-right font-weight-bold" style="color:#e74a3b;font-size:15px;">{{ number_format($totalPending, 0) }}</td>
+                            <tr class="pn-total-row">
+                                <td class="pl-3 py-3 font-weight-bold text-c-dark" colspan="4">Totals / کل</td>
+                                <td class="py-3 text-right font-weight-bold text-c-dark pn-stat-num-sm">{{ number_format($totalRevenue, 0) }}</td>
+                                <td class="py-3 text-right font-weight-bold text-c-red pn-stat-num-sm">{{ number_format($totalPending, 0) }}</td>
                                 <td></td>
                             </tr>
                         </tfoot>
@@ -198,7 +190,7 @@
                 </div>
                 @else
                 <div class="text-center py-5">
-                    <i class="fas fa-map-marker-alt fa-3x mb-3 d-block" style="color:#d1d5db;"></i>
+                    <i class="fas fa-map-marker-alt fa-3x mb-3 d-block text-muted"></i>
                     <p class="text-muted mb-3">No areas added yet.</p>
                     <button class="btn btn-primary btn-sm" id="addBtnEmpty">
                         <i class="fas fa-plus mr-1"></i> Add First Area
@@ -213,14 +205,13 @@
 
 {{-- Modal --}}
 <div class="modal fade" id="areaModal" tabindex="-1" role="dialog" aria-labelledby="areaModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width:460px;" role="document">
-        <div class="modal-content border-0" style="border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15);">
-            <div class="modal-header border-0 text-white px-4 py-3"
-                 style="background:linear-gradient(135deg,#36b9cc,#1a8fa0);">
+    <div class="modal-dialog modal-dialog-centered modal-narrow" role="document">
+        <div class="modal-content border-0 modal-pn">
+            <div class="modal-header border-0 text-white px-4 py-3">
                 <h5 class="modal-title" id="areaModalLabel">
                     <i class="fas fa-map-marker-alt mr-2"></i><span id="modalTitleText">Add Area / علاقہ شامل کریں</span>
                 </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;" aria-label="Close">
+                <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -229,33 +220,31 @@
                 <input type="hidden" id="areaId">
                 <div class="modal-body px-4 py-4">
                     <div class="mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">
                             City / شہر <span class="text-danger">*</span>
                         </label>
-                        <select id="aCityId" class="form-control" style="border-radius:8px;border-color:#d1d5db;" required>
+                        <select id="aCityId" class="form-control fc-pn" required>
                             <option value="">— Select City —</option>
                             @foreach($cities as $c)
                                 <option value="{{ $c->id }}">{{ $c->name }}</option>
                             @endforeach
                         </select>
-                        <div id="cityError" class="text-danger mt-1" style="font-size:12px;display:none;"></div>
+                        <div id="cityError" class="text-danger mt-1 err-msg"></div>
                     </div>
                     <div>
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">
                             Area Name / علاقے کا نام <span class="text-danger">*</span>
                         </label>
-                        <input type="text" id="aName" class="form-control"
-                               style="border-radius:8px;border-color:#d1d5db;" placeholder="e.g. Main Bazaar, Near Masjid" required>
-                        <div id="nameError" class="text-danger mt-1" style="font-size:12px;display:none;"></div>
+                        <input type="text" id="aName" class="form-control fc-pn"
+                               placeholder="e.g. Main Bazaar, Near Masjid" required>
+                        <div id="nameError" class="text-danger mt-1 err-msg"></div>
                     </div>
                 </div>
-                <div class="modal-footer border-0 px-4 py-3" style="background:#f8f9fc;">
-                    <button type="button" class="btn btn-light px-4" data-dismiss="modal" data-bs-dismiss="modal"
-                            style="border-radius:8px;border:1px solid #d1d5db;">
+                <div class="modal-footer border-0 px-4 py-3">
+                    <button type="button" class="btn btn-light px-4 btn-modal-cancel" data-dismiss="modal" data-bs-dismiss="modal">
                         Cancel / منسوخ
                     </button>
-                    <button type="submit" class="btn btn-primary px-4" id="submitBtn"
-                            style="border-radius:8px;background:linear-gradient(135deg,#36b9cc,#1a8fa0);border:none;">
+                    <button type="submit" class="btn btn-primary px-4 btn-modal-save" id="submitBtn">
                         <i class="fas fa-save mr-1"></i> <span id="submitText">Save Area / محفوظ کریں</span>
                     </button>
                 </div>

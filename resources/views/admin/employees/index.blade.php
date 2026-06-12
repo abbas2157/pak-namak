@@ -6,14 +6,14 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1>Employees <small class="text-muted" style="font-size:14px;">ملازمین</small></h1>
+                <h1>Employees <small class="text-muted ch-sub">ملازمین</small></h1>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">Employees</li>
                 </ol>
             </div>
             <div class="col-sm-6 d-flex justify-content-end">
-                <button class="btn btn-primary rounded-pill px-4" id="addEmployee">
+                <button class="btn btn-primary btn-rounded px-4" id="addEmployee">
                     <i class="fas fa-plus mr-1"></i> Add Employee / ملازم شامل کریں
                 </button>
             </div>
@@ -72,10 +72,10 @@
             <button class="btn btn-sm btn-danger filter-btn" data-filter="terminated">Terminated</button>
         </div>
 
-        <div class="card">
+        <div class="card card-pn">
             <div class="card-body p-0">
                 <div class="table-responsive">
-                <table class="table table-bordered table-striped mb-0" id="employeesTable">
+                <table class="table table-bordered table-striped pn-table pn-table-font mb-0" id="employeesTable">
                     <thead class="thead-dark">
                         <tr>
                             <th>Name / نام</th>
@@ -107,13 +107,13 @@
                             </td>
                             <td>{{ $emp->joining_date ? $emp->joining_date->format('d M Y') : '-' }}</td>
                             <td>
-                                <a href="{{ route('admin.employees.show', $emp->id) }}" class="btn btn-info btn-sm" title="View Profile">
+                                <a href="{{ route('admin.employees.show', $emp->id) }}" class="btn btn-sm btn-pn btn-act-view" title="View Profile">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <button class="btn btn-warning btn-sm edit" data-id="{{ $emp->id }}" title="Edit">
+                                <button class="btn btn-sm btn-pn btn-act-edit edit" data-id="{{ $emp->id }}" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-danger btn-sm delete" data-id="{{ $emp->id }}" title="Delete">
+                                <button class="btn btn-sm btn-pn btn-act-delete delete" data-id="{{ $emp->id }}" title="Delete">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
@@ -130,47 +130,47 @@
 </section>
 
 {{-- ========== CREATE MODAL ========== --}}
-<div class="modal fade" id="createEmployeeModal" tabindex="-1">
+<div class="modal fade modal-pn" id="createEmployeeModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <form id="createEmployeeForm">
             @csrf
             <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header">
                     <h5 class="modal-title"><i class="fas fa-user-plus mr-2"></i>Add New Employee / نیا ملازم شامل کریں</h5>
                     <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
                 </div>
                 <div class="modal-body row">
                     <div class="col-md-6 mb-3">
                         <label>Full Name / پورا نام <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="name" required>
+                        <input type="text" class="form-control fc-pn" name="name" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Email / ای میل <span class="text-danger">*</span></label>
-                        <input type="email" class="form-control" name="email" required>
+                        <input type="email" class="form-control fc-pn" name="email" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Phone / فون <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="phone" required>
+                        <input type="text" class="form-control fc-pn" name="phone" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>CNIC / شناختی کارڈ</label>
-                        <input type="text" class="form-control" name="cnic" placeholder="42101-1234567-1">
+                        <input type="text" class="form-control fc-pn" name="cnic" placeholder="42101-1234567-1">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Designation / عہدہ</label>
-                        <input type="text" class="form-control" name="designation" placeholder="e.g. Manager, Worker, Driver">
+                        <input type="text" class="form-control fc-pn" name="designation" placeholder="e.g. Manager, Worker, Driver">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Monthly Salary (PKR) / ماہانہ تنخواہ <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control" name="salary" min="0" required>
+                        <input type="number" class="form-control fc-pn" name="salary" min="0" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Joining Date / شمولیت کی تاریخ</label>
-                        <input type="date" class="form-control" name="joining_date">
+                        <input type="date" class="form-control fc-pn" name="joining_date">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Status / حیثیت <span class="text-danger">*</span></label>
-                        <select class="form-control" name="status" required>
+                        <select class="form-control fc-pn" name="status" required>
                             <option value="working">Working</option>
                             <option value="on_leave">On Leave</option>
                             <option value="terminated">Terminated</option>
@@ -178,16 +178,16 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Leave / End Date / چھٹی کی تاریخ</label>
-                        <input type="date" class="form-control" name="leave_date">
+                        <input type="date" class="form-control fc-pn" name="leave_date">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Address / پتہ</label>
-                        <input type="text" class="form-control" name="address">
+                        <input type="text" class="form-control fc-pn" name="address">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel / منسوخ</button>
-                    <button class="btn btn-primary" type="submit">Save Employee / ملازم محفوظ کریں</button>
+                    <button type="button" class="btn btn-secondary btn-modal-cancel" data-dismiss="modal" data-bs-dismiss="modal">Cancel / منسوخ</button>
+                    <button class="btn btn-primary btn-modal-save" type="submit">Save Employee / ملازم محفوظ کریں</button>
                 </div>
             </div>
         </form>
@@ -195,49 +195,49 @@
 </div>
 
 {{-- ========== EDIT MODAL ========== --}}
-<div class="modal fade" id="editEmployeeModal" tabindex="-1">
+<div class="modal fade modal-pn" id="editEmployeeModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <form id="editEmployeeForm">
             @csrf
             @method('PUT')
             <input type="hidden" name="employee_id" id="editId">
             <div class="modal-content">
-                <div class="modal-header bg-warning">
+                <div class="modal-header">
                     <h5 class="modal-title"><i class="fas fa-user-edit mr-2"></i>Edit Employee / ملازم ترمیم</h5>
-                    <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
+                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
                 </div>
                 <div class="modal-body row">
                     <div class="col-md-6 mb-3">
                         <label>Full Name / پورا نام <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="name" id="editName" required>
+                        <input type="text" class="form-control fc-pn" name="name" id="editName" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Email / ای میل <span class="text-danger">*</span></label>
-                        <input type="email" class="form-control" name="email" id="editEmail" required>
+                        <input type="email" class="form-control fc-pn" name="email" id="editEmail" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Phone / فون <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="phone" id="editPhone" required>
+                        <input type="text" class="form-control fc-pn" name="phone" id="editPhone" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>CNIC / شناختی کارڈ</label>
-                        <input type="text" class="form-control" name="cnic" id="editCnic">
+                        <input type="text" class="form-control fc-pn" name="cnic" id="editCnic">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Designation / عہدہ</label>
-                        <input type="text" class="form-control" name="designation" id="editDesignation">
+                        <input type="text" class="form-control fc-pn" name="designation" id="editDesignation">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Monthly Salary (PKR) / ماہانہ تنخواہ <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control" name="salary" id="editSalary" min="0" required>
+                        <input type="number" class="form-control fc-pn" name="salary" id="editSalary" min="0" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Joining Date / شمولیت کی تاریخ</label>
-                        <input type="date" class="form-control" name="joining_date" id="editJoiningDate">
+                        <input type="date" class="form-control fc-pn" name="joining_date" id="editJoiningDate">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Status / حیثیت <span class="text-danger">*</span></label>
-                        <select class="form-control" name="status" id="editStatus" required>
+                        <select class="form-control fc-pn" name="status" id="editStatus" required>
                             <option value="working">Working</option>
                             <option value="on_leave">On Leave</option>
                             <option value="terminated">Terminated</option>
@@ -245,16 +245,16 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Leave / End Date / چھٹی کی تاریخ</label>
-                        <input type="date" class="form-control" name="leave_date" id="editLeaveDate">
+                        <input type="date" class="form-control fc-pn" name="leave_date" id="editLeaveDate">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Address / پتہ</label>
-                        <input type="text" class="form-control" name="address" id="editAddress">
+                        <input type="text" class="form-control fc-pn" name="address" id="editAddress">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel / منسوخ</button>
-                    <button class="btn btn-warning" type="submit">Update Employee / ملازم اپ ڈیٹ کریں</button>
+                    <button type="button" class="btn btn-secondary btn-modal-cancel" data-dismiss="modal" data-bs-dismiss="modal">Cancel / منسوخ</button>
+                    <button class="btn btn-primary btn-modal-save" type="submit">Update Employee / ملازم اپ ڈیٹ کریں</button>
                 </div>
             </div>
         </form>

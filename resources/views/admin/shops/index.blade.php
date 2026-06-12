@@ -6,14 +6,14 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Shops <small class="text-muted" style="font-size:14px;">دکانیں</small></h1>
+                <h1 class="m-0">Shops <small class="text-muted pn-stat-sub">دکانیں</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item active">Shops</li>
                 </ol>
             </div>
             <div class="col-sm-6 d-flex justify-content-end">
-                <button class="btn btn-primary px-4" style="border-radius:8px;" id="addBtn">
+                <button class="btn btn-primary px-4 btn-pn" id="addBtn">
                     <i class="fas fa-plus mr-1"></i> Add Shop / دکان شامل کریں
                 </button>
             </div>
@@ -27,7 +27,7 @@
         {{-- ===== STATS ===== --}}
         <div class="row mb-3">
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #4e73df !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-blue">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -35,16 +35,15 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $totalShops }}</div>
                                 <small class="text-muted">{{ $activeShops }} active</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(78,115,223,.12);">
-                                <i class="fas fa-store" style="color:#4e73df;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-blue">
+                                <i class="fas fa-store"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1cc88a !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-teal">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -52,16 +51,15 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalRevenue, 0) }}</div>
                                 <small class="text-muted">PKR all sales</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(28,200,138,.12);">
-                                <i class="fas fa-chart-line" style="color:#1cc88a;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-teal">
+                                <i class="fas fa-chart-line"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #e74a3b !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-red">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -69,16 +67,15 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ number_format($totalPending, 0) }}</div>
                                 <small class="text-muted">PKR udhaar</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(231,74,59,.12);">
-                                <i class="fas fa-clock" style="color:#e74a3b;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-red">
+                                <i class="fas fa-clock"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3 mb-2">
-                <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #f6c23e !important;">
+                <div class="card border-0 shadow-sm h-100 pn-bl-yellow">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
@@ -86,9 +83,8 @@
                                 <div class="h5 mb-0 font-weight-bold text-dark">{{ $totalShops - $activeShops }}</div>
                                 <small class="text-muted">not buying</small>
                             </div>
-                            <div class="rounded-circle d-flex align-items-center justify-content-center"
-                                 style="width:46px;height:46px;background:rgba(246,194,62,.12);">
-                                <i class="fas fa-store-slash" style="color:#f6c23e;font-size:18px;"></i>
+                            <div class="pn-icon pn-icon-md pni-yellow">
+                                <i class="fas fa-store-slash"></i>
                             </div>
                         </div>
                     </div>
@@ -104,110 +100,101 @@
         </div>
 
         {{-- ===== TABLE ===== --}}
-        <div class="card border-0 shadow-sm">
+        <div class="card border-0 shadow-sm card-pn">
             <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
-                <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
+                <h6 class="mb-0 font-weight-bold text-c-blue2">
                     <i class="fas fa-store mr-2"></i>Shop Directory / دکانوں کی فہرست
                 </h6>
-                <span class="badge" style="background:#e8f0fe;color:#4e73df;font-size:12px;padding:5px 10px;border-radius:20px;">
-                    {{ $totalShops }} shops
-                </span>
+                <span class="badge pn-bdg pn-bdg-blue">{{ $totalShops }} shops</span>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table mb-0" id="shopTable" style="font-size:13.5px;">
+                    <table class="table mb-0 pn-table pn-table-font" id="shopTable">
                         <thead>
-                            <tr style="background:#f8f9fc;border-bottom:2px solid #e3e6f0;">
-                                <th class="pl-3 py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shop / دکان</th>
-                                <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Contact / رابطہ</th>
-                                <th class="py-3 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">City / Area / شہر</th>
-                                <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Sales / فروخت</th>
-                                <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Total (PKR) / کل</th>
-                                <th class="py-3 text-right text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Pending (PKR) / باقی</th>
-                                <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Status / حیثیت</th>
-                                <th class="py-3 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions / اقدامات</th>
+                            <tr>
+                                <th class="pl-3">Shop / دکان</th>
+                                <th>Contact / رابطہ</th>
+                                <th>City / Area / شہر</th>
+                                <th class="text-center">Sales / فروخت</th>
+                                <th class="text-right">Total (PKR) / کل</th>
+                                <th class="text-right">Pending (PKR) / باقی</th>
+                                <th class="text-center">Status / حیثیت</th>
+                                <th class="text-center">Actions / اقدامات</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($shops as $i => $shop)
-                                <tr class="shop-row" data-status="{{ $shop->status }}"
-                                    id="row_{{ $shop->id }}" style="border-bottom:1px solid #f0f0f0;">
-                                    <td class="pl-3 py-3 align-middle">
-                                        <span class="font-weight-bold d-block" style="color:#2d3748;">{{ $shop->name }}</span>
+                                <tr class="shop-row" data-status="{{ $shop->status }}" id="row_{{ $shop->id }}">
+                                    <td class="pl-3 align-middle">
+                                        <span class="shop-cell-name">{{ $shop->name }}</span>
                                         @if($shop->owner_name)
                                             <small class="text-muted"><i class="fas fa-user mr-1"></i>{{ $shop->owner_name }}</small>
                                         @endif
                                     </td>
-                                    <td class="py-3 align-middle">
-                                        <span class="d-block" style="color:#374151;">
-                                            <i class="fas fa-phone mr-1 text-muted" style="font-size:11px;"></i>{{ $shop->phone_number ?? '—' }}
+                                    <td class="align-middle">
+                                        <span class="shop-cell-contact">
+                                            <i class="fas fa-phone mr-1 text-muted icon-11"></i>{{ $shop->phone_number ?? '—' }}
                                         </span>
                                         @if($shop->email)
                                             <small class="text-muted">
-                                                <i class="fas fa-envelope mr-1" style="font-size:10px;"></i>{{ $shop->email }}
+                                                <i class="fas fa-envelope mr-1 icon-10"></i>{{ $shop->email }}
                                             </small>
                                         @endif
                                     </td>
-                                    <td class="py-3 align-middle">
+                                    <td class="align-middle">
                                         @if($shop->cityRecord)
-                                            <span class="d-block" style="color:#374151;">
-                                                <i class="fas fa-city mr-1 text-muted" style="font-size:11px;"></i>{{ $shop->cityRecord->name }}
+                                            <span class="shop-cell-contact">
+                                                <i class="fas fa-city mr-1 text-muted icon-11"></i>{{ $shop->cityRecord->name }}
                                             </span>
                                         @elseif($shop->city)
-                                            <span class="d-block" style="color:#374151;">
-                                                <i class="fas fa-city mr-1 text-muted" style="font-size:11px;"></i>{{ $shop->city }}
+                                            <span class="shop-cell-contact">
+                                                <i class="fas fa-city mr-1 text-muted icon-11"></i>{{ $shop->city }}
                                             </span>
                                         @endif
                                         @if($shop->area)
                                             <small class="text-muted">
-                                                <i class="fas fa-map-marker-alt mr-1" style="font-size:10px;"></i>{{ $shop->area->name }}
+                                                <i class="fas fa-map-marker-alt mr-1 icon-10"></i>{{ $shop->area->name }}
                                             </small>
                                         @endif
                                     </td>
-                                    <td class="py-3 align-middle text-center">
+                                    <td class="align-middle text-center">
                                         <a href="{{ route('admin.sales.by_shop', ['shop_id' => $shop->id]) }}"
-                                           class="badge"
-                                           style="background:#e8f0fe;color:#4e73df;font-size:12px;padding:5px 10px;border-radius:20px;text-decoration:none;">
+                                           class="badge pn-bdg pn-bdg-blue">
                                             {{ $shop->sales_count }} sales
                                         </a>
                                     </td>
-                                    <td class="py-3 align-middle text-right">
-                                        <span class="font-weight-bold" style="color:#2d3748;">
-                                            {{ number_format($shop->sales_sum_total_amount ?? 0, 0) }}
-                                        </span>
+                                    <td class="align-middle text-right font-weight-bold pn-text-heading">
+                                        {{ number_format($shop->sales_sum_total_amount ?? 0, 0) }}
                                     </td>
-                                    <td class="py-3 align-middle text-right">
+                                    <td class="align-middle text-right">
                                         @if(($shop->sales_sum_pending_amount ?? 0) > 0)
-                                            <span class="font-weight-bold" style="color:#e74a3b;">
+                                            <span class="font-weight-bold text-c-red">
                                                 {{ number_format($shop->sales_sum_pending_amount, 0) }}
                                             </span>
                                         @else
                                             <span class="text-muted">—</span>
                                         @endif
                                     </td>
-                                    <td class="py-3 align-middle text-center">
+                                    <td class="align-middle text-center">
                                         @if($shop->status === 'active')
-                                            <span class="badge badge-success" style="font-size:11px;">Active</span>
+                                            <span class="badge badge-success">Active</span>
                                         @else
-                                            <span class="badge badge-warning" style="font-size:11px;">Inactive</span>
+                                            <span class="badge badge-warning">Inactive</span>
                                         @endif
                                     </td>
-                                    <td class="py-3 align-middle text-center" style="white-space:nowrap;">
+                                    <td class="align-middle text-center text-nowrap">
                                         <a href="{{ route('admin.sales.by_shop', ['shop_id' => $shop->id]) }}"
-                                           class="btn btn-sm mr-1"
-                                           style="background:#e8f0fe;color:#4e73df;border:1px solid #c3d3f7;border-radius:6px;"
+                                           class="btn btn-sm btn-pn btn-act-view mr-1"
                                            title="View Sales">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <button class="btn btn-sm editBtn mr-1"
+                                        <button class="btn btn-sm btn-pn btn-act-edit editBtn mr-1"
                                                 data-id="{{ $shop->id }}"
-                                                style="background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:6px;"
                                                 title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        <button class="btn btn-sm deleteBtn"
+                                        <button class="btn btn-sm btn-pn btn-act-delete deleteBtn"
                                                 data-id="{{ $shop->id }}"
-                                                style="background:#fce8e6;color:#c62828;border:1px solid #ef9a9a;border-radius:6px;"
                                                 title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </button>
@@ -216,9 +203,9 @@
                             @empty
                                 <tr>
                                     <td colspan="8" class="text-center py-5">
-                                        <i class="fas fa-store fa-3x mb-3 d-block" style="color:#d1d5db;"></i>
+                                        <i class="fas fa-store fa-3x mb-3 d-block icon-fade"></i>
                                         <p class="text-muted mb-0">No shops added yet.</p>
-                                        <button class="btn btn-sm btn-primary mt-3" id="addBtnEmpty">
+                                        <button class="btn btn-sm btn-primary btn-pn mt-3" id="addBtnEmpty">
                                             <i class="fas fa-plus mr-1"></i> Add First Shop
                                         </button>
                                     </td>
@@ -227,12 +214,12 @@
                         </tbody>
                         @if($shops->count() > 0)
                         <tfoot>
-                            <tr style="background:#f8f9fc;border-top:2px solid #e3e6f0;">
-                                <td class="pl-3 py-3 font-weight-bold" colspan="4" style="color:#2d3748;">Totals / کل</td>
-                                <td class="py-3 text-right font-weight-bold" style="color:#2d3748;font-size:15px;">
+                            <tr class="pn-total-row">
+                                <td class="pl-3 py-3 font-weight-bold pn-text-heading" colspan="4">Totals / کل</td>
+                                <td class="py-3 text-right font-weight-bold pn-text-heading pn-stat-num-sm">
                                     {{ number_format($totalRevenue, 0) }}
                                 </td>
-                                <td class="py-3 text-right font-weight-bold" style="color:#e74a3b;font-size:15px;">
+                                <td class="py-3 text-right font-weight-bold text-c-red pn-stat-num-sm">
                                     {{ number_format($totalPending, 0) }}
                                 </td>
                                 <td colspan="2"></td>
@@ -248,19 +235,18 @@
 </section>
 
 {{-- ===== MODAL ===== --}}
-<div class="modal fade" id="shopModal" tabindex="-1">
+<div class="modal fade modal-pn" id="shopModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <form id="shopForm">
             @csrf
             <input type="hidden" id="shop_id" name="_shop_id">
-            <div class="modal-content border-0" style="border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.15);">
+            <div class="modal-content">
 
-                <div class="modal-header border-0 text-white px-4 py-3"
-                     style="background:linear-gradient(135deg,#4e73df,#224abe);">
+                <div class="modal-header px-4 py-3">
                     <h5 class="modal-title" id="modalTitle">
                         <i class="fas fa-store mr-2"></i>Add Shop / دکان شامل کریں
                     </h5>
-                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" style="opacity:.8;">
+                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal">
                         <span>&times;</span>
                     </button>
                 </div>
@@ -269,72 +255,70 @@
                     <div class="row">
                         {{-- Shop Name + Owner --}}
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Shop Name / دکان کا نام <span class="text-danger">*</span>
                             </label>
-                            <input type="text" name="name" id="sName" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;" placeholder="Shop / business name" required>
+                            <input type="text" name="name" id="sName" class="form-control fc-pn"
+                                   placeholder="Shop / business name" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Owner Name / مالک کا نام
                             </label>
-                            <input type="text" name="owner_name" id="sOwner" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;" placeholder="Owner / contact person">
+                            <input type="text" name="owner_name" id="sOwner" class="form-control fc-pn"
+                                   placeholder="Owner / contact person">
                         </div>
 
                         {{-- Phone + Email --}}
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Phone / فون <span class="text-danger">*</span>
                             </label>
-                            <input type="text" name="phone_number" id="sPhone" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;" placeholder="03xx-xxxxxxx" required>
+                            <input type="text" name="phone_number" id="sPhone" class="form-control fc-pn"
+                                   placeholder="03xx-xxxxxxx" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Email / ای میل
                             </label>
-                            <input type="email" name="email" id="sEmail" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;" placeholder="shop@example.com">
+                            <input type="email" name="email" id="sEmail" class="form-control fc-pn"
+                                   placeholder="shop@example.com">
                         </div>
 
                         {{-- City + Area --}}
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 City / شہر
                             </label>
-                            <div class="d-flex" style="gap:8px;">
-                                <select name="city_id" id="sCity" class="form-control"
-                                        style="border-radius:8px;border-color:#d1d5db;">
+                            <div class="input-group">
+                                <select name="city_id" id="sCity" class="form-control fc-pn">
                                     <option value="">— Select City —</option>
                                     @foreach($cities as $c)
                                         <option value="{{ $c->id }}" data-areas="{{ $c->areas->toJson() }}">{{ $c->name }}</option>
                                     @endforeach
                                 </select>
-                                <a href="{{ route('admin.cities.index') }}" target="_blank"
-                                   class="btn btn-light flex-shrink-0"
-                                   style="border-radius:8px;border:1px solid #d1d5db;"
-                                   title="Manage Cities">
-                                    <i class="fas fa-city"></i>
-                                </a>
+                                <div class="input-group-append">
+                                    <a href="{{ route('admin.cities.index') }}" target="_blank"
+                                       class="btn btn-light btn-pn"
+                                       title="Manage Cities">
+                                        <i class="fas fa-city"></i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Area / علاقہ
                             </label>
-                            <select name="area_id" id="sArea" class="form-control"
-                                    style="border-radius:8px;border-color:#d1d5db;">
+                            <select name="area_id" id="sArea" class="form-control fc-pn">
                                 <option value="">— Select Area —</option>
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Status / حیثیت <span class="text-danger">*</span>
                             </label>
-                            <select name="status" id="sStatus" class="form-control"
-                                    style="border-radius:8px;border-color:#d1d5db;" required>
+                            <select name="status" id="sStatus" class="form-control fc-pn" required>
                                 <option value="active">Active</option>
                                 <option value="inactive">Inactive</option>
                             </select>
@@ -342,23 +326,21 @@
 
                         {{-- Address --}}
                         <div class="col-12 mb-1">
-                            <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Address / پتہ <span class="text-danger">*</span>
                             </label>
-                            <input type="text" name="address" id="sAddress" class="form-control"
-                                   style="border-radius:8px;border-color:#d1d5db;" placeholder="Full street address" required>
+                            <input type="text" name="address" id="sAddress" class="form-control fc-pn"
+                                   placeholder="Full street address" required>
                         </div>
                     </div>
                 </div>
 
-                <div class="modal-footer border-0 px-4 py-3" style="background:#f8f9fc;">
-                    <button type="button" class="btn btn-light px-4"
-                            data-dismiss="modal" data-bs-dismiss="modal"
-                            style="border-radius:8px;border:1px solid #d1d5db;">
+                <div class="modal-footer px-4 py-3">
+                    <button type="button" class="btn btn-light px-4 btn-modal-cancel"
+                            data-dismiss="modal" data-bs-dismiss="modal">
                         Cancel / منسوخ
                     </button>
-                    <button class="btn btn-primary px-4" type="submit" id="submitBtn"
-                            style="border-radius:8px;background:linear-gradient(135deg,#4e73df,#224abe);border:none;">
+                    <button class="btn btn-primary px-4 btn-modal-save" type="submit" id="submitBtn">
                         <i class="fas fa-save mr-1"></i> Save Shop / محفوظ کریں
                     </button>
                 </div>
@@ -454,26 +436,26 @@ $(function () {
                 const s = res.shop;
                 if (id) {
                     // Update name/owner cell
-                    const nameCell = `<span class="font-weight-bold d-block" style="color:#2d3748;">${s.name}</span>`
+                    const nameCell = `<span class="shop-cell-name">${s.name}</span>`
                         + (s.owner_name ? `<small class="text-muted"><i class="fas fa-user mr-1"></i>${s.owner_name}</small>` : '');
                     $('#row_' + id + ' td:nth-child(2)').html(nameCell);
 
                     // Update contact cell
-                    const contactCell = `<span class="d-block" style="color:#374151;"><i class="fas fa-phone mr-1 text-muted" style="font-size:11px;"></i>${s.phone_number || '—'}</span>`
-                        + (s.email ? `<small class="text-muted"><i class="fas fa-envelope mr-1" style="font-size:10px;"></i>${s.email}</small>` : '');
+                    const contactCell = `<span class="shop-cell-contact"><i class="fas fa-phone mr-1 text-muted icon-11"></i>${s.phone_number || '—'}</span>`
+                        + (s.email ? `<small class="text-muted"><i class="fas fa-envelope mr-1 icon-10"></i>${s.email}</small>` : '');
                     $('#row_' + id + ' td:nth-child(3)').html(contactCell);
 
                     // Update city/area cell
                     const cityName = s.city_record ? s.city_record.name : (s.city || '');
                     const areaName = s.area ? s.area.name : null;
-                    const cityCell = (cityName ? `<span class="d-block" style="color:#374151;"><i class="fas fa-city mr-1 text-muted" style="font-size:11px;"></i>${cityName}</span>` : '')
-                        + (areaName ? `<small class="text-muted"><i class="fas fa-map-marker-alt mr-1" style="font-size:10px;"></i>${areaName}</small>` : '');
+                    const cityCell = (cityName ? `<span class="shop-cell-contact"><i class="fas fa-city mr-1 text-muted icon-11"></i>${cityName}</span>` : '')
+                        + (areaName ? `<small class="text-muted"><i class="fas fa-map-marker-alt mr-1 icon-10"></i>${areaName}</small>` : '');
                     $('#row_' + id + ' td:nth-child(4)').html(cityCell);
 
                     // Status badge
                     const statusBadge = s.status === 'active'
-                        ? '<span class="badge badge-success" style="font-size:11px;">Active</span>'
-                        : '<span class="badge badge-warning" style="font-size:11px;">Inactive</span>';
+                        ? '<span class="badge badge-success">Active</span>'
+                        : '<span class="badge badge-warning">Inactive</span>';
                     $('#row_' + id + ' td:nth-child(8)').html(statusBadge);
                     $('#row_' + id).attr('data-status', s.status);
 

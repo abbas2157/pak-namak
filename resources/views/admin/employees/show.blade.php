@@ -34,8 +34,7 @@
                 <div class="card card-primary card-outline">
                     <div class="card-body box-profile text-center pb-2">
                         <div class="mb-3">
-                            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center"
-                                 style="width:80px;height:80px;font-size:2rem;font-weight:700;">
+                            <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center emp-avatar">
                                 {{ strtoupper(substr($employee->name, 0, 1)) }}
                             </div>
                         </div>

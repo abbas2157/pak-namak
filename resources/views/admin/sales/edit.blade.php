@@ -12,7 +12,7 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Edit Sale <small class="text-muted" style="font-size:14px;">فروخت ترمیم</small></h1>
+                <h1 class="m-0">Edit Sale <small class="text-muted pn-stat-sub">فروخت ترمیم</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('admin.sales.index') }}">Sales</a></li>
@@ -21,7 +21,7 @@
             </div>
             <div class="col-sm-6 d-flex justify-content-end">
                 <a href="{{ route('admin.sales.index') }}"
-                   class="btn btn-light px-4" style="border-radius:8px;border:1px solid #d1d5db;">
+                   class="btn btn-light px-4 btn-modal-cancel">
                     <i class="fas fa-arrow-left mr-1"></i> Back to Sales / فروخت پر واپس
                 </a>
             </div>
@@ -33,7 +33,7 @@
     <div class="container-fluid">
 
         @if(session('error'))
-            <div class="alert alert-danger alert-dismissible">
+            <div class="alert alert-danger alert-dismissible card-pn">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 {{ session('error') }}
             </div>
@@ -47,63 +47,61 @@
              DALLA
         ====================================================== --}}
         <div class="card border-0 shadow-sm mb-3">
-            <div class="card-header border-bottom py-3" style="background:#f0f4ff;">
+            <div class="card-header border-bottom py-3 ch-blue">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
+                    <h6 class="mb-0 font-weight-bold text-c-blue2">
                         <i class="fas fa-tint mr-2"></i>Dalla — ڈلہ
                     </h6>
-                    <button type="button" class="btn btn-sm section-toggle"
-                            data-target="#dallaBody"
-                            style="background:#e8f0fe;color:#4e73df;border:1px solid #c3d3f7;border-radius:6px;">
-                        <i class="fas {{ $dalla ? 'fa-chevron-down' : 'fa-chevron-down' }}"></i>
+                    <button type="button" class="btn btn-sm btn-pn btn-act-view section-toggle"
+                            data-target="#dallaBody">
+                        <i class="fas fa-chevron-down"></i>
                     </button>
                 </div>
             </div>
             <div class="card-body" id="dallaBody">
                 <div class="row align-items-end">
                     <div class="col-md-3 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">
                             Quantity (Mann) — وزن: من
                         </label>
                         <input type="number" name="dalla[sold_quantity_mann]" id="sold_quantity_mann"
-                               class="form-control" style="border-radius:8px;" placeholder="0"
+                               class="form-control fc-pn" placeholder="0"
                                value="{{ $dalla?->quantity_mann ?? '' }}">
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">
                             Total KG — کل وزن
                         </label>
                         <input type="text" name="dalla[sold_quantity_kilo]" id="sold_quantity_kilo_dalla"
-                               readonly class="form-control" style="border-radius:8px;background:#f8f9fc;"
+                               readonly class="form-control fc-ro-pn"
                                value="{{ $dalla?->quantity_kg ?? '' }}">
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">
                             Rate / Mann — فی من
                         </label>
                         <input type="number" name="dalla[pirce_per_mann]" id="pirce_per_mann"
-                               class="form-control" style="border-radius:8px;" placeholder="0"
+                               class="form-control fc-pn" placeholder="0"
                                value="{{ $dalla?->price_per_mann ?? '' }}">
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">
                             Rate / KG — فی کلو
                         </label>
                         <input type="number" name="dalla[pirce_per_kg]" id="pirce_per_kg_dalla"
-                               readonly class="form-control" style="border-radius:8px;background:#f8f9fc;"
+                               readonly class="form-control fc-ro-pn"
                                value="{{ $dalla?->price_per_kg ?? '' }}">
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">
                             Sub Total — سب ٹوٹل
                         </label>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" style="background:#f8f9fc;border-color:#d1d5db;border-radius:8px 0 0 8px;font-size:12px;color:#6b7280;">PKR</span>
+                                <span class="input-group-text input-pre">PKR</span>
                             </div>
                             <input type="text" name="dalla[sub_total]" id="sub_total_dalla"
-                                   readonly class="form-control font-weight-bold"
-                                   style="border-color:#d1d5db;border-radius:0 8px 8px 0;background:#f8f9fc;color:#4e73df;"
+                                   readonly class="form-control font-weight-bold sub-total-dalla"
                                    value="{{ $dalla?->sub_total ?? '' }}">
                         </div>
                     </div>
@@ -115,14 +113,13 @@
              THAILA
         ====================================================== --}}
         <div class="card border-0 shadow-sm mb-3">
-            <div class="card-header border-bottom py-3" style="background:#f0fff8;">
+            <div class="card-header border-bottom py-3 ch-teal">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 font-weight-bold" style="color:#1cc88a;">
+                    <h6 class="mb-0 font-weight-bold text-c-teal">
                         <i class="fas fa-shopping-bag mr-2"></i>Thaila — تھیلا
                     </h6>
-                    <button type="button" class="btn btn-sm section-toggle"
-                            data-target="#thailaBody"
-                            style="background:#d4edda;color:#155724;border:1px solid #c3e6cb;border-radius:6px;">
+                    <button type="button" class="btn btn-sm btn-pn btn-act-confirm section-toggle"
+                            data-target="#thailaBody">
                         <i class="fas fa-chevron-down"></i>
                     </button>
                 </div>
@@ -130,56 +127,54 @@
             <div class="card-body" id="thailaBody">
 
                 <div class="row mb-1 d-none d-md-flex">
-                    <div class="col-md-1"><small class="text-uppercase font-weight-bold text-muted" style="font-size:10px;">Size</small></div>
-                    <div class="col-md-2"><small class="text-uppercase font-weight-bold text-muted" style="font-size:10px;">Qty (تھیلا)</small></div>
-                    <div class="col-md-2"><small class="text-uppercase font-weight-bold text-muted" style="font-size:10px;">Total KG</small></div>
-                    <div class="col-md-2"><small class="text-uppercase font-weight-bold text-muted" style="font-size:10px;">Rate/Thaila</small></div>
-                    <div class="col-md-2"><small class="text-uppercase font-weight-bold text-muted" style="font-size:10px;">Rate/KG</small></div>
-                    <div class="col-md-3"><small class="text-uppercase font-weight-bold text-muted" style="font-size:10px;">Sub Total</small></div>
+                    <div class="col-md-1"><small class="pn-form-col-lbl">Size</small></div>
+                    <div class="col-md-2"><small class="pn-form-col-lbl">Qty (تھیلا)</small></div>
+                    <div class="col-md-2"><small class="pn-form-col-lbl">Total KG</small></div>
+                    <div class="col-md-2"><small class="pn-form-col-lbl">Rate/Thaila</small></div>
+                    <div class="col-md-2"><small class="pn-form-col-lbl">Rate/KG</small></div>
+                    <div class="col-md-3"><small class="pn-form-col-lbl">Sub Total</small></div>
                 </div>
 
                 @foreach([5,10,30,35,40,50] as $size)
                 @php $t = $thailasBySize->get($size); @endphp
-                <div class="row align-items-center mb-2 py-2" style="border-bottom:1px solid #f0f0f0;">
+                <div class="row align-items-center mb-2 py-2 sale-form-row">
                     <div class="col-md-1 mb-2 mb-md-0">
                         <input type="text" name="thaila[{{ $size }}][kilo_{{ $size }}]"
                                id="quantity_{{ $size }}_kilo" value="{{ $size }}" readonly
-                               class="form-control text-center font-weight-bold"
-                               style="border-radius:8px;background:#f0fff8;color:#1cc88a;border-color:#c3e6cb;">
+                               class="form-control text-center font-weight-bold fc-tag-thaila">
                     </div>
                     <div class="col-md-2 mb-2 mb-md-0">
                         <input type="number" name="thaila[{{ $size }}][sold_quantity_kilo_{{ $size }}]"
                                id="sold_quantity_kilo_{{ $size }}"
-                               class="form-control" style="border-radius:8px;" placeholder="0"
+                               class="form-control fc-pn" placeholder="0"
                                value="{{ $t?->quantity ?? '' }}">
                     </div>
                     <div class="col-md-2 mb-2 mb-md-0">
                         <input type="text" name="thaila[{{ $size }}][sold_quantity_kilo]"
                                id="sold_quantity_{{ $size }}_kilo_thaila"
-                               readonly class="form-control" style="border-radius:8px;background:#f8f9fc;"
+                               readonly class="form-control fc-ro-pn"
                                value="{{ $t?->total_kg ?? '' }}">
                     </div>
                     <div class="col-md-2 mb-2 mb-md-0">
                         <input type="number" name="thaila[{{ $size }}][pirce_per_thaila]"
                                id="pirce_per_{{ $size }}_killo_thaila"
-                               class="form-control" style="border-radius:8px;" placeholder="0"
+                               class="form-control fc-pn" placeholder="0"
                                value="{{ $t?->price_per_bag ?? '' }}">
                     </div>
                     <div class="col-md-2 mb-2 mb-md-0">
                         <input type="number" name="thaila[{{ $size }}][pirce_per_kg]"
                                id="pirce_per_kg_{{ $size }}_killo_thaila"
-                               readonly class="form-control" style="border-radius:8px;background:#f8f9fc;"
+                               readonly class="form-control fc-ro-pn"
                                value="{{ $t?->price_per_kg ?? '' }}">
                     </div>
                     <div class="col-md-3 mb-2 mb-md-0">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" style="background:#f8f9fc;border-color:#d1d5db;border-radius:8px 0 0 8px;font-size:12px;color:#6b7280;">PKR</span>
+                                <span class="input-group-text input-pre">PKR</span>
                             </div>
                             <input type="text" name="thaila[{{ $size }}][sub_total]"
                                    id="sub_total_{{ $size }}_killo_thaila"
-                                   readonly class="form-control font-weight-bold"
-                                   style="border-color:#d1d5db;border-radius:0 8px 8px 0;background:#f8f9fc;color:#1cc88a;"
+                                   readonly class="form-control font-weight-bold sub-total-thaila"
                                    value="{{ $t?->sub_total ?? '' }}">
                         </div>
                     </div>
@@ -193,14 +188,13 @@
              PACKAGE
         ====================================================== --}}
         <div class="card border-0 shadow-sm mb-3">
-            <div class="card-header border-bottom py-3" style="background:#fffdf0;">
+            <div class="card-header border-bottom py-3 ch-yellow">
                 <div class="d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0 font-weight-bold" style="color:#f6c23e;">
+                    <h6 class="mb-0 font-weight-bold text-c-warn">
                         <i class="fas fa-box mr-2"></i>Package — پیکٹ
                     </h6>
-                    <button type="button" class="btn btn-sm section-toggle"
-                            data-target="#packageBody"
-                            style="background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:6px;">
+                    <button type="button" class="btn btn-sm btn-pn btn-act-sale section-toggle"
+                            data-target="#packageBody">
                         <i class="fas fa-chevron-down"></i>
                     </button>
                 </div>
@@ -208,33 +202,32 @@
             <div class="card-body" id="packageBody">
 
                 <div class="row mb-1 d-none d-md-flex">
-                    <div class="col-md-1"><small class="text-uppercase font-weight-bold text-muted" style="font-size:10px;">Size</small></div>
-                    <div class="col-md-2"><small class="text-uppercase font-weight-bold text-muted" style="font-size:10px;">Qty (بنڈل)</small></div>
-                    <div class="col-md-2"><small class="text-uppercase font-weight-bold text-muted" style="font-size:10px;">Bundle Type</small></div>
-                    <div class="col-md-2"><small class="text-uppercase font-weight-bold text-muted" style="font-size:10px;">Total KG</small></div>
-                    <div class="col-md-2"><small class="text-uppercase font-weight-bold text-muted" style="font-size:10px;">Rate/Bundle</small></div>
-                    <div class="col-md-3"><small class="text-uppercase font-weight-bold text-muted" style="font-size:10px;">Sub Total</small></div>
+                    <div class="col-md-1"><small class="pn-form-col-lbl">Size</small></div>
+                    <div class="col-md-2"><small class="pn-form-col-lbl">Qty (بنڈل)</small></div>
+                    <div class="col-md-2"><small class="pn-form-col-lbl">Bundle Type</small></div>
+                    <div class="col-md-2"><small class="pn-form-col-lbl">Total KG</small></div>
+                    <div class="col-md-2"><small class="pn-form-col-lbl">Rate/Bundle</small></div>
+                    <div class="col-md-3"><small class="pn-form-col-lbl">Sub Total</small></div>
                 </div>
 
                 @foreach([250,300,400,500,600,700] as $gram)
                 @php $p = $packagesByGram->get($gram); @endphp
-                <div class="row align-items-center mb-2 py-2" style="border-bottom:1px solid #f0f0f0;">
+                <div class="row align-items-center mb-2 py-2 sale-form-row">
                     <div class="col-md-1 mb-2 mb-md-0">
                         <input type="text" name="package[{{ $gram }}][gram_{{ $gram }}]"
                                id="quantity_{{ $gram }}_gram" value="{{ $gram }}" readonly
-                               class="form-control text-center font-weight-bold"
-                               style="border-radius:8px;background:#fffdf0;color:#856404;border-color:#ffc107;font-size:12px;">
+                               class="form-control text-center font-weight-bold fc-tag-package">
                     </div>
                     <div class="col-md-2 mb-2 mb-md-0">
                         <input type="number" name="package[{{ $gram }}][sold_bundles_quantity_{{ $gram }}_gram]"
                                id="sold_bundles_quantity_{{ $gram }}_gram"
-                               class="form-control" style="border-radius:8px;" placeholder="0"
+                               class="form-control fc-pn" placeholder="0"
                                value="{{ $p?->bundle_quantity ?? '' }}">
                     </div>
                     <div class="col-md-2 mb-2 mb-md-0">
                         <select name="package[{{ $gram }}][bundle_type_{{ $gram }}_gram]"
                                 id="bundle_type_{{ $gram }}_gram"
-                                class="form-control" style="border-radius:8px;">
+                                class="form-control fc-pn">
                             <option value="10" {{ ($p?->bundle_size ?? 10) == 10 ? 'selected' : '' }}>10 پیکٹ</option>
                             <option value="20" {{ ($p?->bundle_size ?? 10) == 20 ? 'selected' : '' }}>20 پیکٹ</option>
                         </select>
@@ -242,24 +235,23 @@
                     <div class="col-md-2 mb-2 mb-md-0">
                         <input type="text" name="package[{{ $gram }}][total_kg_{{ $gram }}_gram]"
                                id="total_kg_{{ $gram }}_gram"
-                               readonly class="form-control" style="border-radius:8px;background:#f8f9fc;"
+                               readonly class="form-control fc-ro-pn"
                                value="{{ $p?->total_kg ?? '' }}">
                     </div>
                     <div class="col-md-2 mb-2 mb-md-0">
                         <input type="number" name="package[{{ $gram }}][price_per_bundle]"
                                id="price_per_bundle_{{ $gram }}_gram"
-                               class="form-control" style="border-radius:8px;" placeholder="0"
+                               class="form-control fc-pn" placeholder="0"
                                value="{{ $p?->price_per_bundle ?? '' }}">
                     </div>
                     <div class="col-md-3 mb-2 mb-md-0">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" style="background:#f8f9fc;border-color:#d1d5db;border-radius:8px 0 0 8px;font-size:12px;color:#6b7280;">PKR</span>
+                                <span class="input-group-text input-pre">PKR</span>
                             </div>
                             <input type="text" name="package[{{ $gram }}][sub_total]"
                                    id="sub_total_{{ $gram }}_gram"
-                                   readonly class="form-control font-weight-bold"
-                                   style="border-color:#d1d5db;border-radius:0 8px 8px 0;background:#f8f9fc;color:#856404;"
+                                   readonly class="form-control font-weight-bold sub-total-package"
                                    value="{{ $p?->sub_total ?? '' }}">
                         </div>
                     </div>
@@ -273,8 +265,7 @@
              SALE DETAILS
         ====================================================== --}}
         <div class="card border-0 shadow-sm mb-3">
-            <div class="card-header border-bottom py-3"
-                 style="background:linear-gradient(135deg,#4e73df,#224abe);">
+            <div class="card-header border-bottom py-3 ch-header-blue">
                 <h6 class="mb-0 font-weight-bold text-white">
                     <i class="fas fa-store mr-2"></i>Sale Details / فروخت کی تفصیل
                 </h6>
@@ -282,11 +273,10 @@
             <div class="card-body py-4">
                 <div class="row">
                     <div class="col-md-4 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">
                             Shop / دکان <span class="text-danger">*</span>
                         </label>
-                        <select name="shop_id" id="shop_id" class="form-control select2" required
-                                style="border-radius:8px;">
+                        <select name="shop_id" id="shop_id" class="form-control fc-pn select2" required>
                             <option value="">Select Shop</option>
                             @foreach($shops as $shop)
                                 <option value="{{ $shop->id }}" {{ $sale->shop_id == $shop->id ? 'selected' : '' }}>
@@ -296,75 +286,69 @@
                         </select>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">
                             Sale Date / فروخت کی تاریخ <span class="text-danger">*</span>
                         </label>
-                        <input type="date" name="sale_date" id="date" class="form-control"
-                               value="{{ $sale->sale_date }}" required style="border-radius:8px;">
+                        <input type="date" name="sale_date" id="date" class="form-control fc-pn"
+                               value="{{ $sale->sale_date }}" required>
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">
                             Grand Total (PKR) / کل رقم
                         </label>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text font-weight-bold"
-                                      style="background:#e8f0fe;color:#4e73df;border-color:#c3d3f7;border-radius:8px 0 0 8px;">PKR</span>
+                                <span class="input-group-text font-weight-bold input-pre-total">PKR</span>
                             </div>
                             <input type="number" name="total_sales_amount" readonly
-                                   id="total_sales_amount" class="form-control font-weight-bold"
-                                   value="{{ $sale->total_amount }}"
-                                   style="border-color:#c3d3f7;border-radius:0 8px 8px 0;font-size:18px;color:#4e73df;background:#f0f4ff;">
+                                   id="total_sales_amount" class="form-control font-weight-bold input-grand-total"
+                                   value="{{ $sale->total_amount }}">
                         </div>
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">
                             Received (PKR) / وصول شدہ
                         </label>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text font-weight-bold"
-                                      style="background:#d4edda;color:#155724;border-color:#c3e6cb;border-radius:8px 0 0 8px;">PKR</span>
+                                <span class="input-group-text font-weight-bold input-pre-received">PKR</span>
                             </div>
                             <input type="number" name="received_amount" id="received_amount"
                                    value="{{ $sale->received_amount }}" min="0"
-                                   class="form-control font-weight-bold"
-                                   style="border-color:#c3e6cb;border-radius:0 8px 8px 0;font-size:18px;color:#155724;background:#f0fff8;">
+                                   class="form-control font-weight-bold input-received">
                         </div>
                     </div>
                     <div class="col-md-8 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">
                             Remarks / ملاحظات
                         </label>
-                        <textarea name="remarks" id="remarks" class="form-control" rows="2"
-                                  style="border-radius:8px;" placeholder="Optional notes...">{{ $sale->remarks }}</textarea>
+                        <textarea name="remarks" id="remarks" class="form-control fc-pn" rows="2"
+                                  placeholder="Optional notes...">{{ $sale->remarks }}</textarea>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label class="text-uppercase font-weight-bold text-muted" style="font-size:11px;letter-spacing:.5px;">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">
                             Bill Image / بل تصویر
                         </label>
                         @if($sale->bill_image)
                             <div class="mb-2">
                                 <a href="{{ asset($sale->bill_image) }}" target="_blank"
-                                   class="btn btn-sm btn-outline-secondary" style="border-radius:6px;">
+                                   class="btn btn-sm btn-outline-secondary btn-pn">
                                     <i class="fas fa-image mr-1"></i> View Current Bill
                                 </a>
                             </div>
                         @endif
                         <input type="file" name="bill_image" id="bill_image"
-                               class="form-control" accept="image/*"
-                               style="border-radius:8px;">
+                               class="form-control fc-pn" accept="image/*">
                         <small class="text-muted">Leave blank to keep current image.</small>
                     </div>
                 </div>
 
                 <div class="d-flex justify-content-end pt-2">
                     <a href="{{ route('admin.sales.index') }}"
-                       class="btn btn-light px-4 mr-2" style="border-radius:8px;border:1px solid #d1d5db;">
+                       class="btn btn-light px-4 mr-2 btn-modal-cancel">
                         Cancel / منسوخ
                     </a>
-                    <button class="btn btn-primary px-5" type="submit"
-                            style="border-radius:8px;background:linear-gradient(135deg,#4e73df,#224abe);border:none;font-weight:600;">
+                    <button class="btn btn-primary px-5 btn-modal-save font-weight-bold" type="submit">
                         <i class="fas fa-save mr-2"></i> Update Sale / فروخت اپ ڈیٹ کریں
                     </button>
                 </div>

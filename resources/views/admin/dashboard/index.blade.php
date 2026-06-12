@@ -6,17 +6,15 @@
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Dashboard <small class="text-muted" style="font-size:14px;">ڈیش بورڈ</small></h1>
-                <p class="text-muted mb-0" style="font-size:13px;">
-                    PAK NAMAK & MASALA JAAT PRIVATE LIMITED
-                </p>
+                <h1 class="m-0">Dashboard <small class="text-muted ch-sub">ڈیش بورڈ</small></h1>
+                <p class="text-muted mb-0 ch-desc">PAK NAMAK &amp; MASALA JAAT PRIVATE LIMITED</p>
             </div>
             <div class="col-sm-6">
                 <form method="GET" id="monthFilterForm" class="d-flex justify-content-end align-items-center">
-                    <label class="mb-0 mr-2 text-muted" style="font-size:13px;white-space:nowrap;">
+                    <label class="mb-0 mr-2 text-muted ch-desc text-nowrap">
                         <i class="fas fa-calendar-alt mr-1"></i> Month / مہینہ
                     </label>
-                    <select name="month" class="form-control" style="width:200px;border-radius:8px;"
+                    <select name="month" class="form-control fc-pn month-sel"
                             onchange="document.getElementById('monthFilterForm').submit()">
                         @foreach($months as $month)
                             <option value="{{ $month['value'] }}" {{ $selectedMonth == $month['value'] ? 'selected' : '' }}>
@@ -37,56 +35,56 @@
         <div class="row mb-4">
             <div class="col-xl-3 col-md-6 mb-3">
                 <a href="{{ route('admin.shops.index') }}" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1a5c35!important;border-radius:10px;">
+                    <div class="card border-0 shadow-sm h-100 pn-bl-green">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Active Shops / فعال دکانیں</div>
-                                <div style="font-size:30px;font-weight:800;color:#1a5c35;line-height:1.1;">{{ $activeShopsCount }}</div>
-                                <div style="font-size:11px;color:#b0b7c3;">of {{ $totalShops }} total</div>
+                                <div class="pn-stat-lbl">Active Shops / فعال دکانیں</div>
+                                <div class="pn-stat-num-lg text-c-green">{{ $activeShopsCount }}</div>
+                                <div class="pn-stat-sub">of {{ $totalShops }} total</div>
                             </div>
-                            <i class="fas fa-store" style="font-size:2.5rem;color:#1a5c35;opacity:.15;"></i>
+                            <i class="fas fa-store card-bg-icon text-c-green"></i>
                         </div>
                     </div>
                 </a>
             </div>
             <div class="col-xl-3 col-md-6 mb-3">
                 <a href="{{ route('admin.vendors.index') }}" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #6f42c1!important;border-radius:10px;">
+                    <div class="card border-0 shadow-sm h-100 pn-bl-purple">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Vendors / Suppliers / فروش کار</div>
-                                <div style="font-size:30px;font-weight:800;color:#6f42c1;line-height:1.1;">{{ $totalVendors }}</div>
-                                <div style="font-size:11px;color:#b0b7c3;">registered suppliers</div>
+                                <div class="pn-stat-lbl">Vendors / Suppliers / فروش کار</div>
+                                <div class="pn-stat-num-lg text-c-purple">{{ $totalVendors }}</div>
+                                <div class="pn-stat-sub">registered suppliers</div>
                             </div>
-                            <i class="fas fa-truck" style="font-size:2.5rem;color:#6f42c1;opacity:.15;"></i>
+                            <i class="fas fa-truck card-bg-icon text-c-purple"></i>
                         </div>
                     </div>
                 </a>
             </div>
             <div class="col-xl-3 col-md-6 mb-3">
                 <a href="{{ route('admin.employees.index') }}" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1cc88a!important;border-radius:10px;">
+                    <div class="card border-0 shadow-sm h-100 pn-bl-teal">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Working Employees / کام کرنے والے ملازمین</div>
-                                <div style="font-size:30px;font-weight:800;color:#1cc88a;line-height:1.1;">{{ $workingEmployees }}</div>
-                                <div style="font-size:11px;color:#b0b7c3;">currently working</div>
+                                <div class="pn-stat-lbl">Working Employees / کام کرنے والے ملازمین</div>
+                                <div class="pn-stat-num-lg text-c-teal">{{ $workingEmployees }}</div>
+                                <div class="pn-stat-sub">currently working</div>
                             </div>
-                            <i class="fas fa-users" style="font-size:2.5rem;color:#1cc88a;opacity:.15;"></i>
+                            <i class="fas fa-users card-bg-icon text-c-teal"></i>
                         </div>
                     </div>
                 </a>
             </div>
             <div class="col-xl-3 col-md-6 mb-3">
                 <a href="{{ route('admin.sales.index') }}" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #f6c23e!important;border-radius:10px;">
+                    <div class="card border-0 shadow-sm h-100 pn-bl-yellow">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Sale Invoices / کل فروخت بل</div>
-                                <div style="font-size:30px;font-weight:800;color:#e0a800;line-height:1.1;">{{ $totalSalesCount }}</div>
-                                <div style="font-size:11px;color:#b0b7c3;">all-time transactions</div>
+                                <div class="pn-stat-lbl">Total Sale Invoices / کل فروخت بل</div>
+                                <div class="pn-stat-num-lg text-c-warn">{{ $totalSalesCount }}</div>
+                                <div class="pn-stat-sub">all-time transactions</div>
                             </div>
-                            <i class="fas fa-file-invoice" style="font-size:2.5rem;color:#e0a800;opacity:.15;"></i>
+                            <i class="fas fa-file-invoice card-bg-icon text-c-warn"></i>
                         </div>
                     </div>
                 </a>
@@ -97,42 +95,42 @@
         <div class="row mb-4">
             <div class="col-xl-4 col-md-4 col-sm-6 mb-3">
                 <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #f6c23e!important;border-radius:10px;">
+                    <div class="card border-0 shadow-sm h-100 pn-bl-yellow">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Pending Orders / زیر التواء آرڈرز</div>
-                                <div style="font-size:30px;font-weight:800;color:#e0a800;line-height:1.1;">{{ $pendingOrdersCount }}</div>
-                                <div style="font-size:11px;color:#b0b7c3;">awaiting action</div>
+                                <div class="pn-stat-lbl">Pending Orders / زیر التواء آرڈرز</div>
+                                <div class="pn-stat-num-lg text-c-warn">{{ $pendingOrdersCount }}</div>
+                                <div class="pn-stat-sub">awaiting action</div>
                             </div>
-                            <i class="fas fa-clock" style="font-size:2.5rem;color:#e0a800;opacity:.15;"></i>
+                            <i class="fas fa-clock card-bg-icon text-c-warn"></i>
                         </div>
                     </div>
                 </a>
             </div>
             <div class="col-xl-4 col-md-4 col-sm-6 mb-3">
                 <a href="{{ route('admin.orders.index', ['status' => 'confirmed']) }}" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1cc88a!important;border-radius:10px;">
+                    <div class="card border-0 shadow-sm h-100 pn-bl-teal">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Confirmed Orders / تصدیق شدہ آرڈرز</div>
-                                <div style="font-size:30px;font-weight:800;color:#1cc88a;line-height:1.1;">{{ $confirmedOrdersCount }}</div>
-                                <div style="font-size:11px;color:#b0b7c3;">confirmed</div>
+                                <div class="pn-stat-lbl">Confirmed Orders / تصدیق شدہ آرڈرز</div>
+                                <div class="pn-stat-num-lg text-c-teal">{{ $confirmedOrdersCount }}</div>
+                                <div class="pn-stat-sub">confirmed</div>
                             </div>
-                            <i class="fas fa-check-circle" style="font-size:2.5rem;color:#1cc88a;opacity:.15;"></i>
+                            <i class="fas fa-check-circle card-bg-icon text-c-teal"></i>
                         </div>
                     </div>
                 </a>
             </div>
             <div class="col-xl-4 col-md-4 col-sm-6 mb-3">
                 <a href="{{ route('admin.orders.index') }}" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm h-100" style="border-left:4px solid #1a5c35!important;border-radius:10px;">
+                    <div class="card border-0 shadow-sm h-100 pn-bl-green">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Total Orders / کل آرڈرز</div>
-                                <div style="font-size:30px;font-weight:800;color:#1a5c35;line-height:1.1;">{{ $totalOrdersCount }}</div>
-                                <div style="font-size:11px;color:#b0b7c3;">all time</div>
+                                <div class="pn-stat-lbl">Total Orders / کل آرڈرز</div>
+                                <div class="pn-stat-num-lg text-c-green">{{ $totalOrdersCount }}</div>
+                                <div class="pn-stat-sub">all time</div>
                             </div>
-                            <i class="fas fa-inbox" style="font-size:2.5rem;color:#1a5c35;opacity:.15;"></i>
+                            <i class="fas fa-inbox card-bg-icon text-c-green"></i>
                         </div>
                     </div>
                 </a>
@@ -142,148 +140,140 @@
         {{-- ── ALL-TIME SNAPSHOT ───────────────────────────────── --}}
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
-                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:1px;color:#b0b7c3;">Overall / مجموعی</div>
-                <h5 class="mb-0 font-weight-bold" style="color:#2d3748;">Total Snapshot <small class="text-muted" style="font-size:13px;">کل جائزہ</small></h5>
+                <div class="pn-section-lbl">Overall / مجموعی</div>
+                <h5 class="mb-0 font-weight-bold pn-section-title">Total Snapshot <small class="text-muted ch-desc">کل جائزہ</small></h5>
             </div>
         </div>
 
         <div class="row mb-4">
             {{-- Total Sales --}}
             <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                <div class="card border-0 shadow-sm h-100 card-pn">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-start">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
-                                 style="width:36px;height:36px;background:#e8f5e9;">
-                                <i class="fas fa-chart-line" style="color:#2e7d32;font-size:15px;"></i>
+                            <div class="pn-icon pn-icon-sm pnis-green mr-2 flex-shrink-0">
+                                <i class="fas fa-chart-line"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Sales / کل فروخت</div>
-                                <div style="font-size:15px;font-weight:700;color:#2e7d32;">{{ number_format($totalSales, 0) }}</div>
-                                <div style="font-size:10px;color:#aaa;">{{ $totalSalesCount }} invoices</div>
+                                <div class="pn-tbl-lbl">Total Sales / کل فروخت</div>
+                                <div class="pn-stat-num-sm text-c-dgreen">{{ number_format($totalSales, 0) }}</div>
+                                <div class="pn-stat-sub">{{ $totalSalesCount }} invoices</div>
                             </div>
                         </div>
                     </div>
-                    <div style="height:3px;background:#2e7d32;border-radius:0 0 10px 10px;"></div>
+                    <div class="snap-bt snap-bt-green"></div>
                 </div>
             </div>
 
             {{-- Total Purchases --}}
             <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                <div class="card border-0 shadow-sm h-100 card-pn">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-start">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
-                                 style="width:36px;height:36px;background:#fff8e1;">
-                                <i class="fas fa-shopping-cart" style="color:#f57f17;font-size:15px;"></i>
+                            <div class="pn-icon pn-icon-sm pnis-yellow mr-2 flex-shrink-0">
+                                <i class="fas fa-shopping-cart"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Purchases / کل خریداری</div>
-                                <div style="font-size:15px;font-weight:700;color:#f57f17;">{{ number_format($PurchasesTotal, 0) }}</div>
+                                <div class="pn-tbl-lbl">Total Purchases / کل خریداری</div>
+                                <div class="pn-stat-num-sm text-c-orange2">{{ number_format($PurchasesTotal, 0) }}</div>
                             </div>
                         </div>
                     </div>
-                    <div style="height:3px;background:#f57f17;border-radius:0 0 10px 10px;"></div>
+                    <div class="snap-bt snap-bt-yellow"></div>
                 </div>
             </div>
 
             {{-- Total Expenses --}}
             <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                <div class="card border-0 shadow-sm h-100 card-pn">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-start">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
-                                 style="width:36px;height:36px;background:#fce4ec;">
-                                <i class="fas fa-receipt" style="color:#c62828;font-size:15px;"></i>
+                            <div class="pn-icon pn-icon-sm pnis-red mr-2 flex-shrink-0">
+                                <i class="fas fa-receipt"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Expenses / کل اخراجات</div>
-                                <div style="font-size:15px;font-weight:700;color:#c62828;">{{ number_format($totalExpenses, 0) }}</div>
+                                <div class="pn-tbl-lbl">Total Expenses / کل اخراجات</div>
+                                <div class="pn-stat-num-sm text-c-red">{{ number_format($totalExpenses, 0) }}</div>
                             </div>
                         </div>
                     </div>
-                    <div style="height:3px;background:#c62828;border-radius:0 0 10px 10px;"></div>
+                    <div class="snap-bt snap-bt-red"></div>
                 </div>
             </div>
 
             {{-- Total Salaries --}}
             <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                <div class="card border-0 shadow-sm h-100 card-pn">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-start">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
-                                 style="width:36px;height:36px;background:#e3f2fd;">
-                                <i class="fas fa-money-bill-wave" style="color:#1565c0;font-size:15px;"></i>
+                            <div class="pn-icon pn-icon-sm pnis-blue mr-2 flex-shrink-0">
+                                <i class="fas fa-money-bill-wave"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Salaries / کل تنخواہیں</div>
-                                <div style="font-size:15px;font-weight:700;color:#1565c0;">{{ number_format($totalSalaryPaid, 0) }}</div>
+                                <div class="pn-tbl-lbl">Total Salaries / کل تنخواہیں</div>
+                                <div class="pn-stat-num-sm text-c-blue">{{ number_format($totalSalaryPaid, 0) }}</div>
                             </div>
                         </div>
                     </div>
-                    <div style="height:3px;background:#1565c0;border-radius:0 0 10px 10px;"></div>
+                    <div class="snap-bt snap-bt-blue"></div>
                 </div>
             </div>
 
             {{-- Total Pending --}}
             <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                <div class="card border-0 shadow-sm h-100 card-pn">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-start">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
-                                 style="width:36px;height:36px;background:#fff3e0;">
-                                <i class="fas fa-clock" style="color:#e65100;font-size:15px;"></i>
+                            <div class="pn-icon pn-icon-sm pnis-orange mr-2 flex-shrink-0">
+                                <i class="fas fa-clock"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Total Pending اُدھار</div>
-                                <div style="font-size:15px;font-weight:700;color:#e65100;">{{ number_format($totalPending, 0) }}</div>
+                                <div class="pn-tbl-lbl">Total Pending اُدھار</div>
+                                <div class="pn-stat-num-sm text-c-orange">{{ number_format($totalPending, 0) }}</div>
                                 @php $pendingPct = $totalSales > 0 ? round(($totalPending/$totalSales)*100,1) : 0; @endphp
-                                <div style="font-size:10px;color:#aaa;">{{ $pendingPct }}% of sales</div>
+                                <div class="pn-stat-sub">{{ $pendingPct }}% of sales</div>
                             </div>
                         </div>
                     </div>
-                    <div style="height:3px;background:#e65100;border-radius:0 0 10px 10px;"></div>
+                    <div class="snap-bt snap-bt-orange"></div>
                 </div>
             </div>
 
             {{-- Total Profit / Loss --}}
             @php
-                $tplColor  = $totalProfitLoss >= 0 ? '#1b5e20' : '#b71c1c';
-                $tplBg     = $totalProfitLoss >= 0 ? '#e8f5e9' : '#ffebee';
-                $tplBorder = $totalProfitLoss >= 0 ? '#2e7d32' : '#c62828';
-                $tplIcon   = $totalProfitLoss >= 0 ? 'fa-arrow-up' : 'fa-arrow-down';
-                $tplLabel  = $totalProfitLoss >= 0 ? 'Total Profit' : 'Total Loss';
+                $tplCardClass = $totalProfitLoss >= 0 ? 'snap-profit' : 'snap-loss';
+                $tplIcon      = $totalProfitLoss >= 0 ? 'fa-arrow-up' : 'fa-arrow-down';
+                $tplLabel     = $totalProfitLoss >= 0 ? 'Total Profit' : 'Total Loss';
             @endphp
             <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;background:{{ $tplBg }};">
+                <div class="card border-0 shadow-sm h-100 card-pn {{ $tplCardClass }}">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-start">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
-                                 style="width:36px;height:36px;background:{{ $tplColor }}22;">
-                                <i class="fas {{ $tplIcon }}" style="color:{{ $tplColor }};font-size:15px;"></i>
+                            <div class="pn-icon pn-icon-sm snap-icon mr-2 flex-shrink-0">
+                                <i class="fas {{ $tplIcon }}"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:{{ $tplColor }};">{{ $tplLabel }}</div>
-                                <div style="font-size:15px;font-weight:700;color:{{ $tplColor }};">{{ number_format(abs($totalProfitLoss), 0) }}</div>
-                                <div style="font-size:10px;color:{{ $tplColor }};opacity:.7;">all time</div>
+                                <div class="pn-tbl-lbl snap-lbl">{{ $tplLabel }}</div>
+                                <div class="pn-stat-num-sm snap-val">{{ number_format(abs($totalProfitLoss), 0) }}</div>
+                                <div class="pn-stat-sub snap-lbl">all time</div>
                             </div>
                         </div>
                     </div>
-                    <div style="height:3px;background:{{ $tplBorder }};border-radius:0 0 10px 10px;"></div>
+                    <div class="snap-bt"></div>
                 </div>
             </div>
         </div>
-        
+
         {{-- ── MONTHLY FINANCIALS ──────────────────────────────── --}}
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
-                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:1px;color:#b0b7c3;">Monthly Snapshot / ماہانہ جائزہ</div>
-                <h5 class="mb-0 font-weight-bold" style="color:#2d3748;">
+                <div class="pn-section-lbl">Monthly Snapshot / ماہانہ جائزہ</div>
+                <h5 class="mb-0 font-weight-bold pn-section-title">
                     {{ \Carbon\Carbon::createFromFormat('Y-m', $selectedMonth)->format('F Y') }}
                 </h5>
             </div>
             <a href="{{ route('admin.sales.index', ['month' => $selectedMonth]) }}"
-               class="btn btn-sm btn-outline-primary" style="border-radius:20px;font-size:12px;">
+               class="btn btn-sm btn-outline-primary btn-rounded pn-label">
                 <i class="fas fa-external-link-alt mr-1"></i> View Sales / فروخت دیکھیں
             </a>
         </div>
@@ -291,124 +281,116 @@
         <div class="row mb-3">
             {{-- Sales --}}
             <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                <div class="card border-0 shadow-sm h-100 card-pn">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-start">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
-                                 style="width:36px;height:36px;background:#e8f5e9;">
-                                <i class="fas fa-chart-line" style="color:#2e7d32;font-size:15px;"></i>
+                            <div class="pn-icon pn-icon-sm pnis-green mr-2 flex-shrink-0">
+                                <i class="fas fa-chart-line"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Sales / فروخت</div>
-                                <div style="font-size:15px;font-weight:700;color:#2e7d32;">{{ number_format($monthSalesTotal, 0) }}</div>
-                                <div style="font-size:10px;color:#aaa;">{{ $monthSalesCount }} invoices</div>
+                                <div class="pn-tbl-lbl">Sales / فروخت</div>
+                                <div class="pn-stat-num-sm text-c-dgreen">{{ number_format($monthSalesTotal, 0) }}</div>
+                                <div class="pn-stat-sub">{{ $monthSalesCount }} invoices</div>
                             </div>
                         </div>
                     </div>
-                    <div style="height:3px;background:#2e7d32;border-radius:0 0 10px 10px;"></div>
+                    <div class="snap-bt snap-bt-green"></div>
                 </div>
             </div>
 
             {{-- Purchases --}}
             <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                <div class="card border-0 shadow-sm h-100 card-pn">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-start">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
-                                 style="width:36px;height:36px;background:#fff8e1;">
-                                <i class="fas fa-shopping-cart" style="color:#f57f17;font-size:15px;"></i>
+                            <div class="pn-icon pn-icon-sm pnis-yellow mr-2 flex-shrink-0">
+                                <i class="fas fa-shopping-cart"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Purchases / خریداری</div>
-                                <div style="font-size:15px;font-weight:700;color:#f57f17;">{{ number_format($monthPurchasesTotal, 0) }}</div>
+                                <div class="pn-tbl-lbl">Purchases / خریداری</div>
+                                <div class="pn-stat-num-sm text-c-orange2">{{ number_format($monthPurchasesTotal, 0) }}</div>
                             </div>
                         </div>
                     </div>
-                    <div style="height:3px;background:#f57f17;border-radius:0 0 10px 10px;"></div>
+                    <div class="snap-bt snap-bt-yellow"></div>
                 </div>
             </div>
 
             {{-- Expenses --}}
             <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                <div class="card border-0 shadow-sm h-100 card-pn">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-start">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
-                                 style="width:36px;height:36px;background:#fce4ec;">
-                                <i class="fas fa-receipt" style="color:#c62828;font-size:15px;"></i>
+                            <div class="pn-icon pn-icon-sm pnis-red mr-2 flex-shrink-0">
+                                <i class="fas fa-receipt"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Expenses / اخراجات</div>
-                                <div style="font-size:15px;font-weight:700;color:#c62828;">{{ number_format($monthExpensesTotal, 0) }}</div>
+                                <div class="pn-tbl-lbl">Expenses / اخراجات</div>
+                                <div class="pn-stat-num-sm text-c-red">{{ number_format($monthExpensesTotal, 0) }}</div>
                             </div>
                         </div>
                     </div>
-                    <div style="height:3px;background:#c62828;border-radius:0 0 10px 10px;"></div>
+                    <div class="snap-bt snap-bt-red"></div>
                 </div>
             </div>
 
             {{-- Salaries --}}
             <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                <div class="card border-0 shadow-sm h-100 card-pn">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-start">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
-                                 style="width:36px;height:36px;background:#e3f2fd;">
-                                <i class="fas fa-money-bill-wave" style="color:#1565c0;font-size:15px;"></i>
+                            <div class="pn-icon pn-icon-sm pnis-blue mr-2 flex-shrink-0">
+                                <i class="fas fa-money-bill-wave"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Salaries / تنخواہیں</div>
-                                <div style="font-size:15px;font-weight:700;color:#1565c0;">{{ number_format($monthSalaryTotal, 0) }}</div>
+                                <div class="pn-tbl-lbl">Salaries / تنخواہیں</div>
+                                <div class="pn-stat-num-sm text-c-blue">{{ number_format($monthSalaryTotal, 0) }}</div>
                             </div>
                         </div>
                     </div>
-                    <div style="height:3px;background:#1565c0;border-radius:0 0 10px 10px;"></div>
+                    <div class="snap-bt snap-bt-blue"></div>
                 </div>
             </div>
 
             {{-- Pending / Udhaar --}}
             <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
+                <div class="card border-0 shadow-sm h-100 card-pn">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-start">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
-                                 style="width:36px;height:36px;background:#fff3e0;">
-                                <i class="fas fa-clock" style="color:#e65100;font-size:15px;"></i>
+                            <div class="pn-icon pn-icon-sm pnis-orange mr-2 flex-shrink-0">
+                                <i class="fas fa-clock"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Pending اُدھار</div>
-                                <div style="font-size:15px;font-weight:700;color:#e65100;">{{ number_format($monthPending, 0) }}</div>
+                                <div class="pn-tbl-lbl">Pending اُدھار</div>
+                                <div class="pn-stat-num-sm text-c-orange">{{ number_format($monthPending, 0) }}</div>
                             </div>
                         </div>
                     </div>
-                    <div style="height:3px;background:#e65100;border-radius:0 0 10px 10px;"></div>
+                    <div class="snap-bt snap-bt-orange"></div>
                 </div>
             </div>
 
             {{-- Profit / Loss --}}
             @php
-                $plColor  = $profitLoss >= 0 ? '#1b5e20' : '#b71c1c';
-                $plBg     = $profitLoss >= 0 ? '#e8f5e9' : '#ffebee';
-                $plBorder = $profitLoss >= 0 ? '#2e7d32' : '#c62828';
-                $plIcon   = $profitLoss >= 0 ? 'fa-arrow-up' : 'fa-arrow-down';
-                $plLabel  = $profitLoss >= 0 ? 'Profit' : 'Loss';
+                $plCardClass = $profitLoss >= 0 ? 'snap-profit' : 'snap-loss';
+                $plIcon      = $profitLoss >= 0 ? 'fa-arrow-up' : 'fa-arrow-down';
+                $plLabel     = $profitLoss >= 0 ? 'Profit' : 'Loss';
             @endphp
             <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;background:{{ $plBg }};">
+                <div class="card border-0 shadow-sm h-100 card-pn {{ $plCardClass }}">
                     <div class="card-body py-3 px-3">
                         <div class="d-flex align-items-start">
-                            <div class="rounded-circle d-flex align-items-center justify-content-center mr-2 flex-shrink-0"
-                                 style="width:36px;height:36px;background:{{ $plColor }}22;">
-                                <i class="fas {{ $plIcon }}" style="color:{{ $plColor }};font-size:15px;"></i>
+                            <div class="pn-icon pn-icon-sm snap-icon mr-2 flex-shrink-0">
+                                <i class="fas {{ $plIcon }}"></i>
                             </div>
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:{{ $plColor }};">{{ $plLabel }}</div>
-                                <div style="font-size:15px;font-weight:700;color:{{ $plColor }};">{{ number_format(abs($profitLoss), 0) }}</div>
-                                <div style="font-size:10px;color:{{ $plColor }};opacity:.7;">this month</div>
+                                <div class="pn-tbl-lbl snap-lbl">{{ $plLabel }}</div>
+                                <div class="pn-stat-num-sm snap-val">{{ number_format(abs($profitLoss), 0) }}</div>
+                                <div class="pn-stat-sub snap-lbl">this month</div>
                             </div>
                         </div>
                     </div>
-                    <div style="height:3px;background:{{ $plBorder }};border-radius:0 0 10px 10px;"></div>
+                    <div class="snap-bt"></div>
                 </div>
             </div>
         </div>
@@ -416,61 +398,55 @@
         {{-- ── PRODUCT TYPE BREAKDOWN (MONTH) ────────────────── --}}
         @php
             $prodTotal = $monthDallaTotal + $monthThailaTotal + $monthPackageTotal ?: 1;
+            $dallaPct  = round(($monthDallaTotal / $prodTotal) * 100, 1);
+            $thailaPct = round(($monthThailaTotal / $prodTotal) * 100, 1);
+            $pkgPct    = round(($monthPackageTotal / $prodTotal) * 100, 1);
         @endphp
         <div class="row mb-4">
             <div class="col-md-4 mb-3">
-                <div class="card border-0 shadow-sm" style="border-radius:10px;">
+                <div class="card border-0 shadow-sm card-pn">
                     <div class="card-body py-3">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Dalla — ڈلہ</div>
-                                <div style="font-size:18px;font-weight:700;color:#1a5c35;">PKR {{ number_format($monthDallaTotal, 0) }}</div>
+                                <div class="pn-tbl-lbl">Dalla — ڈلہ</div>
+                                <div class="pn-stat-num-md text-c-green">PKR {{ number_format($monthDallaTotal, 0) }}</div>
                             </div>
-                            <span class="badge badge-primary px-2 py-1" style="font-size:12px;border-radius:20px;">
-                                {{ number_format(($monthDallaTotal / $prodTotal) * 100, 1) }}%
-                            </span>
+                            <span class="badge badge-primary pn-bdg">{{ $dallaPct }}%</span>
                         </div>
-                        <div class="progress" style="height:5px;border-radius:5px;">
-                            <div class="progress-bar bg-primary"
-                                 style="width:{{ ($monthDallaTotal / $prodTotal) * 100 }}%;border-radius:5px;"></div>
+                        <div class="progress progress-sm">
+                            <div class="progress-bar bg-primary pbar" style="--w:{{ $dallaPct }}%"></div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
-                <div class="card border-0 shadow-sm" style="border-radius:10px;">
+                <div class="card border-0 shadow-sm card-pn">
                     <div class="card-body py-3">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Thaila — تھیلا</div>
-                                <div style="font-size:18px;font-weight:700;color:#1cc88a;">PKR {{ number_format($monthThailaTotal, 0) }}</div>
+                                <div class="pn-tbl-lbl">Thaila — تھیلا</div>
+                                <div class="pn-stat-num-md text-c-teal">PKR {{ number_format($monthThailaTotal, 0) }}</div>
                             </div>
-                            <span class="badge badge-success px-2 py-1" style="font-size:12px;border-radius:20px;">
-                                {{ number_format(($monthThailaTotal / $prodTotal) * 100, 1) }}%
-                            </span>
+                            <span class="badge badge-success pn-bdg">{{ $thailaPct }}%</span>
                         </div>
-                        <div class="progress" style="height:5px;border-radius:5px;">
-                            <div class="progress-bar bg-success"
-                                 style="width:{{ ($monthThailaTotal / $prodTotal) * 100 }}%;border-radius:5px;"></div>
+                        <div class="progress progress-sm">
+                            <div class="progress-bar bg-success pbar" style="--w:{{ $thailaPct }}%"></div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 mb-3">
-                <div class="card border-0 shadow-sm" style="border-radius:10px;">
+                <div class="card border-0 shadow-sm card-pn">
                     <div class="card-body py-3">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <div>
-                                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.5px;color:#b0b7c3;">Package — پیکٹ</div>
-                                <div style="font-size:18px;font-weight:700;color:#f6c23e;">PKR {{ number_format($monthPackageTotal, 0) }}</div>
+                                <div class="pn-tbl-lbl">Package — پیکٹ</div>
+                                <div class="pn-stat-num-md text-c-warn">PKR {{ number_format($monthPackageTotal, 0) }}</div>
                             </div>
-                            <span class="badge badge-warning px-2 py-1" style="font-size:12px;border-radius:20px;">
-                                {{ number_format(($monthPackageTotal / $prodTotal) * 100, 1) }}%
-                            </span>
+                            <span class="badge badge-warning pn-bdg">{{ $pkgPct }}%</span>
                         </div>
-                        <div class="progress" style="height:5px;border-radius:5px;">
-                            <div class="progress-bar bg-warning"
-                                 style="width:{{ ($monthPackageTotal / $prodTotal) * 100 }}%;border-radius:5px;"></div>
+                        <div class="progress progress-sm">
+                            <div class="progress-bar bg-warning pbar" style="--w:{{ $pkgPct }}%"></div>
                         </div>
                     </div>
                 </div>
@@ -481,57 +457,53 @@
         @if($recentPendingOrders->count() > 0)
         <div class="row mb-4">
             <div class="col-12">
-                <div class="card border-0 shadow-sm" style="border-radius:10px;">
-                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3"
-                         style="background:#fffbf0;border-radius:10px 10px 0 0;">
+                <div class="card border-0 shadow-sm card-pn">
+                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3 ch-yellow">
                         <div>
-                            <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Action Required / کارروائی درکار</div>
-                            <h6 class="mb-0 font-weight-bold" style="color:#e0a800;">
+                            <div class="pn-stat-lbl">Action Required / کارروائی درکار</div>
+                            <h6 class="mb-0 font-weight-bold text-c-warn">
                                 <i class="fas fa-clock mr-1"></i> Pending Orders / زیر التواء آرڈرز
-                                <span class="badge badge-warning ml-1" style="font-size:11px;border-radius:20px;">{{ $pendingOrdersCount }}</span>
+                                <span class="badge badge-warning ml-1 pn-bdg">{{ $pendingOrdersCount }}</span>
                             </h6>
                         </div>
                         <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}"
-                           class="btn btn-sm btn-outline-warning" style="border-radius:20px;font-size:12px;">
+                           class="btn btn-sm btn-outline-warning btn-rounded pn-label">
                             View All / سب دیکھیں
                         </a>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table mb-0" style="font-size:13px;">
+                            <table class="table mb-0 pn-table pn-table-font">
                                 <thead>
-                                    <tr style="background:#f8f9fc;">
-                                        <th class="pl-3 py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Reference / حوالہ</th>
-                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shop / Customer / دکان</th>
-                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Items / اشیاء</th>
-                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Submitted / جمع تاریخ</th>
-                                        <th class="py-2 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Actions / اقدامات</th>
+                                    <tr>
+                                        <th class="pl-3">Reference / حوالہ</th>
+                                        <th>Shop / Customer / دکان</th>
+                                        <th>Items / اشیاء</th>
+                                        <th>Submitted / جمع تاریخ</th>
+                                        <th class="text-center">Actions / اقدامات</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($recentPendingOrders as $order)
-                                    <tr style="border-bottom:1px solid #f0f0f0;">
-                                        <td class="pl-3 py-2 align-middle">
+                                    <tr>
+                                        <td class="pl-3 align-middle">
                                             <a href="{{ route('admin.orders.show', $order) }}"
-                                               class="font-weight-bold" style="color:#1a5c35;text-decoration:none;">
+                                               class="font-weight-bold text-c-green text-decoration-none">
                                                 {{ $order->reference }}
                                             </a>
                                         </td>
-                                        <td class="py-2 align-middle">
-                                            <span class="font-weight-bold d-block" style="color:#2d3748;">
+                                        <td class="align-middle">
+                                            <span class="font-weight-bold d-block pn-text-heading">
                                                 {{ $order->display_name }}
                                                 @if(!$order->shop_id)
-                                                    <span class="badge badge-secondary ml-1" style="font-size:9px;">New</span>
+                                                    <span class="badge badge-secondary ml-1 badge-new-shop">New</span>
                                                 @endif
                                             </span>
                                             <small class="text-muted">{{ $order->display_phone }}</small>
                                         </td>
-                                        <td class="py-2 align-middle">
+                                        <td class="align-middle">
                                             @foreach($order->items->take(2) as $item)
-                                                <span class="badge mr-1"
-                                                      style="font-size:10px;padding:3px 7px;border-radius:20px;
-                                                      background:{{ $item->type==='dalla'?'#d0e8d8':($item->type==='thaila'?'#d4edda':'#fff3cd') }};
-                                                      color:{{ $item->type==='dalla'?'#1a5c35':($item->type==='thaila'?'#155724':'#856404') }};">
+                                                <span class="badge mr-1 badge-item-{{ $item->type }}">
                                                     {{ $item->quantity }}×
                                                     @if($item->type==='dalla') Dalla
                                                     @elseif($item->type==='thaila') {{ $item->size }}kg
@@ -543,29 +515,21 @@
                                                 <small class="text-muted">+{{ $order->items->count()-2 }} more</small>
                                             @endif
                                         </td>
-                                        <td class="py-2 align-middle">
-                                            <span style="color:#2d3748;">{{ $order->created_at->format('d M, h:i A') }}</span>
-                                        </td>
-                                        <td class="py-2 align-middle text-center" style="white-space:nowrap;">
+                                        <td class="align-middle pn-text-heading">{{ $order->created_at->format('d M, h:i A') }}</td>
+                                        <td class="align-middle text-center text-nowrap">
                                             <a href="{{ route('admin.orders.show', $order) }}"
-                                               class="btn btn-sm mr-1"
-                                               style="background:#d0e8d8;color:#1a5c35;border:1px solid #a8d4b8;border-radius:6px;"
-                                               title="View">
+                                               class="btn btn-sm btn-pn btn-act-gview mr-1" title="View">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             <form action="{{ route('admin.orders.confirm', $order) }}" method="POST" class="d-inline">
                                                 @csrf
-                                                <button type="submit" class="btn btn-sm mr-1"
-                                                        style="background:#d4edda;color:#155724;border:1px solid #c3e6cb;border-radius:6px;"
-                                                        title="Confirm">
+                                                <button type="submit" class="btn btn-sm btn-pn btn-act-confirm mr-1" title="Confirm">
                                                     <i class="fas fa-check"></i>
                                                 </button>
                                             </form>
                                             <form action="{{ route('admin.orders.reject', $order) }}" method="POST" class="d-inline">
                                                 @csrf
-                                                <button type="submit" class="btn btn-sm"
-                                                        style="background:#fce8e6;color:#c62828;border:1px solid #ef9a9a;border-radius:6px;"
-                                                        title="Reject">
+                                                <button type="submit" class="btn btn-sm btn-pn btn-act-delete" title="Reject">
                                                     <i class="fas fa-times"></i>
                                                 </button>
                                             </form>
@@ -584,49 +548,45 @@
         {{-- ── TOP SHOPS + TOP MONTHS ──────────────────────────── --}}
         <div class="row">
             <div class="col-lg-6 mb-4">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
-                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3"
-                         style="background:#eaf3ee;border-radius:10px 10px 0 0;">
+                <div class="card border-0 shadow-sm h-100 card-pn">
+                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3 ch-green">
                         <div>
-                            <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Top 5</div>
-                            <h6 class="mb-0 font-weight-bold" style="color:#1a5c35;">Shops by Revenue / آمدن کے مطابق دکانیں</h6>
+                            <div class="pn-stat-lbl">Top 5</div>
+                            <h6 class="mb-0 font-weight-bold text-c-green">Shops by Revenue / آمدن کے مطابق دکانیں</h6>
                         </div>
                         <a href="{{ route('admin.shops.index') }}"
-                           class="btn btn-sm btn-outline-primary" style="border-radius:20px;font-size:12px;">
+                           class="btn btn-sm btn-outline-primary btn-rounded pn-label">
                             All Shops / تمام دکانیں
                         </a>
                     </div>
                     <div class="card-body p-0">
                         @php $maxShop = $topShops->first()->total ?? 1; @endphp
                         @forelse($topShops as $i => $row)
+                            @php $shopPct = $maxShop > 0 ? round(($row->total / $maxShop) * 100) : 0; @endphp
                             <div class="px-3 py-2 {{ !$loop->last ? 'border-bottom' : '' }}">
                                 <div class="d-flex justify-content-between align-items-center mb-1">
                                     <div class="d-flex align-items-center">
-                                        <span class="badge badge-primary mr-2"
-                                              style="font-size:11px;min-width:22px;border-radius:50%;padding:4px 7px;">
-                                            {{ $i + 1 }}
-                                        </span>
+                                        <span class="badge mr-2 badge-rank-green">{{ $i + 1 }}</span>
                                         <div>
-                                            <div class="font-weight-bold" style="font-size:13px;">{{ $row->shop_name }}</div>
+                                            <div class="font-weight-bold pn-table-font">{{ $row->shop_name }}</div>
                                             @if($row->shop_phone_number)
-                                                <div class="text-muted" style="font-size:11px;">
-                                                    <i class="fas fa-phone mr-1" style="font-size:9px;"></i>{{ $row->shop_phone_number }}
+                                                <div class="text-muted pn-stat-sub">
+                                                    <i class="fas fa-phone mr-1 icon-9"></i>{{ $row->shop_phone_number }}
                                                 </div>
                                             @endif
                                         </div>
                                     </div>
-                                    <span class="font-weight-bold" style="font-size:13px;color:#1a5c35;">
+                                    <span class="font-weight-bold pn-table-font text-c-green">
                                         PKR {{ number_format($row->total, 0) }}
                                     </span>
                                 </div>
-                                <div class="progress" style="height:4px;border-radius:4px;">
-                                    <div class="progress-bar bg-primary"
-                                         style="width:{{ ($row->total / $maxShop) * 100 }}%;border-radius:4px;"></div>
+                                <div class="progress progress-xs">
+                                    <div class="progress-bar pbar bg-primary" style="--w:{{ $shopPct }}%"></div>
                                 </div>
                             </div>
                         @empty
                             <div class="text-center text-muted py-5">
-                                <i class="fas fa-store fa-2x mb-2 d-block" style="opacity:.3;"></i>
+                                <i class="fas fa-store fa-2x mb-2 d-block icon-fade-soft"></i>
                                 No sales data yet
                             </div>
                         @endforelse
@@ -635,44 +595,40 @@
             </div>
 
             <div class="col-lg-6 mb-4">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
-                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3"
-                         style="background:#f0fff8;border-radius:10px 10px 0 0;">
+                <div class="card border-0 shadow-sm h-100 card-pn">
+                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3 ch-teal">
                         <div>
-                            <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">Top 5</div>
-                            <h6 class="mb-0 font-weight-bold" style="color:#1cc88a;">Best Sales Months / بہترین فروخت کے مہینے</h6>
+                            <div class="pn-stat-lbl">Top 5</div>
+                            <h6 class="mb-0 font-weight-bold text-c-teal">Best Sales Months / بہترین فروخت کے مہینے</h6>
                         </div>
                         <a href="{{ route('admin.sales.report') }}"
-                           class="btn btn-sm btn-outline-success" style="border-radius:20px;font-size:12px;">
+                           class="btn btn-sm btn-outline-success btn-rounded pn-label">
                             Full Report / مکمل رپورٹ
                         </a>
                     </div>
                     <div class="card-body p-0">
                         @php $maxMonth = $topDays->first()->total ?? 1; @endphp
                         @forelse($topDays as $i => $row)
+                            @php $moPct = $maxMonth > 0 ? round(($row->total / $maxMonth) * 100) : 0; @endphp
                             <div class="px-3 py-2 {{ !$loop->last ? 'border-bottom' : '' }}">
                                 <div class="d-flex justify-content-between align-items-center mb-1">
                                     <div class="d-flex align-items-center">
-                                        <span class="badge badge-success mr-2"
-                                              style="font-size:11px;min-width:22px;border-radius:50%;padding:4px 7px;">
-                                            {{ $i + 1 }}
-                                        </span>
-                                        <div class="font-weight-bold" style="font-size:13px;">
-                                                {{ \Carbon\Carbon::createFromFormat('Y-m', $row->day)->format('F Y') }}
+                                        <span class="badge badge-success mr-2 badge-circle">{{ $i + 1 }}</span>
+                                        <div class="font-weight-bold pn-table-font">
+                                            {{ \Carbon\Carbon::createFromFormat('Y-m', $row->day)->format('F Y') }}
                                         </div>
                                     </div>
-                                    <span class="font-weight-bold" style="font-size:13px;color:#1cc88a;">
+                                    <span class="font-weight-bold pn-table-font text-c-teal">
                                         PKR {{ number_format($row->total, 0) }}
                                     </span>
                                 </div>
-                                <div class="progress" style="height:4px;border-radius:4px;">
-                                    <div class="progress-bar bg-success"
-                                         style="width:{{ ($row->total / $maxMonth) * 100 }}%;border-radius:4px;"></div>
+                                <div class="progress progress-xs">
+                                    <div class="progress-bar pbar bg-success" style="--w:{{ $moPct }}%"></div>
                                 </div>
                             </div>
                         @empty
                             <div class="text-center text-muted py-5">
-                                <i class="fas fa-calendar fa-2x mb-2 d-block" style="opacity:.3;"></i>
+                                <i class="fas fa-calendar fa-2x mb-2 d-block icon-fade-soft"></i>
                                 No sales data yet
                             </div>
                         @endforelse
@@ -685,16 +641,14 @@
         @if($citySales->count() > 0 || $areaSales->count() > 0)
         <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
             <div>
-                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:1px;color:#b0b7c3;">Location Breakdown / علاقائی جائزہ</div>
-                <h5 class="mb-0 font-weight-bold" style="color:#2d3748;">
-                    Sales by City & Area
-                    <small class="text-muted" style="font-size:13px;">
-                        — {{ \Carbon\Carbon::createFromFormat('Y-m', $selectedMonth)->format('F Y') }}
-                    </small>
+                <div class="pn-section-lbl">Location Breakdown / علاقائی جائزہ</div>
+                <h5 class="mb-0 font-weight-bold pn-section-title">
+                    Sales by City &amp; Area
+                    <small class="text-muted ch-desc">— {{ \Carbon\Carbon::createFromFormat('Y-m', $selectedMonth)->format('F Y') }}</small>
                 </h5>
             </div>
             <a href="{{ route('admin.cities.index') }}"
-               class="btn btn-sm btn-outline-primary" style="border-radius:20px;font-size:12px;">
+               class="btn btn-sm btn-outline-primary btn-rounded pn-label">
                 <i class="fas fa-city mr-1"></i> Manage Cities
             </a>
         </div>
@@ -703,16 +657,15 @@
 
             {{-- CITY BREAKDOWN --}}
             <div class="col-lg-6 mb-4">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
-                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3"
-                         style="background:#eaf3ee;border-radius:10px 10px 0 0;">
+                <div class="card border-0 shadow-sm h-100 card-pn">
+                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3 ch-green">
                         <div>
-                            <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">By City / شہر کے مطابق</div>
-                            <h6 class="mb-0 font-weight-bold" style="color:#1a5c35;">
+                            <div class="pn-stat-lbl">By City / شہر کے مطابق</div>
+                            <h6 class="mb-0 font-weight-bold text-c-green">
                                 <i class="fas fa-city mr-1"></i> City-wise Sales / شہر وار فروخت
                             </h6>
                         </div>
-                        <span class="badge" style="background:#d4edda;color:#155724;font-size:11px;padding:5px 10px;border-radius:20px;">
+                        <span class="pn-bdg pn-bdg-teal">
                             {{ $citySales->count() }} {{ Str::plural('city', $citySales->count()) }}
                         </span>
                     </div>
@@ -720,55 +673,47 @@
                     @php $maxCity = $citySales->first()->total ?: 1; @endphp
                     <div class="card-body p-0">
                         @foreach($citySales as $i => $row)
+                        @php $cityPct = $maxCity > 0 ? round(($row->total / $maxCity) * 100) : 0; @endphp
                         <div class="px-3 py-2 {{ !$loop->last ? 'border-bottom' : '' }}">
                             <div class="d-flex justify-content-between align-items-start mb-1">
                                 <div class="d-flex align-items-center">
-                                    <span class="badge mr-2"
-                                          style="font-size:11px;min-width:22px;border-radius:50%;padding:4px 7px;background:#1a5c35;color:#fff;">
-                                        {{ $i + 1 }}
-                                    </span>
+                                    <span class="badge mr-2 badge-rank-green">{{ $i + 1 }}</span>
                                     <div>
                                         <a href="{{ route('admin.cities.sales', $row->city_id) }}"
-                                           class="font-weight-bold d-block" style="font-size:13px;color:#1a5c35;text-decoration:none;">
+                                           class="font-weight-bold d-block pn-table-font text-c-green text-decoration-none">
                                             {{ $row->city_name }}
-                                            <i class="fas fa-external-link-alt ml-1" style="font-size:9px;opacity:.5;"></i>
+                                            <i class="fas fa-external-link-alt ml-1 icon-fade"></i>
                                         </a>
-                                        <div style="font-size:11px;color:#b0b7c3;">
+                                        <div class="pn-stat-sub">
                                             {{ $row->count }} {{ Str::plural('invoice', $row->count) }}
                                             &nbsp;·&nbsp;
-                                            <span style="color:#e65100;">PKR {{ number_format($row->pending, 0) }} pending</span>
+                                            <span class="text-c-orange">PKR {{ number_format($row->pending, 0) }} pending</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <div class="font-weight-bold" style="font-size:13px;color:#1a5c35;">
+                                    <div class="font-weight-bold pn-table-font text-c-green">
                                         PKR {{ number_format($row->total, 0) }}
                                     </div>
-                                    <div style="font-size:11px;color:#b0b7c3;">
+                                    <div class="pn-stat-sub">
                                         {{ $maxCity > 0 ? round(($row->total / $citySales->sum('total')) * 100, 1) : 0 }}% of total
                                     </div>
                                 </div>
                             </div>
-                            <div class="progress" style="height:5px;border-radius:4px;">
-                                <div class="progress-bar"
-                                     style="width:{{ $maxCity > 0 ? ($row->total / $maxCity) * 100 : 0 }}%;border-radius:4px;background:#1a5c35;"></div>
+                            <div class="progress progress-sm">
+                                <div class="progress-bar pbar pbar-green" style="--w:{{ $cityPct }}%"></div>
                             </div>
                         </div>
                         @endforeach
 
-                        {{-- Grand total row --}}
-                        <div class="px-3 py-2" style="background:#f8f9fc;border-top:2px solid #e3e6f0;border-radius:0 0 10px 10px;">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="font-weight-bold text-muted" style="font-size:12px;">TOTAL / کل</span>
-                                <span class="font-weight-bold" style="font-size:14px;color:#1a5c35;">
-                                    PKR {{ number_format($citySales->sum('total'), 0) }}
-                                </span>
-                            </div>
+                        <div class="breakdown-total-row">
+                            <span class="breakdown-total-lbl text-muted">TOTAL / کل</span>
+                            <span class="breakdown-total-val text-c-green">PKR {{ number_format($citySales->sum('total'), 0) }}</span>
                         </div>
                     </div>
                     @else
                     <div class="card-body text-center py-5 text-muted">
-                        <i class="fas fa-city fa-2x mb-2 d-block" style="opacity:.3;"></i>
+                        <i class="fas fa-city fa-2x mb-2 d-block icon-fade-soft"></i>
                         No city-linked sales this month
                     </div>
                     @endif
@@ -777,69 +722,56 @@
 
             {{-- AREA BREAKDOWN --}}
             <div class="col-lg-6 mb-4">
-                <div class="card border-0 shadow-sm h-100" style="border-radius:10px;">
-                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3"
-                         style="background:#e8f0fe;border-radius:10px 10px 0 0;">
+                <div class="card border-0 shadow-sm h-100 card-pn">
+                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3 ch-blue">
                         <div>
-                            <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:.8px;color:#b0b7c3;">By Area / علاقے کے مطابق</div>
-                            <h6 class="mb-0 font-weight-bold" style="color:#4e73df;">
+                            <div class="pn-stat-lbl">By Area / علاقے کے مطابق</div>
+                            <h6 class="mb-0 font-weight-bold text-c-blue2">
                                 <i class="fas fa-map-marker-alt mr-1"></i> Top Areas / بہترین علاقے
                             </h6>
                         </div>
-                        <span class="badge" style="background:#c3d3f7;color:#224abe;font-size:11px;padding:5px 10px;border-radius:20px;">
-                            Top 5
-                        </span>
+                        <span class="pn-bdg pn-bdg-blue">Top 5</span>
                     </div>
                     @if($areaSales->count() > 0)
                     @php $maxArea = $areaSales->first()->total ?: 1; @endphp
                     <div class="card-body p-0">
                         @foreach($areaSales as $i => $row)
+                        @php $areaPct = $maxArea > 0 ? round(($row->total / $maxArea) * 100) : 0; @endphp
                         <div class="px-3 py-2 {{ !$loop->last ? 'border-bottom' : '' }}">
                             <div class="d-flex justify-content-between align-items-start mb-1">
                                 <div class="d-flex align-items-center">
-                                    <span class="badge mr-2"
-                                          style="font-size:11px;min-width:22px;border-radius:50%;padding:4px 7px;background:#4e73df;color:#fff;">
-                                        {{ $i + 1 }}
-                                    </span>
+                                    <span class="badge mr-2 badge-rank-blue">{{ $i + 1 }}</span>
                                     <div>
-                                        <div class="font-weight-bold" style="font-size:13px;color:#2d3748;">{{ $row->area_name }}</div>
-                                        <div style="font-size:11px;color:#b0b7c3;">
-                                            <i class="fas fa-city mr-1" style="font-size:9px;"></i>{{ $row->city_name }}
+                                        <div class="font-weight-bold pn-table-font pn-text-heading">{{ $row->area_name }}</div>
+                                        <div class="pn-stat-sub">
+                                            <i class="fas fa-city mr-1 icon-9"></i>{{ $row->city_name }}
                                             &nbsp;·&nbsp;{{ $row->count }} {{ Str::plural('invoice', $row->count) }}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <div class="font-weight-bold" style="font-size:13px;color:#4e73df;">
+                                    <div class="font-weight-bold pn-table-font text-c-blue2">
                                         PKR {{ number_format($row->total, 0) }}
                                     </div>
                                     @if($row->pending > 0)
-                                    <div style="font-size:11px;color:#e65100;">
-                                        {{ number_format($row->pending, 0) }} pending
-                                    </div>
+                                    <div class="pn-stat-sub text-c-orange">{{ number_format($row->pending, 0) }} pending</div>
                                     @endif
                                 </div>
                             </div>
-                            <div class="progress" style="height:5px;border-radius:4px;">
-                                <div class="progress-bar"
-                                     style="width:{{ $maxArea > 0 ? ($row->total / $maxArea) * 100 : 0 }}%;border-radius:4px;background:#4e73df;"></div>
+                            <div class="progress progress-sm">
+                                <div class="progress-bar pbar pbar-blue" style="--w:{{ $areaPct }}%"></div>
                             </div>
                         </div>
                         @endforeach
 
-                        {{-- Grand total row --}}
-                        <div class="px-3 py-2" style="background:#f8f9fc;border-top:2px solid #e3e6f0;border-radius:0 0 10px 10px;">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="font-weight-bold text-muted" style="font-size:12px;">TOTAL / کل</span>
-                                <span class="font-weight-bold" style="font-size:14px;color:#4e73df;">
-                                    PKR {{ number_format($areaSales->sum('total'), 0) }}
-                                </span>
-                            </div>
+                        <div class="breakdown-total-row">
+                            <span class="breakdown-total-lbl text-muted">TOTAL / کل</span>
+                            <span class="breakdown-total-val text-c-blue2">PKR {{ number_format($areaSales->sum('total'), 0) }}</span>
                         </div>
                     </div>
                     @else
                     <div class="card-body text-center py-5 text-muted">
-                        <i class="fas fa-map-marker-alt fa-2x mb-2 d-block" style="opacity:.3;"></i>
+                        <i class="fas fa-map-marker-alt fa-2x mb-2 d-block icon-fade-soft"></i>
                         No area-linked sales this month
                     </div>
                     @endif
@@ -853,93 +785,89 @@
         @if($inactiveShops->count() > 0)
         <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
             <div>
-                <div style="font-size:10px;text-transform:uppercase;font-weight:700;letter-spacing:1px;color:#b0b7c3;">Attention Required / توجہ درکار</div>
-                <h5 class="mb-0 font-weight-bold" style="color:#2d3748;">
+                <div class="pn-section-lbl">Attention Required / توجہ درکار</div>
+                <h5 class="mb-0 font-weight-bold pn-section-title">
                     Inactive Shops
-                    <small class="text-muted" style="font-size:13px;">— no sale in last 30 days</small>
+                    <small class="text-muted ch-desc">— no sale in last 30 days</small>
                 </h5>
             </div>
             <a href="{{ route('admin.shops.index') }}"
-               class="btn btn-sm btn-outline-warning" style="border-radius:20px;font-size:12px;">
+               class="btn btn-sm btn-outline-warning btn-rounded pn-label">
                 <i class="fas fa-store mr-1"></i> All Shops
             </a>
         </div>
 
         <div class="row mb-4">
             <div class="col-12">
-                <div class="card border-0 shadow-sm" style="border-radius:10px;border-left:4px solid #f6c23e !important;">
-                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3"
-                         style="background:#fffbf0;border-radius:10px 10px 0 0;">
-                        <h6 class="mb-0 font-weight-bold" style="color:#856404;">
+                <div class="card border-0 shadow-sm card-pn pn-bl-yellow">
+                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3 ch-yellow">
+                        <h6 class="mb-0 font-weight-bold text-c-warn">
                             <i class="fas fa-store-slash mr-2"></i>Active shops with no recent sale / فعال دکانیں جن میں حالیہ فروخت نہیں
                         </h6>
-                        <span class="badge badge-warning" style="font-size:12px;padding:5px 12px;border-radius:20px;">
-                            {{ $inactiveShops->count() }} shops
-                        </span>
+                        <span class="badge badge-warning pn-bdg">{{ $inactiveShops->count() }} shops</span>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table mb-0" style="font-size:13px;">
+                            <table class="table mb-0 pn-table pn-table-font">
                                 <thead>
-                                    <tr style="background:#f8f9fc;border-bottom:2px solid #e3e6f0;">
-                                        <th class="pl-3 py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">#</th>
-                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Shop / دکان</th>
-                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Contact / رابطہ</th>
-                                        <th class="py-2 text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">City / Area</th>
-                                        <th class="py-2 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Last Sale / آخری فروخت</th>
-                                        <th class="py-2 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Days Silent</th>
-                                        <th class="py-2 text-center text-uppercase" style="font-size:11px;color:#6c757d;font-weight:700;letter-spacing:.5px;">Action</th>
+                                    <tr>
+                                        <th class="pl-3">#</th>
+                                        <th>Shop / دکان</th>
+                                        <th class="pn-hide-xs">Contact / رابطہ</th>
+                                        <th class="pn-hide-xs">City / Area</th>
+                                        <th class="text-center">Last Sale / آخری فروخت</th>
+                                        <th class="text-center">Days Silent</th>
+                                        <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($inactiveShops as $i => $shop)
                                     @php
-                                        $lastSale   = $shop->sales_max_sale_date;
-                                        $daysSilent = $lastSale ? (int) \Carbon\Carbon::parse($lastSale)->diffInDays(now()) : null;
-                                        $urgencyColor = ($daysSilent === null || $daysSilent >= 60) ? '#c62828' : ($daysSilent >= 30 ? '#856404' : '#6c757d');
-                                        $urgencyBg    = ($daysSilent === null || $daysSilent >= 60) ? '#fce8e6' : ($daysSilent >= 30 ? '#fff3cd' : '#f3f4f6');
+                                        $lastSale      = $shop->sales_max_sale_date;
+                                        $daysSilent    = $lastSale ? (int) \Carbon\Carbon::parse($lastSale)->diffInDays(now()) : null;
+                                        $urgencyClass  = ($daysSilent === null || $daysSilent >= 60)
+                                                            ? 'urgency-high'
+                                                            : ($daysSilent >= 30 ? 'urgency-medium' : 'urgency-low');
                                     @endphp
-                                    <tr style="border-bottom:1px solid #f0f0f0;">
-                                        <td class="pl-3 py-2 align-middle text-muted" style="font-size:12px;">{{ $i + 1 }}</td>
-                                        <td class="py-2 align-middle">
-                                            <span class="font-weight-bold d-block" style="color:#2d3748;">{{ $shop->name }}</span>
+                                    <tr>
+                                        <td class="pl-3 align-middle text-muted pn-stat-sub">{{ $i + 1 }}</td>
+                                        <td class="align-middle">
+                                            <span class="font-weight-bold d-block pn-text-heading">{{ $shop->name }}</span>
                                             @if($shop->owner_name)
-                                                <small class="text-muted"><i class="fas fa-user mr-1" style="font-size:9px;"></i>{{ $shop->owner_name }}</small>
+                                                <small class="text-muted"><i class="fas fa-user mr-1 icon-9"></i>{{ $shop->owner_name }}</small>
                                             @endif
                                         </td>
-                                        <td class="py-2 align-middle">
-                                            <i class="fas fa-phone mr-1 text-muted" style="font-size:10px;"></i>{{ $shop->phone_number ?? '—' }}
+                                        <td class="align-middle pn-hide-xs">
+                                            <i class="fas fa-phone mr-1 text-muted icon-10"></i>{{ $shop->phone_number ?? '—' }}
                                         </td>
-                                        <td class="py-2 align-middle">
+                                        <td class="align-middle pn-hide-xs">
                                             @if($shop->cityRecord)
-                                                <span class="d-block" style="font-size:12px;color:#374151;">
-                                                    <i class="fas fa-city mr-1 text-muted" style="font-size:10px;"></i>{{ $shop->cityRecord->name }}
+                                                <span class="d-block pn-table-font pn-text-heading">
+                                                    <i class="fas fa-city mr-1 text-muted icon-10"></i>{{ $shop->cityRecord->name }}
                                                 </span>
                                             @endif
                                             @if($shop->area)
-                                                <small class="text-muted"><i class="fas fa-map-marker-alt mr-1" style="font-size:9px;"></i>{{ $shop->area->name }}</small>
+                                                <small class="text-muted"><i class="fas fa-map-marker-alt mr-1 icon-9"></i>{{ $shop->area->name }}</small>
                                             @endif
                                             @if(!$shop->cityRecord && !$shop->area)
                                                 <span class="text-muted">—</span>
                                             @endif
                                         </td>
-                                        <td class="py-2 align-middle text-center">
+                                        <td class="align-middle text-center">
                                             @if($lastSale)
                                                 {{ \Carbon\Carbon::parse($lastSale)->format('d M Y') }}
                                             @else
-                                                <span class="badge" style="background:#fce8e6;color:#c62828;font-size:11px;padding:3px 8px;border-radius:20px;">Never</span>
+                                                <span class="badge-never">Never</span>
                                             @endif
                                         </td>
-                                        <td class="py-2 align-middle text-center">
-                                            <span class="badge" style="background:{{ $urgencyBg }};color:{{ $urgencyColor }};font-size:12px;padding:4px 10px;border-radius:20px;font-weight:700;">
+                                        <td class="align-middle text-center">
+                                            <span class="{{ $urgencyClass }}">
                                                 {{ $daysSilent !== null ? $daysSilent.'d' : '—' }}
                                             </span>
                                         </td>
-                                        <td class="py-2 align-middle text-center">
+                                        <td class="align-middle text-center">
                                             <a href="{{ route('admin.sales.by_shop', ['shop_id' => $shop->id]) }}"
-                                               class="btn btn-sm"
-                                               style="background:#e8f0fe;color:#4e73df;border:1px solid #c3d3f7;border-radius:6px;"
-                                               title="View Sales">
+                                               class="btn btn-sm btn-pn btn-act-view" title="View Sales">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                         </td>
@@ -956,7 +884,4 @@
 
     </div>
 </section>
-@endsection
-
-@section('scripts')
 @endsection

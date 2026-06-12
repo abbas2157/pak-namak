@@ -1,0 +1,637 @@
+/* ================================================================
+   PAK NAMAK — Admin CSS
+   All styling for the admin panel: theme + components.
+   No inline or internal CSS should exist in blade files.
+   ================================================================ */
+
+/* ── THEME VARIABLES ──────────────────────────────────────────── */
+:root {
+    --pn-dark:  #0a2e18;
+    --pn-mid:   #1a5c35;
+    --pn-light: #2d7a4f;
+    --pn-pale:  #e8f5ee;
+}
+
+/* ── GREEN THEME OVERRIDES (AdminLTE) ─────────────────────────── */
+.main-sidebar,
+.sidebar-dark-primary { background: var(--pn-dark) !important; }
+
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link:focus,
+.sidebar-dark-primary .nav-sidebar > .nav-item.menu-open > .nav-link {
+    background: var(--pn-light) !important; color: #fff !important;
+}
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link:hover {
+    background: var(--pn-mid) !important; color: #fff !important;
+}
+.sidebar-dark-primary .nav-treeview > .nav-item > .nav-link.active,
+.sidebar-dark-primary .nav-treeview > .nav-item > .nav-link:hover {
+    background: rgba(255,255,255,.1) !important; color: #fff !important;
+}
+.sidebar-dark-primary .nav-treeview > .nav-item > .nav-link.active .nav-icon,
+.sidebar-dark-primary .nav-treeview > .nav-item > .nav-link:hover .nav-icon {
+    color: #fff !important;
+}
+.brand-link { border-bottom-color: rgba(255,255,255,.1) !important; }
+.main-header.navbar { border-bottom: 2px solid var(--pn-pale) !important; }
+
+.btn-primary { background: var(--pn-mid) !important; border-color: var(--pn-mid) !important; }
+.btn-primary:hover { background: var(--pn-light) !important; border-color: var(--pn-light) !important; }
+.btn-outline-primary { color: var(--pn-mid) !important; border-color: var(--pn-mid) !important; }
+.btn-outline-primary:hover { background: var(--pn-mid) !important; color: #fff !important; }
+
+.badge-primary, .bg-primary { background: var(--pn-mid) !important; }
+.text-primary { color: var(--pn-mid) !important; }
+.border-left-primary { border-left-color: var(--pn-mid) !important; }
+.progress-bar.bg-primary { background: var(--pn-mid) !important; }
+
+.content-wrapper { background: #f2f5f3 !important; }
+
+/* ── CARD BASE ────────────────────────────────────────────────── */
+.card-pn { border-radius: 10px !important; border: none !important; }
+
+/* ── BORDER-LEFT ACCENT CARDS ─────────────────────────────────── */
+.pn-bl-blue   { border-left: 4px solid #4e73df !important; border-radius: 10px !important; }
+.pn-bl-teal   { border-left: 4px solid #1cc88a !important; border-radius: 10px !important; }
+.pn-bl-red    { border-left: 4px solid #e74a3b !important; border-radius: 10px !important; }
+.pn-bl-yellow { border-left: 4px solid #f6c23e !important; border-radius: 10px !important; }
+.pn-bl-cyan   { border-left: 4px solid #36b9cc !important; border-radius: 10px !important; }
+.pn-bl-green  { border-left: 4px solid #1a5c35 !important; border-radius: 10px !important; }
+.pn-bl-purple { border-left: 4px solid #6f42c1 !important; border-radius: 10px !important; }
+
+/* ── STAT ICON CIRCLES ────────────────────────────────────────── */
+.pn-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 50%; flex-shrink: 0;
+}
+.pn-icon-md { width: 46px; height: 46px; }
+.pn-icon-sm { width: 36px; height: 36px; }
+
+/* Large stat icons (border-left cards) */
+.pni-blue   { background: rgba(78,115,223,.12); color: #4e73df; }
+.pni-teal   { background: rgba(28,200,138,.12); color: #1cc88a; }
+.pni-red    { background: rgba(231,74,59,.12);  color: #e74a3b; }
+.pni-yellow { background: rgba(246,194,62,.12); color: #f6c23e; }
+.pni-cyan   { background: rgba(54,185,204,.12); color: #36b9cc; }
+.pni-purple { background: rgba(111,66,193,.12); color: #6f42c1; }
+
+/* Small stat icons (snapshot / summary cards) */
+.pnis-green  { background: #e8f5e9; color: #2e7d32; }
+.pnis-yellow { background: #fff8e1; color: #f57f17; }
+.pnis-red    { background: #fce4ec; color: #c62828; }
+.pnis-blue   { background: #e3f2fd; color: #1565c0; }
+.pnis-orange { background: #fff3e0; color: #e65100; }
+
+/* Profit / Loss dynamic (use .snap-profit or .snap-loss on card) */
+.snap-profit { background: #e8f5e9; }
+.snap-loss   { background: #ffebee; }
+.snap-profit .snap-icon { background: rgba(27,94,32,.13); color: #1b5e20; }
+.snap-loss   .snap-icon { background: rgba(183,28,28,.13); color: #b71c1c; }
+.snap-profit .snap-lbl  { color: #1b5e20; }
+.snap-loss   .snap-lbl  { color: #b71c1c; }
+.snap-profit .snap-val  { color: #1b5e20; }
+.snap-loss   .snap-val  { color: #b71c1c; }
+.snap-profit .snap-bt   { background: #2e7d32; }
+.snap-loss   .snap-bt   { background: #c62828; }
+
+/* ── CARD BOTTOM ACCENT BAR ───────────────────────────────────── */
+.snap-bt {
+    height: 3px;
+    border-radius: 0 0 10px 10px;
+}
+.snap-bt-green  { background: #2e7d32; }
+.snap-bt-yellow { background: #f57f17; }
+.snap-bt-red    { background: #c62828; }
+.snap-bt-blue   { background: #1565c0; }
+.snap-bt-orange { background: #e65100; }
+
+/* ── TYPOGRAPHY HELPERS ───────────────────────────────────────── */
+.pn-stat-lbl {
+    font-size: 10px; text-transform: uppercase; font-weight: 700;
+    letter-spacing: .8px; color: #b0b7c3;
+}
+.pn-section-lbl {
+    font-size: 10px; text-transform: uppercase; font-weight: 700;
+    letter-spacing: 1px; color: #b0b7c3;
+}
+.pn-tbl-lbl {
+    font-size: 11px; color: #6c757d; font-weight: 700; letter-spacing: .5px;
+}
+.pn-stat-num-lg  { font-size: 30px; font-weight: 800; line-height: 1.1; }
+.pn-stat-num-md  { font-size: 18px; font-weight: 700; }
+.pn-stat-num-sm  { font-size: 15px; font-weight: 700; }
+.pn-stat-sub     { font-size: 11px; color: #b0b7c3; }
+.pn-label        { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+.pn-text         { color: #1a5c35 !important; }
+.pn-text-heading { color: #2d3748 !important; }
+.pn-text-teal    { color: #1cc88a !important; }
+.pn-text-danger  { color: #e74a3b !important; }
+.pn-text-warn    { color: #e0a800 !important; }
+.pn-text-muted2  { color: #b0b7c3; }
+
+/* ── TABLE STYLES ─────────────────────────────────────────────── */
+.pn-table thead tr { background: #f8f9fc; }
+.pn-table thead th {
+    font-size: 11px; color: #6c757d; font-weight: 700;
+    letter-spacing: .5px; text-transform: uppercase;
+    border-bottom: 2px solid #e3e6f0 !important;
+    white-space: nowrap;
+    padding: 12px 14px;
+}
+.pn-table tbody td {
+    padding: 12px 14px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f0f0f0 !important;
+}
+.pn-table tbody tr:hover { background: #f8fdf9; }
+.pn-table tfoot tr { background: #f8f9fc; }
+.pn-table tfoot td { border-top: 2px solid #e3e6f0 !important; }
+.pn-table.table-sm thead th { padding: 8px 12px; }
+.pn-table.table-sm tbody td { padding: 8px 12px; }
+.pn-table-font { font-size: 13.5px; }
+
+/* ── ACTION BUTTONS ───────────────────────────────────────────── */
+.btn-pn { border-radius: 6px !important; }
+.btn-act-view    { background: #e8f0fe !important; color: #4e73df !important; border: 1px solid #c3d3f7 !important; }
+.btn-act-gview   { background: #d0e8d8 !important; color: #1a5c35 !important; border: 1px solid #a8d4b8 !important; }
+.btn-act-print   { background: #f3f4f6 !important; color: #374151 !important; border: 1px solid #d1d5db !important; }
+.btn-act-bill    { background: #d4edda !important; color: #155724 !important; border: 1px solid #c3e6cb !important; }
+.btn-act-edit    { background: #fff3cd !important; color: #856404 !important; border: 1px solid #ffc107 !important; }
+.btn-act-delete  { background: #fce8e6 !important; color: #c62828 !important; border: 1px solid #ef9a9a !important; }
+.btn-act-confirm { background: #d4edda !important; color: #155724 !important; border: 1px solid #c3e6cb !important; }
+.btn-act-sale    { background: #fff3cd !important; color: #856404 !important; border: 1px solid #ffc107 !important; }
+.btn-rounded     { border-radius: 20px !important; }
+.btn-modal-save {
+    border-radius: 8px !important;
+    background: linear-gradient(135deg,#4e73df,#224abe) !important;
+    border: none !important;
+}
+.btn-modal-cancel {
+    border-radius: 8px !important;
+    border: 1px solid #d1d5db !important;
+}
+.btn-clear-filter {
+    background: #f3f4f6; color: #6b7280;
+    border-radius: 8px; border: 1px solid #d1d5db;
+}
+.btn-clear-filter:hover { background: #e5e7eb; color: #374151; }
+
+/* ── BADGES ───────────────────────────────────────────────────── */
+.pn-bdg      { border-radius: 20px !important; font-size: 12px !important; padding: 5px 10px !important; }
+.pn-bdg-blue { background: #e8f0fe !important; color: #4e73df !important; }
+.pn-bdg-teal { background: #d4edda !important; color: #155724 !important; }
+.pn-bdg-red  { background: #fce8e6 !important; color: #c62828 !important; }
+.pn-bdg-dall { background: #d0e8d8 !important; color: #1a5c35 !important; }
+.pn-bdg-warn { background: #fff3cd !important; color: #856404 !important; }
+
+.badge-dalla   { background: #d0e8d8 !important; color: #1a5c35 !important; }
+.badge-thaila  { background: #d4edda !important; color: #155724 !important; }
+.badge-package { background: #fff3cd !important; color: #856404 !important; }
+.badge-new-shop{ background: #e9ecef !important; color: #6c757d !important; font-size: 9px !important; }
+.badge-circle  { border-radius: 50% !important; min-width: 22px !important; padding: 4px 7px !important; }
+
+/* ── PROGRESS BARS ────────────────────────────────────────────── */
+.progress-sm  { height: 5px !important; border-radius: 5px !important; }
+.progress-xs  { height: 4px !important; border-radius: 4px !important; }
+.pbar         { border-radius: inherit; width: var(--w, 0%); }
+.pbar-green   { background: #1a5c35 !important; }
+.pbar-teal    { background: #1cc88a !important; }
+.pbar-red     { background: #e74a3b !important; }
+.pbar-blue    { background: #4e73df !important; }
+
+/* ── CARD HEADERS (colored) ───────────────────────────────────── */
+.ch-green  { background: #eaf3ee !important; border-radius: 10px 10px 0 0 !important; }
+.ch-yellow { background: #fffbf0 !important; border-radius: 10px 10px 0 0 !important; }
+.ch-teal   { background: #f0fff8 !important; border-radius: 10px 10px 0 0 !important; }
+.ch-blue   { background: #e8f0fe !important; border-radius: 10px 10px 0 0 !important; }
+
+/* ── MODAL ────────────────────────────────────────────────────── */
+.modal-pn .modal-content {
+    border-radius: 12px !important;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.15);
+}
+.modal-pn .modal-header {
+    background: linear-gradient(135deg,#4e73df,#224abe);
+    border-bottom: none !important;
+    color: #fff;
+}
+.modal-pn .modal-header .modal-title { color: #fff; }
+.modal-pn .modal-header .close { color: #fff !important; opacity: .8; }
+.modal-pn .modal-footer {
+    background: #f8f9fc !important;
+    border-top: none !important;
+}
+.modal-pn-green .modal-header {
+    background: linear-gradient(135deg,#2d7a4f,#1a5c35);
+    border-bottom: none !important;
+    color: #fff;
+}
+.modal-pn-green .modal-header .modal-title { color: #fff; }
+.modal-pn-green .modal-header .close { color: #fff !important; opacity: .8; }
+
+/* ── FORM CONTROLS ────────────────────────────────────────────── */
+.fc-pn    { border-radius: 8px !important; border-color: #d1d5db !important; }
+.fc-ro-pn { border-radius: 8px !important; border-color: #d1d5db !important; background: #f8f9fc !important; }
+.fc-lg-pn { border-color: #d1d5db !important; border-radius: 0 8px 8px 0 !important; font-weight: bold; font-size: 16px; }
+.input-pre {
+    background: #f3f4f6; border-color: #d1d5db;
+    border-radius: 8px 0 0 8px !important; font-weight: 600; color: #6b7280;
+}
+
+/* ── GRAND TOTAL ROW ──────────────────────────────────────────── */
+.pn-total-row { background: #f8f9fc; border-top: 2px solid #e3e6f0; }
+.pn-grand-green { background: #eaf3ee !important; border-radius: 0 0 10px 10px !important; }
+
+/* ── SECTION HEADER HELPERS ───────────────────────────────────── */
+.pn-sec-hd {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 1rem;
+}
+
+/* ── URGENCY BADGES (inactive shops) ─────────────────────────── */
+.urgency-high   { background: #fce8e6; color: #c62828; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+.urgency-medium { background: #fff3cd; color: #856404; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+.urgency-low    { background: #f3f4f6; color: #6c757d; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+.urgency-never  { background: #fce8e6; color: #c62828; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 20px; }
+
+/* ── CONTENT HEADER SMALL TEXT ────────────────────────────────── */
+.ch-sub { font-size: 14px; }
+.ch-desc { font-size: 13px; }
+
+/* ── FADE ICON (empty state) ──────────────────────────────────── */
+.icon-fade { color: #d1d5db; }
+.icon-fade-soft { opacity: .3; }
+
+/* ── ORDERS INDEX (moved from inline <style> block) ───────────── */
+.orders-header {
+    background: linear-gradient(135deg, #0a2e18, #1a5c35);
+    border-radius: 14px; padding: 24px 28px;
+    margin-bottom: 24px; color: #fff;
+}
+.stat-pill {
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 12px; padding: 14px 18px;
+    text-align: center; transition: background .15s;
+    cursor: pointer; text-decoration: none; display: block;
+}
+.stat-pill:hover { background: rgba(255,255,255,.18); text-decoration: none; }
+.stat-pill.active-pending   { background: rgba(246,194,62,.25); border-color: rgba(246,194,62,.5); }
+.stat-pill.active-confirmed { background: rgba(28,200,138,.25); border-color: rgba(28,200,138,.5); }
+.stat-pill.active-rejected  { background: rgba(231,74,59,.25);  border-color: rgba(231,74,59,.5); }
+.stat-pill.active-all       { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.4); }
+.stat-num  { font-size: 26px; font-weight: 800; line-height: 1; color: #fff; }
+.stat-lbl  { font-size: 10px; text-transform: uppercase; letter-spacing: .7px; color: rgba(255,255,255,.6); margin-top: 4px; }
+.stat-dot  { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+.filter-card {
+    background: #fff; border-radius: 12px;
+    box-shadow: 0 1px 8px rgba(0,0,0,.07);
+    padding: 16px 20px; margin-bottom: 18px;
+}
+.orders-table th {
+    background: #f2f5f3; font-size: 11px; text-transform: uppercase;
+    letter-spacing: .5px; color: #6c757d; font-weight: 700;
+    padding: 12px 14px; border-bottom: 2px solid #e0ebe4 !important;
+    white-space: nowrap;
+}
+.orders-table td { padding: 12px 14px; vertical-align: middle; border-bottom: 1px solid #f0f4f2 !important; }
+.orders-table tbody tr:hover { background: #f8fdf9; }
+.ref-link { font-weight: 700; color: #1a5c35; text-decoration: none; font-size: 13px; }
+.ref-link:hover { color: #2d7a4f; text-decoration: underline; }
+.type-badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 20px; margin: 1px 2px 1px 0; white-space: nowrap;
+}
+.tb-dalla   { background: #d0e8d8; color: #1a5c35; }
+.tb-thaila  { background: #d4edda; color: #155724; }
+.tb-package { background: #fff3cd; color: #856404; }
+.status-pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; white-space: nowrap; }
+.sp-pending   { background: #fff3cd; color: #856404; }
+.sp-confirmed { background: #d4edda; color: #155724; }
+.sp-rejected  { background: #fce8e6; color: #c62828; }
+.action-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 7px; border: none;
+    cursor: pointer; font-size: 12px; transition: opacity .15s; text-decoration: none;
+}
+.ab-view    { background: #d0e8d8; color: #1a5c35; }
+.ab-confirm { background: #d4edda; color: #155724; }
+.ab-reject  { background: #fce8e6; color: #c62828; }
+.ab-sale    { background: #fff3cd; color: #856404; }
+.action-btn:hover { opacity: .75; }
+.empty-state { text-align: center; padding: 60px 20px; color: #b0b7c3; }
+.empty-state i { font-size: 3rem; margin-bottom: 14px; display: block; opacity: .4; }
+.per-page-select {
+    border: 1px solid #dee2e6; border-radius: 8px;
+    padding: 5px 10px; font-size: 13px; color: #555; background: #fff;
+}
+.page-link { color: #1a5c35 !important; }
+.page-item.active .page-link {
+    background: #1a5c35 !important; border-color: #1a5c35 !important; color: #fff !important;
+}
+.shop-name { font-weight: 600; color: #2d3748; font-size: 13px; }
+.shop-meta { font-size: 11px; color: #9ca3af; }
+.new-badge {
+    background: #e9ecef; color: #6c757d; font-size: 9px; font-weight: 700;
+    padding: 1px 6px; border-radius: 10px; vertical-align: middle;
+}
+.today-badge {
+    background: rgba(246,194,62,.2); color: #856404; font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(246,194,62,.4);
+}
+
+/* ── COLOR UTILITIES ──────────────────────────────────────────── */
+.text-c-green   { color: #1a5c35 !important; }
+.text-c-dgreen  { color: #2e7d32 !important; }
+.text-c-teal    { color: #1cc88a !important; }
+.text-c-warn    { color: #e0a800 !important; }
+.text-c-purple  { color: #6f42c1 !important; }
+.text-c-red     { color: #c62828 !important; }
+.text-c-orange2 { color: #f57f17 !important; }
+.text-c-blue    { color: #1565c0 !important; }
+.text-c-orange  { color: #e65100 !important; }
+.text-c-blue2   { color: #4e73df !important; }
+
+/* ── CARD BG ICON ─────────────────────────────────────────────── */
+.card-bg-icon { font-size: 2.5rem; opacity: .15; }
+
+/* ── WIDTH FROM CSS VAR (progress bars) ───────────────────────── */
+.pbar { border-radius: inherit; width: var(--w, 0%); }
+
+/* ── ITEM TYPE BADGES (orders dashboard) ─────────────────────── */
+.badge-item-dalla   { background: #d0e8d8; color: #1a5c35; font-size: 10px; padding: 3px 7px; border-radius: 20px; }
+.badge-item-thaila  { background: #d4edda; color: #155724; font-size: 10px; padding: 3px 7px; border-radius: 20px; }
+.badge-item-package { background: #fff3cd; color: #856404; font-size: 10px; padding: 3px 7px; border-radius: 20px; }
+
+/* ── SECTION DIVIDER (monthly label row) ──────────────────────── */
+.pn-section-title { color: #2d3748; }
+
+/* ── BADGE RANK CIRCLE ────────────────────────────────────────── */
+.badge-rank-green  { background: #1a5c35 !important; color: #fff !important; border-radius: 50% !important; min-width: 22px !important; padding: 4px 7px !important; font-size: 11px !important; }
+.badge-rank-blue   { background: #4e73df !important; color: #fff !important; border-radius: 50% !important; min-width: 22px !important; padding: 4px 7px !important; font-size: 11px !important; }
+
+/* ── CITY/AREA BREAKDOWN ──────────────────────────────────────── */
+.breakdown-total-row {
+    background: #f8f9fc; border-top: 2px solid #e3e6f0; border-radius: 0 0 10px 10px;
+    padding: 8px 16px;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.breakdown-total-lbl { font-size: 12px; font-weight: 700; }
+.breakdown-total-val { font-size: 14px; font-weight: 700; }
+
+/* ── PENDING / NEVER BADGE ────────────────────────────────────── */
+.badge-never {
+    background: #fce8e6; color: #c62828;
+    font-size: 11px; padding: 3px 8px; border-radius: 20px;
+    font-weight: 700;
+}
+
+/* ── ORDERS HEADER STAT COLORS ───────────────────────────────── */
+.stat-clr-all       { color: #fff !important; }
+.stat-clr-pending   { color: #f6c23e !important; }
+.stat-clr-confirmed { color: #1cc88a !important; }
+.stat-clr-rejected  { color: #e74a3b !important; }
+.stat-dot-all       { background: #fff; }
+.stat-dot-pending   { background: #f6c23e; }
+.stat-dot-confirmed { background: #1cc88a; }
+.stat-dot-rejected  { background: #e74a3b; }
+.badge-orders-pending {
+    background: rgba(246,194,62,.25); border: 1px solid rgba(246,194,62,.5);
+    color: #ffc107; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px;
+}
+
+/* ── TABLE CARD TOOLBAR / PAGINATION BAR ──────────────────────── */
+.tbl-toolbar     { border-top: 1px solid #e0ebe4 !important; background: #fafcfa !important; }
+.tbl-toolbar-top { border-bottom: 1px solid #e0ebe4 !important; background: #fafcfa !important; }
+.tbl-card        { border-radius: 14px !important; overflow: hidden; }
+
+/* ── FILTER FORM LABELS ───────────────────────────────────────── */
+.filter-lbl {
+    font-size: 11px; font-weight: 700; color: #6c757d;
+    text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; display: block;
+}
+.input-group-pre { background: #f2f5f3 !important; border-color: #dee2e6 !important; }
+
+/* ── DATE CELL HELPERS ────────────────────────────────────────── */
+.cell-date-main { font-size: 12px; color: #2d3748; font-weight: 600; }
+.cell-today-tag { font-size: 9px; font-weight: 700; color: #1a5c35; text-transform: uppercase; letter-spacing: .5px; }
+.cell-yest-tag  { font-size: 9px; color: #9ca3af; }
+
+/* ── ICON TINY ────────────────────────────────────────────────── */
+.icon-9  { font-size: 9px !important; }
+.icon-10 { font-size: 10px !important; }
+.icon-11 { font-size: 11px !important; }
+
+/* Stat card icon inside circle */
+.pn-icon-md i { font-size: 18px; }
+.pn-icon-sm i { font-size: 14px; }
+
+/* Column width helpers */
+.col-narrow { max-width: 150px; }
+
+/* Dashboard month selector */
+.month-sel { width: 200px; }
+
+/* Dynamic progress bar color via CSS custom property */
+.pbar-dyn { background: var(--clr, #1cc88a) !important; border-radius: 10px; }
+
+/* ── EMPTY STATE ──────────────────────────────────────────────── */
+.empty-row td {
+    text-align: center;
+    padding: 60px 20px;
+    color: #b0b7c3;
+}
+.empty-row .empty-icon { font-size: 3rem; margin-bottom: 14px; display: block; opacity: .4; }
+.empty-msg  { font-size: 13px; color: #b0b7c3; }
+
+/* ── SHOP HISTORY ROW ────────────────────────────────────────── */
+.history-row { border-bottom: 1px solid #f0f0f0; }
+.history-label { font-size: 13px; color: #555; }
+
+/* ── INFO BOXES (small inline alerts) ────────────────────────── */
+.info-warn-sm {
+    background: #fff3cd; font-size: 12px; color: #856404;
+    border-radius: 6px; padding: 8px 12px;
+}
+.info-box-muted {
+    background: #f8f9fc; font-size: 13px; color: #555;
+    border-radius: 6px; padding: 10px 14px;
+}
+
+/* ── SHOPS TABLE JS CELLS ─────────────────────────────────────── */
+.shop-cell-name { color: #2d3748; font-weight: 700; display: block; }
+.shop-cell-contact { color: #374151; display: block; }
+
+/* ── ORDER SHOW STATUS BADGE (large) ─────────────────────────── */
+.status-badge-lg { font-size: 13px !important; border-radius: 20px !important; padding: 6px 14px !important; }
+
+/* ── TABLE SIMPLE (no pn-table class) ────────────────────────── */
+.table-simple thead tr { background: #f2f5f3; }
+.table-simple thead th {
+    font-size: 11px; color: #6c757d; font-weight: 700;
+    letter-spacing: .5px; text-transform: uppercase;
+}
+.table-simple tbody tr { border-bottom: 1px solid #f0f0f0; }
+
+/* ── CARD BODY DETAILS (shop history etc) ────────────────────── */
+.detail-row {
+    display: flex; justify-content: space-between;
+    padding: 8px 0; border-bottom: 1px solid #f0f0f0;
+}
+.detail-row:last-child { border-bottom: none; }
+
+/* ── SALES CREATE / EDIT FORM ─────────────────────────────────── */
+.ch-header-blue { background: linear-gradient(135deg,#4e73df,#224abe) !important; border-radius: 10px 10px 0 0 !important; }
+
+/* Size tag badges (readonly inputs showing size label) */
+.fc-tag-dalla   { background:#f0f4ff !important; color:#4e73df !important; border-color:#c3d3f7 !important; border-radius:8px !important; }
+.fc-tag-thaila  { background:#f0fff8 !important; color:#1cc88a !important; border-color:#c3e6cb !important; border-radius:8px !important; }
+.fc-tag-package { background:#fffdf0 !important; color:#856404 !important; border-color:#ffc107 !important; border-radius:8px !important; font-size:12px !important; }
+
+/* Sub-total inputs (right side of PKR input-group) */
+.sub-total-dalla   { border-color:#d1d5db !important; border-radius:0 8px 8px 0 !important; background:#f8f9fc !important; color:#4e73df !important; }
+.sub-total-thaila  { border-color:#d1d5db !important; border-radius:0 8px 8px 0 !important; background:#f8f9fc !important; color:#1cc88a !important; }
+.sub-total-package { border-color:#d1d5db !important; border-radius:0 8px 8px 0 !important; background:#f8f9fc !important; color:#856404 !important; }
+
+/* Grand Total / Received input groups */
+.input-pre-total    { background:#e8f0fe !important; color:#4e73df !important; border-color:#c3d3f7 !important; border-radius:8px 0 0 8px !important; }
+.input-pre-received { background:#d4edda !important; color:#155724 !important; border-color:#c3e6cb !important; border-radius:8px 0 0 8px !important; }
+.input-grand-total  { border-color:#c3d3f7 !important; border-radius:0 8px 8px 0 !important; font-size:18px !important; color:#4e73df !important; background:#f0f4ff !important; }
+.input-received     { border-color:#c3e6cb !important; border-radius:0 8px 8px 0 !important; font-size:18px !important; color:#155724 !important; background:#f0fff8 !important; }
+
+/* Form row separator */
+.sale-form-row { border-bottom: 1px solid #f0f0f0; }
+
+/* Column header labels */
+.pn-form-col-lbl { font-size: 10px; text-transform: uppercase; font-weight: 700; color: #6c757d; }
+
+/* ── PROGRESS BAR COLORS (more) ──────────────────────────────── */
+.pbar-blue   { background: #4e73df !important; }
+.pbar-teal   { background: #1cc88a !important; }
+.pbar-red    { background: #e74a3b !important; }
+.pbar-green  { background: #1a5c35 !important; }
+
+/* ── BADGE PILLS (colored count badges) ──────────────────────── */
+.bdg-blue    { background:#e8f0fe !important; color:#4e73df !important; border-radius:20px; }
+.bdg-teal    { background:#d4edda !important; color:#155724 !important; border-radius:20px; }
+.bdg-neutral { background:#f3f4f6 !important; color:#374151 !important; border-radius:20px; }
+.bdg-yellow  { background:#fff3cd !important; color:#856404 !important; border-radius:20px; }
+.bdg-red     { background:#fce8e6 !important; color:#c62828 !important; border-radius:20px; }
+.bdg-sm      { font-size: 11px !important; padding: 3px 8px !important; }
+.bdg-md      { font-size: 12px !important; padding: 5px 10px !important; }
+
+/* ── SIDEBAR STYLES ───────────────────────────────────────────── */
+.brand-link-pn      { background: rgba(0,0,0,.15); }
+.sidebar-logo-img   { width:36px; height:36px; border-radius:50%; object-fit:contain; background:#fff; padding:2px; flex-shrink:0; }
+.sidebar-brand-txt  { font-size:13px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sidebar-brand-sub  { font-weight:400; opacity:.65; font-size:10px; }
+.nav-sub-lbl        { font-size:9px !important; opacity:.65; font-family:inherit; }
+
+/* ── EMPLOYEE AVATAR ─────────────────────────────────────────── */
+.emp-avatar { width:80px; height:80px; font-size:2rem; font-weight:700; }
+
+/* ── CARD HEADER COLOR VARIANTS ──────────────────────────────── */
+.ch-blue    { background:#f0f4ff !important; }
+.ch-teal    { background:#f0fff8 !important; }
+.ch-yellow  { background:#fffdf0 !important; }
+.ch-red     { background:#fff5f5 !important; }
+
+/* ── CITY/AREA TOGGLE BUTTON ─────────────────────────────────── */
+.btn-city-toggle  { background:#e8f0fe; color:#4e73df; border:1px solid #c3d3f7; border-radius:6px; width:30px; height:30px; padding:0; }
+.btn-area-info    { background:#f0f9ff; border:1px solid #bae6fd; }
+
+/* ── BREAKDOWN LABEL COLOR ──────────────────────────────────────*/
+.breakdown-lbl      { font-size:13px; color:#374151; }
+.breakdown-lbl-val  { font-size:12px; }
+.breakdown-lbl-num  { font-size:12px; color:#374151; font-weight:600; }
+.breakdown-prog-5   { height:5px; border-radius:10px; background:#f0f0f0; }
+.breakdown-prog-7   { height:7px; border-radius:10px; background:#f0f0f0; }
+.breakdown-prog-3   { height:3px; border-radius:10px; background:#f0f0f0; }
+
+/* ── REPORT PRINT CSS ─────────────────────────────────────────── */
+@media print {
+    .no-print   { display: none !important; }
+    .main-sidebar, .main-header, .content-header { display: none !important; }
+    .content-wrapper { margin-left: 0 !important; }
+    .card { box-shadow: none !important; border: 1px solid #ddd !important; }
+}
+
+/* ── MISC TEXT COLORS ────────────────────────────────────────── */
+.text-c-dark   { color: #2d3748 !important; }
+.text-c-muted2 { color: #b0b7c3 !important; }
+
+/* ── ERROR MESSAGE / FORM VALIDATION ─────────────────────────── */
+.err-msg { font-size: 12px; display: none; }
+
+/* ── MODAL WIDTH HELPERS ──────────────────────────────────────── */
+.modal-narrow    { max-width: 460px; }
+.modal-narrow-sm { max-width: 440px; }
+
+/* ── MOBILE RESPONSIVE ────────────────────────────────────────── */
+@media (max-width: 767px) {
+    .content-header h1 { font-size: 1.2rem; }
+    .content-header .breadcrumb { font-size: 12px; }
+    .card-body { padding: .75rem !important; }
+    .pn-table thead th,
+    .pn-table tbody td { padding: 8px 8px !important; font-size: 12px !important; }
+    .orders-table th,
+    .orders-table td { padding: 8px 8px !important; font-size: 12px !important; }
+    .pn-stat-num-lg { font-size: 22px; }
+    .orders-header { padding: 16px 14px !important; border-radius: 10px !important; }
+    .filter-card { padding: 12px 12px !important; }
+    .stat-pill { padding: 10px 12px !important; }
+    .stat-num { font-size: 20px !important; }
+    .btn-pn, .btn-act-view, .btn-act-edit, .btn-act-delete,
+    .btn-act-confirm, .btn-act-gview, .btn-act-print { padding: 4px 7px !important; font-size: 12px !important; }
+    .pn-sec-hd { flex-wrap: wrap; gap: 8px; }
+    .action-btn { width: 28px !important; height: 28px !important; }
+    .modal-pn .modal-body,
+    .modal-pn .modal-header,
+    .modal-pn .modal-footer { padding: 14px 16px !important; }
+}
+
+/* ── EXPENSE / PURCHASE SIDEBAR BREAKDOWN ─────────────────────── */
+.breakdown-bar    { height: 5px; border-radius: 10px; background: #f0f0f0; }
+.breakdown-bar-md { height: 7px; border-radius: 10px; background: #f0f0f0; }
+.breakdown-item { font-size: 13px; color: #374151; }
+.breakdown-amount { font-size: 12px; }
+.breakdown-val  { font-size: 12px; color: #374151; font-weight: 600; }
+.breakdown-grand-total-bar { border-top: 2px solid #f0f0f0; }
+.icon-fw14      { width: 14px; text-align: center; }
+.col-desc       { max-width: 180px; }
+.pbar-yellow    { background: #f6c23e !important; }
+.pbar-orange    { background: #fd7e14 !important; }
+.pbar-purple    { background: #6f42c1 !important; }
+.pbar-cyan      { background: #36b9cc !important; }
+.pbar-grey      { background: #858796 !important; }
+
+/* Expense category pills */
+.exp-pill            { display:inline-flex; align-items:center; font-size:12px; font-weight:600; white-space:nowrap; padding:3px 10px; border-radius:20px; }
+.exp-pill-fuel       { background:rgba(253,126,20,.1);  color:#fd7e14; }
+.exp-pill-vehicle    { background:rgba(78,115,223,.1);  color:#4e73df; }
+.exp-pill-food       { background:rgba(28,200,138,.1);  color:#1cc88a; }
+.exp-pill-rent       { background:rgba(111,66,193,.1);  color:#6f42c1; }
+.exp-pill-utilities  { background:rgba(54,185,204,.1);  color:#36b9cc; }
+.exp-pill-repair     { background:rgba(231,74,59,.1);   color:#e74a3b; }
+.exp-pill-others     { background:rgba(133,135,150,.1); color:#858796; }
+
+/* Payment method pills */
+.pay-pill-cash       { background:rgba(28,200,138,.1);  color:#1cc88a; }
+.pay-pill-jazzcash   { background:rgba(253,126,20,.1);  color:#fd7e14; }
+.pay-pill-easypaisa  { background:rgba(40,167,69,.1);   color:#28a745; }
+.pay-pill-bank       { background:rgba(78,115,223,.1);  color:#4e73df; }
+
+/* Expense category icon colors */
+.text-c-orange      { color: #fd7e14 !important; }
+.text-c-purple2     { color: #6f42c1 !important; }
+.text-c-cyan        { color: #36b9cc !important; }
+.text-c-grey        { color: #858796 !important; }
+.text-c-yellow      { color: #f6c23e !important; }
+
+@media (max-width: 575px) {
+    .pn-hide-xs { display: none !important; }
+    .pn-icon-md { width: 36px !important; height: 36px !important; }
+    .pn-icon-md i { font-size: 15px !important; }
+    .card-body.px-4 { padding-left: .75rem !important; padding-right: .75rem !important; }
+}
