@@ -564,6 +564,21 @@
 /* ── ERROR MESSAGE / FORM VALIDATION ─────────────────────────── */
 .err-msg { font-size: 12px; display: none; }
 
+/* ── ORDER → SALE CONVERTED BADGE ────────────────────────────── */
+.order-sale-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: #d4edda;
+    color: #155724;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.order-sale-badge:hover { background: #c3e6cb; color: #0d4018; text-decoration: none; }
+
 /* ── MODAL WIDTH HELPERS ──────────────────────────────────────── */
 .modal-narrow    { max-width: 460px; }
 .modal-narrow-sm { max-width: 440px; }

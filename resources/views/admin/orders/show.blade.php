@@ -28,7 +28,12 @@
                         </button>
                     </form>
                 @endif
-                @if(in_array($order->status, ['pending','confirmed']))
+                @if($order->sale)
+                    <a href="{{ route('admin.sales.index') }}?search={{ $order->sale->id }}"
+                       class="btn btn-success px-4 mr-2 btn-pn">
+                        <i class="fas fa-check-circle mr-1"></i> Converted — Sale #{{ $order->sale->id }}
+                    </a>
+                @elseif(in_array($order->status, ['pending','confirmed']))
                     <a href="{{ route('admin.orders.to_sale', $order) }}"
                        class="btn btn-warning px-4 mr-2 btn-pn">
                         <i class="fas fa-exchange-alt mr-1"></i> Convert to Sale
@@ -89,6 +94,14 @@
                                     <span class="badge badge-danger status-badge-lg">
                                         <i class="fas fa-times-circle mr-1"></i> Rejected
                                     </span>
+                                @endif
+                                @if($order->sale)
+                                    <a href="{{ route('admin.sales.index') }}?search={{ $order->sale->id }}"
+                                       class="order-sale-badge mt-1">
+                                        <i class="fas fa-check-circle mr-1"></i>Converted — Sale #{{ $order->sale->id }}
+                                        &nbsp;·&nbsp; {{ $order->sale->sale_date }}
+                                        &nbsp;·&nbsp; PKR {{ number_format($order->sale->total_amount, 0) }}
+                                    </a>
                                 @endif
                             </div>
                         </div>

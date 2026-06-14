@@ -31,7 +31,7 @@ class OrderAdminController extends Controller
         $dateTo    = $request->input('date_to');
         $perPage   = in_array($request->input('per_page'), [20, 50, 100]) ? (int) $request->input('per_page') : 20;
 
-        $query = Order::with(['shop:id,name,phone_number,city', 'items'])
+        $query = Order::with(['shop:id,name,phone_number,city', 'items', 'sale:id,order_id'])
             ->orderByDesc('id');
 
         // Status filter
@@ -65,7 +65,7 @@ class OrderAdminController extends Controller
 
     public function show(Order $order)
     {
-        $order->load(['shop', 'items']);
+        $order->load(['shop', 'items', 'sale:id,order_id,sale_date,total_amount']);
 
         $shopSalesTotal   = null;
         $shopSalesPending = null;

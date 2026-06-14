@@ -101,6 +101,7 @@ class SaleController extends Controller
              * -------------------------- */
             $sale = Sale::create([
                 'shop_id'         => $request->shop_id,
+                'order_id'        => $request->order_id ?: null,
                 'sale_date'       => $request->sale_date,
                 'total_amount'    => 0,
                 'received_amount' => 0,

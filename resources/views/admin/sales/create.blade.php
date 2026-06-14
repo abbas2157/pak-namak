@@ -37,6 +37,9 @@
         @endif
         <form action="{{ route('admin.sales.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
+            @if($prefill)
+                <input type="hidden" name="order_id" value="{{ $prefill->id }}">
+            @endif
 
         {{-- ======================================================
              DALLA

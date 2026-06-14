@@ -222,6 +222,14 @@
                                         <i class="fas fa-times mr-1 icon-9"></i>Rejected
                                     @endif
                                 </span>
+                                @if($order->sale)
+                                    <div class="mt-1">
+                                        <a href="{{ route('admin.sales.index') }}?search={{ $order->sale->id }}"
+                                           class="order-sale-badge" title="Sale #{{ $order->sale->id }}">
+                                            <i class="fas fa-check-circle mr-1"></i>Sale #{{ $order->sale->id }}
+                                        </a>
+                                    </div>
+                                @endif
                             </td>
 
                             {{-- Actions --}}
@@ -246,7 +254,7 @@
                                     </form>
                                 @endif
 
-                                @if(in_array($order->status, ['pending', 'confirmed']))
+                                @if(!$order->sale && in_array($order->status, ['pending', 'confirmed']))
                                     <a href="{{ route('admin.orders.to_sale', $order) }}"
                                        class="action-btn ab-sale" title="Convert to Sale">
                                         <i class="fas fa-exchange-alt"></i>

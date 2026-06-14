@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Order;
 
 class Sale extends Model
 {
     protected $fillable = [
         'sale_date',
         'shop_id',
+        'order_id',
         'total_amount',
         'received_amount',
         'pending_amount',
@@ -18,6 +20,11 @@ class Sale extends Model
 
     public function shop(){
         return $this->belongsTo(Shop::class);
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
     }
 
     public function salt_type(){

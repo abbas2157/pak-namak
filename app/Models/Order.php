@@ -21,6 +21,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function sale()
+    {
+        return $this->hasOne(\App\Models\Sale::class);
+    }
+
     public static function generateReference(): string
     {
         $year = date('Y');
