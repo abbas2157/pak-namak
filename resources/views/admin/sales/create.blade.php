@@ -255,6 +255,52 @@
         </div>
 
         {{-- ======================================================
+             SHOP INFO PANEL (shown on shop select via AJAX)
+        ====================================================== --}}
+        <div id="shop-info-panel" class="card border-0 shadow-sm mb-3 d-none">
+            <div class="card-header border-bottom py-2 ch-header-blue d-flex justify-content-between align-items-center">
+                <h6 class="mb-0 font-weight-bold text-white">
+                    <i class="fas fa-store mr-2"></i>
+                    <span id="sip-shop-name">—</span>
+                    <small class="ml-2 font-weight-normal" style="opacity:.8;">کھاتہ خلاصہ · Account Summary</small>
+                </h6>
+                <a id="sip-whatsapp-btn" href="#" target="_blank" rel="noopener"
+                   class="btn btn-sm font-weight-bold" style="background:#25D366;color:#fff;min-width:110px;">
+                    <i class="fab fa-whatsapp mr-1"></i> WhatsApp
+                </a>
+            </div>
+            <div class="card-body py-3">
+                <div class="row text-center mb-2">
+                    <div class="col-4">
+                        <div class="border rounded py-2 px-1">
+                            <div class="small text-muted mb-1">کل فروخت<br><span class="text-uppercase" style="font-size:10px;">Total Sales</span></div>
+                            <div class="font-weight-bold" id="sip-total">—</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="border rounded py-2 px-1" style="border-color:#28a745!important;">
+                            <div class="small text-muted mb-1">وصول شدہ<br><span class="text-uppercase" style="font-size:10px;">Received</span></div>
+                            <div class="font-weight-bold text-success" id="sip-received">—</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="border rounded py-2 px-1" style="border-color:#dc3545!important;">
+                            <div class="small text-muted mb-1">باقی رقم<br><span class="text-uppercase" style="font-size:10px;">Pending</span></div>
+                            <div class="font-weight-bold text-danger" id="sip-pending">—</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sip-orders-section" class="d-none mt-3">
+                    <h6 class="font-weight-bold text-muted border-top pt-3 mb-2">
+                        <i class="fas fa-clipboard-list mr-1"></i>
+                        زیر التواء آرڈر · Unconverted Orders
+                    </h6>
+                    <div id="sip-orders-list"></div>
+                </div>
+            </div>
+        </div>
+
+        {{-- ======================================================
              SALE DETAILS (Shop / Date / Total / Remarks / Bill)
         ====================================================== --}}
         <div class="card border-0 shadow-sm mb-3">
@@ -427,6 +473,70 @@ $(document).ready(function () {
     /* ── SELECT2 ── */
     $('.select2').select2({ placeholder: 'Select a shop', allowClear: true });
     $('.select2').next('.select2-container').find('.select2-selection').css({ height: '39px' });
+
+    /* ── SHOP INFO PANEL ── */
+    var sipInfoUrl  = '{{ route("admin.shops.info", "__ID__") }}';
+    var sipOrderUrl = '{{ route("admin.orders.show", "__ID__") }}';
+
+    function sipFmt(n) {
+        return 'PKR ' + Number(n).toLocaleString('en-PK', { maximumFractionDigits: 0 });
+    }
+
+    function loadShopInfo(shopId) {
+        if (!shopId) {
+            $('#shop-info-panel').addClass('d-none');
+            return;
+        }
+        $.getJSON(sipInfoUrl.replace('__ID__', shopId), function (data) {
+            $('#sip-shop-name').text(data.shop.name);
+            $('#sip-total').text(sipFmt(data.financials.total_amount));
+            $('#sip-received').text(sipFmt(data.financials.received_amount));
+            $('#sip-pending').text(sipFmt(data.financials.pending_amount));
+
+            // Build WhatsApp message (Urdu)
+            var msg = 'دکان: ' + data.shop.name + '\n'
+                    + 'کل فروخت: ' + sipFmt(data.financials.total_amount) + '\n'
+                    + 'وصول شدہ: ' + sipFmt(data.financials.received_amount) + '\n'
+                    + 'باقی رقم: ' + sipFmt(data.financials.pending_amount);
+            var waPhone = '';
+            if (data.shop.phone_number) {
+                var digits = data.shop.phone_number.replace(/\D/g, '');
+                if (digits.charAt(0) === '0') digits = '92' + digits.slice(1);
+                else if (digits.indexOf('92') !== 0) digits = '92' + digits;
+                waPhone = digits;
+            }
+            $('#sip-whatsapp-btn').attr('href',
+                'https://wa.me/' + waPhone + '?text=' + encodeURIComponent(msg));
+
+            // Orders list
+            if (data.orders.length > 0) {
+                var html = '';
+                data.orders.forEach(function (o) {
+                    var badge = o.status === 'pending' ? 'warning' : 'success';
+                    var oUrl  = sipOrderUrl.replace('__ID__', o.id);
+                    html += '<div class="d-flex justify-content-between align-items-center py-2 border-bottom">'
+                          +   '<span>'
+                          +     '<a href="' + oUrl + '" target="_blank" class="font-weight-bold">' + o.reference + '</a> '
+                          +     '<span class="badge badge-' + badge + ' ml-1">' + o.status + '</span> '
+                          +     '<small class="text-muted ml-2">' + o.created_at + '</small>'
+                          +   '</span>'
+                          +   '<small class="text-muted">' + o.items_count + ' item(s)</small>'
+                          + '</div>';
+                });
+                $('#sip-orders-list').html(html);
+                $('#sip-orders-section').removeClass('d-none');
+            } else {
+                $('#sip-orders-section').addClass('d-none');
+            }
+
+            $('#shop-info-panel').removeClass('d-none');
+        });
+    }
+
+    $('#shop_id').on('change', function () { loadShopInfo($(this).val()); });
+
+    // Pre-load if shop is already selected (prefill from order)
+    if ($('#shop_id').val()) { loadShopInfo($('#shop_id').val()); }
 
     /* ── Run calculations on load (for prefilled values) ── */
     calcDalla();

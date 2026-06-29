@@ -125,6 +125,59 @@ class OrderController extends Controller
             ->where('reference', $reference)
             ->firstOrFail();
 
-        return view('order.confirm', compact('order'));
+        $shopFinancials = null;
+        $shopOrders     = collect();
+
+        if ($order->shop) {
+            $stats = $order->shop->sales()
+                ->selectRaw('COALESCE(SUM(total_amount),0) as total_amount, COALESCE(SUM(received_amount),0) as received_amount, COALESCE(SUM(pending_amount),0) as pending_amount')
+                ->first();
+            $shopFinancials = [
+                'total_amount'    => (float) $stats->total_amount,
+                'received_amount' => (float) $stats->received_amount,
+                'pending_amount'  => (float) $stats->pending_amount,
+            ];
+            $shopOrders = Order::where('shop_id', $order->shop->id)
+                ->whereIn('status', ['pending', 'confirmed'])
+                ->whereDoesntHave('sale')
+                ->withCount('items')
+                ->orderByDesc('id')
+                ->get(['id', 'reference', 'status', 'created_at']);
+        }
+
+        return view('order.confirm', compact('order', 'shopFinancials', 'shopOrders'));
+    }
+
+    public function shopInfo(Shop $shop): \Illuminate\Http\JsonResponse
+    {
+        $stats = $shop->sales()
+            ->selectRaw('COALESCE(SUM(total_amount),0) as total_amount, COALESCE(SUM(received_amount),0) as received_amount, COALESCE(SUM(pending_amount),0) as pending_amount')
+            ->first();
+
+        $orders = Order::where('shop_id', $shop->id)
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->whereDoesntHave('sale')
+            ->withCount('items')
+            ->orderByDesc('id')
+            ->get(['id', 'reference', 'status', 'created_at']);
+
+        return response()->json([
+            'shop' => [
+                'id'           => $shop->id,
+                'name'         => $shop->name,
+                'phone_number' => $shop->phone_number,
+            ],
+            'financials' => [
+                'total_amount'    => (float) $stats->total_amount,
+                'received_amount' => (float) $stats->received_amount,
+                'pending_amount'  => (float) $stats->pending_amount,
+            ],
+            'orders' => $orders->map(fn($o) => [
+                'reference'  => $o->reference,
+                'status'     => $o->status,
+                'created_at' => $o->created_at->format('d M Y'),
+                'items_count'=> $o->items_count,
+            ])->values(),
+        ]);
     }
 }

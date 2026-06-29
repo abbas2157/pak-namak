@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Order;
 use App\Models\Shop;
 use App\Models\City;
 use Illuminate\Http\Request;
@@ -104,5 +105,39 @@ class ShopController extends Controller
     {
         Shop::findOrFail($id)->delete();
         return response()->json(['success' => true]);
+    }
+
+    public function info(Shop $shop): \Illuminate\Http\JsonResponse
+    {
+        $stats = $shop->sales()
+            ->selectRaw('COALESCE(SUM(total_amount),0) as total_amount, COALESCE(SUM(received_amount),0) as received_amount, COALESCE(SUM(pending_amount),0) as pending_amount')
+            ->first();
+
+        $orders = Order::where('shop_id', $shop->id)
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->whereDoesntHave('sale')
+            ->withCount('items')
+            ->orderByDesc('id')
+            ->get(['id', 'reference', 'status', 'created_at', 'remarks']);
+
+        return response()->json([
+            'shop' => [
+                'id'           => $shop->id,
+                'name'         => $shop->name,
+                'phone_number' => $shop->phone_number,
+            ],
+            'financials' => [
+                'total_amount'    => (float) $stats->total_amount,
+                'received_amount' => (float) $stats->received_amount,
+                'pending_amount'  => (float) $stats->pending_amount,
+            ],
+            'orders' => $orders->map(fn($o) => [
+                'id'          => $o->id,
+                'reference'   => $o->reference,
+                'status'      => $o->status,
+                'created_at'  => $o->created_at->format('d M Y'),
+                'items_count' => $o->items_count,
+            ])->values(),
+        ]);
     }
 }

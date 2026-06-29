@@ -583,6 +583,34 @@
 .modal-narrow    { max-width: 460px; }
 .modal-narrow-sm { max-width: 440px; }
 
+/* ── PAGINATION ───────────────────────────────────────────────── */
+.pagination { margin-bottom: 0; gap: 2px; }
+.pagination .page-link {
+    border-radius: 6px !important;
+    border: 1px solid #e3e6f0;
+    color: var(--pn-mid);
+    font-size: 13px;
+    padding: 5px 11px;
+    line-height: 1.4;
+    background: #fff;
+    transition: background .15s, border-color .15s;
+}
+.pagination .page-link:hover {
+    background: var(--pn-pale);
+    border-color: var(--pn-light);
+    color: var(--pn-dark);
+}
+.pagination .page-item.active .page-link {
+    background: var(--pn-mid);
+    border-color: var(--pn-mid);
+    color: #fff;
+}
+.pagination .page-item.disabled .page-link {
+    color: #b0b7c3;
+    background: #f8f9fc;
+    border-color: #e3e6f0;
+}
+
 /* ── MOBILE RESPONSIVE ────────────────────────────────────────── */
 @media (max-width: 767px) {
     .content-header h1 { font-size: 1.2rem; }

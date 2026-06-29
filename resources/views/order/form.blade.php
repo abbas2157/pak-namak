@@ -67,6 +67,45 @@
                     </select>
                 </div>
 
+                {{-- Shop info panel (loaded via AJAX when shop is selected) --}}
+                <div id="pub-shop-info" class="d-none mt-3">
+                    <div class="rounded-3 p-3" style="background:#f0f9ff;border:1.5px solid #bee3f8;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-bold" id="pub-sip-name">—</span>
+                            <a id="pub-wa-btn" href="#" target="_blank" rel="noopener"
+                               class="btn btn-sm fw-bold" style="background:#25D366;color:#fff;border:none;">
+                                <i class="fab fa-whatsapp me-1"></i> WhatsApp
+                            </a>
+                        </div>
+                        <div class="row text-center g-2 mb-1">
+                            <div class="col-4">
+                                <div class="rounded-2 p-2" style="background:#fff;border:1px solid #dee2e6;">
+                                    <div class="small text-muted lh-1 mb-1">کل فروخت<br><small>Total Sales</small></div>
+                                    <div class="fw-bold small" id="pub-sip-total">—</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="rounded-2 p-2" style="background:#fff;border:1px solid #28a745;">
+                                    <div class="small text-muted lh-1 mb-1">وصول شدہ<br><small>Received</small></div>
+                                    <div class="fw-bold small text-success" id="pub-sip-received">—</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="rounded-2 p-2" style="background:#fff;border:1px solid #dc3545;">
+                                    <div class="small text-muted lh-1 mb-1">باقی رقم<br><small>Pending</small></div>
+                                    <div class="fw-bold small text-danger" id="pub-sip-pending">—</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="pub-sip-orders" class="d-none mt-2">
+                            <div class="small fw-bold text-muted border-top pt-2 mb-1">
+                                <i class="fas fa-clipboard-list me-1"></i>زیر التواء آرڈر · Pending Orders
+                            </div>
+                            <div id="pub-sip-orders-list" class="small"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="mt-3">
                     <label class="check-row">
                         <input type="checkbox" id="unlistedCheck" name="unlisted" value="1"
@@ -311,12 +350,64 @@ $(function () {
         if (this.checked) {
             $('#unlistedFields').slideDown(200);
             $('#shopSelectWrap').slideUp(200);
-            $('#shop_id').val('').trigger('change');
+            $('#pub-shop-info').addClass('d-none');
+            $('#shop_id').val('').trigger('change.select2');
         } else {
             $('#unlistedFields').slideUp(200);
             $('#shopSelectWrap').slideDown(200);
         }
     });
+
+    // ── Shop info panel ────────────────────────────────
+    var pubShopInfoUrl = '{{ route("order.shop.info", "__ID__") }}';
+
+    function pubFmt(n) {
+        return 'PKR ' + Number(n).toLocaleString('en-PK', { maximumFractionDigits: 0 });
+    }
+
+    function loadPubShopInfo(shopId) {
+        if (!shopId) { $('#pub-shop-info').addClass('d-none'); return; }
+        $.getJSON(pubShopInfoUrl.replace('__ID__', shopId), function (data) {
+            $('#pub-sip-name').text(data.shop.name);
+            $('#pub-sip-total').text(pubFmt(data.financials.total_amount));
+            $('#pub-sip-received').text(pubFmt(data.financials.received_amount));
+            $('#pub-sip-pending').text(pubFmt(data.financials.pending_amount));
+
+            var msg = 'دکان: ' + data.shop.name + '\n'
+                    + 'کل فروخت: ' + pubFmt(data.financials.total_amount) + '\n'
+                    + 'وصول شدہ: ' + pubFmt(data.financials.received_amount) + '\n'
+                    + 'باقی رقم: ' + pubFmt(data.financials.pending_amount);
+            var waPhone = '';
+            if (data.shop.phone_number) {
+                var d = data.shop.phone_number.replace(/\D/g, '');
+                if (d.charAt(0) === '0') d = '92' + d.slice(1);
+                else if (d.indexOf('92') !== 0) d = '92' + d;
+                waPhone = d;
+            }
+            $('#pub-wa-btn').attr('href', 'https://wa.me/' + waPhone + '?text=' + encodeURIComponent(msg));
+
+            if (data.orders.length > 0) {
+                var html = '';
+                data.orders.forEach(function (o) {
+                    var badge = o.status === 'pending' ? 'warning' : 'success';
+                    html += '<div class="d-flex justify-content-between py-1 border-bottom">'
+                          +   '<span><span class="fw-bold">' + o.reference + '</span> '
+                          +   '<span class="badge bg-' + badge + ' ms-1">' + o.status + '</span> '
+                          +   '<span class="text-muted ms-1">' + o.created_at + '</span></span>'
+                          +   '<span class="text-muted">' + o.items_count + ' item(s)</span>'
+                          + '</div>';
+                });
+                $('#pub-sip-orders-list').html(html);
+                $('#pub-sip-orders').removeClass('d-none');
+            } else {
+                $('#pub-sip-orders').addClass('d-none');
+            }
+            $('#pub-shop-info').removeClass('d-none');
+        });
+    }
+
+    $('#shop_id').on('change', function () { loadPubShopInfo($(this).val()); });
+    if ($('#shop_id').val()) { loadPubShopInfo($('#shop_id').val()); }
 
     // ── Format number ──────────────────────────────────
     function fmt(n) {

@@ -17,6 +17,7 @@ Route::middleware('web')->group(function () {
         Route::resource('sales', App\Http\Controllers\Admin\SaleController::class, ['as' => 'admin']);
         Route::post('sales/{sale}/quick-update', [App\Http\Controllers\Admin\SaleController::class, 'quickUpdate'])->name('admin.sales.quick_update');
         Route::resource('shops', App\Http\Controllers\Admin\ShopController::class, ['as' => 'admin']);
+        Route::get('shops/{shop}/info', [App\Http\Controllers\Admin\ShopController::class, 'info'])->name('admin.shops.info');
         Route::resource('cities', App\Http\Controllers\Admin\CityController::class, ['as' => 'admin'])->except(['create', 'show']);
         Route::get('cities/{city}/sales', [App\Http\Controllers\Admin\CityController::class, 'sales'])->name('admin.cities.sales');
 
