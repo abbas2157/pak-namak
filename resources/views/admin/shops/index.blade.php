@@ -193,6 +193,15 @@
                                                 title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
+                                        @if(($shop->sales_sum_pending_amount ?? 0) > 0)
+                                        <button class="btn btn-sm btn-pn btn-act-confirm shopRecordPaymentBtn mr-1"
+                                                data-id="{{ $shop->id }}"
+                                                data-name="{{ $shop->name }}"
+                                                data-pending="{{ $shop->sales_sum_pending_amount }}"
+                                                title="Record Payment">
+                                            <i class="fas fa-hand-holding-dollar"></i>
+                                        </button>
+                                        @endif
                                         <button class="btn btn-sm btn-pn btn-act-delete deleteBtn"
                                                 data-id="{{ $shop->id }}"
                                                 title="Delete">
@@ -345,6 +354,57 @@
                     </button>
                 </div>
 
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- ===== RECORD PAYMENT MODAL (shop-level, FIFO across pending sales) ===== --}}
+<div class="modal fade modal-pn" id="shopRecordPaymentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form id="shopRecordPaymentForm">
+            @csrf
+            <div class="modal-content border-0">
+                <div class="modal-header border-0 text-white px-4 py-3">
+                    <h5 class="modal-title"><i class="fas fa-hand-holding-dollar mr-2"></i>Record Payment / ادائیگی درج کریں</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body px-4 py-4">
+                    <p class="mb-3">
+                        <strong id="srp_shop_name"></strong>
+                        <span class="text-muted"> — Total Pending: </span>
+                        <span class="font-weight-bold text-c-red" id="srp_pending_display"></span>
+                    </p>
+                    <p class="text-muted small mb-3">Applied to this shop's oldest pending sales first.</p>
+                    <div class="mb-3">
+                        <label class="filter-lbl">Amount <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" min="0.01" name="amount" class="form-control fc-pn" placeholder="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="filter-lbl">Payment Date <span class="text-danger">*</span></label>
+                        <input type="date" name="payment_date" id="srp_payment_date" class="form-control fc-pn" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="filter-lbl">Method <span class="text-danger">*</span></label>
+                        <select name="payment_method" class="form-control fc-pn" required>
+                            <option value="Cash" selected>Cash</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="EasyPaisa">EasyPaisa</option>
+                            <option value="JazzCash">JazzCash</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-0">
+                        <label class="filter-lbl">Note / نوٹ</label>
+                        <textarea name="note" class="form-control fc-pn" rows="2" placeholder="Optional"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 px-4 py-3">
+                    <button type="button" class="btn btn-light btn-modal-cancel px-4" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary btn-modal-save px-4" type="submit" id="srpSubmitBtn">
+                        <i class="fas fa-save mr-1"></i> Save
+                    </button>
+                </div>
             </div>
         </form>
     </div>
@@ -526,6 +586,44 @@ $(function () {
                 error: function (xhr) { toastr.error('Error: ' + xhr.status); }
             });
         });
+    });
+
+    // Deep link from other pages (e.g. dashboard "Add Shop" button) straight into the Add Shop modal
+    if (new URLSearchParams(window.location.search).get('open') === 'create') {
+        $('#addBtn').trigger('click');
+    }
+
+    // Record Payment (shop-level, FIFO across pending sales)
+    $(document).on('click', '.shopRecordPaymentBtn', function () {
+        const btn = $(this);
+        $('#shopRecordPaymentForm')[0].reset();
+        $('#shopRecordPaymentForm').data('shop-id', btn.data('id'));
+        $('#srp_shop_name').text(btn.data('name') || '');
+        $('#srp_pending_display').text(Number(btn.data('pending')).toLocaleString());
+        $('#srp_payment_date').val(new Date().toISOString().split('T')[0]);
+        $('#shopRecordPaymentModal').modal('show');
+    });
+
+    $('#shopRecordPaymentForm').on('submit', function (e) {
+        e.preventDefault();
+        const shopId = $(this).data('shop-id');
+        const btn = $('#srpSubmitBtn');
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Saving...');
+
+        $.post(APP_URL + '/shops/' + shopId + '/payments', $(this).serialize())
+            .done(function (res) {
+                toastr.success('Payment recorded across ' + (res.sales_paid || 0) + ' sale(s)!');
+                $('#shopRecordPaymentModal').modal('hide');
+                setTimeout(() => location.reload(), 800);
+            })
+            .fail(function (xhr) {
+                if (xhr.status === 422) {
+                    alert((xhr.responseJSON.message) || Object.values(xhr.responseJSON.errors || {}).map(e => e[0]).join('\n'));
+                } else {
+                    toastr.error('Could not record payment.');
+                }
+            })
+            .always(() => btn.prop('disabled', false).html('<i class="fas fa-save mr-1"></i> Save'));
     });
 
 });

@@ -31,6 +31,30 @@
 <section class="content">
     <div class="container-fluid">
 
+        {{-- ── QUICK ACTIONS ────────────────────────────── --}}
+        <div class="row mb-3">
+            <div class="col-12 d-flex flex-wrap">
+                <a href="{{ route('admin.sales.create') }}" class="btn btn-pn px-4 mr-2 mb-2 text-white" style="background:linear-gradient(135deg,#1a5c35,#2d7a4f);">
+                    <i class="fas fa-plus mr-1"></i> Add Sale / فروخت
+                </a>
+                <a href="{{ route('admin.shops.index') }}?open=create" class="btn btn-pn px-4 mr-2 mb-2 text-white" style="background:linear-gradient(135deg,#3a5fc9,#4e73df);">
+                    <i class="fas fa-store mr-1"></i> Add Shop / دکان
+                </a>
+                <a href="{{ route('admin.stocks.index') }}" class="btn btn-pn px-4 mr-2 mb-2 text-white" style="background:linear-gradient(135deg,#4a2f7a,#7a4fbf);">
+                    <i class="fas fa-warehouse mr-1"></i> Add Stock / اسٹاک
+                </a>
+                <a href="{{ route('order.form') }}" target="_blank" rel="noopener" class="btn btn-pn px-4 mr-2 mb-2 text-white" style="background:linear-gradient(135deg,#b8391f,#e74a3b);">
+                    <i class="fas fa-cart-plus mr-1"></i> Add Order / آرڈر
+                </a>
+                <a href="{{ route('admin.shops.payment_form') }}" class="btn btn-pn px-4 mr-2 mb-2 text-white" style="background:linear-gradient(135deg,#0d5c5c,#1a8a8a);">
+                    <i class="fas fa-hand-holding-dollar mr-1"></i> Record Payment / ادائیگی
+                </a>
+                <a href="{{ route('admin.employees.advance_form') }}" class="btn btn-pn px-4 mb-2 text-white" style="background:linear-gradient(135deg,#8a6d0d,#c9a227);">
+                    <i class="fas fa-hand-holding-dollar mr-1"></i> Advance / ایڈوانس
+                </a>
+            </div>
+        </div>
+
         {{-- ── ENTITY QUICK COUNTS ────────────────────────────── --}}
         <div class="row mb-4">
             <div class="col-xl-3 col-md-6 mb-3">

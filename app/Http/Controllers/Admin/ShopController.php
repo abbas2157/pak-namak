@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Order;
 use App\Models\Shop;
 use App\Models\City;
+use App\Models\SalePayment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class ShopController extends Controller
 {
@@ -34,6 +36,20 @@ class ShopController extends Controller
     public function create()
     {
         return redirect()->route('admin.shops.index');
+    }
+
+    /**
+     * Standalone "Record Payment" page — pick any shop and log a payment
+     * against its pending balance without going through the Shops list.
+     */
+    public function paymentForm()
+    {
+        $shops = Shop::with('area')
+            ->withSum('sales', 'pending_amount')
+            ->orderByDesc('sales_sum_pending_amount')
+            ->get();
+
+        return view('admin.shops.payment-form', compact('shops'));
     }
 
     public function store(Request $request)
@@ -105,6 +121,65 @@ class ShopController extends Controller
     {
         Shop::findOrFail($id)->delete();
         return response()->json(['success' => true]);
+    }
+
+    /**
+     * Record a lump-sum payment against a shop's overall pending balance,
+     * spreading it across that shop's pending sales oldest-first (FIFO)
+     * until the amount is used up or every sale is settled.
+     */
+    public function recordPayment(Request $request, Shop $shop)
+    {
+        $request->validate([
+            'amount'         => 'required|numeric|min:0.01',
+            'payment_date'   => 'required|date',
+            'payment_method' => 'required|in:Cash,Bank Transfer,EasyPaisa,JazzCash,Other',
+            'note'           => 'nullable|string|max:500',
+        ]);
+
+        $pendingSales = $shop->sales()
+            ->where('pending_amount', '>', 0)
+            ->orderBy('sale_date')
+            ->orderBy('id')
+            ->get();
+
+        $totalPending = $pendingSales->sum('pending_amount');
+
+        if ($totalPending <= 0) {
+            return response()->json(['success' => false, 'message' => 'This shop has no pending amount.'], 422);
+        }
+
+        $remaining = min((float) $request->amount, (float) $totalPending);
+        $salesPaid = 0;
+
+        DB::transaction(function () use ($pendingSales, &$remaining, $request, &$salesPaid) {
+            foreach ($pendingSales as $sale) {
+                if ($remaining <= 0) {
+                    break;
+                }
+
+                $allocated = min($remaining, (float) $sale->pending_amount);
+
+                SalePayment::create([
+                    'sale_id'        => $sale->id,
+                    'amount'         => $allocated,
+                    'payment_date'   => $request->payment_date,
+                    'payment_method' => $request->payment_method,
+                    'note'           => $request->note,
+                ]);
+
+                $received = $sale->payments()->sum('amount');
+                $sale->update([
+                    'received_amount' => $received,
+                    'pending_amount'  => $sale->total_amount - $received,
+                ]);
+
+                $remaining -= $allocated;
+                $salesPaid++;
+            }
+        });
+
+        return response()->json(['success' => true, 'sales_paid' => $salesPaid]);
     }
 
     public function info(Shop $shop): \Illuminate\Http\JsonResponse

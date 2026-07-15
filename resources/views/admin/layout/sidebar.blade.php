@@ -30,6 +30,13 @@
                 </li>
 
                 <li class="nav-item">
+                    <a href="{{ route('admin.stocks.index') }}" class="nav-link {{ request()->routeIs('admin.stocks.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-warehouse"></i>
+                        <p>Stock <small class="d-block nav-sub-lbl">اسٹاک</small></p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
                     <a href="{{ route('admin.purchases.index') }}" class="nav-link {{ request()->routeIs('admin.purchases.*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-cart-shopping"></i>
                         <p>Purchases <small class="d-block nav-sub-lbl">خریداری</small></p>
@@ -85,9 +92,16 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{ route('admin.shops.index') }}"
-                               class="nav-link {{ request()->routeIs('admin.shops.*') ? 'active' : '' }}">
+                               class="nav-link {{ request()->routeIs('admin.shops.index') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>All Shops <small class="d-block nav-sub-lbl">تمام دکانیں</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.shops.payment_form') }}"
+                               class="nav-link {{ request()->routeIs('admin.shops.payment_form') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Record Payment <small class="d-block nav-sub-lbl">ادائیگی درج کریں</small></p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -114,11 +128,35 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a href="{{ route('admin.employees.index') }}" class="nav-link {{ request()->routeIs('admin.employees.*') ? 'active' : '' }}">
+                @php $employeesActive = request()->routeIs('admin.employees.*') || request()->routeIs('admin.holidays.*'); @endphp
+                <li class="nav-item has-treeview {{ $employeesActive ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ $employeesActive ? 'active' : '' }}">
                         <i class="nav-icon fas fa-users"></i>
-                        <p>Employees <small class="d-block nav-sub-lbl">ملازمین</small></p>
+                        <p>Employees <small class="d-block nav-sub-lbl">ملازمین</small> <i class="fas fa-angle-left right"></i></p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.employees.index') }}"
+                               class="nav-link {{ request()->routeIs('admin.employees.index') || request()->routeIs('admin.employees.show') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>All Employees <small class="d-block nav-sub-lbl">تمام ملازمین</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.employees.advance_form') }}"
+                               class="nav-link {{ request()->routeIs('admin.employees.advance_form') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Record Advance <small class="d-block nav-sub-lbl">ایڈوانس درج کریں</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.holidays.index') }}"
+                               class="nav-link {{ request()->routeIs('admin.holidays.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Holidays <small class="d-block nav-sub-lbl">تعطیلات</small></p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 <li class="nav-item">

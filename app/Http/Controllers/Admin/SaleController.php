@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use App\Models\{Sale, SaleDalla, SaleThaila, SalePackage, SalePayment, SaltType, Shop, Order};
+use App\Models\{Sale, SaleDalla, SaleThaila, SalePackage, SalePayment, SaltType, Shop, Order, StockMovement};
 
 class SaleController extends Controller
 {
@@ -44,7 +44,7 @@ class SaleController extends Controller
 
     public function create()
     {
-        $shops  = Shop::orderBy('id', 'desc')->get();
+        $shops  = Shop::with('area')->orderBy('id', 'desc')->get();
         $types  = SaltType::get();
         $prefill = null;
 
@@ -53,7 +53,9 @@ class SaleController extends Controller
             session()->forget('prefill_order_id');
         }
 
-        return view('admin.sales.create', compact('shops', 'types', 'prefill'));
+        $stockLevels = \App\Models\Stock::levels()->keyBy(fn ($l) => \App\Models\Stock::key($l['product_type'], $l['size'], $l['bundle_size']));
+
+        return view('admin.sales.create', compact('shops', 'types', 'prefill', 'stockLevels'));
     }
     public function show($id)
     {
@@ -61,7 +63,8 @@ class SaleController extends Controller
             'shop',
             'dalla',
             'thailas',
-            'packages'
+            'packages',
+            'payments' => fn ($q) => $q->orderByDesc('payment_date')->orderByDesc('id'),
         ])->findOrFail($id);
 
         return view('admin.sales.partials.sale-detail', compact('sale'));
@@ -133,6 +136,8 @@ class SaleController extends Controller
                         'sub_total'      => $subTotal,
                     ]);
 
+                    StockMovement::record('dalla', null, -($d['sold_quantity_mann'] ?? 0), -($d['sold_quantity_kilo'] ?? 0), 'sale', $sale);
+
                     $grandTotal += $subTotal;
                 }
             }
@@ -161,6 +166,8 @@ class SaleController extends Controller
                         'price_per_kg'  => $item['pirce_per_kg'] ?? 0,
                         'sub_total'     => $subTotal,
                     ]);
+
+                    StockMovement::record('thaila', (int) $kg, -$soldKg, -($soldKg * $kg), 'sale', $sale);
 
                     $grandTotal += $subTotal;
                 }
@@ -194,14 +201,27 @@ class SaleController extends Controller
                         'sub_total'        => $subTotal,
                     ]);
 
+                    StockMovement::record('package', (int) $gram, -$bundleQty, -$totalKg, 'sale', $sale, null, null, (int) $bundleSize);
+
                     $grandTotal += $subTotal;
                 }
             }
 
             /* ---------------------------
-             * UPDATE TOTALS
+             * INITIAL PAYMENT + TOTALS
              * -------------------------- */
-            $receivedAmount = min((float) ($request->received_amount ?? 0), $grandTotal);
+            $initialReceived = min((float) ($request->received_amount ?? 0), $grandTotal);
+            if ($initialReceived > 0) {
+                SalePayment::create([
+                    'sale_id'        => $sale->id,
+                    'amount'         => $initialReceived,
+                    'payment_date'   => $sale->sale_date,
+                    'payment_method' => 'cash',
+                    'note'           => 'Initial payment at sale creation',
+                ]);
+            }
+
+            $receivedAmount = $sale->payments()->sum('amount');
             $sale->update([
                 'total_amount'    => $grandTotal,
                 'received_amount' => $receivedAmount,
@@ -221,17 +241,42 @@ class SaleController extends Controller
     public function edit(Sale $sale)
     {
         $sale->load(['shop', 'dalla', 'thailas', 'packages']);
-        $shops = Shop::orderBy('name')->get();
-        return view('admin.sales.edit', compact('sale', 'shops'));
+        $shops = Shop::with('area')->orderBy('name')->get();
+        $stockLevels = \App\Models\Stock::levels()
+            ->keyBy(fn ($l) => \App\Models\Stock::key($l['product_type'], $l['size'], $l['bundle_size']))
+            ->all();
+
+        // Add back this sale's own already-reserved quantities, since update()
+        // reverses them before re-deducting — so "in stock" here should reflect
+        // what will actually be available for this edit, not just the current balance.
+        if ($sale->dalla) {
+            $key = \App\Models\Stock::key('dalla', null, null);
+            if (isset($stockLevels[$key])) {
+                $stockLevels[$key]['quantity'] += $sale->dalla->quantity_mann;
+            }
+        }
+        foreach ($sale->thailas as $t) {
+            $key = \App\Models\Stock::key('thaila', $t->bag_size_kg, null);
+            if (isset($stockLevels[$key])) {
+                $stockLevels[$key]['quantity'] += $t->quantity;
+            }
+        }
+        foreach ($sale->packages as $p) {
+            $key = \App\Models\Stock::key('package', $p->packet_gram, $p->bundle_size);
+            if (isset($stockLevels[$key])) {
+                $stockLevels[$key]['quantity'] += $p->bundle_quantity;
+            }
+        }
+
+        return view('admin.sales.edit', compact('sale', 'shops', 'stockLevels'));
     }
 
     public function update(Request $request, Sale $sale)
     {
         $request->validate([
-            'shop_id'         => 'required|exists:shops,id',
-            'sale_date'       => 'required|date',
-            'received_amount' => 'nullable|numeric|min:0',
-            'remarks'         => 'nullable|string',
+            'shop_id'   => 'required|exists:shops,id',
+            'sale_date' => 'required|date',
+            'remarks'   => 'nullable|string',
         ]);
 
         DB::beginTransaction();
@@ -262,6 +307,9 @@ class SaleController extends Controller
                 'bill_image' => $billImagePath,
             ]);
 
+            // Reverse stock deducted by the sale's previous line items before recreating them
+            StockMovement::reverseFor($sale);
+
             // ── DALLA ──
             $sale->dalla()->delete();
             if (!empty($request->dalla)) {
@@ -276,6 +324,7 @@ class SaleController extends Controller
                         'price_per_kg'   => $d['pirce_per_kg'] ?? 0,
                         'sub_total'      => $subTotal,
                     ]);
+                    StockMovement::record('dalla', null, -($d['sold_quantity_mann'] ?? 0), -($d['sold_quantity_kilo'] ?? 0), 'sale', $sale);
                     $grandTotal += $subTotal;
                 }
             }
@@ -296,6 +345,7 @@ class SaleController extends Controller
                         'price_per_kg'  => $item['pirce_per_kg'] ?? 0,
                         'sub_total'     => $subTotal,
                     ]);
+                    StockMovement::record('thaila', (int) $kg, -$soldKg, -($soldKg * $kg), 'sale', $sale);
                     $grandTotal += $subTotal;
                 }
             }
@@ -318,12 +368,13 @@ class SaleController extends Controller
                         'price_per_bundle' => $item['price_per_bundle'] ?? 0,
                         'sub_total'        => $subTotal,
                     ]);
+                    StockMovement::record('package', (int) $gram, -$bundleQty, -$totalKg, 'sale', $sale, null, null, (int) $bundleSize);
                     $grandTotal += $subTotal;
                 }
             }
 
-            // ── TOTALS ──
-            $receivedAmount = min((float) ($request->received_amount ?? 0), $grandTotal);
+            // ── TOTALS ── (received_amount is derived from the payment ledger, untouched by line-item edits)
+            $receivedAmount = $sale->payments()->sum('amount');
             $sale->update([
                 'total_amount'    => $grandTotal,
                 'received_amount' => $receivedAmount,
@@ -342,27 +393,80 @@ class SaleController extends Controller
     public function quickUpdate(Request $request, Sale $sale)
     {
         $request->validate([
-            'shop_id'         => 'required|exists:shops,id',
-            'sale_date'       => 'required|date',
-            'received_amount' => 'nullable|numeric|min:0',
-            'remarks'         => 'nullable|string',
+            'shop_id'   => 'required|exists:shops,id',
+            'sale_date' => 'required|date',
+            'remarks'   => 'nullable|string',
         ]);
 
-        $received = min((float) ($request->received_amount ?? 0), $sale->total_amount);
-        $sale->update([
-            'shop_id'         => $request->shop_id,
-            'sale_date'       => $request->sale_date,
-            'received_amount' => $received,
-            'pending_amount'  => $sale->total_amount - $received,
-            'remarks'         => $request->remarks,
+        $sale->update($request->only(['shop_id', 'sale_date', 'remarks']));
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
+     * Record a payment against a sale's pending amount. Amount is capped at
+     * the current pending amount so pending never goes negative from a payment.
+     */
+    public function addPayment(Request $request, Sale $sale)
+    {
+        $request->validate([
+            'amount'         => 'required|numeric|min:0.01',
+            'payment_date'   => 'required|date',
+            'payment_method' => 'required|in:Cash,Bank Transfer,EasyPaisa,JazzCash,Other',
+            'note'           => 'nullable|string|max:500',
         ]);
+
+        if ($sale->pending_amount <= 0) {
+            return response()->json(['success' => false, 'message' => 'This sale has no pending amount.'], 422);
+        }
+
+        DB::transaction(function () use ($request, $sale) {
+            $amount = min((float) $request->amount, (float) $sale->pending_amount);
+
+            SalePayment::create([
+                'sale_id'        => $sale->id,
+                'amount'         => $amount,
+                'payment_date'   => $request->payment_date,
+                'payment_method' => $request->payment_method,
+                'note'           => $request->note,
+            ]);
+
+            $received = $sale->payments()->sum('amount');
+            $sale->update([
+                'received_amount' => $received,
+                'pending_amount'  => $sale->total_amount - $received,
+            ]);
+        });
+
+        return response()->json(['success' => true]);
+    }
+
+    public function destroyPayment(Sale $sale, SalePayment $payment)
+    {
+        if ($payment->sale_id !== $sale->id) {
+            abort(404);
+        }
+
+        DB::transaction(function () use ($sale, $payment) {
+            $payment->delete();
+
+            $received = $sale->payments()->sum('amount');
+            $sale->update([
+                'received_amount' => $received,
+                'pending_amount'  => $sale->total_amount - $received,
+            ]);
+        });
 
         return response()->json(['success' => true]);
     }
 
     public function destroy(Sale $sale)
     {
-        $sale->delete();
+        DB::transaction(function () use ($sale) {
+            StockMovement::reverseFor($sale);
+            $sale->delete();
+        });
+
         return response()->json(['success' => true, 'message' => 'Sale deleted successfully']);
     }
 }

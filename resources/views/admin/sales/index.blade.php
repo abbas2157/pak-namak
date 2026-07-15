@@ -200,6 +200,13 @@
                                                         title="Quick Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
+                                                <button class="btn btn-sm btn-pn btn-act-confirm recordPaymentBtn mr-1"
+                                                        data-id="{{ $sale->id }}"
+                                                        data-shop="{{ $sale->shop->name ?? '' }}"
+                                                        data-pending="{{ $sale->pending_amount }}"
+                                                        title="Record Payment">
+                                                    <i class="fas fa-hand-holding-dollar"></i>
+                                                </button>
                                                 <a href="{{ route('admin.sales.edit', $sale->id) }}"
                                                    class="btn btn-sm btn-pn btn-act-view mr-1"
                                                    title="Full Edit">
@@ -438,8 +445,8 @@
                             <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Received Amount / وصول شدہ رقم
                             </label>
-                            <input type="number" name="received_amount" id="edit_received_amount"
-                                   class="form-control fc-pn" min="0" step="1" placeholder="0">
+                            <input type="text" id="edit_received_display" class="form-control fc-ro-pn" readonly>
+                            <small class="text-muted">Use "Record Payment" to change this.</small>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="pn-label text-uppercase font-weight-bold text-muted">
@@ -467,6 +474,57 @@
                     </button>
                 </div>
 
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- ===== RECORD PAYMENT MODAL ===== --}}
+<div class="modal fade modal-pn" id="recordPaymentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form id="recordPaymentForm">
+            @csrf
+            <input type="hidden" name="sale_id" id="rp_sale_id">
+            <div class="modal-content border-0">
+                <div class="modal-header border-0 text-white px-4 py-3">
+                    <h5 class="modal-title"><i class="fas fa-hand-holding-dollar mr-2"></i>Record Payment / ادائیگی درج کریں</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body px-4 py-4">
+                    <p class="mb-3">
+                        <strong id="rp_shop_name"></strong>
+                        <span class="text-muted"> — Pending: </span>
+                        <span class="font-weight-bold text-c-red" id="rp_pending_display"></span>
+                    </p>
+                    <div class="mb-3">
+                        <label class="filter-lbl">Amount <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" min="0.01" name="amount" class="form-control fc-pn" placeholder="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="filter-lbl">Payment Date <span class="text-danger">*</span></label>
+                        <input type="date" name="payment_date" id="rp_payment_date" class="form-control fc-pn" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="filter-lbl">Method <span class="text-danger">*</span></label>
+                        <select name="payment_method" class="form-control fc-pn" required>
+                            <option value="Cash" selected>Cash</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="EasyPaisa">EasyPaisa</option>
+                            <option value="JazzCash">JazzCash</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-0">
+                        <label class="filter-lbl">Note / نوٹ</label>
+                        <textarea name="note" class="form-control fc-pn" rows="2" placeholder="Optional"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 px-4 py-3">
+                    <button type="button" class="btn btn-light btn-modal-cancel px-4" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary btn-modal-save px-4" type="submit" id="rpSubmitBtn">
+                        <i class="fas fa-save mr-1"></i> Save
+                    </button>
+                </div>
             </div>
         </form>
     </div>
@@ -514,18 +572,73 @@ $(function () {
         $('#edit_total_amount').val(btn.data('total'));
         $('#edit_shop_id').val(btn.data('shop-id'));
         $('#edit_sale_date').val(btn.data('sale-date'));
-        $('#edit_received_amount').val(btn.data('received'));
         $('#edit_total_display').val(Number(btn.data('total')).toLocaleString());
+        $('#edit_received_display').val(Number(btn.data('received')).toLocaleString());
         $('#edit_pending_display').val(Number(btn.data('pending')).toLocaleString());
         $('#edit_remarks').val(btn.data('remarks') ?? '');
         $('#editSaleModal').modal('show');
     });
 
-    // Edit — live pending calculation
-    $('#edit_received_amount').on('input', function () {
-        const total    = parseFloat($('#edit_total_amount').val()) || 0;
-        const received = Math.min(parseFloat($(this).val()) || 0, total);
-        $('#edit_pending_display').val((total - received).toLocaleString());
+    // Record Payment — open modal from either the row button or the View Details modal
+    $(document).on('click', '.recordPaymentBtn', function () {
+        const btn = $(this);
+        $('#rp_sale_id').val(btn.data('id'));
+        $('#rp_shop_name').text(btn.data('shop') || '');
+        $('#rp_pending_display').text(Number(btn.data('pending')).toLocaleString());
+        $('#rp_payment_date').val(new Date().toISOString().split('T')[0]);
+        $('#recordPaymentForm')[0].reset();
+        $('#rp_payment_date').val(new Date().toISOString().split('T')[0]);
+        $('#recordPaymentModal').modal('show');
+    });
+
+    $('#recordPaymentForm').on('submit', function (e) {
+        e.preventDefault();
+        const id  = $('#rp_sale_id').val();
+        const btn = $('#rpSubmitBtn');
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Saving...');
+
+        $.post(APP_URL + '/sales/' + id + '/payments', $(this).serialize())
+            .done(function () {
+                toastr.success('Payment recorded!');
+                $('#recordPaymentModal').modal('hide');
+                setTimeout(() => location.reload(), 800);
+            })
+            .fail(function (xhr) {
+                if (xhr.status === 422) {
+                    alert((xhr.responseJSON.message) || Object.values(xhr.responseJSON.errors || {}).map(e => e[0]).join('\n'));
+                } else {
+                    toastr.error('Could not record payment.');
+                }
+            })
+            .always(() => btn.prop('disabled', false).html('<i class="fas fa-save mr-1"></i> Save'));
+    });
+
+    // Delete a payment (triggered from the View Details modal's history list)
+    $(document).on('click', '.deletePaymentBtn', function () {
+        const saleId = $(this).data('sale-id');
+        const payId  = $(this).data('payment-id');
+        Swal.fire({
+            title: 'Delete this payment?',
+            text: 'This cannot be undone.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e74a3b',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, delete',
+            cancelButtonText: 'Cancel'
+        }).then(result => {
+            if (!result.isConfirmed) return;
+            $.ajax({
+                url: APP_URL + '/sales/' + saleId + '/payments/' + payId,
+                type: 'POST',
+                data: { _method: 'DELETE', _token: '{{ csrf_token() }}' },
+                success: function () {
+                    toastr.success('Payment deleted.');
+                    setTimeout(() => location.reload(), 800);
+                },
+                error: function () { toastr.error('Could not delete payment.'); }
+            });
+        });
     });
 
     // Quick Edit — submit

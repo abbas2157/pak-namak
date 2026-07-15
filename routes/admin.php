@@ -11,13 +11,21 @@ Route::middleware('web')->group(function () {
         Route::get('logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('logout');
         Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 
+        Route::get('stocks', [App\Http\Controllers\Admin\StockController::class, 'index'])->name('admin.stocks.index');
+        Route::post('stocks/addition', [App\Http\Controllers\Admin\StockController::class, 'storeAddition'])->name('admin.stocks.addition');
+        Route::post('stocks/adjustment', [App\Http\Controllers\Admin\StockController::class, 'storeAdjustment'])->name('admin.stocks.adjustment');
+
         Route::resource('purchases', App\Http\Controllers\Admin\PurchaseController::class, ['as' => 'admin']);
         Route::resource('productions', App\Http\Controllers\Admin\ProductionController::class, ['as' => 'admin']);
         Route::resource('vendors', App\Http\Controllers\Admin\VendorController::class, ['as' => 'admin']);
         Route::resource('sales', App\Http\Controllers\Admin\SaleController::class, ['as' => 'admin']);
         Route::post('sales/{sale}/quick-update', [App\Http\Controllers\Admin\SaleController::class, 'quickUpdate'])->name('admin.sales.quick_update');
+        Route::post('sales/{sale}/payments', [App\Http\Controllers\Admin\SaleController::class, 'addPayment'])->name('admin.sales.payments.store');
+        Route::delete('sales/{sale}/payments/{payment}', [App\Http\Controllers\Admin\SaleController::class, 'destroyPayment'])->name('admin.sales.payments.destroy');
         Route::resource('shops', App\Http\Controllers\Admin\ShopController::class, ['as' => 'admin']);
         Route::get('shops/{shop}/info', [App\Http\Controllers\Admin\ShopController::class, 'info'])->name('admin.shops.info');
+        Route::post('shops/{shop}/payments', [App\Http\Controllers\Admin\ShopController::class, 'recordPayment'])->name('admin.shops.payments.store');
+        Route::get('shop-payments', [App\Http\Controllers\Admin\ShopController::class, 'paymentForm'])->name('admin.shops.payment_form');
         Route::resource('cities', App\Http\Controllers\Admin\CityController::class, ['as' => 'admin'])->except(['create', 'show']);
         Route::get('cities/{city}/sales', [App\Http\Controllers\Admin\CityController::class, 'sales'])->name('admin.cities.sales');
 
@@ -39,8 +47,17 @@ Route::middleware('web')->group(function () {
 
         Route::resource('types', App\Http\Controllers\Admin\TypeController::class, ['as' => 'admin']);
         Route::resource('employees', App\Http\Controllers\Admin\EmployeeController::class, ['as' => 'admin']);
-        Route::post('employees/{employee}/salaries', [App\Http\Controllers\Admin\EmployeeSalaryController::class, 'store'])->name('admin.employees.salaries.store');
+        Route::post('employees/{employee}/advances', [App\Http\Controllers\Admin\EmployeeSalaryController::class, 'storeAdvance'])->name('admin.employees.advances.store');
+        Route::post('employees/{employee}/salaries', [App\Http\Controllers\Admin\EmployeeSalaryController::class, 'storeSalary'])->name('admin.employees.salaries.store');
+        Route::get('employees/{employee}/salary-preview', [App\Http\Controllers\Admin\EmployeeSalaryController::class, 'preview'])->name('admin.employees.salaries.preview');
         Route::delete('employees/{employee}/salaries/{salary}', [App\Http\Controllers\Admin\EmployeeSalaryController::class, 'destroy'])->name('admin.employees.salaries.destroy');
+        Route::post('employees/{employee}/absences', [App\Http\Controllers\Admin\EmployeeAbsenceController::class, 'store'])->name('admin.employees.absences.store');
+        Route::delete('employees/{employee}/absences/{absence}', [App\Http\Controllers\Admin\EmployeeAbsenceController::class, 'destroy'])->name('admin.employees.absences.destroy');
+        Route::get('employee-advances', [App\Http\Controllers\Admin\EmployeeSalaryController::class, 'advanceForm'])->name('admin.employees.advance_form');
+
+        Route::get('holidays', [App\Http\Controllers\Admin\CompanyHolidayController::class, 'index'])->name('admin.holidays.index');
+        Route::post('holidays', [App\Http\Controllers\Admin\CompanyHolidayController::class, 'store'])->name('admin.holidays.store');
+        Route::delete('holidays/{holiday}', [App\Http\Controllers\Admin\CompanyHolidayController::class, 'destroy'])->name('admin.holidays.destroy');
         Route::resource('expenses', App\Http\Controllers\Admin\ExpenseController::class, ['as' => 'admin']);
         Route::resource('assets', App\Http\Controllers\Admin\AssetController::class, ['as' => 'admin']);
 

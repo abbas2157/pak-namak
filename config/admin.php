@@ -32,4 +32,9 @@ return [
         10 => '10 Packs',
         20 => '20 Packs',
     ],
+    'thaila_sizes' => [5, 10, 30, 35, 40, 50],
+    'package_grams' => [250, 300, 400, 500, 600, 700],
+
+    // Fixed weekly off for attendance/salary deduction purposes (0=Sunday ... 6=Saturday)
+    'weekly_holiday' => 0,
 ];

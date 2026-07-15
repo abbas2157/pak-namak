@@ -158,6 +158,7 @@
                 <div class="item-card" id="dalla-card">
                     <div class="item-card-header">
                         <span class="size-pill sp-dalla"><i class="fas fa-weight fa-icon-xs me-1"></i> Bulk — ڈلہ</span>
+                        <small class="text-muted ms-2">In stock: {{ number_format($stockLevels['dalla::']['quantity'] ?? 0, 0) }} Mann</small>
                         <div>
                             <span class="subtotal-display" id="dalla_sub_display"></span>
                             <span class="subtotal-placeholder" id="dalla_sub_placeholder">Enter qty &amp; rate</span>
@@ -207,6 +208,7 @@
                 <div class="item-card" id="thaila-card-{{ $size }}">
                     <div class="item-card-header">
                         <span class="size-pill sp-thaila">{{ $size }} KG bag</span>
+                        <small class="text-muted ms-2">In stock: {{ number_format($stockLevels['thaila:'.$size.':']['quantity'] ?? 0, 0) }} bags</small>
                         <div>
                             <span class="subtotal-display" id="thaila_sub_display_{{ $size }}"></span>
                             <span class="subtotal-placeholder" id="thaila_sub_placeholder_{{ $size }}">—</span>
@@ -257,6 +259,7 @@
                 <div class="item-card" id="package-card-{{ $gram }}">
                     <div class="item-card-header">
                         <span class="size-pill sp-package">{{ $gram }}g pack</span>
+                        <small class="text-muted ms-2">In stock: 10-pk {{ number_format($stockLevels['package:'.$gram.':10']['quantity'] ?? 0, 0) }} · 20-pk {{ number_format($stockLevels['package:'.$gram.':20']['quantity'] ?? 0, 0) }}</small>
                         <div>
                             <span class="subtotal-display" id="package_sub_display_{{ $gram }}"></span>
                             <span class="subtotal-placeholder" id="package_sub_placeholder_{{ $gram }}">—</span>

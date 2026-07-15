@@ -14,6 +14,10 @@ Route::post('/order',                        [OrderController::class, 'store'])-
 Route::get('/order/confirm/{reference}',     [OrderController::class, 'confirm'])->name('order.confirm');
 Route::get('/order/shop/{shop}/info',        [OrderController::class, 'shopInfo'])->name('order.shop.info');
 
+// Public stock availability
+Route::get('/stock',                         [OrderController::class, 'stockView'])->name('stock.public');
+Route::get('/stock/data',                    [OrderController::class, 'stockData'])->name('stock.data');
+
 
 
 

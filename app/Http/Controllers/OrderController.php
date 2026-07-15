@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Shop;
+use App\Models\Stock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +16,9 @@ class OrderController extends Controller
             ->orderBy('name')
             ->get(['id', 'name', 'city', 'phone_number']);
 
-        return view('order.form', compact('shops'));
+        $stockLevels = Stock::levels()->keyBy(fn ($l) => Stock::key($l['product_type'], $l['size'], $l['bundle_size']));
+
+        return view('order.form', compact('shops', 'stockLevels'));
     }
 
     public function store(Request $request)
@@ -146,6 +149,22 @@ class OrderController extends Controller
         }
 
         return view('order.confirm', compact('order', 'shopFinancials', 'shopOrders'));
+    }
+
+    public function stockView()
+    {
+        $levels = Stock::levels();
+
+        return view('order.stock', compact('levels'));
+    }
+
+    /**
+     * Live JSON feed of current stock levels, polled by the stock dashboard
+     * so its numbers update in place without a full page reload.
+     */
+    public function stockData(): \Illuminate\Http\JsonResponse
+    {
+        return response()->json(['levels' => Stock::levels()->values()]);
     }
 
     public function shopInfo(Shop $shop): \Illuminate\Http\JsonResponse

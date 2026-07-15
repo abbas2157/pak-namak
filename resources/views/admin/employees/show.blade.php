@@ -119,9 +119,14 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title mb-0">Salary History / تنخواہ کی تاریخ</h4>
-                        <button class="btn btn-primary btn-sm" id="addSalaryBtn">
-                            <i class="fas fa-plus mr-1"></i> Record Payment / ادائیگی درج کریں
-                        </button>
+                        <div>
+                            <button class="btn btn-outline-primary btn-sm" id="addAdvanceBtn">
+                                <i class="fas fa-hand-holding-dollar mr-1"></i> Record Advance
+                            </button>
+                            <button class="btn btn-primary btn-sm" id="settleMonthBtn">
+                                <i class="fas fa-check-circle mr-1"></i> Settle Month
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body p-0">
                         <table class="table table-bordered table-sm mb-0" id="salaryTable">
@@ -129,7 +134,9 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Month / مہینہ</th>
+                                    <th>Type</th>
                                     <th>Amount (PKR) / رقم</th>
+                                    <th>Breakdown</th>
                                     <th>Paid On / ادائیگی تاریخ</th>
                                     <th>Note / نوٹ</th>
                                     <th>Action / اقدام</th>
@@ -140,7 +147,23 @@
                                 <tr id="salRow{{ $sal->id }}">
                                     <td>{{ $i + 1 }}</td>
                                     <td><strong>{{ $sal->month->format('M Y') }}</strong></td>
+                                    <td>
+                                        @if($sal->type === 'advance')
+                                            <span class="badge badge-info">Advance</span>
+                                        @else
+                                            <span class="badge badge-success">Salary</span>
+                                        @endif
+                                    </td>
                                     <td>{{ number_format($sal->amount, 0) }}</td>
+                                    <td class="small text-muted">
+                                        @if($sal->type === 'salary')
+                                            Gross {{ number_format($sal->gross_amount, 0) }}
+                                            @if($sal->advance_deducted > 0) &minus; Adv {{ number_format($sal->advance_deducted, 0) }} @endif
+                                            @if($sal->absent_days > 0) &minus; {{ $sal->absent_days }}d absence ({{ number_format($sal->absence_deducted, 0) }}) @endif
+                                        @else
+                                            &mdash;
+                                        @endif
+                                    </td>
                                     <td>{{ $sal->paid_at ? $sal->paid_at->format('d M Y') : '-' }}</td>
                                     <td>{{ $sal->note ?? '-' }}</td>
                                     <td>
@@ -151,7 +174,55 @@
                                 </tr>
                             @empty
                                 <tr id="noSalRow">
-                                    <td colspan="6" class="text-center py-3 text-muted">No salary payments recorded yet.</td>
+                                    <td colspan="8" class="text-center py-3 text-muted">No salary payments recorded yet.</td>
+                                </tr>
+                            @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {{-- Attendance / Absences --}}
+                <div class="card mt-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="card-title mb-0">Attendance / حاضری</h4>
+                        <button class="btn btn-outline-danger btn-sm" id="addAbsenceBtn">
+                            <i class="fas fa-calendar-xmark mr-1"></i> Mark Absence
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-bordered table-sm mb-0" id="absenceTable">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Note</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @forelse($employee->absences as $i => $abs)
+                                <tr id="absRow{{ $abs->id }}">
+                                    <td>{{ $i + 1 }}</td>
+                                    <td><strong>{{ $abs->date->format('d M Y') }}</strong></td>
+                                    <td>
+                                        @if($abs->paid)
+                                            <span class="badge badge-warning">Paid Leave</span>
+                                        @else
+                                            <span class="badge badge-danger">Unpaid Absence</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $abs->note ?? '-' }}</td>
+                                    <td>
+                                        <button class="btn btn-danger btn-xs delete-abs" data-id="{{ $abs->id }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr id="noAbsRow">
+                                    <td colspan="5" class="text-center py-3 text-muted">No absences recorded.</td>
                                 </tr>
                             @endforelse
                             </tbody>
@@ -163,37 +234,109 @@
     </div>
 </section>
 
-{{-- ========== ADD SALARY MODAL ========== --}}
-<div class="modal fade" id="addSalaryModal" tabindex="-1">
+{{-- ========== RECORD ADVANCE MODAL ========== --}}
+<div class="modal fade" id="addAdvanceModal" tabindex="-1">
     <div class="modal-dialog">
-        <form id="addSalaryForm">
+        <form id="addAdvanceForm">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title"><i class="fas fa-hand-holding-dollar mr-2"></i>Record Advance</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label>Amount (PKR) / رقم <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" name="amount" min="0.01" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Date / تاریخ <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" name="payment_date" value="{{ date('Y-m-d') }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Note / نوٹ</label>
+                        <textarea class="form-control" name="note" rows="2" placeholder="Optional"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel / منسوخ</button>
+                    <button class="btn btn-info text-white" type="submit">Save Advance</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- ========== SETTLE MONTH MODAL ========== --}}
+<div class="modal fade" id="settleMonthModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form id="settleMonthForm">
             @csrf
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title"><i class="fas fa-coins mr-2"></i>Record Salary Payment / تنخواہ ادائیگی درج کریں</h5>
+                    <h5 class="modal-title"><i class="fas fa-check-circle mr-2"></i>Settle Month / تنخواہ کی ادائیگی</h5>
                     <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
                         <label>Month / مہینہ <span class="text-danger">*</span></label>
-                        <input type="month" class="form-control" name="month" required>
+                        <input type="month" class="form-control" name="month" id="settleMonthInput" required>
                     </div>
-                    <div class="mb-3">
-                        <label>Amount (PKR) / رقم <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control" name="amount" value="{{ $employee->salary }}" min="0" required>
+
+                    <div id="settlePreview" class="d-none p-3 mb-3 rounded" style="background:#f4f6f9;">
+                        <div class="d-flex justify-content-between"><span>Gross Salary</span><strong id="sp_gross">-</strong></div>
+                        <div class="d-flex justify-content-between text-info"><span>Advances Taken</span><strong id="sp_advance">-</strong></div>
+                        <div class="d-flex justify-content-between text-danger"><span id="sp_absent_label">Absence Deduction</span><strong id="sp_absence">-</strong></div>
+                        <hr class="my-2">
+                        <div class="d-flex justify-content-between"><span class="font-weight-bold">Net Payable</span><strong id="sp_net" class="text-success">-</strong></div>
+                        <div id="sp_settled_warning" class="text-danger small mt-2 d-none">This month is already settled.</div>
                     </div>
+
                     <div class="mb-3">
                         <label>Paid On / ادائیگی تاریخ</label>
                         <input type="date" class="form-control" name="paid_at" value="{{ date('Y-m-d') }}">
                     </div>
                     <div class="mb-3">
                         <label>Note / نوٹ</label>
-                        <textarea class="form-control" name="note" rows="2" placeholder="Optional note (e.g. advance, deduction)..."></textarea>
+                        <textarea class="form-control" name="note" rows="2" placeholder="Optional"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel / منسوخ</button>
-                    <button class="btn btn-primary" type="submit">Save Payment / ادائیگی محفوظ کریں</button>
+                    <button class="btn btn-primary" type="submit" id="settleSubmitBtn">Confirm &amp; Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- ========== MARK ABSENCE MODAL ========== --}}
+<div class="modal fade" id="addAbsenceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form id="addAbsenceForm">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="fas fa-calendar-xmark mr-2"></i>Mark Absence</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label>Date / تاریخ <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control" name="date" value="{{ date('Y-m-d') }}" required>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" name="paid" id="absencePaid" value="1">
+                        <label class="form-check-label" for="absencePaid">Paid leave (does not deduct salary)</label>
+                    </div>
+                    <div class="mb-3">
+                        <label>Note / نوٹ</label>
+                        <textarea class="form-control" name="note" rows="2" placeholder="Optional (e.g. sick, personal)"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Cancel / منسوخ</button>
+                    <button class="btn btn-danger" type="submit">Save</button>
                 </div>
             </div>
         </form>
@@ -271,31 +414,23 @@
 <script>
 $(document).ready(function () {
 
-    // --- Salary: open modal ---
-    $('#addSalaryBtn').on('click', function () {
-        $('#addSalaryForm')[0].reset();
-        $('#addSalaryForm [name="amount"]').val('{{ $employee->salary }}');
-        $('#addSalaryForm [name="paid_at"]').val(new Date().toISOString().split('T')[0]);
-        $('#addSalaryModal').modal('show');
+    // --- Advance: open modal ---
+    $('#addAdvanceBtn').on('click', function () {
+        $('#addAdvanceForm')[0].reset();
+        $('#addAdvanceForm [name="payment_date"]').val(new Date().toISOString().split('T')[0]);
+        $('#addAdvanceModal').modal('show');
     });
 
-    // --- Salary: submit ---
-    $('#addSalaryForm').on('submit', function (e) {
+    // --- Advance: submit ---
+    $('#addAdvanceForm').on('submit', function (e) {
         e.preventDefault();
-        const data = $(this).serializeArray();
-        // Normalize "YYYY-MM" to "YYYY-MM-01" for server date parsing
-        data.forEach(function (item) {
-            if (item.name === 'month' && item.value.length === 7) {
-                item.value += '-01';
-            }
-        });
         $.ajax({
-            url: "{{ route('admin.employees.salaries.store', $employee->id) }}",
+            url: "{{ route('admin.employees.advances.store', $employee->id) }}",
             type: 'POST',
-            data: $.param(data),
+            data: $(this).serialize(),
             success: function (res) {
                 if (res.success) {
-                    $('#addSalaryModal').modal('hide');
+                    $('#addAdvanceModal').modal('hide');
                     location.reload();
                 }
             },
@@ -308,9 +443,65 @@ $(document).ready(function () {
         });
     });
 
-    // --- Salary: delete ---
+    // --- Settle Month: open modal ---
+    $('#settleMonthBtn').on('click', function () {
+        $('#settleMonthForm')[0].reset();
+        $('#settleMonthForm [name="paid_at"]').val(new Date().toISOString().split('T')[0]);
+        $('#settlePreview').addClass('d-none');
+        const now = new Date();
+        $('#settleMonthInput').val(now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0'));
+        loadSettlePreview();
+        $('#settleMonthModal').modal('show');
+    });
+
+    $('#settleMonthInput').on('change', loadSettlePreview);
+
+    function loadSettlePreview() {
+        const month = $('#settleMonthInput').val();
+        if (!month) { $('#settlePreview').addClass('d-none'); return; }
+        $.get("{{ route('admin.employees.salaries.preview', $employee->id) }}", { month: month }, function (res) {
+            $('#sp_gross').text(Number(res.gross).toLocaleString());
+            $('#sp_advance').text('- ' + Number(res.advance_total).toLocaleString());
+            $('#sp_absent_label').text('Absence Deduction (' + res.absent_days + ' day' + (res.absent_days == 1 ? '' : 's') + ')');
+            $('#sp_absence').text('- ' + Number(res.absence_deducted).toLocaleString());
+            $('#sp_net').text(Number(res.net).toLocaleString());
+            $('#sp_settled_warning').toggleClass('d-none', !res.already_settled);
+            $('#settleSubmitBtn').prop('disabled', res.already_settled);
+            $('#settlePreview').removeClass('d-none');
+        });
+    }
+
+    // --- Settle Month: submit ---
+    $('#settleMonthForm').on('submit', function (e) {
+        e.preventDefault();
+        const data = $(this).serializeArray();
+        data.forEach(function (item) {
+            if (item.name === 'month' && item.value.length === 7) {
+                item.value += '-01';
+            }
+        });
+        $.ajax({
+            url: "{{ route('admin.employees.salaries.store', $employee->id) }}",
+            type: 'POST',
+            data: $.param(data),
+            success: function (res) {
+                if (res.success) {
+                    $('#settleMonthModal').modal('hide');
+                    location.reload();
+                }
+            },
+            error: function (xhr) {
+                const msg = xhr.responseJSON?.message
+                    ?? Object.values(xhr.responseJSON?.errors ?? {}).map(e => e[0]).join("\n")
+                    ?? 'Error: ' + xhr.status;
+                alert(msg);
+            }
+        });
+    });
+
+    // --- Salary: delete (works for advance or salary rows) ---
     $(document).on('click', '.delete-sal', function () {
-        if (!confirm('Remove this salary record?')) return;
+        if (!confirm('Remove this record?')) return;
         const id = $(this).data('id');
         $.ajax({
             url: APP_URL + '/employees/{{ $employee->id }}/salaries/' + id,
@@ -320,7 +511,56 @@ $(document).ready(function () {
                 if (res.success) {
                     $('#salRow' + id).remove();
                     if ($('#salaryTable tbody tr').length === 0) {
-                        $('#salaryTable tbody').append('<tr id="noSalRow"><td colspan="6" class="text-center py-3 text-muted">No salary payments recorded yet.</td></tr>');
+                        $('#salaryTable tbody').append('<tr id="noSalRow"><td colspan="8" class="text-center py-3 text-muted">No salary payments recorded yet.</td></tr>');
+                    }
+                }
+            },
+            error: function (xhr) { alert('Error: ' + xhr.status); }
+        });
+    });
+
+    // --- Absence: open modal ---
+    $('#addAbsenceBtn').on('click', function () {
+        $('#addAbsenceForm')[0].reset();
+        $('#addAbsenceForm [name="date"]').val(new Date().toISOString().split('T')[0]);
+        $('#addAbsenceModal').modal('show');
+    });
+
+    // --- Absence: submit ---
+    $('#addAbsenceForm').on('submit', function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: "{{ route('admin.employees.absences.store', $employee->id) }}",
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function (res) {
+                if (res.success) {
+                    $('#addAbsenceModal').modal('hide');
+                    location.reload();
+                }
+            },
+            error: function (xhr) {
+                const msg = xhr.responseJSON?.message
+                    ?? Object.values(xhr.responseJSON?.errors ?? {}).map(e => e[0]).join("\n")
+                    ?? 'Error: ' + xhr.status;
+                alert(msg);
+            }
+        });
+    });
+
+    // --- Absence: delete ---
+    $(document).on('click', '.delete-abs', function () {
+        if (!confirm('Remove this absence record?')) return;
+        const id = $(this).data('id');
+        $.ajax({
+            url: APP_URL + '/employees/{{ $employee->id }}/absences/' + id,
+            type: 'POST',
+            data: { _method: 'DELETE', _token: "{{ csrf_token() }}" },
+            success: function (res) {
+                if (res.success) {
+                    $('#absRow' + id).remove();
+                    if ($('#absenceTable tbody tr').length === 0) {
+                        $('#absenceTable tbody').append('<tr id="noAbsRow"><td colspan="5" class="text-center py-3 text-muted">No absences recorded.</td></tr>');
                     }
                 }
             },

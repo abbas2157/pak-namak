@@ -2,6 +2,9 @@
 @section('title', 'New Sale')
 
 @section('content')
+<style>
+    .stock-hint { font-size: .68rem; line-height: 1.3; margin-top: 4px; white-space: nowrap; }
+</style>
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
@@ -35,7 +38,7 @@
             </div>
         </div>
         @endif
-        <form action="{{ route('admin.sales.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.sales.store') }}" method="POST" enctype="multipart/form-data" id="saleForm">
             @csrf
             @if($prefill)
                 <input type="hidden" name="order_id" value="{{ $prefill->id }}">
@@ -62,6 +65,7 @@
                         <label class="pn-label text-uppercase font-weight-bold text-muted">
                             Quantity (Mann) — وزن: من
                         </label>
+                        <small class="text-muted d-block mb-1">In stock: {{ number_format($stockLevels['dalla::']['quantity'] ?? 0, 2) }} Mann</small>
                         @php $prefillDalla = $prefill?->items->firstWhere('type','dalla'); @endphp
                         <input type="number" name="dalla[sold_quantity_mann]" id="sold_quantity_mann"
                                class="form-control fc-pn" placeholder="0"
@@ -135,10 +139,11 @@
                 @foreach([5,10,30,35,40,50] as $size)
                 @php $prefillThaila = $prefill?->items->where('type','thaila')->firstWhere('size',$size); @endphp
                 <div class="row align-items-center mb-2 py-2 sale-form-row">
-                    <div class="col-md-1 mb-2 mb-md-0">
+                    <div class="col-md-1 mb-2 mb-md-0 text-center">
                         <input type="text" name="thaila[{{ $size }}][kilo_{{ $size }}]"
                                id="quantity_{{ $size }}_kilo" value="{{ $size }}" readonly
                                class="form-control text-center font-weight-bold fc-tag-thaila">
+                        <small class="text-muted d-block stock-hint">{{ number_format($stockLevels['thaila:'.$size.':']['quantity'] ?? 0, 0) }} in stock</small>
                     </div>
                     <div class="col-md-2 mb-2 mb-md-0">
                         <input type="number" name="thaila[{{ $size }}][sold_quantity_kilo_{{ $size }}]"
@@ -208,10 +213,12 @@
                 @foreach([250,300,400,500,600,700] as $gram)
                 @php $prefillPackage = $prefill?->items->where('type','package')->firstWhere('size',$gram); @endphp
                 <div class="row align-items-center mb-2 py-2 sale-form-row">
-                    <div class="col-md-1 mb-2 mb-md-0">
+                    <div class="col-md-1 mb-2 mb-md-0 text-center">
                         <input type="text" name="package[{{ $gram }}][gram_{{ $gram }}]"
                                id="quantity_{{ $gram }}_gram" value="{{ $gram }}" readonly
                                class="form-control text-center font-weight-bold fc-tag-package">
+                        <small class="text-muted d-block stock-hint">10pk {{ number_format($stockLevels['package:'.$gram.':10']['quantity'] ?? 0, 0) }}</small>
+                        <small class="text-muted d-block stock-hint">20pk {{ number_format($stockLevels['package:'.$gram.':20']['quantity'] ?? 0, 0) }}</small>
                     </div>
                     <div class="col-md-2 mb-2 mb-md-0">
                         <input type="number" name="package[{{ $gram }}][sold_bundles_quantity_{{ $gram }}_gram]"
@@ -318,9 +325,10 @@
                         <select name="shop_id" id="shop_id" class="form-control fc-pn select2" required>
                             <option value="">Select Shop</option>
                             @foreach($shops as $shop)
+                                @php $shopArea = $shop->area?->name ?? $shop->city; @endphp
                                 <option value="{{ $shop->id }}"
                                     {{ ($prefill && $prefill->shop_id == $shop->id) ? 'selected' : '' }}>
-                                    {{ $shop->name }}
+                                    {{ $shop->name }}{{ $shopArea ? ' — ' . $shopArea : '' }}
                                 </option>
                             @endforeach
                         </select>
@@ -542,6 +550,60 @@ $(document).ready(function () {
     calcDalla();
     [5, 10, 30, 35, 40, 50].forEach(function (s) { calcThaila(s); });
     [250, 300, 400, 500, 600, 700].forEach(function (g) { calcPackage(g); });
+
+    /* ── Stock shortage confirmation before save ── */
+    const STOCK_LEVELS = @json($stockLevels);
+
+    function stockQty(type, size, bundle) {
+        const key = type + ':' + (size ?? '') + ':' + (bundle ?? '');
+        return STOCK_LEVELS[key] ? parseFloat(STOCK_LEVELS[key].quantity) : 0;
+    }
+
+    $('#saleForm').on('submit', function (e) {
+        const shortages = [];
+
+        const dallaQty = parseFloat($('#sold_quantity_mann').val()) || 0;
+        if (dallaQty > 0) {
+            const avail = stockQty('dalla', null, null);
+            if (dallaQty > avail) shortages.push('Dalla — need ' + dallaQty + ', only ' + avail + ' Mann in stock');
+        }
+
+        [5, 10, 30, 35, 40, 50].forEach(function (size) {
+            const qty = parseFloat($('#sold_quantity_kilo_' + size).val()) || 0;
+            if (qty > 0) {
+                const avail = stockQty('thaila', size, null);
+                if (qty > avail) shortages.push(size + 'KG Thaila — need ' + qty + ', only ' + avail + ' bags in stock');
+            }
+        });
+
+        [250, 300, 400, 500, 600, 700].forEach(function (gram) {
+            const qty = parseFloat($('#sold_bundles_quantity_' + gram + '_gram').val()) || 0;
+            const bundleSize = parseInt($('#bundle_type_' + gram + '_gram').val()) || null;
+            if (qty > 0 && bundleSize) {
+                const avail = stockQty('package', gram, bundleSize);
+                if (qty > avail) shortages.push(gram + 'g Package (' + bundleSize + '-pack) — need ' + qty + ', only ' + avail + ' bundles in stock');
+            }
+        });
+
+        if (shortages.length > 0) {
+            e.preventDefault();
+            const form = this;
+            Swal.fire({
+                title: 'Not enough stock',
+                html: shortages.map(function (s) { return '• ' + s; }).join('<br>') + '<br><br>Save this sale anyway?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Save anyway',
+                cancelButtonText: 'Let me fix it',
+                confirmButtonColor: '#e74a3b',
+                cancelButtonColor: '#6c757d',
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    });
 });
 </script>
 @endsection

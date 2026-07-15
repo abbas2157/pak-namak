@@ -74,6 +74,11 @@
                 Place an Order — آرڈر کریں
             </a>
 
+            <a href="{{ route('stock.public') }}" class="order-link" style="margin-top: 10px;">
+                <i class="fas fa-warehouse"></i>
+                View Stock — اسٹاک دیکھیں
+            </a>
+
         </div>
 
         <div class="login-footer">{{ config('admin.pak_namak.website') }}</div>

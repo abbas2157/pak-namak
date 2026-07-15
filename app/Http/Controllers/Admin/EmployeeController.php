@@ -44,7 +44,7 @@ class EmployeeController extends Controller
 
     public function show(Employee $employee)
     {
-        $employee->load('salaries');
+        $employee->load(['salaries', 'absences' => fn ($q) => $q->orderByDesc('date')]);
         $totalPaid = $employee->salaries->sum('amount');
         return view('admin.employees.show', compact('employee', 'totalPaid'));
     }
