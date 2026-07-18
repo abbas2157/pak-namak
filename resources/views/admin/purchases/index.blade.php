@@ -409,6 +409,26 @@ function recalcTotalCost() {
     }
 }
 
+function recalcQtyKg() {
+    const ton = parseFloat($('#salt_quantity').val()) || 0;
+    $('#salt_quantity_kg').val((ton * 1000).toFixed(2));
+    recalcTotalCost();
+}
+
+function recalcRateFromGrandTotal() {
+    const grand = parseFloat($('#grand_total').val())          || 0;
+    const tr    = parseFloat($('#transport_cost').val())       || 0;
+    const lu    = parseFloat($('#loading_unloading_cost').val()) || 0;
+    const qty   = parseFloat($('#salt_quantity_kg').val())     || 0;
+
+    const totalCost = grand - tr - lu;
+    $('#total_cost').val(totalCost.toFixed(2));
+
+    if (qty > 0) {
+        $('#rate_per_kg').val((totalCost / qty).toFixed(2));
+    }
+}
+
 $(function () {
 
     $('#purchasesTable').DataTable({
@@ -429,11 +449,17 @@ $(function () {
         }
     });
 
+    // Auto-calc: Ton => KG
+    $('#salt_quantity').on('input', recalcQtyKg);
+
     // Auto-calc: KG * rate => total cost
     $('#salt_quantity_kg, #rate_per_kg').on('input', recalcTotalCost);
 
     // Auto-calc: total + transport + loading => grand total
     $('#total_cost, #transport_cost, #loading_unloading_cost').on('input', recalcGrandTotal);
+
+    // Auto-calc (reverse): typing Grand Total directly back-calculates Rate per KG
+    $('#grand_total').on('input', recalcRateFromGrandTotal);
 
     // Open add modal
     $('#addBtn, #addBtnEmpty').on('click', function () {
