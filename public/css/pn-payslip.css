@@ -1,0 +1,165 @@
+/* ================================================================
+   PAK NAMAK — Print Payslip CSS
+   Standalone print page styling (A4, watermark, earnings/deductions
+   tables, signature lines).
+   ================================================================ */
+
+@page { size: A4; margin: 14mm; }
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: Calibri, Arial, Helvetica, sans-serif;
+    color: #1a1a1a;
+    margin: 0;
+    background: #f2f2f2;
+}
+
+.no-print-bar {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.print-btn {
+    padding: 8px 12px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #f8f9fc;
+    font-size: 13px;
+}
+
+.payslip-page {
+    position: relative;
+    max-width: 210mm;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 14mm;
+    overflow: hidden;
+}
+
+/* ── Watermark ─────────────────────────────────────────────── */
+.payslip-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-30deg);
+    font-size: 72px;
+    font-weight: 800;
+    color: #000;
+    opacity: 0.05;
+    white-space: nowrap;
+    z-index: 0;
+    pointer-events: none;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+}
+
+.payslip-content { position: relative; z-index: 1; }
+
+/* ── Header ─────────────────────────────────────────────────── */
+.payslip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 3px solid #1a5c35;
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+}
+
+.payslip-brand { display: flex; align-items: center; gap: 12px; }
+.payslip-logo { width: 56px; height: 56px; object-fit: contain; }
+.payslip-company-name { font-size: 18px; font-weight: 800; color: #1a5c35; margin: 0; }
+.payslip-company-sub { font-size: 11px; color: #555; }
+
+.payslip-company-contact { text-align: right; font-size: 11px; color: #444; line-height: 1.5; }
+
+.payslip-title-block { text-align: center; margin: 12px 0 18px; }
+.payslip-title { font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
+.payslip-subtitle { font-size: 13px; color: #444; margin-top: 2px; }
+
+/* ── Employee details grid ─────────────────────────────────── */
+.payslip-section-label {
+    background: #1a5c35;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 10px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin: 16px 0 0;
+}
+
+.emp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid #ddd;
+    border-top: none;
+    font-size: 12px;
+}
+
+.emp-grid .cell {
+    padding: 6px 10px;
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.emp-grid .cell:nth-child(even) { border-right: none; }
+.emp-grid .cell .lbl { color: #666; }
+.emp-grid .cell .val { font-weight: 700; text-align: right; }
+
+/* ── Earnings / Deductions tables ───────────────────────────── */
+.pay-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+
+.pay-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.pay-table th, .pay-table td { border: 1px solid #ccc; padding: 7px 10px; }
+.pay-table th { background: #eef4ee; text-align: left; }
+.pay-table td.amt { text-align: right; }
+.pay-table tfoot td { font-weight: 800; background: #f7f7f7; }
+
+/* ── Net summary ────────────────────────────────────────────── */
+.payslip-net {
+    margin-top: 16px;
+    border: 2px solid #1a5c35;
+    border-radius: 6px;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f4faf6;
+}
+
+.payslip-net .net-label { font-size: 13px; font-weight: 700; }
+.payslip-net .net-value { font-size: 20px; font-weight: 800; color: #1a5c35; }
+.payslip-net-words { font-size: 11.5px; color: #444; margin-top: 6px; font-style: italic; }
+
+/* ── Footer ─────────────────────────────────────────────────── */
+.payslip-footer { margin-top: 30px; font-size: 11px; color: #555; }
+.payslip-computer-note { text-align: center; margin-bottom: 26px; }
+
+.sign-row { display: flex; justify-content: space-between; margin-top: 10px; }
+.sign-box { width: 30%; text-align: center; }
+.sign-line { border-top: 1px solid #333; margin-top: 34px; padding-top: 4px; font-size: 11px; }
+
+.stamp-box {
+    width: 30%;
+    border: 1px dashed #999;
+    border-radius: 6px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 11px;
+    margin: 0 auto;
+}
+
+@media print {
+    body { background: #fff; }
+    .no-print-bar { display: none; }
+    .payslip-page { border: none; max-width: none; padding: 0; }
+}

@@ -133,4 +133,86 @@ class EmployeeSalaryController extends Controller
         $salary->delete();
         return response()->json(['success' => true]);
     }
+
+    /**
+     * Printable payslip for a settled month. Only valid for type='salary'
+     * rows — advances have no gross/deduction breakdown to show.
+     */
+    public function payslip(Employee $employee, EmployeeSalary $salary)
+    {
+        abort_unless($salary->employee_id === $employee->id && $salary->type === 'salary', 404);
+
+        $start = $salary->month->copy()->startOfMonth();
+        $end   = $salary->month->copy()->endOfMonth();
+
+        $paidLeaveDays = $employee->absences()
+            ->whereBetween('date', [$start->toDateString(), $end->toDateString()])
+            ->where('paid', true)
+            ->count();
+
+        $daysPresent = max(30 - $salary->absent_days - $paidLeaveDays, 0);
+
+        $totalDeductions = (float) $salary->advance_deducted + (float) $salary->absence_deducted;
+
+        $netInWords = $this->numberToWords((int) round($salary->amount)) . ' Rupees Only';
+
+        return view('admin.employees.payslip', compact(
+            'employee', 'salary', 'paidLeaveDays', 'daysPresent', 'totalDeductions', 'netInWords'
+        ));
+    }
+
+    /**
+     * Convert a whole number of rupees to words using the
+     * Pakistani/Indian numbering system (Lakh / Crore), e.g.
+     * 125000 => "One Lakh Twenty Five Thousand".
+     */
+    private function numberToWords(int $number): string
+    {
+        if ($number === 0) {
+            return 'Zero';
+        }
+
+        $ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
+            'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen',
+            'Seventeen', 'Eighteen', 'Nineteen'];
+        $tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+        $twoDigits = function (int $n) use ($ones, $tens): string {
+            if ($n < 20) {
+                return $ones[$n];
+            }
+            $ten = intdiv($n, 10);
+            $rest = $n % 10;
+            return trim($tens[$ten] . ' ' . $ones[$rest]);
+        };
+
+        $threeDigits = function (int $n) use ($twoDigits, $ones): string {
+            if ($n < 100) {
+                return $twoDigits($n);
+            }
+            $hundred = intdiv($n, 100);
+            $rest = $n % 100;
+            $words = $ones[$hundred] . ' Hundred';
+            if ($rest > 0) {
+                $words .= ' ' . $twoDigits($rest);
+            }
+            return $words;
+        };
+
+        $crore = intdiv($number, 10000000);
+        $number %= 10000000;
+        $lakh = intdiv($number, 100000);
+        $number %= 100000;
+        $thousand = intdiv($number, 1000);
+        $number %= 1000;
+        $hundred = $number;
+
+        $parts = [];
+        if ($crore > 0)    $parts[] = $threeDigits($crore) . ' Crore';
+        if ($lakh > 0)     $parts[] = $threeDigits($lakh) . ' Lakh';
+        if ($thousand > 0) $parts[] = $threeDigits($thousand) . ' Thousand';
+        if ($hundred > 0)  $parts[] = $threeDigits($hundred);
+
+        return implode(' ', $parts);
+    }
 }

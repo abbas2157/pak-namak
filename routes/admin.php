@@ -51,6 +51,7 @@ Route::middleware('web')->group(function () {
         Route::post('employees/{employee}/salaries', [App\Http\Controllers\Admin\EmployeeSalaryController::class, 'storeSalary'])->name('admin.employees.salaries.store');
         Route::get('employees/{employee}/salary-preview', [App\Http\Controllers\Admin\EmployeeSalaryController::class, 'preview'])->name('admin.employees.salaries.preview');
         Route::delete('employees/{employee}/salaries/{salary}', [App\Http\Controllers\Admin\EmployeeSalaryController::class, 'destroy'])->name('admin.employees.salaries.destroy');
+        Route::get('employees/{employee}/salaries/{salary}/payslip', [App\Http\Controllers\Admin\EmployeeSalaryController::class, 'payslip'])->name('admin.employees.salaries.payslip');
         Route::post('employees/{employee}/absences', [App\Http\Controllers\Admin\EmployeeAbsenceController::class, 'store'])->name('admin.employees.absences.store');
         Route::delete('employees/{employee}/absences/{absence}', [App\Http\Controllers\Admin\EmployeeAbsenceController::class, 'destroy'])->name('admin.employees.absences.destroy');
         Route::get('employee-advances', [App\Http\Controllers\Admin\EmployeeSalaryController::class, 'advanceForm'])->name('admin.employees.advance_form');

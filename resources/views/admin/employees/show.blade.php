@@ -167,6 +167,13 @@
                                     <td>{{ $sal->paid_at ? $sal->paid_at->format('d M Y') : '-' }}</td>
                                     <td>{{ $sal->note ?? '-' }}</td>
                                     <td>
+                                        @if($sal->type === 'salary')
+                                            <a class="btn btn-secondary btn-xs mr-1" target="_blank"
+                                               href="{{ route('admin.employees.salaries.payslip', [$employee->id, $sal->id]) }}"
+                                               title="Print Payslip">
+                                                <i class="fas fa-file-invoice"></i>
+                                            </a>
+                                        @endif
                                         <button class="btn btn-danger btn-xs delete-sal" data-id="{{ $sal->id }}">
                                             <i class="fas fa-trash"></i>
                                         </button>
