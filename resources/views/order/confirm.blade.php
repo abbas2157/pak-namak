@@ -123,11 +123,18 @@
         @endif
 
         @php
+            $waFooter = "\n———————————\n"
+                      . config('admin.shop_name') . "\n"
+                      . config('admin.shop_name_urdu') . "\n"
+                      . '📞 ' . config('admin.pak_namak.phone') . "\n"
+                      . '📅 ' . now()->format('d M Y');
+
             $waMsg = 'آرڈر: ' . $order->reference . "\n"
                    . 'دکان: ' . $order->display_name . "\n"
                    . ($grandTotal > 0 ? "کل رقم: PKR " . number_format($grandTotal, 0) . "\n" : '')
                    . ($shopFinancials ? "باقی رقم: PKR " . number_format($shopFinancials['pending_amount'], 0) . "\n" : '')
-                   . 'تاریخ: ' . $order->created_at->format('d M Y');
+                   . 'تاریخ: ' . $order->created_at->format('d M Y')
+                   . $waFooter;
             $rawPhone = $order->shop?->phone_number ?? $order->phone ?? '';
             $waPhone  = '';
             if ($rawPhone) {

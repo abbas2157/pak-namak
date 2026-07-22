@@ -142,7 +142,6 @@ $condMeta = [
                     </div>
 
                     <div class="card-body p-2">
-                        <div class="table-responsive">
                             <table class="table pn-table pn-table-font mb-0" id="assetsTable">
                                 <thead>
                                     <tr>
@@ -233,7 +232,6 @@ $condMeta = [
                                 </tfoot>
                                 @endif
                             </table>
-                        </div>
                     </div>
                 </div>
             </div>

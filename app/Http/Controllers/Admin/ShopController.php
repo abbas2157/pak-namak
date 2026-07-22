@@ -195,6 +195,11 @@ class ShopController extends Controller
             ->orderByDesc('id')
             ->get(['id', 'reference', 'status', 'created_at', 'remarks']);
 
+        $pendingSales = $shop->sales()
+            ->where('pending_amount', '>', 0)
+            ->orderBy('sale_date')
+            ->get(['id', 'sale_date', 'pending_amount']);
+
         return response()->json([
             'shop' => [
                 'id'           => $shop->id,
@@ -212,6 +217,11 @@ class ShopController extends Controller
                 'status'      => $o->status,
                 'created_at'  => $o->created_at->format('d M Y'),
                 'items_count' => $o->items_count,
+            ])->values(),
+            'pending_sales' => $pendingSales->map(fn($s) => [
+                'id'             => $s->id,
+                'sale_date'      => $s->sale_date ? \Carbon\Carbon::parse($s->sale_date)->format('d M Y') : '-',
+                'pending_amount' => (float) $s->pending_amount,
             ])->values(),
         ]);
     }

@@ -2,6 +2,7 @@
 
 return [
     'shop_name' => 'PAK NAMAK & MASALA JAAT PRIVATE LIMITED',
+    'shop_name_urdu' => 'پاک نمک اینڈ مصالحہ جات (پرائیویٹ) لمیٹڈ',
     'pak_namak' => [
         'phone' => '+92 307 8479818',
         'website' => 'paknamak.com',

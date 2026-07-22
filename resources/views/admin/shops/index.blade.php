@@ -108,7 +108,6 @@
                 <span class="badge pn-bdg pn-bdg-blue">{{ $totalShops }} shops</span>
             </div>
             <div class="card-body p-0">
-                <div class="table-responsive">
                     <table class="table mb-0 pn-table pn-table-font" id="shopTable">
                         <thead>
                             <tr>
@@ -201,6 +200,12 @@
                                                 title="Record Payment">
                                             <i class="fas fa-hand-holding-dollar"></i>
                                         </button>
+                                        <button class="btn btn-sm shopWhatsappBtn mr-1"
+                                                style="background:#25D366;color:#fff;"
+                                                data-id="{{ $shop->id }}"
+                                                title="Send Pending Amount on WhatsApp">
+                                            <i class="fab fa-whatsapp"></i>
+                                        </button>
                                         @endif
                                         <button class="btn btn-sm btn-pn btn-act-delete deleteBtn"
                                                 data-id="{{ $shop->id }}"
@@ -236,7 +241,6 @@
                         </tfoot>
                         @endif
                     </table>
-                </div>
             </div>
         </div>
 
@@ -624,6 +628,54 @@ $(function () {
                 }
             })
             .always(() => btn.prop('disabled', false).html('<i class="fas fa-save mr-1"></i> Save'));
+    });
+
+    // Send pending amount + unpaid sales list on WhatsApp
+    function waBrandingFooter() {
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        var d = new Date();
+        var dateStr = String(d.getDate()).padStart(2, '0') + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+        return '\n———————————\n'
+             + '{{ config('admin.shop_name') }}\n'
+             + '{{ config('admin.shop_name_urdu') }}\n'
+             + '📞 {{ config('admin.pak_namak.phone') }}\n'
+             + '📅 ' + dateStr;
+    }
+
+    function fmtPkr(n) {
+        return 'PKR ' + Number(n).toLocaleString('en-PK', { maximumFractionDigits: 0 });
+    }
+
+    $(document).on('click', '.shopWhatsappBtn', function () {
+        const btn = $(this);
+        const shopId = btn.data('id');
+
+        $.getJSON(APP_URL + '/shops/' + shopId + '/info', function (data) {
+            if (!data.shop.phone_number) {
+                toastr.error('This shop has no phone number saved.');
+                return;
+            }
+
+            let msg = 'دکان: ' + data.shop.name + '\n'
+                    + 'باقی رقم: ' + fmtPkr(data.financials.pending_amount);
+
+            if (data.pending_sales && data.pending_sales.length) {
+                msg += '\n\nزیر التواء فروخت · Pending Sales:';
+                data.pending_sales.forEach(function (s) {
+                    msg += '\n#' + s.id + ' — ' + s.sale_date + ' — ' + fmtPkr(s.pending_amount);
+                });
+            }
+
+            msg += waBrandingFooter();
+
+            let digits = data.shop.phone_number.replace(/\D/g, '');
+            if (digits.charAt(0) === '0') digits = '92' + digits.slice(1);
+            else if (digits.indexOf('92') !== 0) digits = '92' + digits;
+
+            window.open('https://wa.me/' + digits + '?text=' + encodeURIComponent(msg), '_blank');
+        }).fail(function () {
+            toastr.error('Could not load shop details.');
+        });
     });
 
 });

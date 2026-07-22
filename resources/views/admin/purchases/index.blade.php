@@ -116,7 +116,6 @@
                         <span class="badge pn-bdg pn-bdg-blue">{{ $totalEntries }} records</span>
                     </div>
                     <div class="card-body p-2">
-                        <div class="table-responsive">
                             <table class="table mb-0 pn-table pn-table-font" id="purchasesTable">
                                 <thead>
                                     <tr>
@@ -189,7 +188,6 @@
                                 </tfoot>
                                 @endif
                             </table>
-                        </div>
                     </div>
                 </div>
             </div>

@@ -368,6 +368,18 @@ $(function () {
         return 'PKR ' + Number(n).toLocaleString('en-PK', { maximumFractionDigits: 0 });
     }
 
+    // ── WhatsApp branding footer (company name EN/UR, phone, date) ──
+    function waBrandingFooter() {
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        var d = new Date();
+        var dateStr = String(d.getDate()).padStart(2, '0') + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+        return '\n———————————\n'
+             + '{{ config('admin.shop_name') }}\n'
+             + '{{ config('admin.shop_name_urdu') }}\n'
+             + '📞 {{ config('admin.pak_namak.phone') }}\n'
+             + '📅 ' + dateStr;
+    }
+
     function loadPubShopInfo(shopId) {
         if (!shopId) { $('#pub-shop-info').addClass('d-none'); return; }
         $.getJSON(pubShopInfoUrl.replace('__ID__', shopId), function (data) {
@@ -379,7 +391,8 @@ $(function () {
             var msg = 'دکان: ' + data.shop.name + '\n'
                     + 'کل فروخت: ' + pubFmt(data.financials.total_amount) + '\n'
                     + 'وصول شدہ: ' + pubFmt(data.financials.received_amount) + '\n'
-                    + 'باقی رقم: ' + pubFmt(data.financials.pending_amount);
+                    + 'باقی رقم: ' + pubFmt(data.financials.pending_amount)
+                    + waBrandingFooter();
             var waPhone = '';
             if (data.shop.phone_number) {
                 var d = data.shop.phone_number.replace(/\D/g, '');
