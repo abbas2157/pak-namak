@@ -94,6 +94,7 @@
                             <th>Phone / فون</th>
                             <th>Address / پتہ</th>
                             <th class="text-center">Purchases / خریداری</th>
+                            <th class="text-right">Pending / باقی</th>
                             <th class="text-center">Actions / اقدامات</th>
                         </tr>
                     </thead>
@@ -107,7 +108,23 @@
                             <td class="text-center">
                                 <span class="badge badge-info">{{ $vendor->purchases_count }}</span>
                             </td>
-                            <td class="text-center">
+                            <td class="text-right">
+                                @if(($vendor->purchases_sum_pending_amount ?? 0) > 0)
+                                    <span class="font-weight-bold text-danger">{{ number_format($vendor->purchases_sum_pending_amount, 0) }}</span>
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
+                            </td>
+                            <td class="text-center text-nowrap">
+                                @if(($vendor->purchases_sum_pending_amount ?? 0) > 0)
+                                <button class="btn btn-sm btn-pn btn-act-confirm vendorRecordPaymentBtn mr-1"
+                                        data-id="{{ $vendor->id }}"
+                                        data-name="{{ $vendor->name }}"
+                                        data-pending="{{ $vendor->purchases_sum_pending_amount }}"
+                                        title="Record Payment">
+                                    <i class="fas fa-hand-holding-dollar"></i>
+                                </button>
+                                @endif
                                 <button class="btn btn-sm btn-pn btn-act-edit editBtn mr-1"
                                         data-id="{{ $vendor->id }}"
                                         title="Edit">
@@ -122,7 +139,7 @@
                         </tr>
                     @empty
                         <tr id="emptyRow">
-                            <td colspan="6" class="text-center py-5">
+                            <td colspan="7" class="text-center py-5">
                                 <i class="fas fa-truck fa-3x mb-3 d-block icon-fade"></i>
                                 <p class="text-muted mb-0">No vendors added yet.</p>
                                 <button class="btn btn-sm btn-primary mt-3" id="addBtnEmpty">
@@ -203,6 +220,47 @@
         </form>
     </div>
 </div>
+
+{{-- ===== RECORD PAYMENT MODAL (vendor-level, FIFO across pending purchases) ===== --}}
+<div class="modal fade modal-pn" id="vendorRecordPaymentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form id="vendorRecordPaymentForm">
+            @csrf
+            <div class="modal-content border-0">
+                <div class="modal-header border-0 text-white px-4 py-3">
+                    <h5 class="modal-title"><i class="fas fa-hand-holding-dollar mr-2"></i>Record Payment / ادائیگی درج کریں</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body px-4 py-4">
+                    <p class="mb-3">
+                        <strong id="vrp_vendor_name"></strong>
+                        <span class="text-muted"> — Total Pending: </span>
+                        <span class="font-weight-bold text-c-red" id="vrp_pending_display"></span>
+                    </p>
+                    <p class="text-muted small mb-3">Applied to this vendor's oldest pending purchases first.</p>
+                    <div class="mb-3">
+                        <label class="filter-lbl">Amount <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" min="0.01" name="amount" class="form-control fc-pn" placeholder="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="filter-lbl">Payment Date <span class="text-danger">*</span></label>
+                        <input type="date" name="payment_date" id="vrp_payment_date" class="form-control fc-pn" required>
+                    </div>
+                    <div class="mb-0">
+                        <label class="filter-lbl">Note / نوٹ</label>
+                        <textarea name="note" class="form-control fc-pn" rows="2" placeholder="Optional"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 px-4 py-3">
+                    <button type="button" class="btn btn-light btn-modal-cancel px-4" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary btn-modal-save px-4" type="submit" id="vrpSubmitBtn">
+                        <i class="fas fa-save mr-1"></i> Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -216,6 +274,7 @@ function buildRow(v, idx) {
         <td>${v.phone || '—'}</td>
         <td>${v.address || '—'}</td>
         <td class="text-center"><span class="badge badge-info">0</span></td>
+        <td class="text-right"><span class="text-muted">—</span></td>
         <td class="text-center">
             <button class="btn btn-sm btn-pn btn-act-edit editBtn mr-1" data-id="${v.id}" title="Edit">
                 <i class="fas fa-edit"></i>
@@ -238,7 +297,7 @@ $(function () {
         info: true,
         autoWidth: false,
         responsive: true,
-        columnDefs: [{ orderable: false, targets: [4, 5] }, { responsivePriority: 1, targets: -1 }],
+        columnDefs: [{ orderable: false, targets: [4, 6] }, { responsivePriority: 1, targets: -1 }],
         language: {
             search: '',
             searchPlaceholder: 'Search vendors...',
@@ -336,6 +395,39 @@ $(function () {
                 error: function (xhr) { toastr.error('Error: ' + xhr.status); }
             });
         });
+    });
+
+    // Record Payment (vendor-level, FIFO across pending purchases)
+    $(document).on('click', '.vendorRecordPaymentBtn', function () {
+        const btn = $(this);
+        $('#vendorRecordPaymentForm')[0].reset();
+        $('#vendorRecordPaymentForm').data('vendor-id', btn.data('id'));
+        $('#vrp_vendor_name').text(btn.data('name') || '');
+        $('#vrp_pending_display').text(Number(btn.data('pending')).toLocaleString());
+        $('#vrp_payment_date').val(new Date().toISOString().split('T')[0]);
+        $('#vendorRecordPaymentModal').modal('show');
+    });
+
+    $('#vendorRecordPaymentForm').on('submit', function (e) {
+        e.preventDefault();
+        const vendorId = $(this).data('vendor-id');
+        const btn = $('#vrpSubmitBtn');
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Saving...');
+
+        $.post(APP_URL + '/vendors/' + vendorId + '/payments', $(this).serialize())
+            .done(function (res) {
+                toastr.success('Payment recorded across ' + (res.purchases_paid || 0) + ' purchase(s)!');
+                $('#vendorRecordPaymentModal').modal('hide');
+                setTimeout(() => location.reload(), 800);
+            })
+            .fail(function (xhr) {
+                if (xhr.status === 422) {
+                    alert((xhr.responseJSON.message) || Object.values(xhr.responseJSON.errors || {}).map(e => e[0]).join('\n'));
+                } else {
+                    toastr.error('Could not record payment.');
+                }
+            })
+            .always(() => btn.prop('disabled', false).html('<i class="fas fa-save mr-1"></i> Save'));
     });
 
 });

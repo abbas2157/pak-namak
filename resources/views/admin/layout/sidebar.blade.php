@@ -121,11 +121,28 @@
                     </ul>
                 </li>
 
-                <li class="nav-item">
-                    <a href="{{ route('admin.vendors.index') }}" class="nav-link {{ request()->routeIs('admin.vendors.*') ? 'active' : '' }}">
+                @php $vendorsActive = request()->routeIs('admin.vendors.*') || request()->routeIs('admin.vendors.payment_form'); @endphp
+                <li class="nav-item has-treeview {{ $vendorsActive ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ $vendorsActive ? 'active' : '' }}">
                         <i class="nav-icon fas fa-boxes-packing"></i>
-                        <p>Vendors / Supplier <small class="d-block nav-sub-lbl">فروش کار / سپلائر</small></p>
+                        <p>Vendors / Supplier <small class="d-block nav-sub-lbl">فروش کار / سپلائر</small> <i class="fas fa-angle-left right"></i></p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.vendors.index') }}"
+                               class="nav-link {{ request()->routeIs('admin.vendors.index') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>All Vendors <small class="d-block nav-sub-lbl">تمام فروش کار</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.vendors.payment_form') }}"
+                               class="nav-link {{ request()->routeIs('admin.vendors.payment_form') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Record Payment <small class="d-block nav-sub-lbl">ادائیگی درج کریں</small></p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 @php $employeesActive = request()->routeIs('admin.employees.*') || request()->routeIs('admin.holidays.*'); @endphp

@@ -125,6 +125,8 @@
                                         <th>Qty (KG) / مقدار (کلو)</th>
                                         <th>Rate/KG / نرخ/کلو</th>
                                         <th class="text-right">Grand Total / کل مجموعہ</th>
+                                        <th class="text-right">Paid / ادا شدہ</th>
+                                        <th class="text-right">Pending / باقی</th>
                                         <th class="text-center">Actions / اقدامات</th>
                                     </tr>
                                 </thead>
@@ -153,7 +155,28 @@
                                                     {{ number_format($row->grand_total, 0) }}
                                                 </span>
                                             </td>
-                                            <td class="align-middle text-center">
+                                            <td class="align-middle text-right">{{ number_format($row->paid_amount, 0) }}</td>
+                                            <td class="align-middle text-right">
+                                                @if($row->pending_amount > 0)
+                                                    <span class="font-weight-bold text-danger">{{ number_format($row->pending_amount, 0) }}</span>
+                                                @else
+                                                    <span class="text-muted">—</span>
+                                                @endif
+                                            </td>
+                                            <td class="align-middle text-center text-nowrap">
+                                                @if($row->pending_amount > 0)
+                                                <button class="btn btn-sm btn-pn btn-act-confirm recordPaymentBtn mr-1"
+                                                        data-id="{{ $row->id }}"
+                                                        data-vendor="{{ $row->vendor->name ?? '—' }}"
+                                                        data-pending="{{ $row->pending_amount }}"
+                                                        title="Record Payment">
+                                                    <i class="fas fa-hand-holding-dollar"></i>
+                                                </button>
+                                                @endif
+                                                <button class="btn btn-sm btn-pn btn-act-view historyBtn mr-1"
+                                                        data-id="{{ $row->id }}" title="Payment History">
+                                                    <i class="fas fa-clock-rotate-left"></i>
+                                                </button>
                                                 <button class="btn btn-sm btn-pn btn-act-edit editBtn mr-1"
                                                         data-id="{{ $row->id }}" title="Edit">
                                                     <i class="fas fa-edit"></i>
@@ -166,7 +189,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="7" class="text-center py-5">
+                                            <td colspan="9" class="text-center py-5">
                                                 <i class="fas fa-shopping-cart fa-3x mb-3 d-block icon-fade"></i>
                                                 <p class="text-muted mb-0">No purchases found for this period.</p>
                                                 <button class="btn btn-sm btn-primary btn-pn mt-3" id="addBtnEmpty">
@@ -183,6 +206,8 @@
                                         <td class="py-3 text-right font-weight-bold text-c-red pn-stat-num-sm">
                                             {{ number_format($totalSpent, 0) }}
                                         </td>
+                                        <td class="py-3 text-right font-weight-bold pn-text-heading">{{ number_format($totalPaid, 0) }}</td>
+                                        <td class="py-3 text-right font-weight-bold text-danger">{{ number_format($totalPending, 0) }}</td>
                                         <td></td>
                                     </tr>
                                 </tfoot>
@@ -363,6 +388,27 @@
                             </div>
                             <small class="text-muted">= Total Cost + Transport + Loading</small>
                         </div>
+                        <div class="col-md-12 mb-3" id="amountPaidWrap">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
+                                Amount Paid Now (PKR) / ابھی ادا کی گئی رقم
+                            </label>
+                            <input type="number" step="0.01" name="amount_paid" id="amount_paid"
+                                   class="form-control fc-pn" min="0" placeholder="0 (leave blank if unpaid)">
+                            <small class="text-muted">Optional — leave blank to record the full amount as pending.</small>
+                        </div>
+                        <div class="col-md-12 mb-3 d-none" id="paidSummaryWrap">
+                            <div class="p-3 rounded-3" style="background:#f8f9fc;border:1px solid #e9ecef;">
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted">Paid so far</span>
+                                    <strong id="paidSummaryPaid">—</strong>
+                                </div>
+                                <div class="d-flex justify-content-between mt-1">
+                                    <span class="text-muted">Pending</span>
+                                    <strong class="text-danger" id="paidSummaryPending">—</strong>
+                                </div>
+                                <small class="text-muted d-block mt-2">Use "Record Payment" on the list to add more payments.</small>
+                            </div>
+                        </div>
                         <div class="col-12 mb-1">
                             <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Remarks / ملاحظات
@@ -385,6 +431,66 @@
 
             </div>
         </form>
+    </div>
+</div>
+
+{{-- ===== RECORD PAYMENT MODAL ===== --}}
+<div class="modal fade modal-pn" id="recordPaymentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form id="recordPaymentForm">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header px-4 py-3">
+                    <h5 class="modal-title"><i class="fas fa-hand-holding-dollar mr-2"></i>Record Payment</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body px-4 py-4">
+                    <p class="mb-3">
+                        <strong id="rp_vendor_name"></strong>
+                        <span class="text-muted"> — Pending: </span>
+                        <span class="font-weight-bold text-danger" id="rp_pending_display"></span>
+                    </p>
+                    <div class="mb-3">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">Amount <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" min="0.01" name="amount" class="form-control fc-pn" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">Payment Date <span class="text-danger">*</span></label>
+                        <input type="date" name="payment_date" id="rp_payment_date" class="form-control fc-pn" required>
+                    </div>
+                    <div class="mb-0">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">Note</label>
+                        <textarea name="note" class="form-control fc-pn" rows="2" placeholder="Optional"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer px-4 py-3">
+                    <button type="button" class="btn btn-light px-4 btn-modal-cancel" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary px-4 btn-modal-save" type="submit" id="rpSubmitBtn">
+                        <i class="fas fa-save mr-1"></i> Save Payment
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- ===== PAYMENT HISTORY MODAL ===== --}}
+<div class="modal fade modal-pn" id="historyModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header px-4 py-3">
+                <h5 class="modal-title"><i class="fas fa-clock-rotate-left mr-2"></i>Payment History</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div class="modal-body px-4 py-4">
+                <table class="table table-sm mb-0" id="historyTable">
+                    <thead>
+                        <tr><th>Date</th><th class="text-right">Amount</th><th>Note</th><th></th></tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
@@ -438,7 +544,7 @@ $(function () {
         info: true,
         autoWidth: false,
         responsive: true,
-        columnDefs: [{ orderable: false, targets: [6] }, { responsivePriority: 1, targets: -1 }],
+        columnDefs: [{ orderable: false, targets: [8] }, { responsivePriority: 1, targets: -1 }],
         language: {
             search: '',
             searchPlaceholder: 'Search purchases...',
@@ -464,6 +570,8 @@ $(function () {
         $('#purchaseForm')[0].reset();
         $('#purchase_id').val('');
         $('#purchase_date').val(new Date().toISOString().split('T')[0]);
+        $('#amountPaidWrap').removeClass('d-none');
+        $('#paidSummaryWrap').addClass('d-none');
         $('#modalTitle').html('<i class="fas fa-shopping-cart mr-2"></i>Add Purchase');
         $('#submitBtn').html('<i class="fas fa-save mr-1"></i> Save Purchase');
         $('#purchaseModal').modal('show');
@@ -513,6 +621,10 @@ $(function () {
             $('#loading_unloading_cost').val(p.loading_unloading_cost);
             $('#grand_total').val(p.grand_total);
             $('#remarks').val(p.remarks);
+            $('#amountPaidWrap').addClass('d-none');
+            $('#paidSummaryWrap').removeClass('d-none');
+            $('#paidSummaryPaid').text(Number(p.paid_amount).toLocaleString());
+            $('#paidSummaryPending').text(Number(p.pending_amount).toLocaleString());
             $('#modalTitle').html('<i class="fas fa-edit mr-2"></i>Edit Purchase');
             $('#submitBtn').html('<i class="fas fa-save mr-1"></i> Update Purchase');
             $('#purchaseModal').modal('show');
@@ -543,6 +655,86 @@ $(function () {
                 },
                 error: function (xhr) { toastr.error('Error: ' + xhr.status); }
             });
+        });
+    });
+
+    // Record Payment: open modal
+    $(document).on('click', '.recordPaymentBtn', function () {
+        const btn = $(this);
+        $('#recordPaymentForm')[0].reset();
+        $('#recordPaymentForm').data('purchase-id', btn.data('id'));
+        $('#rp_vendor_name').text(btn.data('vendor') || '');
+        $('#rp_pending_display').text(Number(btn.data('pending')).toLocaleString());
+        $('#rp_payment_date').val(new Date().toISOString().split('T')[0]);
+        $('#recordPaymentModal').modal('show');
+    });
+
+    // Record Payment: submit
+    $('#recordPaymentForm').on('submit', function (e) {
+        e.preventDefault();
+        const purchaseId = $(this).data('purchase-id');
+        const btn = $('#rpSubmitBtn');
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Saving...');
+
+        $.post(APP_URL + '/purchases/' + purchaseId + '/payments', $(this).serialize())
+            .done(function () {
+                toastr.success('Payment recorded!');
+                $('#recordPaymentModal').modal('hide');
+                setTimeout(() => location.reload(), 800);
+            })
+            .fail(function (xhr) {
+                if (xhr.status === 422) {
+                    alert((xhr.responseJSON.message) || Object.values(xhr.responseJSON.errors || {}).map(e => e[0]).join('\n'));
+                } else {
+                    toastr.error('Could not record payment.');
+                }
+            })
+            .always(() => btn.prop('disabled', false).html('<i class="fas fa-save mr-1"></i> Save Payment'));
+    });
+
+    // Payment History: open + load
+    $(document).on('click', '.historyBtn', function () {
+        const purchaseId = $(this).data('id');
+        $('#historyTable tbody').html('<tr><td colspan="4" class="text-center text-muted py-3">Loading...</td></tr>');
+        $('#historyModal').modal('show');
+
+        $.getJSON(APP_URL + '/purchases/' + purchaseId + '/payments', function (res) {
+            const rows = res.payments || [];
+            if (!rows.length) {
+                $('#historyTable tbody').html('<tr><td colspan="4" class="text-center text-muted py-3">No payments recorded yet.</td></tr>');
+                return;
+            }
+            let html = '';
+            rows.forEach(function (p) {
+                html += '<tr id="histRow' + p.id + '">'
+                      +   '<td>' + (p.payment_date || '-') + '</td>'
+                      +   '<td class="text-right">' + Number(p.amount).toLocaleString() + '</td>'
+                      +   '<td>' + (p.note || '-') + '</td>'
+                      +   '<td class="text-right">'
+                      +     '<button class="btn btn-danger btn-xs deleteHistBtn" data-purchase="' + purchaseId + '" data-id="' + p.id + '">'
+                      +       '<i class="fas fa-trash"></i>'
+                      +     '</button>'
+                      +   '</td>'
+                      + '</tr>';
+            });
+            $('#historyTable tbody').html(html);
+        });
+    });
+
+    // Payment History: delete a payment
+    $(document).on('click', '.deleteHistBtn', function () {
+        if (!confirm('Remove this payment?')) return;
+        const purchaseId = $(this).data('purchase');
+        const paymentId = $(this).data('id');
+        $.ajax({
+            url: APP_URL + '/purchases/' + purchaseId + '/payments/' + paymentId,
+            type: 'POST',
+            data: { _method: 'DELETE', _token: '{{ csrf_token() }}' },
+            success: function () {
+                toastr.success('Payment removed.');
+                setTimeout(() => location.reload(), 600);
+            },
+            error: function () { toastr.error('Could not remove payment.'); }
         });
     });
 

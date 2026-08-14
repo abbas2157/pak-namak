@@ -16,8 +16,13 @@ Route::middleware('web')->group(function () {
         Route::post('stocks/adjustment', [App\Http\Controllers\Admin\StockController::class, 'storeAdjustment'])->name('admin.stocks.adjustment');
 
         Route::resource('purchases', App\Http\Controllers\Admin\PurchaseController::class, ['as' => 'admin']);
+        Route::post('purchases/{purchase}/payments', [App\Http\Controllers\Admin\PurchaseController::class, 'recordPayment'])->name('admin.purchases.payments.store');
+        Route::get('purchases/{purchase}/payments', [App\Http\Controllers\Admin\PurchaseController::class, 'payments'])->name('admin.purchases.payments.index');
+        Route::delete('purchases/{purchase}/payments/{payment}', [App\Http\Controllers\Admin\PurchaseController::class, 'destroyPayment'])->name('admin.purchases.payments.destroy');
         Route::resource('productions', App\Http\Controllers\Admin\ProductionController::class, ['as' => 'admin']);
         Route::resource('vendors', App\Http\Controllers\Admin\VendorController::class, ['as' => 'admin']);
+        Route::post('vendors/{vendor}/payments', [App\Http\Controllers\Admin\VendorController::class, 'recordPayment'])->name('admin.vendors.payments.store');
+        Route::get('vendor-payments', [App\Http\Controllers\Admin\VendorController::class, 'paymentForm'])->name('admin.vendors.payment_form');
         Route::resource('sales', App\Http\Controllers\Admin\SaleController::class, ['as' => 'admin']);
         Route::post('sales/{sale}/quick-update', [App\Http\Controllers\Admin\SaleController::class, 'quickUpdate'])->name('admin.sales.quick_update');
         Route::post('sales/{sale}/payments', [App\Http\Controllers\Admin\SaleController::class, 'addPayment'])->name('admin.sales.payments.store');

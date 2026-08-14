@@ -17,6 +17,8 @@ class Purchase extends Model
         'transport_cost',
         'loading_unloading_cost',
         'grand_total',
+        'paid_amount',
+        'pending_amount',
         'remarks',
     ];
 
@@ -27,5 +29,10 @@ class Purchase extends Model
     public function vendor()
     {
         return $this->belongsTo(Vendor::class, 'vendor_id', 'id');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(PurchasePayment::class);
     }
 }
