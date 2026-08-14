@@ -66,7 +66,15 @@
                                         <label class="filter-lbl">Payment Date <span class="text-danger">*</span></label>
                                         <input type="date" name="payment_date" id="rp_payment_date" class="form-control fc-pn" required>
                                     </div>
-                                    <div class="col-md-12 mb-3">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="filter-lbl">Paid From <span class="text-danger">*</span></label>
+                                        <select name="account_id" class="form-control fc-pn" required>
+                                            @foreach($accounts as $account)
+                                                <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
                                         <label class="filter-lbl">Note / نوٹ</label>
                                         <input type="text" name="note" class="form-control fc-pn" placeholder="Optional">
                                     </div>

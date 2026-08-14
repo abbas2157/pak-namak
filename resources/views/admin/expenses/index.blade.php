@@ -191,6 +191,9 @@ $catIconClass = [
                                                 <span class="exp-pill exp-pill-{{ $cc }}">
                                                     <i class="fas {{ $ci }} mr-1"></i>{{ $expense->category }}
                                                 </span>
+                                                @if($expense->is_investment)
+                                                    <span class="badge badge-warning d-block mt-1"><i class="fas fa-piggy-bank mr-1"></i>Investment</span>
+                                                @endif
                                             </td>
                                             <td class="align-middle col-desc">
                                                 <span class="text-truncate d-block pn-table-font">
@@ -385,14 +388,21 @@ $catIconClass = [
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="pn-label text-uppercase font-weight-bold text-muted">
-                                Payment Method / ادائیگی کا طریقہ <span class="text-danger">*</span>
+                                Paid From / کہاں سے ادا کیا <span class="text-danger">*</span>
                             </label>
-                            <select name="payment_method" id="payment_method" class="form-control fc-pn" required>
-                                <option value="Cash">💵 Cash</option>
-                                <option value="JazzCash">📱 JazzCash</option>
-                                <option value="EasyPaisa">📲 EasyPaisa</option>
-                                <option value="Bank">🏦 Bank Transfer</option>
+                            <select name="account_id" id="account_id" class="form-control fc-pn" required>
+                                @foreach($accounts as $account)
+                                    <option value="{{ $account->id }}">{{ $account->label() }}</option>
+                                @endforeach
                             </select>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="is_investment" id="is_investment" value="1">
+                                <label class="custom-control-label" for="is_investment">
+                                    Mark as Investment / سرمایہ کاری کے طور پر نشان زد کریں
+                                </label>
+                            </div>
                         </div>
                         <div class="col-12 mb-3">
                             <label class="pn-label text-uppercase font-weight-bold text-muted">
@@ -545,8 +555,9 @@ $(function () {
             $('#expense_id').val(exp.id);
             $('#expense_date').val(exp.expense_date);
             $('#category').val(exp.category);
-            $('#payment_method').val(exp.payment_method);
+            $('#account_id').val(exp.account_id);
             $('#amount').val(exp.amount);
+            $('#is_investment').prop('checked', !!exp.is_investment);
             $('#description').val(exp.description);
             $('#remarks').val(exp.remarks);
             $('#modalTitle').html('<i class="fas fa-edit mr-2"></i>Edit Expense');

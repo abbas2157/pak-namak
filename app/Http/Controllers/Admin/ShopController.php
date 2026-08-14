@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\Shop;
 use App\Models\City;
 use App\Models\SalePayment;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -27,9 +28,10 @@ class ShopController extends Controller
         $totalPending = $shops->sum('sales_sum_pending_amount');
 
         $cities = City::with('areas')->orderBy('name')->get();
+        $accounts = Account::where('is_active', true)->orderBy('name')->get();
 
         return view('admin.shops.index', compact(
-            'shops', 'totalShops', 'activeShops', 'totalRevenue', 'totalPending', 'cities'
+            'shops', 'totalShops', 'activeShops', 'totalRevenue', 'totalPending', 'cities', 'accounts'
         ));
     }
 
@@ -48,8 +50,9 @@ class ShopController extends Controller
             ->withSum('sales', 'pending_amount')
             ->orderByDesc('sales_sum_pending_amount')
             ->get();
+        $accounts = Account::where('is_active', true)->orderBy('name')->get();
 
-        return view('admin.shops.payment-form', compact('shops'));
+        return view('admin.shops.payment-form', compact('shops', 'accounts'));
     }
 
     public function store(Request $request)
@@ -131,11 +134,13 @@ class ShopController extends Controller
     public function recordPayment(Request $request, Shop $shop)
     {
         $request->validate([
-            'amount'         => 'required|numeric|min:0.01',
-            'payment_date'   => 'required|date',
-            'payment_method' => 'required|in:Cash,Bank Transfer,EasyPaisa,JazzCash,Other',
-            'note'           => 'nullable|string|max:500',
+            'amount'       => 'required|numeric|min:0.01',
+            'payment_date' => 'required|date',
+            'account_id'   => 'required|exists:accounts,id',
+            'note'         => 'nullable|string|max:500',
         ]);
+
+        $account = Account::find($request->account_id);
 
         $pendingSales = $shop->sales()
             ->where('pending_amount', '>', 0)
@@ -152,7 +157,7 @@ class ShopController extends Controller
         $remaining = min((float) $request->amount, (float) $totalPending);
         $salesPaid = 0;
 
-        DB::transaction(function () use ($pendingSales, &$remaining, $request, &$salesPaid) {
+        DB::transaction(function () use ($pendingSales, &$remaining, $request, &$salesPaid, $account) {
             foreach ($pendingSales as $sale) {
                 if ($remaining <= 0) {
                     break;
@@ -162,9 +167,10 @@ class ShopController extends Controller
 
                 SalePayment::create([
                     'sale_id'        => $sale->id,
+                    'account_id'     => $account->id,
                     'amount'         => $allocated,
                     'payment_date'   => $request->payment_date,
-                    'payment_method' => $request->payment_method,
+                    'payment_method' => $account->paymentMethodLabel(),
                     'note'           => $request->note,
                 ]);
 

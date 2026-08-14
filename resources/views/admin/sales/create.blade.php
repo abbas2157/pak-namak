@@ -364,7 +364,17 @@
                                    class="form-control font-weight-bold input-received">
                         </div>
                     </div>
-                    <div class="col-md-8 mb-3">
+                    <div class="col-md-2 mb-3">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">
+                            Received Into / کہاں موصول ہوا
+                        </label>
+                        <select name="account_id" class="form-control fc-pn">
+                            @foreach($accounts as $account)
+                                <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
                         <label class="pn-label text-uppercase font-weight-bold text-muted">
                             Remarks / ملاحظات
                         </label>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Employee;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -42,11 +43,27 @@ class EmployeeController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function show(Employee $employee)
+    public function show(Request $request, Employee $employee)
     {
         $employee->load(['salaries', 'absences' => fn ($q) => $q->orderByDesc('date')]);
         $totalPaid = $employee->salaries->sum('amount');
-        return view('admin.employees.show', compact('employee', 'totalPaid'));
+        $accounts = Account::where('is_active', true)->orderBy('name')->get();
+
+        $months = $employee->salaries
+            ->map(fn ($s) => $s->month->format('Y-m'))
+            ->unique()
+            ->sortDesc()
+            ->map(fn ($value) => ['value' => $value, 'label' => \Carbon\Carbon::createFromFormat('Y-m', $value)->format('F Y')])
+            ->values();
+
+        $selectedMonth = $request->get('month', now()->format('Y-m'));
+        $salaryHistory = $selectedMonth
+            ? $employee->salaries->filter(fn ($s) => $s->month->format('Y-m') === $selectedMonth)->values()
+            : $employee->salaries;
+
+        return view('admin.employees.show', compact(
+            'employee', 'totalPaid', 'accounts', 'months', 'selectedMonth', 'salaryHistory'
+        ));
     }
 
     public function edit(Employee $employee)

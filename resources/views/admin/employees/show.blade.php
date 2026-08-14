@@ -117,13 +117,24 @@
 
                 {{-- Salary History Table --}}
                 <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                         <h4 class="card-title mb-0">Salary History / تنخواہ کی تاریخ</h4>
-                        <div>
+                        <div class="d-flex align-items-center">
+                            <form method="GET" id="salaryMonthFilterForm" class="mr-2">
+                                <select name="month" class="form-control form-control-sm" style="min-width:150px;"
+                                        onchange="document.getElementById('salaryMonthFilterForm').submit()">
+                                    <option value="" {{ $selectedMonth === '' || $selectedMonth === null ? 'selected' : '' }}>All Time</option>
+                                    @foreach($months as $m)
+                                        <option value="{{ $m['value'] }}" {{ $selectedMonth === $m['value'] ? 'selected' : '' }}>
+                                            {{ $m['label'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </form>
                             <button class="btn btn-outline-primary btn-sm" id="addAdvanceBtn">
                                 <i class="fas fa-hand-holding-dollar mr-1"></i> Record Advance
                             </button>
-                            <button class="btn btn-primary btn-sm" id="settleMonthBtn">
+                            <button class="btn btn-primary btn-sm ml-1" id="settleMonthBtn">
                                 <i class="fas fa-check-circle mr-1"></i> Settle Month
                             </button>
                         </div>
@@ -143,7 +154,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            @forelse($employee->salaries as $i => $sal)
+                            @forelse($salaryHistory as $i => $sal)
                                 <tr id="salRow{{ $sal->id }}">
                                     <td>{{ $i + 1 }}</td>
                                     <td><strong>{{ $sal->month->format('M Y') }}</strong></td>
@@ -181,7 +192,9 @@
                                 </tr>
                             @empty
                                 <tr id="noSalRow">
-                                    <td colspan="8" class="text-center py-3 text-muted">No salary payments recorded yet.</td>
+                                    <td colspan="8" class="text-center py-3 text-muted">
+                                        No salary payments {{ $selectedMonth ? 'for this month' : 'recorded yet' }}.
+                                    </td>
                                 </tr>
                             @endforelse
                             </tbody>
@@ -261,6 +274,14 @@
                         <input type="date" class="form-control" name="payment_date" value="{{ date('Y-m-d') }}" required>
                     </div>
                     <div class="mb-3">
+                        <label>Paid From <span class="text-danger">*</span></label>
+                        <select name="account_id" class="form-control" required>
+                            @foreach($accounts as $account)
+                                <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
                         <label>Note / نوٹ</label>
                         <textarea class="form-control" name="note" rows="2" placeholder="Optional"></textarea>
                     </div>
@@ -302,6 +323,14 @@
                     <div class="mb-3">
                         <label>Paid On / ادائیگی تاریخ</label>
                         <input type="date" class="form-control" name="paid_at" value="{{ date('Y-m-d') }}">
+                    </div>
+                    <div class="mb-3">
+                        <label>Paid From <span class="text-danger">*</span></label>
+                        <select name="account_id" class="form-control" required>
+                            @foreach($accounts as $account)
+                                <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label>Note / نوٹ</label>

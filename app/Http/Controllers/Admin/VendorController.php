@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Vendor, Purchase, PurchasePayment};
+use App\Models\{Vendor, Purchase, PurchasePayment, Account};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -18,8 +18,9 @@ class VendorController extends Controller
         $totalVendors = $vendors->count();
         $totalSpent   = Purchase::sum('grand_total');
         $topVendor    = $vendors->sortByDesc('purchases_count')->first();
+        $accounts     = Account::where('is_active', true)->orderBy('name')->get();
 
-        return view('admin.vendors.index', compact('vendors', 'totalVendors', 'totalSpent', 'topVendor'));
+        return view('admin.vendors.index', compact('vendors', 'totalVendors', 'totalSpent', 'topVendor', 'accounts'));
     }
 
     public function create()
@@ -36,8 +37,9 @@ class VendorController extends Controller
         $vendors = Vendor::withSum('purchases', 'pending_amount')
             ->orderByDesc('id')
             ->get();
+        $accounts = Account::where('is_active', true)->orderBy('name')->get();
 
-        return view('admin.vendors.payment-form', compact('vendors'));
+        return view('admin.vendors.payment-form', compact('vendors', 'accounts'));
     }
 
     /**
@@ -49,8 +51,11 @@ class VendorController extends Controller
         $request->validate([
             'amount'       => 'required|numeric|min:0.01',
             'payment_date' => 'required|date',
+            'account_id'   => 'required|exists:accounts,id',
             'note'         => 'nullable|string|max:500',
         ]);
+
+        $account = Account::find($request->account_id);
 
         $pendingPurchases = $vendor->purchases()
             ->where('pending_amount', '>', 0)
@@ -67,7 +72,7 @@ class VendorController extends Controller
         $remaining = min((float) $request->amount, (float) $totalPending);
         $purchasesPaid = 0;
 
-        DB::transaction(function () use ($pendingPurchases, &$remaining, $request, &$purchasesPaid) {
+        DB::transaction(function () use ($pendingPurchases, &$remaining, $request, &$purchasesPaid, $account) {
             foreach ($pendingPurchases as $purchase) {
                 if ($remaining <= 0) {
                     break;
@@ -77,6 +82,7 @@ class VendorController extends Controller
 
                 PurchasePayment::create([
                     'purchase_id'  => $purchase->id,
+                    'account_id'   => $account->id,
                     'amount'       => $allocated,
                     'payment_date' => $request->payment_date,
                     'note'         => $request->note,

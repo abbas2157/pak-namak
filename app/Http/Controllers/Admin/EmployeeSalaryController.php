@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Employee;
 use App\Models\EmployeeSalary;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
@@ -17,8 +18,9 @@ class EmployeeSalaryController extends Controller
     public function advanceForm()
     {
         $employees = Employee::where('status', 'working')->orderBy('name')->get();
+        $accounts = Account::where('is_active', true)->orderBy('name')->get();
 
-        return view('admin.employees.advance-form', compact('employees'));
+        return view('admin.employees.advance-form', compact('employees', 'accounts'));
     }
 
     /**
@@ -29,17 +31,19 @@ class EmployeeSalaryController extends Controller
         $request->validate([
             'amount'       => 'required|numeric|min:0.01',
             'payment_date' => 'required|date',
+            'account_id'   => 'required|exists:accounts,id',
             'note'         => 'nullable|string|max:500',
         ]);
 
         $month = Carbon::parse($request->payment_date)->startOfMonth()->toDateString();
 
         $salary = $employee->salaries()->create([
-            'type'     => 'advance',
-            'month'    => $month,
-            'amount'   => $request->amount,
-            'paid_at'  => $request->payment_date,
-            'note'     => $request->note,
+            'type'       => 'advance',
+            'account_id' => $request->account_id,
+            'month'      => $month,
+            'amount'     => $request->amount,
+            'paid_at'    => $request->payment_date,
+            'note'       => $request->note,
         ]);
 
         return response()->json(['success' => true, 'salary' => $salary]);
@@ -52,9 +56,10 @@ class EmployeeSalaryController extends Controller
     public function storeSalary(Request $request, Employee $employee)
     {
         $request->validate([
-            'month'   => 'required',
-            'paid_at' => 'nullable|date',
-            'note'    => 'nullable|string|max:500',
+            'month'      => 'required',
+            'paid_at'    => 'nullable|date',
+            'account_id' => 'required|exists:accounts,id',
+            'note'       => 'nullable|string|max:500',
         ]);
 
         $month = Carbon::parse($request->month)->startOfMonth()->toDateString();
@@ -68,6 +73,7 @@ class EmployeeSalaryController extends Controller
 
         $salary = $employee->salaries()->create([
             'type'             => 'salary',
+            'account_id'       => $request->account_id,
             'month'            => $month,
             'amount'           => $breakdown['net'],
             'gross_amount'     => $breakdown['gross'],

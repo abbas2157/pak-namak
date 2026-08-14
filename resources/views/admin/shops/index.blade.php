@@ -389,13 +389,11 @@
                         <input type="date" name="payment_date" id="srp_payment_date" class="form-control fc-pn" required>
                     </div>
                     <div class="mb-3">
-                        <label class="filter-lbl">Method <span class="text-danger">*</span></label>
-                        <select name="payment_method" class="form-control fc-pn" required>
-                            <option value="Cash" selected>Cash</option>
-                            <option value="Bank Transfer">Bank Transfer</option>
-                            <option value="EasyPaisa">EasyPaisa</option>
-                            <option value="JazzCash">JazzCash</option>
-                            <option value="Other">Other</option>
+                        <label class="filter-lbl">Received Into <span class="text-danger">*</span></label>
+                        <select name="account_id" class="form-control fc-pn" required>
+                            @foreach($accounts as $account)
+                                <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="mb-0">

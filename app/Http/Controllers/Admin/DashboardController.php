@@ -5,7 +5,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Models\{Sale, Purchase, Shop, Expense, SaleDalla, SaleThaila, SalePackage, EmployeeSalary, Vendor, Employee, Order, City};
+use App\Models\{Sale, Purchase, Shop, Expense, SaleDalla, SaleThaila, SalePackage, EmployeeSalary, Vendor, Employee, Order, City, CashLedger, Asset};
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -38,20 +38,38 @@ class DashboardController extends Controller
         $totalShops = Shop::count();
 
         /* -------------------------
-        * MONTH PURCHASES
+        * MONTH PURCHASES (operating only — investment-flagged purchases
+        * are capital expenditure, excluded from the P&L below)
         * ------------------------ */
         $monthPurchasesTotal = Purchase::whereBetween('created_at', [$monthStart, $monthEnd])
+            ->where('is_investment', false)
             ->sum('grand_total');
 
-        $PurchasesTotal = Purchase::sum('grand_total');
+        $PurchasesTotal = Purchase::where('is_investment', false)->sum('grand_total');
 
         /* -------------------------
-        * MONTH EXPENSES
+        * MONTH EXPENSES (operating only, same reasoning)
         * ------------------------ */
         $monthExpensesTotal = Expense::whereBetween('expense_date', [$monthStart, $monthEnd])
+            ->where('is_investment', false)
             ->sum('amount');
 
-        $totalExpenses = Expense::sum('amount');
+        $totalExpenses = Expense::where('is_investment', false)->sum('amount');
+
+        /* -------------------------
+        * MONTH / TOTAL INVESTMENT (capital put into the business via
+        * investment-flagged expenses, assets, and purchases)
+        * ------------------------ */
+        $monthInvestmentTotal =
+            Expense::whereBetween('expense_date', [$monthStart, $monthEnd])->where('is_investment', true)->sum('amount')
+            + Purchase::whereBetween('created_at', [$monthStart, $monthEnd])->where('is_investment', true)->sum('grand_total')
+            + Asset::whereBetween('purchase_date', [$monthStart, $monthEnd])->where('is_investment', true)->get()
+                ->sum(fn ($a) => $a->quantity * $a->purchase_price);
+
+        $totalInvestment =
+            Expense::where('is_investment', true)->sum('amount')
+            + Purchase::where('is_investment', true)->sum('grand_total')
+            + Asset::where('is_investment', true)->get()->sum(fn ($a) => $a->quantity * $a->purchase_price);
 
         /* -------------------------
         * MONTH SALARIES
@@ -230,12 +248,17 @@ class DashboardController extends Controller
             $current->addMonth();
         }
 
+        $cashBalance = CashLedger::currentBalance();
+
         return view('admin.dashboard.index', compact(
+            'cashBalance',
             'totalShops',
             'monthSalesTotal',
             'monthPurchasesTotal',
             'monthExpensesTotal',
             'monthSalaryTotal',
+            'monthInvestmentTotal',
+            'totalInvestment',
             'profitLoss',
             'totalSales',
             'PurchasesTotal',

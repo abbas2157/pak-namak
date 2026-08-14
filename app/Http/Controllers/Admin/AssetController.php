@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Asset;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -22,8 +23,10 @@ class AssetController extends Controller
             ->map(fn($group) => $group->sum(fn($a) => $a->quantity * $a->purchase_price))
             ->sortByDesc(fn($v) => $v);
 
+        $accounts = Account::where('is_active', true)->orderBy('name')->get();
+
         return view('admin.assets.index', compact(
-            'assets', 'totalValue', 'totalCount', 'activeCount', 'repairCount', 'categoryTotals'
+            'assets', 'totalValue', 'totalCount', 'activeCount', 'repairCount', 'categoryTotals', 'accounts'
         ));
     }
 
@@ -40,6 +43,8 @@ class AssetController extends Controller
             'quantity'       => 'required|integer|min:1',
             'purchase_price' => 'required|numeric|min:0',
             'purchase_date'  => 'required|date',
+            'account_id'     => 'required|exists:accounts,id',
+            'is_investment'  => 'boolean',
             'status'         => 'required|in:active,under_repair,disposed',
             'condition'      => 'required|in:good,fair,poor',
             'location'       => 'nullable|string|max:255',
@@ -55,9 +60,12 @@ class AssetController extends Controller
         $asset = Asset::create(array_merge(
             $request->only([
                 'asset_name', 'category', 'quantity', 'purchase_price',
-                'purchase_date', 'description', 'status', 'condition', 'location',
+                'purchase_date', 'account_id', 'description', 'status', 'condition', 'location',
             ]),
-            ['image' => $imagePath]
+            [
+                'image'         => $imagePath,
+                'is_investment' => $request->boolean('is_investment'),
+            ]
         ));
 
         return response()->json(['success' => true, 'asset' => $asset]);
@@ -80,6 +88,8 @@ class AssetController extends Controller
             'quantity'       => 'required|integer|min:1',
             'purchase_price' => 'required|numeric|min:0',
             'purchase_date'  => 'required|date',
+            'account_id'     => 'required|exists:accounts,id',
+            'is_investment'  => 'boolean',
             'status'         => 'required|in:active,under_repair,disposed',
             'condition'      => 'required|in:good,fair,poor',
             'location'       => 'nullable|string|max:255',
@@ -89,8 +99,9 @@ class AssetController extends Controller
 
         $data = $request->only([
             'asset_name', 'category', 'quantity', 'purchase_price',
-            'purchase_date', 'description', 'status', 'condition', 'location',
+            'purchase_date', 'account_id', 'description', 'status', 'condition', 'location',
         ]);
+        $data['is_investment'] = $request->boolean('is_investment');
 
         if ($request->hasFile('image')) {
             if ($asset->image && file_exists(public_path($asset->image))) {

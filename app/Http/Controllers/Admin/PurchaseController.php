@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use App\Models\{Purchase, PurchasePayment, Vendor};
+use App\Models\{Purchase, PurchasePayment, Vendor, Account};
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
@@ -11,6 +11,7 @@ class PurchaseController extends Controller
 {
     public function index(Request $request)
     {
+        $accounts = Account::where('is_active', true)->orderBy('name')->get();
         $query = Purchase::with('vendor');
 
         if ($request->month) {
@@ -37,7 +38,7 @@ class PurchaseController extends Controller
         $selectedMonth = $request->month;
 
         return view('admin.purchases.index', compact(
-            'purchases', 'vendors',
+            'purchases', 'vendors', 'accounts',
             'totalSpent', 'totalPaid', 'totalPending', 'totalQtyKg', 'totalQtyTon', 'totalEntries',
             'months', 'selectedMonth'
         ));
@@ -46,7 +47,8 @@ class PurchaseController extends Controller
     public function create()
     {
         $vendors = Vendor::orderBy('name')->get();
-        return view('admin.purchases.index', compact('vendors'));
+        $accounts = Account::where('is_active', true)->orderBy('name')->get();
+        return view('admin.purchases.index', compact('vendors', 'accounts'));
     }
 
     public function store(Request $request)
@@ -58,6 +60,8 @@ class PurchaseController extends Controller
             'total_cost'    => 'required|numeric|min:0',
             'grand_total'   => 'required|numeric|min:0',
             'amount_paid'   => 'nullable|numeric|min:0',
+            'account_id'    => 'nullable|exists:accounts,id',
+            'is_investment' => 'boolean',
         ]);
 
         $purchase = DB::transaction(function () use ($request) {
@@ -74,11 +78,13 @@ class PurchaseController extends Controller
                 'loading_unloading_cost' => $request->loading_unloading_cost ?? 0,
                 'grand_total'            => $request->grand_total,
                 'remarks'                => $request->remarks,
+                'is_investment'          => $request->boolean('is_investment'),
             ]);
 
             $amountPaid = min((float) ($request->amount_paid ?? 0), (float) $request->grand_total);
             if ($amountPaid > 0) {
                 $purchase->payments()->create([
+                    'account_id'   => $request->account_id,
                     'amount'       => $amountPaid,
                     'payment_date' => $purchaseDate,
                     'note'         => 'Initial payment',
@@ -111,6 +117,7 @@ class PurchaseController extends Controller
             'rate_per_kg'   => 'required|numeric|min:0',
             'total_cost'    => 'required|numeric|min:0',
             'grand_total'   => 'required|numeric|min:0',
+            'is_investment' => 'boolean',
         ]);
 
         $purchase = Purchase::findOrFail($id);
@@ -125,6 +132,7 @@ class PurchaseController extends Controller
             'loading_unloading_cost' => $request->loading_unloading_cost ?? 0,
             'grand_total'            => $request->grand_total,
             'remarks'                => $request->remarks,
+            'is_investment'          => $request->boolean('is_investment'),
         ]);
 
         // grand_total may have changed — recompute pending against the same paid_amount
@@ -148,6 +156,7 @@ class PurchaseController extends Controller
         $request->validate([
             'amount'       => 'required|numeric|min:0.01',
             'payment_date' => 'required|date',
+            'account_id'   => 'required|exists:accounts,id',
             'note'         => 'nullable|string|max:500',
         ]);
 
@@ -159,6 +168,7 @@ class PurchaseController extends Controller
 
         DB::transaction(function () use ($purchase, $request, $amount) {
             $purchase->payments()->create([
+                'account_id'   => $request->account_id,
                 'amount'       => $amount,
                 'payment_date' => $request->payment_date,
                 'note'         => $request->note,

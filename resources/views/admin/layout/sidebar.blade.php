@@ -17,6 +17,13 @@
                 </li>
 
                 <li class="nav-item">
+                    <a href="{{ route('admin.cash_ledger.index') }}" class="nav-link {{ request()->routeIs('admin.cash_ledger.*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-wallet"></i>
+                        <p>Cash &amp; Bank <small class="d-block nav-sub-lbl">نقد اور بینک</small></p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
                     <a href="{{ route('admin.orders.index') }}" class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                         <i class="nav-icon fas fa-inbox"></i>
                         <p>

@@ -11,6 +11,16 @@ Route::middleware('web')->group(function () {
         Route::get('logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('logout');
         Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 
+        Route::get('cash-ledger', [App\Http\Controllers\Admin\CashLedgerController::class, 'index'])->name('admin.cash_ledger.index');
+        Route::post('cash-ledger/opening-balance', [App\Http\Controllers\Admin\CashLedgerController::class, 'setOpeningBalance'])->name('admin.cash_ledger.opening_balance');
+        Route::post('cash-ledger/manual', [App\Http\Controllers\Admin\CashLedgerController::class, 'storeManual'])->name('admin.cash_ledger.manual.store');
+        Route::delete('cash-ledger/{ledger}', [App\Http\Controllers\Admin\CashLedgerController::class, 'destroyManual'])->name('admin.cash_ledger.destroy');
+
+        Route::post('accounts', [App\Http\Controllers\Admin\AccountController::class, 'store'])->name('admin.accounts.store');
+        Route::put('accounts/{account}', [App\Http\Controllers\Admin\AccountController::class, 'update'])->name('admin.accounts.update');
+        Route::delete('accounts/{account}', [App\Http\Controllers\Admin\AccountController::class, 'destroy'])->name('admin.accounts.destroy');
+        Route::post('accounts/{account}/reactivate', [App\Http\Controllers\Admin\AccountController::class, 'reactivate'])->name('admin.accounts.reactivate');
+
         Route::get('stocks', [App\Http\Controllers\Admin\StockController::class, 'index'])->name('admin.stocks.index');
         Route::post('stocks/addition', [App\Http\Controllers\Admin\StockController::class, 'storeAddition'])->name('admin.stocks.addition');
         Route::post('stocks/adjustment', [App\Http\Controllers\Admin\StockController::class, 'storeAdjustment'])->name('admin.stocks.adjustment');

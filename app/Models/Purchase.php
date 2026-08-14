@@ -20,10 +20,12 @@ class Purchase extends Model
         'paid_amount',
         'pending_amount',
         'remarks',
+        'is_investment',
     ];
 
     protected $casts = [
         'purchase_date' => 'date',
+        'is_investment' => 'boolean',
     ];
 
     public function vendor()

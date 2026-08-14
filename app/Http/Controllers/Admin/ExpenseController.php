@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Expense;
+use App\Models\{Account, Expense};
 use Carbon\Carbon;
 
 class ExpenseController extends Controller
@@ -12,6 +12,7 @@ class ExpenseController extends Controller
     public function index(Request $request)
     {
         $selectedMonth = $request->get('month');
+        $accounts = Account::where('is_active', true)->orderBy('name')->get();
 
         $query = Expense::orderByDesc('id');
 
@@ -38,31 +39,37 @@ class ExpenseController extends Controller
         }
 
         return view('admin.expenses.index', compact(
-            'expenses', 'categoryTotals', 'grandTotal', 'selectedMonth', 'months'
+            'expenses', 'categoryTotals', 'grandTotal', 'selectedMonth', 'months', 'accounts'
         ));
     }
 
     public function create()
     {
-        return view('admin.expenses.index');
+        $accounts = Account::where('is_active', true)->orderBy('name')->get();
+        return view('admin.expenses.index', compact('accounts'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'expense_date'   => 'required|date',
-            'category'       => 'required|string|max:255',
-            'payment_method' => 'required|in:Cash,Bank,JazzCash,EasyPaisa',
-            'amount'         => 'required|numeric|min:0',
+            'expense_date'  => 'required|date',
+            'category'      => 'required|string|max:255',
+            'account_id'    => 'required|exists:accounts,id',
+            'amount'        => 'required|numeric|min:0',
+            'is_investment' => 'boolean',
         ]);
+
+        $account = Account::find($request->account_id);
 
         $expense = Expense::create([
             'expense_date'   => $request->expense_date,
             'category'       => $request->category,
-            'payment_method' => $request->payment_method,
+            'account_id'     => $account->id,
+            'payment_method' => $account->paymentMethodLabel(),
             'amount'         => $request->amount,
             'description'    => $request->description,
             'remarks'        => $request->remarks,
+            'is_investment'  => $request->boolean('is_investment'),
         ]);
 
         return response()->json($expense);
@@ -76,19 +83,24 @@ class ExpenseController extends Controller
     public function update(Request $request, Expense $expense)
     {
         $request->validate([
-            'expense_date'   => 'required|date',
-            'category'       => 'required|string|max:255',
-            'payment_method' => 'required|in:Cash,Bank,JazzCash,EasyPaisa',
-            'amount'         => 'required|numeric|min:0',
+            'expense_date'  => 'required|date',
+            'category'      => 'required|string|max:255',
+            'account_id'    => 'required|exists:accounts,id',
+            'amount'        => 'required|numeric|min:0',
+            'is_investment' => 'boolean',
         ]);
+
+        $account = Account::find($request->account_id);
 
         $expense->update([
             'expense_date'   => $request->expense_date,
             'category'       => $request->category,
-            'payment_method' => $request->payment_method,
+            'account_id'     => $account->id,
+            'payment_method' => $account->paymentMethodLabel(),
             'amount'         => $request->amount,
             'description'    => $request->description,
             'remarks'        => $request->remarks,
+            'is_investment'  => $request->boolean('is_investment'),
         ]);
 
         return response()->json($expense);

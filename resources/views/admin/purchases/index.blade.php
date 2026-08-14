@@ -146,6 +146,9 @@
                                             <td class="align-middle">
                                                 <span class="font-weight-bold d-block pn-text-heading">{{ $row->vendor->name ?? '—' }}</span>
                                                 <small class="text-muted">{{ $row->vendor->phone ?? '' }}</small>
+                                                @if($row->is_investment)
+                                                    <span class="badge badge-warning d-block mt-1"><i class="fas fa-piggy-bank mr-1"></i>Investment</span>
+                                                @endif
                                             </td>
                                             <td class="align-middle">{{ $row->salt_quantity ?? '—' }}</td>
                                             <td class="align-middle">{{ $row->salt_quantity_kg ?? '—' }}</td>
@@ -388,13 +391,23 @@
                             </div>
                             <small class="text-muted">= Total Cost + Transport + Loading</small>
                         </div>
-                        <div class="col-md-12 mb-3" id="amountPaidWrap">
+                        <div class="col-md-6 mb-3" id="amountPaidWrap">
                             <label class="pn-label text-uppercase font-weight-bold text-muted">
                                 Amount Paid Now (PKR) / ابھی ادا کی گئی رقم
                             </label>
                             <input type="number" step="0.01" name="amount_paid" id="amount_paid"
                                    class="form-control fc-pn" min="0" placeholder="0 (leave blank if unpaid)">
                             <small class="text-muted">Optional — leave blank to record the full amount as pending.</small>
+                        </div>
+                        <div class="col-md-6 mb-3" id="paidAccountWrap">
+                            <label class="pn-label text-uppercase font-weight-bold text-muted">
+                                Paid From / کہاں سے ادا کیا
+                            </label>
+                            <select name="account_id" id="paid_account_id" class="form-control fc-pn">
+                                @foreach($accounts as $account)
+                                    <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="col-md-12 mb-3 d-none" id="paidSummaryWrap">
                             <div class="p-3 rounded-3" style="background:#f8f9fc;border:1px solid #e9ecef;">
@@ -407,6 +420,14 @@
                                     <strong class="text-danger" id="paidSummaryPending">—</strong>
                                 </div>
                                 <small class="text-muted d-block mt-2">Use "Record Payment" on the list to add more payments.</small>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="is_investment" id="p_is_investment" value="1">
+                                <label class="custom-control-label" for="p_is_investment">
+                                    Mark as Investment / سرمایہ کاری کے طور پر نشان زد کریں
+                                </label>
                             </div>
                         </div>
                         <div class="col-12 mb-1">
@@ -457,6 +478,14 @@
                     <div class="mb-3">
                         <label class="pn-label text-uppercase font-weight-bold text-muted">Payment Date <span class="text-danger">*</span></label>
                         <input type="date" name="payment_date" id="rp_payment_date" class="form-control fc-pn" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">Paid From <span class="text-danger">*</span></label>
+                        <select name="account_id" class="form-control fc-pn" required>
+                            @foreach($accounts as $account)
+                                <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-0">
                         <label class="pn-label text-uppercase font-weight-bold text-muted">Note</label>
@@ -571,6 +600,7 @@ $(function () {
         $('#purchase_id').val('');
         $('#purchase_date').val(new Date().toISOString().split('T')[0]);
         $('#amountPaidWrap').removeClass('d-none');
+        $('#paidAccountWrap').removeClass('d-none');
         $('#paidSummaryWrap').addClass('d-none');
         $('#modalTitle').html('<i class="fas fa-shopping-cart mr-2"></i>Add Purchase');
         $('#submitBtn').html('<i class="fas fa-save mr-1"></i> Save Purchase');
@@ -621,7 +651,9 @@ $(function () {
             $('#loading_unloading_cost').val(p.loading_unloading_cost);
             $('#grand_total').val(p.grand_total);
             $('#remarks').val(p.remarks);
+            $('#p_is_investment').prop('checked', !!p.is_investment);
             $('#amountPaidWrap').addClass('d-none');
+            $('#paidAccountWrap').addClass('d-none');
             $('#paidSummaryWrap').removeClass('d-none');
             $('#paidSummaryPaid').text(Number(p.paid_amount).toLocaleString());
             $('#paidSummaryPending').text(Number(p.pending_amount).toLocaleString());

@@ -164,7 +164,12 @@ $condMeta = [
                                         <tr class="asset-row" data-cat="{{ $asset->category }}"
                                             id="row_{{ $asset->id }}">
                                             <td class="pl-3 align-middle">
-                                                <span class="font-weight-bold d-block pn-text-heading">{{ $asset->asset_name }}</span>
+                                                <span class="font-weight-bold d-block pn-text-heading">
+                                                    {{ $asset->asset_name }}
+                                                    @if($asset->is_investment)
+                                                        <span class="badge badge-warning ml-1"><i class="fas fa-piggy-bank mr-1"></i>Investment</span>
+                                                    @endif
+                                                </span>
                                                 @if($asset->location)
                                                     <small class="text-muted"><i class="fas fa-map-marker-alt mr-1"></i>{{ $asset->location }}</small>
                                                 @endif
@@ -379,6 +384,26 @@ $condMeta = [
                                    placeholder="e.g. Factory, Office, Warehouse">
                         </div>
 
+                        {{-- Row 3b: Paid From + Investment --}}
+                        <div class="col-md-6 mb-3">
+                            <label class="filter-lbl">
+                                Paid From / کہاں سے ادا کیا <span class="text-danger">*</span>
+                            </label>
+                            <select name="account_id" id="aAccount" class="form-control fc-pn" required>
+                                @foreach($accounts as $account)
+                                    <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3 d-flex align-items-end">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" name="is_investment" id="aInvestment" value="1">
+                                <label class="custom-control-label" for="aInvestment">
+                                    Mark as Investment / سرمایہ کاری کے طور پر نشان زد کریں
+                                </label>
+                            </div>
+                        </div>
+
                         {{-- Row 4: Status + Condition --}}
                         <div class="col-md-6 mb-3">
                             <label class="filter-lbl">
@@ -569,6 +594,8 @@ $(function () {
             $('#aPrice').val(a.purchase_price);
             $('#aDate').val(a.purchase_date);
             $('#aLocation').val(a.location);
+            $('#aAccount').val(a.account_id);
+            $('#aInvestment').prop('checked', !!a.is_investment);
             $('#aStatus').val(a.status);
             $('#aCondition').val(a.condition);
             $('#aDesc').val(a.description);

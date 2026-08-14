@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use App\Models\{Sale, SaleDalla, SaleThaila, SalePackage, SalePayment, SaltType, Shop, Order, StockMovement};
+use App\Models\{Sale, SaleDalla, SaleThaila, SalePackage, SalePayment, SaltType, Shop, Order, StockMovement, Account};
 
 class SaleController extends Controller
 {
@@ -54,8 +54,9 @@ class SaleController extends Controller
         }
 
         $stockLevels = \App\Models\Stock::levels()->keyBy(fn ($l) => \App\Models\Stock::key($l['product_type'], $l['size'], $l['bundle_size']));
+        $accounts = Account::where('is_active', true)->orderBy('name')->get();
 
-        return view('admin.sales.create', compact('shops', 'types', 'prefill', 'stockLevels'));
+        return view('admin.sales.create', compact('shops', 'types', 'prefill', 'stockLevels', 'accounts'));
     }
     public function show($id)
     {
@@ -212,11 +213,13 @@ class SaleController extends Controller
              * -------------------------- */
             $initialReceived = min((float) ($request->received_amount ?? 0), $grandTotal);
             if ($initialReceived > 0) {
+                $account = Account::find($request->account_id) ?? Account::where('type', 'cash')->first();
                 SalePayment::create([
                     'sale_id'        => $sale->id,
+                    'account_id'     => $account?->id,
                     'amount'         => $initialReceived,
                     'payment_date'   => $sale->sale_date,
-                    'payment_method' => 'cash',
+                    'payment_method' => $account?->paymentMethodLabel() ?? 'Cash',
                     'note'           => 'Initial payment at sale creation',
                 ]);
             }
@@ -410,10 +413,10 @@ class SaleController extends Controller
     public function addPayment(Request $request, Sale $sale)
     {
         $request->validate([
-            'amount'         => 'required|numeric|min:0.01',
-            'payment_date'   => 'required|date',
-            'payment_method' => 'required|in:Cash,Bank Transfer,EasyPaisa,JazzCash,Other',
-            'note'           => 'nullable|string|max:500',
+            'amount'       => 'required|numeric|min:0.01',
+            'payment_date' => 'required|date',
+            'account_id'   => 'required|exists:accounts,id',
+            'note'         => 'nullable|string|max:500',
         ]);
 
         if ($sale->pending_amount <= 0) {
@@ -422,12 +425,14 @@ class SaleController extends Controller
 
         DB::transaction(function () use ($request, $sale) {
             $amount = min((float) $request->amount, (float) $sale->pending_amount);
+            $account = Account::find($request->account_id);
 
             SalePayment::create([
                 'sale_id'        => $sale->id,
+                'account_id'     => $account->id,
                 'amount'         => $amount,
                 'payment_date'   => $request->payment_date,
-                'payment_method' => $request->payment_method,
+                'payment_method' => $account->paymentMethodLabel(),
                 'note'           => $request->note,
             ]);
 

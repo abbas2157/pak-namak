@@ -55,6 +55,55 @@
             </div>
         </div>
 
+        {{-- ── CASH & BANK BALANCE + INVESTMENT ────────────────────────────── --}}
+        <div class="row mb-4">
+            <div class="col-lg-6 mb-3 mb-lg-0">
+                <a href="{{ route('admin.cash_ledger.index') }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100" style="background:linear-gradient(135deg,#1a5c35,#2d7a4f);">
+                        <div class="card-body py-3 px-4 d-flex align-items-center justify-content-between text-white">
+                            <div>
+                                <div class="text-uppercase font-weight-bold mb-1" style="opacity:.85;font-size:.75rem;">
+                                    <i class="fas fa-wallet mr-1"></i> Cash &amp; Bank Balance / نقد اور بینک بیلنس
+                                </div>
+                                <div class="font-weight-bold" style="font-size:1.7rem;">PKR {{ number_format($cashBalance, 0) }}</div>
+                            </div>
+                            <i class="fas fa-chevron-right" style="opacity:.7;"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 mb-3 mb-lg-0">
+                <a href="{{ route('admin.cash_ledger.index', ['investment' => 1]) }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100" style="background:linear-gradient(135deg,#8a6d0d,#c9a227);">
+                        <div class="card-body py-3 px-4 d-flex align-items-center justify-content-between text-white">
+                            <div>
+                                <div class="text-uppercase font-weight-bold mb-1" style="opacity:.85;font-size:.75rem;">
+                                    <i class="fas fa-piggy-bank mr-1"></i> Total Investment / کل سرمایہ کاری
+                                </div>
+                                <div class="font-weight-bold" style="font-size:1.5rem;">PKR {{ number_format($totalInvestment, 0) }}</div>
+                            </div>
+                            <i class="fas fa-chevron-right" style="opacity:.7;"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3">
+                <a href="{{ route('admin.cash_ledger.index', ['investment' => 1, 'month' => $selectedMonth]) }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100" style="background:linear-gradient(135deg,#b8860b,#e0ac2b);">
+                        <div class="card-body py-3 px-4 d-flex align-items-center justify-content-between text-white">
+                            <div>
+                                <div class="text-uppercase font-weight-bold mb-1" style="opacity:.85;font-size:.75rem;">
+                                    <i class="fas fa-calendar-check mr-1"></i> Monthly Investment / ماہانہ سرمایہ کاری
+                                </div>
+                                <div class="font-weight-bold" style="font-size:1.5rem;">PKR {{ number_format($monthInvestmentTotal, 0) }}</div>
+                            </div>
+                            <i class="fas fa-chevron-right" style="opacity:.7;"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
         {{-- ── ENTITY QUICK COUNTS ────────────────────────────── --}}
         <div class="row mb-4">
             <div class="col-xl-3 col-md-6 mb-3">
