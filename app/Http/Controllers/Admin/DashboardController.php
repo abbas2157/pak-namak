@@ -5,7 +5,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Models\{Sale, Purchase, Shop, Expense, SaleDalla, SaleThaila, SalePackage, EmployeeSalary, Vendor, Employee, Order, City, CashLedger, Asset};
+use App\Models\{Sale, Purchase, Shop, Expense, SaleDalla, SaleThaila, SalePackage, EmployeeSalary, Vendor, Employee, Order, City, CashLedger, Asset, Production};
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -81,6 +81,15 @@ class DashboardController extends Controller
         $totalSalaryPaid = EmployeeSalary::sum('amount');
 
         /* -------------------------
+        * MONTH / TOTAL PRODUCTION COST (electricity/fuel spent processing
+        * raw salt — a real operating cost, subtracted from profit below)
+        * ------------------------ */
+        $monthProductionCost = Production::whereBetween('production_date', [$monthStart, $monthEnd])
+            ->sum('electricity_fuel_cost');
+
+        $totalProductionCost = Production::sum('electricity_fuel_cost');
+
+        /* -------------------------
         * PENDING (UDHAAR)
         * ------------------------ */
         $totalPending = Sale::sum('pending_amount');
@@ -123,10 +132,10 @@ class DashboardController extends Controller
             ->sum('sale_packages.sub_total');
 
         /* -------------------------
-        * PROFIT / LOSS (sales - purchases - expenses - salaries)
+        * PROFIT / LOSS (sales - purchases - expenses - salaries - production costs)
         * ------------------------ */
-        $profitLoss = $monthSalesTotal - ($monthPurchasesTotal + $monthExpensesTotal + $monthSalaryTotal);
-        $totalProfitLoss = $totalSales - ($PurchasesTotal + $totalExpenses + $totalSalaryPaid);
+        $profitLoss = $monthSalesTotal - ($monthPurchasesTotal + $monthExpensesTotal + $monthSalaryTotal + $monthProductionCost);
+        $totalProfitLoss = $totalSales - ($PurchasesTotal + $totalExpenses + $totalSalaryPaid + $totalProductionCost);
 
         /* -------------------------
         * TOP SHOPS + TOP MONTHS + BEST NAMAK TYPE
@@ -259,6 +268,8 @@ class DashboardController extends Controller
             'monthSalaryTotal',
             'monthInvestmentTotal',
             'totalInvestment',
+            'monthProductionCost',
+            'totalProductionCost',
             'profitLoss',
             'totalSales',
             'PurchasesTotal',

@@ -232,6 +232,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="filter-lbl">Paid From / کہاں سے ادا کیا</label>
+                        <select name="account_id" id="account_id" class="form-control fc-pn">
+                            @foreach($accounts as $account)
+                                <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
+                            @endforeach
+                        </select>
+                        <small class="text-muted">Only used if a cost above is entered.</small>
+                    </div>
                     <div class="col-12 mb-3">
                         <label class="filter-lbl">Remarks / ملاحظات</label>
                         <textarea class="form-control fc-pn" name="remarks" id="remarks" rows="2"
@@ -330,6 +339,7 @@ $(document).ready(function () {
             $('#wastage').val(p.wastage);
             $('#machine_used').val(p.machine_used);
             $('#electricity_fuel_cost').val(p.electricity_fuel_cost);
+            $('#account_id').val(p.account_id);
             $('#remarks').val(p.remarks);
             calcEfficiency();
             $('#modalTitle').html('<i class="fas fa-edit mr-2"></i>Edit Production');

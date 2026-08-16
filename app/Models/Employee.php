@@ -35,6 +35,18 @@ class Employee extends Model
         return $this->hasMany(EmployeeAbsence::class);
     }
 
+    protected static function booted(): void
+    {
+        // employee_salaries.employee_id cascades at the DB level, which
+        // never fires EmployeeSalary's Eloquent `deleted` hook — remove the
+        // matching ledger rows explicitly before that cascade wipes them out.
+        static::deleting(function (self $employee) {
+            CashLedger::where('source_type', 'employee_salary')
+                ->whereIn('source_id', $employee->salaries()->pluck('id'))
+                ->delete();
+        });
+    }
+
     /**
      * True if the given date is a non-working day: the fixed weekly off
      * (config('admin.weekly_holiday'), 0=Sunday) or a listed company holiday.

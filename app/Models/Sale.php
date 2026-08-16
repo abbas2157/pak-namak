@@ -44,4 +44,16 @@ class Sale extends Model
     public function payments() {
         return $this->hasMany(SalePayment::class);
     }
+
+    protected static function booted(): void
+    {
+        // sale_payments.sale_id cascades at the DB level, which never fires
+        // SalePayment's Eloquent `deleted` hook — remove the matching
+        // ledger rows explicitly before that cascade wipes them out.
+        static::deleting(function (self $sale) {
+            CashLedger::where('source_type', 'sale_payment')
+                ->whereIn('source_id', $sale->payments()->pluck('id'))
+                ->delete();
+        });
+    }
 }

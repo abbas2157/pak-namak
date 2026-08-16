@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Production;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -18,9 +19,11 @@ class ProductionController extends Controller
         $totalCost     = $productions->sum('electricity_fuel_cost');
         $efficiency    = $totalRaw > 0 ? round(($totalFinished / $totalRaw) * 100, 1) : 0;
 
+        $accounts = Account::where('is_active', true)->orderBy('name')->get();
+
         return view('admin.productions.index', compact(
             'productions',
-            'totalRaw', 'totalFinished', 'totalWastage', 'totalCost', 'efficiency'
+            'totalRaw', 'totalFinished', 'totalWastage', 'totalCost', 'efficiency', 'accounts'
         ));
     }
 
@@ -37,11 +40,12 @@ class ProductionController extends Controller
             'finished_salt'         => 'required|numeric|min:0',
             'wastage'               => 'nullable|numeric|min:0',
             'electricity_fuel_cost' => 'nullable|numeric|min:0',
+            'account_id'            => 'nullable|exists:accounts,id',
         ]);
 
         $production = Production::create($request->only([
             'production_date', 'raw_salt_used', 'finished_salt',
-            'wastage', 'machine_used', 'electricity_fuel_cost', 'remarks',
+            'wastage', 'machine_used', 'electricity_fuel_cost', 'remarks', 'account_id',
         ]));
 
         return response()->json(['success' => true, 'production' => $production]);
@@ -60,11 +64,12 @@ class ProductionController extends Controller
             'finished_salt'         => 'required|numeric|min:0',
             'wastage'               => 'nullable|numeric|min:0',
             'electricity_fuel_cost' => 'nullable|numeric|min:0',
+            'account_id'            => 'nullable|exists:accounts,id',
         ]);
 
         $production->update($request->only([
             'production_date', 'raw_salt_used', 'finished_salt',
-            'wastage', 'machine_used', 'electricity_fuel_cost', 'remarks',
+            'wastage', 'machine_used', 'electricity_fuel_cost', 'remarks', 'account_id',
         ]));
 
         return response()->json(['success' => true, 'production' => $production]);
