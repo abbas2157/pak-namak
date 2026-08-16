@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Account;
+use App\Models\AccountTransfer;
 use App\Models\CashLedger;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class CashLedgerController extends Controller
@@ -60,17 +62,21 @@ class CashLedgerController extends Controller
 
         $currentBalance = CashLedger::currentBalance();
 
+        // Same reasoning as the breakdown panels below — transfers move money
+        // between your own accounts, so they're excluded from in/out totals
+        // to avoid inflating gross income/expense with internal movements.
         $monthStart = Carbon::now()->startOfMonth();
         $monthEnd   = Carbon::now()->endOfMonth();
-        $thisMonthIn  = (float) CashLedger::where('type', 'in')->whereBetween('transaction_date', [$monthStart, $monthEnd])->sum('amount');
-        $thisMonthOut = (float) CashLedger::where('type', 'out')->whereBetween('transaction_date', [$monthStart, $monthEnd])->sum('amount');
-        $allTimeIn    = (float) CashLedger::where('type', 'in')->sum('amount');
-        $allTimeOut   = (float) CashLedger::where('type', 'out')->sum('amount');
+        $thisMonthIn  = (float) CashLedger::where('type', 'in')->where('source_type', '!=', 'transfer')->whereBetween('transaction_date', [$monthStart, $monthEnd])->sum('amount');
+        $thisMonthOut = (float) CashLedger::where('type', 'out')->where('source_type', '!=', 'transfer')->whereBetween('transaction_date', [$monthStart, $monthEnd])->sum('amount');
+        $allTimeIn    = (float) CashLedger::where('type', 'in')->where('source_type', '!=', 'transfer')->sum('amount');
+        $allTimeOut   = (float) CashLedger::where('type', 'out')->where('source_type', '!=', 'transfer')->sum('amount');
 
         // Breakdown panels respect the month filter (so they match what the
         // table is showing) but ignore source/account filters (a breakdown of
-        // one source/account in isolation isn't useful).
-        $breakdownQuery = CashLedger::query();
+        // one source/account in isolation isn't useful). Transfers are excluded
+        // — moving money between your own accounts isn't real income/expense.
+        $breakdownQuery = CashLedger::where('source_type', '!=', 'transfer');
         if ($selectedMonth) {
             [$year, $month] = explode('-', $selectedMonth);
             $breakdownQuery->whereYear('transaction_date', $year)->whereMonth('transaction_date', $month);
@@ -152,16 +158,88 @@ class CashLedgerController extends Controller
         return response()->json(['success' => true]);
     }
 
+    /**
+     * Move money between two of the business's own accounts — creates one
+     * `out` leg on the source account and one `in` leg on the destination,
+     * both tied to a shared AccountTransfer record so they display/delete
+     * as a pair. Net effect on the total balance is zero (in/out cancel).
+     */
+    public function storeTransfer(Request $request)
+    {
+        $request->validate([
+            'from_account_id' => 'required|exists:accounts,id|different:to_account_id',
+            'to_account_id'   => 'required|exists:accounts,id',
+            'amount'          => 'required|numeric|min:0.01',
+            'date'            => 'required|date',
+            'description'     => 'nullable|string|max:255',
+            'note'            => 'nullable|string|max:500',
+        ], [
+            'from_account_id.different' => 'The From and To accounts must be different.',
+        ]);
+
+        DB::transaction(function () use ($request) {
+            $fromAccount = Account::findOrFail($request->from_account_id);
+            $toAccount   = Account::findOrFail($request->to_account_id);
+
+            $transfer = AccountTransfer::create([
+                'from_account_id' => $fromAccount->id,
+                'to_account_id'   => $toAccount->id,
+                'amount'          => $request->amount,
+                'transfer_date'   => $request->date,
+                'description'     => $request->description,
+                'note'            => $request->note,
+                'created_by'      => auth()->id(),
+            ]);
+
+            $desc = $request->description ?: 'Account Transfer';
+
+            CashLedger::create([
+                'account_id'       => $fromAccount->id,
+                'type'             => 'out',
+                'amount'           => $request->amount,
+                'source_type'      => 'transfer',
+                'source_id'        => $transfer->id,
+                'transaction_date' => $request->date,
+                'description'      => "{$desc} — to {$toAccount->label()}",
+                'note'             => $request->note,
+                'created_by'       => auth()->id(),
+            ]);
+
+            CashLedger::create([
+                'account_id'       => $toAccount->id,
+                'type'             => 'in',
+                'amount'           => $request->amount,
+                'source_type'      => 'transfer',
+                'source_id'        => $transfer->id,
+                'transaction_date' => $request->date,
+                'description'      => "{$desc} — from {$fromAccount->label()}",
+                'note'             => $request->note,
+                'created_by'       => auth()->id(),
+            ]);
+        });
+
+        return response()->json(['success' => true]);
+    }
+
     public function destroyManual(CashLedger $ledger)
     {
-        if (!in_array($ledger->source_type, ['manual', 'opening_balance'], true)) {
+        if (!in_array($ledger->source_type, ['manual', 'opening_balance', 'transfer'], true)) {
             return response()->json([
                 'success' => false,
                 'message' => 'This entry is linked to a real record — delete or edit that record instead.',
             ], 422);
         }
 
-        $ledger->delete();
+        if ($ledger->source_type === 'transfer') {
+            // A transfer is two ledger rows sharing one AccountTransfer id —
+            // remove both legs together so the transfer can't be left half-deleted.
+            DB::transaction(function () use ($ledger) {
+                CashLedger::where('source_type', 'transfer')->where('source_id', $ledger->source_id)->delete();
+                AccountTransfer::where('id', $ledger->source_id)->delete();
+            });
+        } else {
+            $ledger->delete();
+        }
 
         return response()->json(['success' => true]);
     }

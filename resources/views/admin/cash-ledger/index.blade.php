@@ -9,6 +9,7 @@ $sourceMeta = [
     'employee_salary'  => ['label' => 'Salary/Advance',  'short' => 'Salary/Advances',  'badge' => 'badge-info',      'icon' => 'fa-users'],
     'manual'           => ['label' => 'Manual',          'short' => 'Manual Entries',   'badge' => 'badge-secondary', 'icon' => 'fa-pen'],
     'opening_balance'  => ['label' => 'Opening Balance', 'short' => 'Opening Balance',  'badge' => 'badge-dark',      'icon' => 'fa-flag'],
+    'transfer'         => ['label' => 'Transfer',        'short' => 'Transfers',        'badge' => 'badge-primary',   'icon' => 'fa-right-left'],
 ];
 $typeMeta = [
     'cash'      => ['icon' => 'fa-money-bill-wave', 'color' => '#1a5c35'],
@@ -37,6 +38,9 @@ $inactiveAccounts = $accounts->where('is_active', false);
             <div class="col-sm-6 d-flex justify-content-end">
                 <button class="btn btn-outline-secondary btn-pn px-3 mr-2" id="addAccountBtn">
                     <i class="fas fa-plus mr-1"></i> Add Account
+                </button>
+                <button class="btn btn-outline-primary btn-pn px-3 mr-2" id="addTransferBtn">
+                    <i class="fas fa-right-left mr-1"></i> Transfer
                 </button>
                 <button class="btn btn-primary btn-pn px-4" id="addManualBtn">
                     <i class="fas fa-plus mr-1"></i> Add Manual Entry
@@ -277,7 +281,7 @@ $inactiveAccounts = $accounts->where('is_active', false);
                                             {{ number_format($entry->running_balance ?? 0, 0) }}
                                         </td>
                                         <td class="align-middle text-center">
-                                            @if(in_array($entry->source_type, ['manual', 'opening_balance']))
+                                            @if(in_array($entry->source_type, ['manual', 'opening_balance', 'transfer']))
                                                 <button class="btn btn-danger btn-xs deleteLedgerBtn" data-id="{{ $entry->id }}">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
@@ -506,6 +510,65 @@ $inactiveAccounts = $accounts->where('is_active', false);
         </form>
     </div>
 </div>
+
+{{-- ===== TRANSFER MODAL ===== --}}
+<div class="modal fade modal-pn" id="transferModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form id="transferForm">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header px-4 py-3">
+                    <h5 class="modal-title"><i class="fas fa-right-left mr-2"></i>Transfer Between Accounts</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body px-4 py-4">
+                    <p class="text-muted small">Move money from one of your own accounts to another — e.g. Cash in Hand to Bank, or Bank to JazzCash. Total balance is unaffected; only the two accounts' individual balances change.</p>
+                    <div class="mb-3">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">From Account <span class="text-danger">*</span></label>
+                        <select name="from_account_id" id="tr_from" class="form-control fc-pn" required>
+                            <option value="">— Select —</option>
+                            @foreach($activeAccounts as $account)
+                                <option value="{{ $account->id }}">{{ $account->label() }} ({{ number_format($account->balance, 0) }})</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">To Account <span class="text-danger">*</span></label>
+                        <select name="to_account_id" id="tr_to" class="form-control fc-pn" required>
+                            <option value="">— Select —</option>
+                            @foreach($activeAccounts as $account)
+                                <option value="{{ $account->id }}">{{ $account->label() }} ({{ number_format($account->balance, 0) }})</option>
+                            @endforeach
+                        </select>
+                        <span class="text-danger small" id="tr_same_error" style="display:none;">From and To accounts must be different.</span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">Amount (PKR) <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" min="0.01" name="amount" class="form-control fc-pn" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">Date <span class="text-danger">*</span></label>
+                        <input type="date" name="date" class="form-control fc-pn" value="{{ date('Y-m-d') }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">Description</label>
+                        <input type="text" name="description" class="form-control fc-pn" placeholder="Optional — defaults to &quot;Account Transfer&quot;">
+                    </div>
+                    <div class="mb-0">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">Note</label>
+                        <textarea name="note" class="form-control fc-pn" rows="2" placeholder="Optional"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer px-4 py-3">
+                    <button type="button" class="btn btn-light px-4 btn-modal-cancel" data-dismiss="modal" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary px-4 btn-modal-save" type="submit" id="transferSubmitBtn">
+                        <i class="fas fa-save mr-1"></i> Transfer
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -624,6 +687,36 @@ $(function () {
                 alert(Object.values(xhr.responseJSON?.errors || {}).map(e => e[0]).join('\n') || 'Something went wrong.');
             })
             .always(() => btn.prop('disabled', false).html('<i class="fas fa-save mr-1"></i> Save'));
+    });
+
+    // ── Transfer Between Accounts ──────────────────────
+    $('#addTransferBtn').on('click', function () {
+        $('#transferForm')[0].reset();
+        $('#tr_same_error').hide();
+        $('#transferModal').modal('show');
+    });
+
+    function checkTransferAccounts() {
+        const same = $('#tr_from').val() && $('#tr_from').val() === $('#tr_to').val();
+        $('#tr_same_error').toggle(!!same);
+        return !same;
+    }
+    $('#tr_from, #tr_to').on('change', checkTransferAccounts);
+
+    $('#transferForm').on('submit', function (e) {
+        e.preventDefault();
+        if (!checkTransferAccounts()) return;
+        const btn = $('#transferSubmitBtn');
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Saving...');
+        $.post("{{ route('admin.cash_ledger.transfer.store') }}", $(this).serialize())
+            .done(function () {
+                toastr.success('Transfer completed!');
+                setTimeout(() => location.reload(), 600);
+            })
+            .fail(function (xhr) {
+                alert(Object.values(xhr.responseJSON?.errors || {}).map(e => e[0]).join('\n') || 'Something went wrong.');
+            })
+            .always(() => btn.prop('disabled', false).html('<i class="fas fa-save mr-1"></i> Transfer'));
     });
 
     $(document).on('click', '.deleteLedgerBtn', function () {

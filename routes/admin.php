@@ -14,6 +14,7 @@ Route::middleware('web')->group(function () {
         Route::get('cash-ledger', [App\Http\Controllers\Admin\CashLedgerController::class, 'index'])->name('admin.cash_ledger.index');
         Route::post('cash-ledger/opening-balance', [App\Http\Controllers\Admin\CashLedgerController::class, 'setOpeningBalance'])->name('admin.cash_ledger.opening_balance');
         Route::post('cash-ledger/manual', [App\Http\Controllers\Admin\CashLedgerController::class, 'storeManual'])->name('admin.cash_ledger.manual.store');
+        Route::post('cash-ledger/transfer', [App\Http\Controllers\Admin\CashLedgerController::class, 'storeTransfer'])->name('admin.cash_ledger.transfer.store');
         Route::delete('cash-ledger/{ledger}', [App\Http\Controllers\Admin\CashLedgerController::class, 'destroyManual'])->name('admin.cash_ledger.destroy');
 
         Route::post('accounts', [App\Http\Controllers\Admin\AccountController::class, 'store'])->name('admin.accounts.store');
