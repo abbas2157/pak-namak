@@ -23,6 +23,11 @@ class Shop extends Model
         return $this->hasMany(Sale::class);
     }
 
+    public function spiceSales()
+    {
+        return $this->hasMany(SpiceSale::class);
+    }
+
     public function cityRecord()
     {
         return $this->belongsTo(City::class, 'city_id');

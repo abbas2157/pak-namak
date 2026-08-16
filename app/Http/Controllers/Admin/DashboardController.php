@@ -5,7 +5,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Models\{Sale, Purchase, Shop, Expense, SaleDalla, SaleThaila, SalePackage, EmployeeSalary, Vendor, Employee, Order, City, CashLedger, Asset, Production};
+use App\Models\{Sale, Purchase, Shop, Expense, SaleDalla, SaleThaila, SalePackage, EmployeeSalary, Vendor, Employee, Order, City, CashLedger, Asset, Production, SpiceSale, SpicePurchase, SpiceOrder};
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -25,12 +25,18 @@ class DashboardController extends Controller
         }
 
         /* -------------------------
-        * MONTH SALES
+        * MONTH SALES (salt + spices combined, since overall business
+        * profit should reflect both product lines together)
         * ------------------------ */
-        $monthSalesTotal = Sale::whereBetween('sale_date', [$monthStart, $monthEnd])
+        $monthSaltSalesTotal = Sale::whereBetween('sale_date', [$monthStart, $monthEnd])
             ->sum('total_amount');
+        $monthSpiceSalesTotal = SpiceSale::whereBetween('sale_date', [$monthStart, $monthEnd])
+            ->sum('total_amount');
+        $monthSalesTotal = $monthSaltSalesTotal + $monthSpiceSalesTotal;
 
-        $totalSales = Sale::sum('total_amount');
+        $totalSaltSales  = Sale::sum('total_amount');
+        $totalSpiceSales = SpiceSale::sum('total_amount');
+        $totalSales = $totalSaltSales + $totalSpiceSales;
 
         /* -------------------------
         * TOTAL SHOPS
@@ -41,11 +47,17 @@ class DashboardController extends Controller
         * MONTH PURCHASES (operating only — investment-flagged purchases
         * are capital expenditure, excluded from the P&L below)
         * ------------------------ */
-        $monthPurchasesTotal = Purchase::whereBetween('created_at', [$monthStart, $monthEnd])
+        $monthSaltPurchasesTotal = Purchase::whereBetween('created_at', [$monthStart, $monthEnd])
             ->where('is_investment', false)
             ->sum('grand_total');
+        $monthSpicePurchasesTotal = SpicePurchase::whereBetween('created_at', [$monthStart, $monthEnd])
+            ->where('is_investment', false)
+            ->sum('grand_total');
+        $monthPurchasesTotal = $monthSaltPurchasesTotal + $monthSpicePurchasesTotal;
 
-        $PurchasesTotal = Purchase::where('is_investment', false)->sum('grand_total');
+        $saltPurchasesTotal  = Purchase::where('is_investment', false)->sum('grand_total');
+        $spicePurchasesTotal = SpicePurchase::where('is_investment', false)->sum('grand_total');
+        $PurchasesTotal = $saltPurchasesTotal + $spicePurchasesTotal;
 
         /* -------------------------
         * MONTH EXPENSES (operating only, same reasoning)
@@ -63,12 +75,14 @@ class DashboardController extends Controller
         $monthInvestmentTotal =
             Expense::whereBetween('expense_date', [$monthStart, $monthEnd])->where('is_investment', true)->sum('amount')
             + Purchase::whereBetween('created_at', [$monthStart, $monthEnd])->where('is_investment', true)->sum('grand_total')
+            + SpicePurchase::whereBetween('created_at', [$monthStart, $monthEnd])->where('is_investment', true)->sum('grand_total')
             + Asset::whereBetween('purchase_date', [$monthStart, $monthEnd])->where('is_investment', true)->get()
                 ->sum(fn ($a) => $a->quantity * $a->purchase_price);
 
         $totalInvestment =
             Expense::where('is_investment', true)->sum('amount')
             + Purchase::where('is_investment', true)->sum('grand_total')
+            + SpicePurchase::where('is_investment', true)->sum('grand_total')
             + Asset::where('is_investment', true)->get()->sum(fn ($a) => $a->quantity * $a->purchase_price);
 
         /* -------------------------
@@ -92,14 +106,23 @@ class DashboardController extends Controller
         /* -------------------------
         * PENDING (UDHAAR)
         * ------------------------ */
-        $totalPending = Sale::sum('pending_amount');
-        $monthPending = Sale::whereBetween('sale_date', [$monthStart, $monthEnd])->sum('pending_amount');
+        $totalSaltPending  = Sale::sum('pending_amount');
+        $totalSpicePending = SpiceSale::sum('pending_amount');
+        $totalPending = $totalSaltPending + $totalSpicePending;
+
+        $monthSaltPending  = Sale::whereBetween('sale_date', [$monthStart, $monthEnd])->sum('pending_amount');
+        $monthSpicePending = SpiceSale::whereBetween('sale_date', [$monthStart, $monthEnd])->sum('pending_amount');
+        $monthPending = $monthSaltPending + $monthSpicePending;
 
         /* -------------------------
         * COUNTS
         * ------------------------ */
         $monthSalesCount  = Sale::whereBetween('sale_date', [$monthStart, $monthEnd])->count();
         $totalSalesCount  = Sale::count();
+
+        $monthSpiceSalesCount = SpiceSale::whereBetween('sale_date', [$monthStart, $monthEnd])->count();
+        $totalSpiceSalesCount = SpiceSale::count();
+
         $activeShopsCount = Shop::where('status', 'active')->count();
         $totalVendors     = Vendor::count();
         $workingEmployees = Employee::where('status', 'working')->count();
@@ -111,6 +134,18 @@ class DashboardController extends Controller
         $confirmedOrdersCount = Order::where('status', 'confirmed')->count();
         $totalOrdersCount     = Order::count();
         $recentPendingOrders  = Order::with(['shop', 'items'])
+            ->where('status', 'pending')
+            ->orderByDesc('id')
+            ->limit(5)
+            ->get();
+
+        /* -------------------------
+        * SPICE ORDERS
+        * ------------------------ */
+        $pendingSpiceOrdersCount   = SpiceOrder::where('status', 'pending')->count();
+        $confirmedSpiceOrdersCount = SpiceOrder::where('status', 'confirmed')->count();
+        $totalSpiceOrdersCount     = SpiceOrder::count();
+        $recentPendingSpiceOrders  = SpiceOrder::with(['shop', 'items.spiceType'])
             ->where('status', 'pending')
             ->orderByDesc('id')
             ->limit(5)
@@ -278,8 +313,14 @@ class DashboardController extends Controller
             'totalProfitLoss',
             'totalPending',
             'monthPending',
+            'totalSaltPending',
+            'totalSpicePending',
+            'monthSaltPending',
+            'monthSpicePending',
             'monthSalesCount',
             'totalSalesCount',
+            'monthSpiceSalesCount',
+            'totalSpiceSalesCount',
             'activeShopsCount',
             'totalVendors',
             'workingEmployees',
@@ -296,9 +337,21 @@ class DashboardController extends Controller
             'confirmedOrdersCount',
             'totalOrdersCount',
             'recentPendingOrders',
+            'pendingSpiceOrdersCount',
+            'confirmedSpiceOrdersCount',
+            'totalSpiceOrdersCount',
+            'recentPendingSpiceOrders',
             'citySales',
             'areaSales',
-            'inactiveShops'
+            'inactiveShops',
+            'monthSaltSalesTotal',
+            'monthSpiceSalesTotal',
+            'totalSaltSales',
+            'totalSpiceSales',
+            'monthSaltPurchasesTotal',
+            'monthSpicePurchasesTotal',
+            'saltPurchasesTotal',
+            'spicePurchasesTotal',
         ));
     }
 }

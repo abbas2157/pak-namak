@@ -36,6 +36,10 @@ return [
     'thaila_sizes' => [5, 10, 30, 35, 40, 50],
     'package_grams' => [250, 300, 400, 500, 600, 700],
 
+    // Weight scale for the Spices module (Chilli/Turmeric/etc). Values in grams;
+    // 1000/5000/10000 represent 1kg/5kg/10kg for uniform gram-based storage/sorting.
+    'spice_sizes' => [50, 100, 200, 500, 1000, 5000, 10000],
+
     // Fixed weekly off for attendance/salary deduction purposes (0=Sunday ... 6=Saturday)
     'weekly_holiday' => 0,
 ];

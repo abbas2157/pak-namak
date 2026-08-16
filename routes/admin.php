@@ -88,5 +88,42 @@ Route::middleware('web')->group(function () {
         Route::post('orders/{order}/reject',    [App\Http\Controllers\Admin\OrderAdminController::class, 'reject'])->name('admin.orders.reject');
         Route::get('orders/{order}/to-sale',    [App\Http\Controllers\Admin\OrderAdminController::class, 'toSale'])->name('admin.orders.to_sale');
 
+        // ═══════════════════════════════════════════════════════════
+        // SPICES MODULE — separate from salt (Chilli, Turmeric, ...)
+        // ═══════════════════════════════════════════════════════════
+
+        // ->parameters() pins each resource's route wildcard to match the
+        // controller's chosen variable name — Laravel's default wildcard for a
+        // multi-word kebab resource (e.g. "spice-sales") is the snake_case
+        // "spice_sale", which won't implicitly bind to a camelCase $spiceSale
+        // parameter and would silently inject an empty, unsaved model instead.
+        Route::resource('spice-types', App\Http\Controllers\Admin\SpiceTypeController::class, ['as' => 'admin'])
+            ->parameters(['spice-types' => 'type']);
+
+        // URI is plural ("spice-stocks") to avoid colliding with the public
+        // singular "/spice-stock" viewing page below — same admin-plural /
+        // public-singular convention salt uses ("stocks" vs "stock"). Route
+        // *names* stay "admin.spice-stock.*" (unaffected by the URI change).
+        Route::get('spice-stocks', [App\Http\Controllers\Admin\SpiceStockController::class, 'index'])->name('admin.spice-stock.index');
+        Route::post('spice-stocks/addition', [App\Http\Controllers\Admin\SpiceStockController::class, 'storeAddition'])->name('admin.spice-stock.addition');
+        Route::post('spice-stocks/adjustment', [App\Http\Controllers\Admin\SpiceStockController::class, 'storeAdjustment'])->name('admin.spice-stock.adjustment');
+
+        Route::resource('spice-purchases', App\Http\Controllers\Admin\SpicePurchaseController::class, ['as' => 'admin']);
+        Route::post('spice-purchases/{purchase}/payments', [App\Http\Controllers\Admin\SpicePurchaseController::class, 'recordPayment'])->name('admin.spice-purchases.payments.store');
+        Route::get('spice-purchases/{purchase}/payments', [App\Http\Controllers\Admin\SpicePurchaseController::class, 'payments'])->name('admin.spice-purchases.payments.index');
+        Route::delete('spice-purchases/{purchase}/payments/{payment}', [App\Http\Controllers\Admin\SpicePurchaseController::class, 'destroyPayment'])->name('admin.spice-purchases.payments.destroy');
+
+        Route::resource('spice-sales', App\Http\Controllers\Admin\SpiceSaleController::class, ['as' => 'admin'])
+            ->parameters(['spice-sales' => 'spiceSale']);
+        Route::post('spice-sales/{spiceSale}/quick-update', [App\Http\Controllers\Admin\SpiceSaleController::class, 'quickUpdate'])->name('admin.spice-sales.quick_update');
+        Route::post('spice-sales/{spiceSale}/payments', [App\Http\Controllers\Admin\SpiceSaleController::class, 'addPayment'])->name('admin.spice-sales.payments.store');
+        Route::delete('spice-sales/{spiceSale}/payments/{payment}', [App\Http\Controllers\Admin\SpiceSaleController::class, 'destroyPayment'])->name('admin.spice-sales.payments.destroy');
+
+        Route::get('spice-orders',                    [App\Http\Controllers\Admin\SpiceOrderAdminController::class, 'index'])->name('admin.spice-orders.index');
+        Route::get('spice-orders/{spiceOrder}',        [App\Http\Controllers\Admin\SpiceOrderAdminController::class, 'show'])->name('admin.spice-orders.show');
+        Route::post('spice-orders/{spiceOrder}/confirm', [App\Http\Controllers\Admin\SpiceOrderAdminController::class, 'confirm'])->name('admin.spice-orders.confirm');
+        Route::post('spice-orders/{spiceOrder}/reject', [App\Http\Controllers\Admin\SpiceOrderAdminController::class, 'reject'])->name('admin.spice-orders.reject');
+        Route::get('spice-orders/{spiceOrder}/to-sale', [App\Http\Controllers\Admin\SpiceOrderAdminController::class, 'toSale'])->name('admin.spice-orders.to_sale');
+
     });
 });

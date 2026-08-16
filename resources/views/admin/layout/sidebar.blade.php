@@ -12,11 +12,13 @@
                 $vendorsActive   = request()->routeIs('admin.vendors.*') || request()->routeIs('admin.vendors.payment_form');
                 $employeesActive = request()->routeIs('admin.employees.*') || request()->routeIs('admin.holidays.*');
 
-                $overviewCatActive = request()->routeIs('dashboard') || request()->routeIs('admin.cash_ledger.*') || request()->routeIs('admin.orders.*');
+                $ordersActive = request()->routeIs('admin.orders.*') || request()->routeIs('admin.spice-orders.*');
+                $overviewCatActive = request()->routeIs('dashboard') || request()->routeIs('admin.cash_ledger.*') || $ordersActive;
                 $salesCatActive    = request()->routeIs('admin.sales.*') || $shopsActive;
                 $purchCatActive    = request()->routeIs('admin.purchases.*') || $vendorsActive || request()->routeIs('admin.productions.*') || request()->routeIs('admin.stocks.*');
                 $financeCatActive  = request()->routeIs('admin.expenses.*') || request()->routeIs('admin.assets.*');
                 $settingsCatActive = request()->routeIs('admin.types.*') || request()->routeIs('admin.cities.*') || request()->routeIs('admin.areas.*');
+                $spicesCatActive   = request()->routeIs('admin.spice-*');
             @endphp
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
 
@@ -39,17 +41,47 @@
                                 <p>Cash &amp; Bank <small class="d-block nav-sub-lbl">نقد اور بینک</small></p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.orders.index') }}" class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
+                        <li class="nav-item has-treeview {{ $ordersActive ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ $ordersActive ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>
                                     Orders <small class="d-block nav-sub-lbl">آرڈرز</small>
-                                    @php $pendingOrders = \App\Models\Order::where('status','pending')->count(); @endphp
-                                    @if($pendingOrders > 0)
-                                        <span class="badge badge-warning right icon-10">{{ $pendingOrders }}</span>
+                                    @php
+                                        $pendingOrders = \App\Models\Order::where('status','pending')->count();
+                                        $pendingSpiceOrders = \App\Models\SpiceOrder::where('status','pending')->count();
+                                    @endphp
+                                    @if(($pendingOrders + $pendingSpiceOrders) > 0)
+                                        <span class="badge badge-warning right icon-10">{{ $pendingOrders + $pendingSpiceOrders }}</span>
                                     @endif
+                                    <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.orders.index') }}"
+                                       class="nav-link {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>
+                                            Salt <small class="d-block nav-sub-lbl">نمک</small>
+                                            @if($pendingOrders > 0)
+                                                <span class="badge badge-warning right icon-10">{{ $pendingOrders }}</span>
+                                            @endif
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.spice-orders.index') }}"
+                                       class="nav-link {{ request()->routeIs('admin.spice-orders.*') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>
+                                            Chilli <small class="d-block nav-sub-lbl">مرچ</small>
+                                            @if($pendingSpiceOrders > 0)
+                                                <span class="badge badge-warning right icon-10">{{ $pendingSpiceOrders }}</span>
+                                            @endif
+                                        </p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </li>
@@ -143,6 +175,52 @@
                             <a href="{{ route('admin.stocks.index') }}" class="nav-link {{ request()->routeIs('admin.stocks.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Stock <small class="d-block nav-sub-lbl">اسٹاک</small></p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                {{-- ═══ SPICES ═══ --}}
+                <li class="nav-item has-treeview {{ $spicesCatActive ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link nav-cat-link {{ $spicesCatActive ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-pepper-hot"></i>
+                        <p>Spices <small class="d-block nav-sub-lbl">مصالحہ جات</small> <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.spice-sales.index') }}" class="nav-link {{ request()->routeIs('admin.spice-sales.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Spice Sales <small class="d-block nav-sub-lbl">مصالحہ فروخت</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.spice-purchases.index') }}" class="nav-link {{ request()->routeIs('admin.spice-purchases.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Spice Purchases <small class="d-block nav-sub-lbl">مصالحہ خریداری</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.spice-orders.index') }}" class="nav-link {{ request()->routeIs('admin.spice-orders.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>
+                                    Spice Orders <small class="d-block nav-sub-lbl">مصالحہ آرڈرز</small>
+                                    @php $pendingSpiceOrders = \App\Models\SpiceOrder::where('status','pending')->count(); @endphp
+                                    @if($pendingSpiceOrders > 0)
+                                        <span class="badge badge-warning right icon-10">{{ $pendingSpiceOrders }}</span>
+                                    @endif
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.spice-stock.index') }}" class="nav-link {{ request()->routeIs('admin.spice-stock.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Spice Stock <small class="d-block nav-sub-lbl">مصالحہ اسٹاک</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.spice-types.index') }}" class="nav-link {{ request()->routeIs('admin.spice-types.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Spice Types <small class="d-block nav-sub-lbl">مصالحہ کی اقسام</small></p>
                             </a>
                         </li>
                     </ul>

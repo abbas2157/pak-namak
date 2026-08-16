@@ -79,6 +79,16 @@
                 View Stock — اسٹاک دیکھیں
             </a>
 
+            <a href="{{ route('spice-order.form') }}" class="order-link" style="margin-top: 10px;">
+                <i class="fas fa-pepper-hot"></i>
+                Place a Spice Order — مصالحہ آرڈر کریں
+            </a>
+
+            <a href="{{ route('spice-stock.public') }}" class="order-link" style="margin-top: 10px;">
+                <i class="fas fa-warehouse"></i>
+                View Spice Stock — مصالحہ اسٹاک دیکھیں
+            </a>
+
         </div>
 
         <div class="login-footer">{{ config('admin.pak_namak.website') }}</div>

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\SpiceOrderController;
 
 // Landing page
 Route::get('/', function () {
@@ -17,6 +18,15 @@ Route::get('/order/shop/{shop}/info',        [OrderController::class, 'shopInfo'
 // Public stock availability
 Route::get('/stock',                         [OrderController::class, 'stockView'])->name('stock.public');
 Route::get('/stock/data',                    [OrderController::class, 'stockData'])->name('stock.data');
+
+// Public spice order portal (Chilli, Turmeric, ...) — separate from salt
+Route::get('/spice-order',                     [SpiceOrderController::class, 'form'])->name('spice-order.form');
+Route::post('/spice-order',                    [SpiceOrderController::class, 'store'])->name('spice-order.store');
+Route::get('/spice-order/confirm/{reference}', [SpiceOrderController::class, 'confirm'])->name('spice-order.confirm');
+
+// Public spice stock availability
+Route::get('/spice-stock',                     [SpiceOrderController::class, 'stockView'])->name('spice-stock.public');
+Route::get('/spice-stock/data',                [SpiceOrderController::class, 'stockData'])->name('spice-stock.data');
 
 
 

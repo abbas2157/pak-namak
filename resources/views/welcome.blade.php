@@ -32,6 +32,15 @@
                 <i class="fas fa-chevron-right ms-auto abl-arrow-bright"></i>
             </a>
 
+            <a href="{{ route('spice-order.form') }}" class="action-btn-landing btn-order-landing">
+                <div class="abl-icon"><i class="fas fa-pepper-hot"></i></div>
+                <div>
+                    <div class="abl-title">Place a Spice Order</div>
+                    <div class="abl-desc">مصالحہ آرڈر کریں — No account needed</div>
+                </div>
+                <i class="fas fa-chevron-right ms-auto abl-arrow-bright"></i>
+            </a>
+
             <div class="pn-divider">or</div>
 
             <a href="{{ route('dashboard') }}" class="action-btn-landing btn-admin-landing">

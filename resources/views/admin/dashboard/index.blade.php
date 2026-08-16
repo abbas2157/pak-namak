@@ -31,16 +31,23 @@
 <section class="content">
     <div class="container-fluid">
 
+        {{-- ═══════════════════════════════════════════════════════════
+             COMMON — shared across Salt and Spices, shown before the tabs
+        ═══════════════════════════════════════════════════════════ --}}
+
         {{-- ── QUICK ACTIONS ────────────────────────────── --}}
         <div class="row mb-3">
             <div class="col-12 d-flex flex-wrap">
                 <a href="{{ route('admin.sales.create') }}" class="btn btn-pn px-4 mr-2 mb-2 text-white" style="background:linear-gradient(135deg,#1a5c35,#2d7a4f);">
                     <i class="fas fa-plus mr-1"></i> Add Sale / فروخت
                 </a>
+                <a href="{{ route('admin.spice-sales.create') }}" class="btn btn-pn px-4 mr-2 mb-2 text-white" style="background:linear-gradient(135deg,#4a2f7a,#7a4fbf);">
+                    <i class="fas fa-pepper-hot mr-1"></i> Add Spice Sale / مصالحہ فروخت
+                </a>
                 <a href="{{ route('admin.shops.index') }}?open=create" class="btn btn-pn px-4 mr-2 mb-2 text-white" style="background:linear-gradient(135deg,#3a5fc9,#4e73df);">
                     <i class="fas fa-store mr-1"></i> Add Shop / دکان
                 </a>
-                <a href="{{ route('admin.stocks.index') }}" class="btn btn-pn px-4 mr-2 mb-2 text-white" style="background:linear-gradient(135deg,#4a2f7a,#7a4fbf);">
+                <a href="{{ route('admin.stocks.index') }}" class="btn btn-pn px-4 mr-2 mb-2 text-white" style="background:linear-gradient(135deg,#0d5c5c,#1a8a8a);">
                     <i class="fas fa-warehouse mr-1"></i> Add Stock / اسٹاک
                 </a>
                 <a href="{{ route('order.form') }}" target="_blank" rel="noopener" class="btn btn-pn px-4 mr-2 mb-2 text-white" style="background:linear-gradient(135deg,#b8391f,#e74a3b);">
@@ -106,7 +113,7 @@
 
         {{-- ── ENTITY QUICK COUNTS ────────────────────────────── --}}
         <div class="row mb-4">
-            <div class="col-xl-3 col-md-6 mb-3">
+            <div class="col-xl-4 col-md-4 mb-3">
                 <a href="{{ route('admin.shops.index') }}" class="text-decoration-none">
                     <div class="card border-0 shadow-sm h-100 pn-bl-green">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
@@ -120,7 +127,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-xl-3 col-md-6 mb-3">
+            <div class="col-xl-4 col-md-4 mb-3">
                 <a href="{{ route('admin.vendors.index') }}" class="text-decoration-none">
                     <div class="card border-0 shadow-sm h-100 pn-bl-purple">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
@@ -134,7 +141,7 @@
                     </div>
                 </a>
             </div>
-            <div class="col-xl-3 col-md-6 mb-3">
+            <div class="col-xl-4 col-md-4 mb-3">
                 <a href="{{ route('admin.employees.index') }}" class="text-decoration-none">
                     <div class="card border-0 shadow-sm h-100 pn-bl-teal">
                         <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
@@ -148,73 +155,13 @@
                     </div>
                 </a>
             </div>
-            <div class="col-xl-3 col-md-6 mb-3">
-                <a href="{{ route('admin.sales.index') }}" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm h-100 pn-bl-yellow">
-                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
-                            <div>
-                                <div class="pn-stat-lbl">Total Sale Invoices / کل فروخت بل</div>
-                                <div class="pn-stat-num-lg text-c-warn">{{ $totalSalesCount }}</div>
-                                <div class="pn-stat-sub">all-time transactions</div>
-                            </div>
-                            <i class="fas fa-file-invoice card-bg-icon text-c-warn"></i>
-                        </div>
-                    </div>
-                </a>
-            </div>
         </div>
 
-        {{-- ── ORDERS SUMMARY ─────────────────────────────────── --}}
-        <div class="row mb-4">
-            <div class="col-xl-4 col-md-4 col-sm-6 mb-3">
-                <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm h-100 pn-bl-yellow">
-                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
-                            <div>
-                                <div class="pn-stat-lbl">Pending Orders / زیر التواء آرڈرز</div>
-                                <div class="pn-stat-num-lg text-c-warn">{{ $pendingOrdersCount }}</div>
-                                <div class="pn-stat-sub">awaiting action</div>
-                            </div>
-                            <i class="fas fa-clock card-bg-icon text-c-warn"></i>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-xl-4 col-md-4 col-sm-6 mb-3">
-                <a href="{{ route('admin.orders.index', ['status' => 'confirmed']) }}" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm h-100 pn-bl-teal">
-                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
-                            <div>
-                                <div class="pn-stat-lbl">Confirmed Orders / تصدیق شدہ آرڈرز</div>
-                                <div class="pn-stat-num-lg text-c-teal">{{ $confirmedOrdersCount }}</div>
-                                <div class="pn-stat-sub">confirmed</div>
-                            </div>
-                            <i class="fas fa-check-circle card-bg-icon text-c-teal"></i>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-xl-4 col-md-4 col-sm-6 mb-3">
-                <a href="{{ route('admin.orders.index') }}" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm h-100 pn-bl-green">
-                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
-                            <div>
-                                <div class="pn-stat-lbl">Total Orders / کل آرڈرز</div>
-                                <div class="pn-stat-num-lg text-c-green">{{ $totalOrdersCount }}</div>
-                                <div class="pn-stat-sub">all time</div>
-                            </div>
-                            <i class="fas fa-inbox card-bg-icon text-c-green"></i>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        {{-- ── ALL-TIME SNAPSHOT ───────────────────────────────── --}}
+        {{-- ── ALL-TIME SNAPSHOT (salt + spices combined) ─────── --}}
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
                 <div class="pn-section-lbl">Overall / مجموعی</div>
-                <h5 class="mb-0 font-weight-bold pn-section-title">Total Snapshot <small class="text-muted ch-desc">کل جائزہ</small></h5>
+                <h5 class="mb-0 font-weight-bold pn-section-title">Total Snapshot <small class="text-muted ch-desc">کل جائزہ — نمک اور مصالحہ جات ملا کر</small></h5>
             </div>
         </div>
 
@@ -230,7 +177,7 @@
                             <div>
                                 <div class="pn-tbl-lbl">Total Sales / کل فروخت</div>
                                 <div class="pn-stat-num-sm text-c-dgreen">{{ number_format($totalSales, 0) }}</div>
-                                <div class="pn-stat-sub">{{ $totalSalesCount }} invoices</div>
+                                <div class="pn-stat-sub">{{ $totalSalesCount + $totalSpiceSalesCount }} invoices</div>
                             </div>
                         </div>
                     </div>
@@ -337,12 +284,13 @@
             </div>
         </div>
 
-        {{-- ── MONTHLY FINANCIALS ──────────────────────────────── --}}
+        {{-- ── MONTHLY FINANCIALS (salt + spices combined) ────── --}}
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div>
                 <div class="pn-section-lbl">Monthly Snapshot / ماہانہ جائزہ</div>
                 <h5 class="mb-0 font-weight-bold pn-section-title">
                     {{ \Carbon\Carbon::createFromFormat('Y-m', $selectedMonth)->format('F Y') }}
+                    <small class="text-muted ch-desc">— نمک اور مصالحہ جات ملا کر</small>
                 </h5>
             </div>
             <a href="{{ route('admin.sales.index', ['month' => $selectedMonth]) }}"
@@ -351,7 +299,7 @@
             </a>
         </div>
 
-        <div class="row mb-3">
+        <div class="row mb-4">
             {{-- Sales --}}
             <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
                 <div class="card border-0 shadow-sm h-100 card-pn">
@@ -363,7 +311,7 @@
                             <div>
                                 <div class="pn-tbl-lbl">Sales / فروخت</div>
                                 <div class="pn-stat-num-sm text-c-dgreen">{{ number_format($monthSalesTotal, 0) }}</div>
-                                <div class="pn-stat-sub">{{ $monthSalesCount }} invoices</div>
+                                <div class="pn-stat-sub">{{ $monthSalesCount + $monthSpiceSalesCount }} invoices</div>
                             </div>
                         </div>
                     </div>
@@ -465,6 +413,90 @@
                     </div>
                     <div class="snap-bt"></div>
                 </div>
+            </div>
+        </div>
+
+        {{-- ═══════════════════════════════════════════════════════════
+             TABS — Salt vs Chilli & Spices, each with its own detail
+        ═══════════════════════════════════════════════════════════ --}}
+
+        <ul class="nav nav-tabs pn-dash-tabs mb-3" id="dashProductTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="salt-tab" data-toggle="tab" data-bs-toggle="tab"
+                   href="#salt-panel" role="tab" aria-controls="salt-panel" aria-selected="true">
+                    <i class="fas fa-cube mr-1"></i> Salt <small class="d-none d-sm-inline">/ نمک</small>
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="spice-tab" data-toggle="tab" data-bs-toggle="tab"
+                   href="#spice-panel" role="tab" aria-controls="spice-panel" aria-selected="false">
+                    <i class="fas fa-pepper-hot mr-1"></i> Chilli &amp; Spices <small class="d-none d-sm-inline">/ مصالحہ جات</small>
+                </a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="dashProductTabsContent">
+
+        {{-- ═══════════════════════════ SALT TAB ═══════════════════════════ --}}
+        <div class="tab-pane fade show active" id="salt-panel" role="tabpanel" aria-labelledby="salt-tab">
+
+        {{-- ── SALT SALES + ORDERS SUMMARY ─────────────────────── --}}
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <a href="{{ route('admin.sales.index') }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100 pn-bl-yellow">
+                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
+                            <div>
+                                <div class="pn-stat-lbl">Total Sale Invoices / کل فروخت بل</div>
+                                <div class="pn-stat-num-lg text-c-warn">{{ $totalSalesCount }}</div>
+                                <div class="pn-stat-sub">all-time — {{ number_format($totalSaltSales, 0) }} PKR</div>
+                            </div>
+                            <i class="fas fa-file-invoice card-bg-icon text-c-warn"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100 pn-bl-yellow">
+                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
+                            <div>
+                                <div class="pn-stat-lbl">Pending Orders / زیر التواء آرڈرز</div>
+                                <div class="pn-stat-num-lg text-c-warn">{{ $pendingOrdersCount }}</div>
+                                <div class="pn-stat-sub">awaiting action</div>
+                            </div>
+                            <i class="fas fa-clock card-bg-icon text-c-warn"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <a href="{{ route('admin.orders.index', ['status' => 'confirmed']) }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100 pn-bl-teal">
+                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
+                            <div>
+                                <div class="pn-stat-lbl">Confirmed Orders / تصدیق شدہ آرڈرز</div>
+                                <div class="pn-stat-num-lg text-c-teal">{{ $confirmedOrdersCount }}</div>
+                                <div class="pn-stat-sub">confirmed</div>
+                            </div>
+                            <i class="fas fa-check-circle card-bg-icon text-c-teal"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <a href="{{ route('admin.orders.index') }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100 pn-bl-green">
+                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
+                            <div>
+                                <div class="pn-stat-lbl">Total Orders / کل آرڈرز</div>
+                                <div class="pn-stat-num-lg text-c-green">{{ $totalOrdersCount }}</div>
+                                <div class="pn-stat-sub">all time</div>
+                            </div>
+                            <i class="fas fa-inbox card-bg-icon text-c-green"></i>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
 
@@ -854,14 +886,14 @@
         </div>
         @endif
 
-        {{-- ── INACTIVE SHOPS (no sale in last 30 days) ──────── --}}
+        {{-- ── INACTIVE SHOPS (no salt sale in last 30 days) ──── --}}
         @if($inactiveShops->count() > 0)
         <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
             <div>
                 <div class="pn-section-lbl">Attention Required / توجہ درکار</div>
                 <h5 class="mb-0 font-weight-bold pn-section-title">
                     Inactive Shops
-                    <small class="text-muted ch-desc">— no sale in last 30 days</small>
+                    <small class="text-muted ch-desc">— no salt sale in last 30 days</small>
                 </h5>
             </div>
             <a href="{{ route('admin.shops.index') }}"
@@ -955,6 +987,273 @@
         </div>
         @endif
 
+        </div>{{-- /salt-panel --}}
+
+        {{-- ═══════════════════════════ SPICE TAB ══════════════════════════ --}}
+        <div class="tab-pane fade" id="spice-panel" role="tabpanel" aria-labelledby="spice-tab">
+
+        {{-- ── SPICE SALES + ORDERS SUMMARY ────────────────────── --}}
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <a href="{{ route('admin.spice-sales.index') }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100 pn-bl-purple">
+                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
+                            <div>
+                                <div class="pn-stat-lbl">Total Spice Sale Invoices / کل مصالحہ فروخت بل</div>
+                                <div class="pn-stat-num-lg text-c-purple">{{ $totalSpiceSalesCount }}</div>
+                                <div class="pn-stat-sub">all-time — {{ number_format($totalSpiceSales, 0) }} PKR</div>
+                            </div>
+                            <i class="fas fa-file-invoice card-bg-icon text-c-purple"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <a href="{{ route('admin.spice-orders.index', ['status' => 'pending']) }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100 pn-bl-yellow">
+                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
+                            <div>
+                                <div class="pn-stat-lbl">Pending Spice Orders / زیر التواء مصالحہ آرڈرز</div>
+                                <div class="pn-stat-num-lg text-c-warn">{{ $pendingSpiceOrdersCount }}</div>
+                                <div class="pn-stat-sub">awaiting action</div>
+                            </div>
+                            <i class="fas fa-pepper-hot card-bg-icon text-c-warn"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <a href="{{ route('admin.spice-orders.index', ['status' => 'confirmed']) }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100 pn-bl-teal">
+                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
+                            <div>
+                                <div class="pn-stat-lbl">Confirmed Spice Orders / تصدیق شدہ مصالحہ آرڈرز</div>
+                                <div class="pn-stat-num-lg text-c-teal">{{ $confirmedSpiceOrdersCount }}</div>
+                                <div class="pn-stat-sub">confirmed</div>
+                            </div>
+                            <i class="fas fa-check-circle card-bg-icon text-c-teal"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <a href="{{ route('admin.spice-orders.index') }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100 pn-bl-green">
+                        <div class="card-body d-flex align-items-center justify-content-between py-3 px-4">
+                            <div>
+                                <div class="pn-stat-lbl">Total Spice Orders / کل مصالحہ آرڈرز</div>
+                                <div class="pn-stat-num-lg text-c-green">{{ $totalSpiceOrdersCount }}</div>
+                                <div class="pn-stat-sub">all time</div>
+                            </div>
+                            <i class="fas fa-inbox card-bg-icon text-c-green"></i>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        {{-- ── SPICE FINANCIAL SNAPSHOT ────────────────────────── --}}
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <div class="pn-section-lbl">Spices Only / صرف مصالحہ جات</div>
+                <h5 class="mb-0 font-weight-bold pn-section-title">Financial Snapshot <small class="text-muted ch-desc">مالی جائزہ</small></h5>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card border-0 shadow-sm h-100 card-pn">
+                    <div class="card-body py-3 px-3">
+                        <div class="d-flex align-items-start">
+                            <div class="pn-icon pn-icon-sm pnis-green mr-2 flex-shrink-0">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div>
+                                <div class="pn-tbl-lbl">Total Spice Sales / کل مصالحہ فروخت</div>
+                                <div class="pn-stat-num-sm text-c-dgreen">{{ number_format($totalSpiceSales, 0) }}</div>
+                                <div class="pn-stat-sub">this month: {{ number_format($monthSpiceSalesTotal, 0) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="snap-bt snap-bt-green"></div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card border-0 shadow-sm h-100 card-pn">
+                    <div class="card-body py-3 px-3">
+                        <div class="d-flex align-items-start">
+                            <div class="pn-icon pn-icon-sm pnis-yellow mr-2 flex-shrink-0">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div>
+                                <div class="pn-tbl-lbl">Total Spice Purchases / کل مصالحہ خریداری</div>
+                                <div class="pn-stat-num-sm text-c-orange2">{{ number_format($spicePurchasesTotal, 0) }}</div>
+                                <div class="pn-stat-sub">this month: {{ number_format($monthSpicePurchasesTotal, 0) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="snap-bt snap-bt-yellow"></div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card border-0 shadow-sm h-100 card-pn">
+                    <div class="card-body py-3 px-3">
+                        <div class="d-flex align-items-start">
+                            <div class="pn-icon pn-icon-sm pnis-orange mr-2 flex-shrink-0">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>
+                                <div class="pn-tbl-lbl">Pending اُدھار</div>
+                                <div class="pn-stat-num-sm text-c-orange">{{ number_format($totalSpicePending, 0) }}</div>
+                                <div class="pn-stat-sub">this month: {{ number_format($monthSpicePending, 0) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="snap-bt snap-bt-orange"></div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <a href="{{ route('admin.spice-stock.index') }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100 card-pn">
+                        <div class="card-body py-3 px-3">
+                            <div class="d-flex align-items-start">
+                                <div class="pn-icon pn-icon-sm pnis-blue mr-2 flex-shrink-0">
+                                    <i class="fas fa-warehouse"></i>
+                                </div>
+                                <div>
+                                    <div class="pn-tbl-lbl">Spice Stock / مصالحہ اسٹاک</div>
+                                    <div class="pn-stat-num-sm text-c-blue">View Levels</div>
+                                    <div class="pn-stat-sub">click to open</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="snap-bt snap-bt-blue"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        {{-- ── RECENT PENDING SPICE ORDERS ─────────────────────── --}}
+        @if($recentPendingSpiceOrders->count() > 0)
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm card-pn">
+                    <div class="card-header border-0 d-flex justify-content-between align-items-center py-3 ch-yellow">
+                        <div>
+                            <div class="pn-stat-lbl">Action Required / کارروائی درکار</div>
+                            <h6 class="mb-0 font-weight-bold text-c-warn">
+                                <i class="fas fa-pepper-hot mr-1"></i> Pending Spice Orders / زیر التواء مصالحہ آرڈرز
+                                <span class="badge badge-warning ml-1 pn-bdg">{{ $pendingSpiceOrdersCount }}</span>
+                            </h6>
+                        </div>
+                        <a href="{{ route('admin.spice-orders.index', ['status' => 'pending']) }}"
+                           class="btn btn-sm btn-outline-warning btn-rounded pn-label">
+                            View All / سب دیکھیں
+                        </a>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table mb-0 pn-table pn-table-font">
+                                <thead>
+                                    <tr>
+                                        <th class="pl-3">Reference / حوالہ</th>
+                                        <th>Shop / Customer / دکان</th>
+                                        <th>Items / اشیاء</th>
+                                        <th>Submitted / جمع تاریخ</th>
+                                        <th class="text-center">Actions / اقدامات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($recentPendingSpiceOrders as $order)
+                                    <tr>
+                                        <td class="pl-3 align-middle">
+                                            <a href="{{ route('admin.spice-orders.show', $order) }}"
+                                               class="font-weight-bold text-c-green text-decoration-none">
+                                                {{ $order->reference }}
+                                            </a>
+                                        </td>
+                                        <td class="align-middle">
+                                            <span class="font-weight-bold d-block pn-text-heading">
+                                                {{ $order->display_name }}
+                                                @if(!$order->shop_id)
+                                                    <span class="badge badge-secondary ml-1 badge-new-shop">New</span>
+                                                @endif
+                                            </span>
+                                            <small class="text-muted">{{ $order->display_phone }}</small>
+                                        </td>
+                                        <td class="align-middle">
+                                            @foreach($order->items->take(2) as $item)
+                                                <span class="badge mr-1 badge-item-package">
+                                                    {{ $item->quantity }}× {{ $item->spiceType->title ?? 'Spice' }} {{ $item->size }}g
+                                                </span>
+                                            @endforeach
+                                            @if($order->items->count() > 2)
+                                                <small class="text-muted">+{{ $order->items->count()-2 }} more</small>
+                                            @endif
+                                        </td>
+                                        <td class="align-middle pn-text-heading">{{ $order->created_at->format('d M, h:i A') }}</td>
+                                        <td class="align-middle text-center text-nowrap">
+                                            <a href="{{ route('admin.spice-orders.show', $order) }}"
+                                               class="btn btn-sm btn-pn btn-act-gview mr-1" title="View">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <form action="{{ route('admin.spice-orders.confirm', $order) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-pn btn-act-confirm mr-1" title="Confirm">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('admin.spice-orders.reject', $order) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-pn btn-act-delete" title="Reject">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @else
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm card-pn">
+                    <div class="card-body text-center py-5 text-muted">
+                        <i class="fas fa-pepper-hot fa-2x mb-2 d-block icon-fade-soft"></i>
+                        No pending spice orders right now
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        </div>{{-- /spice-panel --}}
+
+        </div>{{-- /tab-content --}}
+
     </div>
 </section>
+@endsection
+
+@section('scripts')
+<script>
+$(function () {
+    // Bootstrap 4/5-agnostic tab activation (this app loads both bundles).
+    $('#dashProductTabs a').on('click', function (e) {
+        e.preventDefault();
+        var target = $(this).attr('href');
+
+        $('#dashProductTabs a').removeClass('active').attr('aria-selected', 'false');
+        $(this).addClass('active').attr('aria-selected', 'true');
+
+        $('.tab-pane').removeClass('show active');
+        $(target).addClass('show active');
+    });
+});
+</script>
 @endsection
