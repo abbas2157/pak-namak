@@ -40,13 +40,10 @@ class Asset extends Model
 
     protected static function booted(): void
     {
-        $sync = function (self $asset) {
-            $prefix = $asset->is_investment ? 'Investment' : 'Asset';
-            CashLedger::sync('asset', $asset->id, 'out', $asset->totalValue(), $asset->purchase_date, "{$prefix}: {$asset->asset_name}", $asset->account_id, (bool) $asset->is_investment);
-        };
-
-        static::created($sync);
-        static::updated($sync);
+        // Adding/editing an asset no longer auto-deducts its value from the
+        // selected account's Cash & Bank balance — assets are tracked as
+        // records only. Still clean up any ledger rows synced under the old
+        // behavior if such an asset is deleted.
         static::deleted(fn (self $asset) => CashLedger::remove('asset', $asset->id));
     }
 }
