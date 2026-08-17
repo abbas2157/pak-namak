@@ -38,7 +38,7 @@ return [
 
     // Weight scale for the Spices module (Chilli/Turmeric/etc). Values in grams;
     // 1000/5000/10000 represent 1kg/5kg/10kg for uniform gram-based storage/sorting.
-    'spice_sizes' => [50, 100, 200, 500, 1000, 5000, 10000],
+    'spice_sizes' => [50, 100, 200, 250, 500, 1000, 5000, 10000],
 
     // Fixed weekly off for attendance/salary deduction purposes (0=Sunday ... 6=Saturday)
     'weekly_holiday' => 0,
