@@ -138,6 +138,11 @@ class PurchaseController extends Controller
         // grand_total may have changed — recompute pending against the same paid_amount
         $this->recalcTotals($purchase);
 
+        // is_investment may have just been toggled — re-sync existing payments'
+        // Cash & Bank ledger entries to match (removed if now investment,
+        // (re)created if no longer investment).
+        $purchase->payments->each->syncLedger();
+
         return response()->json(['success' => true]);
     }
 
