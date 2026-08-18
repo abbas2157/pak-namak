@@ -108,6 +108,7 @@
                 <span class="badge pn-bdg pn-bdg-blue">{{ $totalShops }} shops</span>
             </div>
             <div class="card-body p-0">
+                <div class="table-responsive">
                     <table class="table mb-0 pn-table pn-table-font" id="shopTable">
                         <thead>
                             <tr>
@@ -241,6 +242,7 @@
                         </tfoot>
                         @endif
                     </table>
+                </div>
             </div>
         </div>
 
@@ -389,11 +391,12 @@
                         <input type="date" name="payment_date" id="srp_payment_date" class="form-control fc-pn" required>
                     </div>
                     <div class="mb-3">
-                        <label class="filter-lbl">Received Into <span class="text-danger">*</span></label>
-                        <select name="account_id" class="form-control fc-pn" required>
+                        <label class="filter-lbl">Received Into</label>
+                        <select name="account_id" class="form-control fc-pn">
                             @foreach($accounts as $account)
                                 <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
                             @endforeach
+                            <option value="">Other / Not from Cash &amp; Bank (کیش/بینک سے نہیں)</option>
                         </select>
                     </div>
                     <div class="mb-0">
@@ -417,24 +420,28 @@
 <script>
 $(function () {
 
-    // DataTable
-    $('#shopTable').DataTable({
-        paging: true,
-        pageLength: 15,
-        lengthChange: false,
-        searching: true,
-        ordering: false,
-        info: true,
-        autoWidth: false,
-        responsive: true,
-        columnDefs: [{ orderable: false, targets: [3, 7] }, { responsivePriority: 1, targets: -1 }],
-        language: {
-            search: '',
-            searchPlaceholder: 'Search shops...',
-            info: 'Showing _START_–_END_ of _TOTAL_',
-            paginate: { previous: '‹', next: '›' }
-        }
-    });
+    // DataTable — DataTables throws on an empty (colspan "no records")
+    // table when columnDefs targets a specific column index, aborting
+    // this whole script block. Only initialize with real rows.
+    if ($('#shopTable tbody tr').not(':has(td[colspan])').length > 0) {
+        $('#shopTable').DataTable({
+            paging: true,
+            pageLength: 15,
+            lengthChange: false,
+            searching: true,
+            ordering: false,
+            info: true,
+            autoWidth: false,
+            responsive: true,
+            columnDefs: [{ orderable: false, targets: [3, 7] }, { responsivePriority: 1, targets: -1 }],
+            language: {
+                search: '',
+                searchPlaceholder: 'Search shops...',
+                info: 'Showing _START_–_END_ of _TOTAL_',
+                paginate: { previous: '‹', next: '›' }
+            }
+        });
+    }
 
     // Status filter
     $('.filter-btn').on('click', function () {

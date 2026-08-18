@@ -133,10 +133,12 @@ class ShopController extends Controller
      */
     public function recordPayment(Request $request, Shop $shop)
     {
+        $request->merge(['account_id' => $request->account_id ?: null]);
+
         $request->validate([
             'amount'       => 'required|numeric|min:0.01',
             'payment_date' => 'required|date',
-            'account_id'   => 'required|exists:accounts,id',
+            'account_id'   => 'nullable|exists:accounts,id',
             'note'         => 'nullable|string|max:500',
         ]);
 
@@ -167,10 +169,10 @@ class ShopController extends Controller
 
                 SalePayment::create([
                     'sale_id'        => $sale->id,
-                    'account_id'     => $account->id,
+                    'account_id'     => $account?->id,
                     'amount'         => $allocated,
                     'payment_date'   => $request->payment_date,
-                    'payment_method' => $account->paymentMethodLabel(),
+                    'payment_method' => $account?->paymentMethodLabel() ?? 'Other',
                     'note'           => $request->note,
                 ]);
 

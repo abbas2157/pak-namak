@@ -29,6 +29,11 @@ class Expense extends Model
     protected static function booted(): void
     {
         $sync = function (self $expense) {
+            if (!$expense->account_id) {
+                CashLedger::remove('expense', $expense->id);
+                return;
+            }
+
             $prefix = $expense->is_investment ? 'Investment' : 'Expense';
             $desc = "{$prefix}: {$expense->category}" . ($expense->description ? " — {$expense->description}" : '');
             CashLedger::sync('expense', $expense->id, 'out', (float) $expense->amount, $expense->expense_date, $desc, $expense->account_id, (bool) $expense->is_investment);

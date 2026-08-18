@@ -274,11 +274,12 @@
                         <input type="date" class="form-control" name="payment_date" value="{{ date('Y-m-d') }}" required>
                     </div>
                     <div class="mb-3">
-                        <label>Paid From <span class="text-danger">*</span></label>
-                        <select name="account_id" class="form-control" required>
+                        <label>Paid From</label>
+                        <select name="account_id" class="form-control">
                             @foreach($accounts as $account)
                                 <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
                             @endforeach
+                            <option value="">Other / Not from Cash &amp; Bank (کیش/بینک سے نہیں)</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -325,11 +326,12 @@
                         <input type="date" class="form-control" name="paid_at" value="{{ date('Y-m-d') }}">
                     </div>
                     <div class="mb-3">
-                        <label>Paid From <span class="text-danger">*</span></label>
-                        <select name="account_id" class="form-control" required>
+                        <label>Paid From</label>
+                        <select name="account_id" class="form-control">
                             @foreach($accounts as $account)
                                 <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
                             @endforeach
+                            <option value="">Other / Not from Cash &amp; Bank (کیش/بینک سے نہیں)</option>
                         </select>
                     </div>
                     <div class="mb-3">

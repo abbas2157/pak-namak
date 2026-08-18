@@ -87,6 +87,7 @@
         {{-- ── TABLE ──────────────────────────────────── --}}
         <div class="card card-pn border-0 shadow-sm">
             <div class="card-body p-0">
+                <div class="table-responsive">
                 <table class="table table-sm pn-table pn-table-font mb-0" id="productionsTable">
                     <thead>
                         <tr>
@@ -171,6 +172,7 @@
                     </tfoot>
                     @endif
                 </table>
+                </div>
             </div>
         </div>
 
@@ -238,6 +240,7 @@
                             @foreach($accounts as $account)
                                 <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
                             @endforeach
+                            <option value="">Other / Not from Cash &amp; Bank (کیش/بینک سے نہیں)</option>
                         </select>
                         <small class="text-muted">Only used if a cost above is entered.</small>
                     </div>
@@ -263,17 +266,22 @@
 <script>
 $(document).ready(function () {
 
-    $('#productionsTable').DataTable({
-        paging: true,
-        pageLength: 25,
-        lengthChange: false,
-        searching: true,
-        ordering: false,
-        info: true,
-        autoWidth: false,
-        responsive: true,
-        columnDefs: [{ orderable: false, targets: [8] }, { responsivePriority: 1, targets: -1 }],
-    });
+    // DataTables throws on an empty (colspan "no records") table when
+    // columnDefs targets a specific column index — only initialize when
+    // there are real rows to enhance.
+    if ($('#productionsTable tbody tr').not(':has(td[colspan])').length > 0) {
+        $('#productionsTable').DataTable({
+            paging: true,
+            pageLength: 25,
+            lengthChange: false,
+            searching: true,
+            ordering: false,
+            info: true,
+            autoWidth: false,
+            responsive: true,
+            columnDefs: [{ orderable: false, targets: [8] }, { responsivePriority: 1, targets: -1 }],
+        });
+    }
 
     // Live efficiency calculator
     function calcEfficiency() {

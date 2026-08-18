@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use App\Models\{SpicePurchase, SpicePurchasePayment, SpiceType, Vendor, Account};
+use App\Models\{SpicePurchase, SpicePurchasePayment, SpiceType, Vendor, VendorAdvance, Account};
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
@@ -37,10 +37,17 @@ class SpicePurchaseController extends Controller
 
         $selectedMonth = $request->month;
 
+        // Vendor advance credit still available to draw on, keyed by vendor —
+        // powers the "pay from advance" option in the Record Payment modal.
+        $vendorAdvanceCredit = VendorAdvance::where('remaining_amount', '>', 0)
+            ->selectRaw('vendor_id, SUM(remaining_amount) as total')
+            ->groupBy('vendor_id')
+            ->pluck('total', 'vendor_id');
+
         return view('admin.spice-purchases.index', compact(
             'purchases', 'vendors', 'accounts', 'spiceTypes',
             'totalSpent', 'totalPaid', 'totalPending', 'totalQtyKg', 'totalEntries',
-            'months', 'selectedMonth'
+            'months', 'selectedMonth', 'vendorAdvanceCredit'
         ));
     }
 
@@ -54,6 +61,8 @@ class SpicePurchaseController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge(['account_id' => $request->account_id ?: null]);
+
         $request->validate([
             'vendor_id'     => 'required|exists:vendors,id',
             'spice_type_id' => 'required|exists:spice_types,id',
@@ -140,6 +149,11 @@ class SpicePurchaseController extends Controller
 
         $this->recalcTotals($purchase);
 
+        // is_investment may have just been toggled — re-sync existing payments'
+        // Cash & Bank ledger entries to match (removed if now investment,
+        // (re)created if no longer investment).
+        $purchase->payments->each->syncLedger();
+
         return response()->json(['success' => true]);
     }
 
@@ -149,12 +163,21 @@ class SpicePurchaseController extends Controller
         return response()->json(['success' => true]);
     }
 
+    /**
+     * Record an additional payment against a purchase (clamped to not
+     * exceed what's currently pending). Can either draw fresh money from
+     * a Cash & Bank account, or draw down an existing vendor advance —
+     * money already sent to this vendor before the purchase existed.
+     */
     public function recordPayment(Request $request, SpicePurchase $purchase)
     {
+        $useAdvance = $request->boolean('use_advance_credit');
+        $request->merge(['account_id' => $request->account_id ?: null]);
+
         $request->validate([
             'amount'       => 'required|numeric|min:0.01',
             'payment_date' => 'required|date',
-            'account_id'   => 'required|exists:accounts,id',
+            'account_id'   => 'nullable|exists:accounts,id',
             'note'         => 'nullable|string|max:500',
         ]);
 
@@ -163,6 +186,14 @@ class SpicePurchaseController extends Controller
         }
 
         $amount = min((float) $request->amount, (float) $purchase->pending_amount);
+
+        if ($useAdvance) {
+            $applied = $this->applyAdvanceCredit($purchase, $amount, $request->payment_date, $request->note);
+            if ($applied <= 0) {
+                return response()->json(['success' => false, 'message' => 'This vendor has no advance credit available.'], 422);
+            }
+            return response()->json(['success' => true, 'purchase' => $purchase->fresh()]);
+        }
 
         DB::transaction(function () use ($purchase, $request, $amount) {
             $purchase->payments()->create([
@@ -206,5 +237,53 @@ class SpicePurchaseController extends Controller
             'paid_amount'    => $paid,
             'pending_amount' => $purchase->grand_total - $paid,
         ]);
+    }
+
+    /**
+     * Draw down this vendor's oldest available advance credit first,
+     * spreading the requested amount across as many advance records as
+     * needed. Returns the amount actually applied (capped by whatever
+     * credit genuinely exists).
+     */
+    private function applyAdvanceCredit(SpicePurchase $purchase, float $amount, string $date, ?string $note): float
+    {
+        return DB::transaction(function () use ($purchase, $amount, $date, $note) {
+            $advances = VendorAdvance::where('vendor_id', $purchase->vendor_id)
+                ->where('remaining_amount', '>', 0)
+                ->orderBy('advance_date')
+                ->orderBy('id')
+                ->lockForUpdate()
+                ->get();
+
+            $remaining = min($amount, (float) $advances->sum('remaining_amount'));
+            $totalApplied = 0.0;
+
+            foreach ($advances as $advance) {
+                if ($remaining <= 0) {
+                    break;
+                }
+
+                $allocate = min($remaining, (float) $advance->remaining_amount);
+
+                $purchase->payments()->create([
+                    'account_id'        => $advance->account_id,
+                    'vendor_advance_id' => $advance->id,
+                    'amount'            => $allocate,
+                    'payment_date'      => $date,
+                    'note'              => $note,
+                ]);
+
+                $advance->decrement('remaining_amount', $allocate);
+
+                $remaining -= $allocate;
+                $totalApplied += $allocate;
+            }
+
+            if ($totalApplied > 0) {
+                $this->recalcTotals($purchase);
+            }
+
+            return $totalApplied;
+        });
     }
 }

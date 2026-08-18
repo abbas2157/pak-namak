@@ -28,10 +28,12 @@ class EmployeeSalaryController extends Controller
      */
     public function storeAdvance(Request $request, Employee $employee)
     {
+        $request->merge(['account_id' => $request->account_id ?: null]);
+
         $request->validate([
             'amount'       => 'required|numeric|min:0.01',
             'payment_date' => 'required|date',
-            'account_id'   => 'required|exists:accounts,id',
+            'account_id'   => 'nullable|exists:accounts,id',
             'note'         => 'nullable|string|max:500',
         ]);
 
@@ -55,10 +57,12 @@ class EmployeeSalaryController extends Controller
      */
     public function storeSalary(Request $request, Employee $employee)
     {
+        $request->merge(['account_id' => $request->account_id ?: null]);
+
         $request->validate([
             'month'      => 'required',
             'paid_at'    => 'nullable|date',
-            'account_id' => 'required|exists:accounts,id',
+            'account_id' => 'nullable|exists:accounts,id',
             'note'       => 'nullable|string|max:500',
         ]);
 

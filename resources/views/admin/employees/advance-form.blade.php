@@ -64,11 +64,12 @@
                                         <input type="date" name="payment_date" id="ra_payment_date" class="form-control fc-pn" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label class="filter-lbl">Paid From <span class="text-danger">*</span></label>
-                                        <select name="account_id" class="form-control fc-pn" required>
+                                        <label class="filter-lbl">Paid From</label>
+                                        <select name="account_id" class="form-control fc-pn">
                                             @foreach($accounts as $account)
                                                 <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
                                             @endforeach
+                                            <option value="">Other / Not from Cash &amp; Bank (کیش/بینک سے نہیں)</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6 mb-3">

@@ -34,6 +34,8 @@ class ProductionController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge(['account_id' => $request->account_id ?: null]);
+
         $request->validate([
             'production_date'       => 'required|date',
             'raw_salt_used'         => 'required|numeric|min:0',
@@ -58,6 +60,8 @@ class ProductionController extends Controller
 
     public function update(Request $request, Production $production)
     {
+        $request->merge(['account_id' => $request->account_id ?: null]);
+
         $request->validate([
             'production_date'       => 'required|date',
             'raw_salt_used'         => 'required|numeric|min:0',

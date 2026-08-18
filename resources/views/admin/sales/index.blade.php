@@ -115,6 +115,7 @@
                         <span class="badge pn-bdg pn-bdg-blue">{{ $totalCount }} records</span>
                     </div>
                     <div class="card-body p-2">
+                        <div class="table-responsive">
                             <table class="table mb-0 pn-table pn-table-font" id="salesTable">
                                 <thead>
                                     <tr>
@@ -247,6 +248,7 @@
                                 </tfoot>
                                 @endif
                             </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -503,13 +505,12 @@
                         <input type="date" name="payment_date" id="rp_payment_date" class="form-control fc-pn" required>
                     </div>
                     <div class="mb-3">
-                        <label class="filter-lbl">Method <span class="text-danger">*</span></label>
-                        <select name="payment_method" class="form-control fc-pn" required>
-                            <option value="Cash" selected>Cash</option>
-                            <option value="Bank Transfer">Bank Transfer</option>
-                            <option value="EasyPaisa">EasyPaisa</option>
-                            <option value="JazzCash">JazzCash</option>
-                            <option value="Other">Other</option>
+                        <label class="filter-lbl">Received Into / کہاں موصول ہوا</label>
+                        <select name="account_id" class="form-control fc-pn">
+                            @foreach(\App\Models\Account::where('is_active', true)->orderBy('name')->get() as $account)
+                                <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
+                            @endforeach
+                            <option value="">Other / Not from Cash &amp; Bank (کیش/بینک سے نہیں)</option>
                         </select>
                     </div>
                     <div class="mb-0">
@@ -533,6 +534,12 @@
 <script>
 $(function () {
 
+    // DataTables throws on an empty (colspan "no records") table when
+    // columnDefs targets a specific column index — that column doesn't
+    // exist on the placeholder row, and the crash aborts this whole
+    // script block, silently breaking every button below it. Only
+    // initialize DataTables when there are real rows to enhance.
+    if ($('#salesTable tbody tr').not(':has(td[colspan])').length > 0) {
     $('#salesTable').DataTable({
         paging: true,
         pageLength: 20,
@@ -550,6 +557,7 @@ $(function () {
             paginate: { previous: '‹', next: '›' }
         }
     });
+    }
 
     // View detail
     $(document).on('click', '.viewBtn', function () {

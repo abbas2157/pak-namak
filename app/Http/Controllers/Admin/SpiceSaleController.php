@@ -96,7 +96,8 @@ class SpiceSaleController extends Controller
                         }
 
                         $totalKg = ($gram / 1000) * $qty;
-                        $subTotal = (float) $qty * (float) ($item['price'] ?? 0);
+                        $ratePerKg = (float) ($item['rate_per_kg'] ?? 0);
+                        $subTotal = $totalKg * $ratePerKg;
 
                         SpiceSaleItem::create([
                             'spice_sale_id'   => $sale->id,
@@ -104,7 +105,7 @@ class SpiceSaleController extends Controller
                             'packet_gram'     => $gram,
                             'quantity'        => $qty,
                             'total_kg'        => $totalKg,
-                            'price_per_unit'  => $item['price'] ?? 0,
+                            'price_per_kg'    => $ratePerKg,
                             'sub_total'       => $subTotal,
                         ]);
 
@@ -117,13 +118,13 @@ class SpiceSaleController extends Controller
 
             $initialReceived = min((float) ($request->received_amount ?? 0), $grandTotal);
             if ($initialReceived > 0) {
-                $account = Account::find($request->account_id) ?? Account::where('type', 'cash')->first();
+                $account = Account::find($request->account_id);
                 SpiceSalePayment::create([
                     'spice_sale_id'  => $sale->id,
                     'account_id'     => $account?->id,
                     'amount'         => $initialReceived,
                     'payment_date'   => $sale->sale_date,
-                    'payment_method' => $account?->paymentMethodLabel() ?? 'Cash',
+                    'payment_method' => $account?->paymentMethodLabel() ?? 'Other',
                     'note'           => 'Initial payment at sale creation',
                 ]);
             }
@@ -195,7 +196,8 @@ class SpiceSaleController extends Controller
                         if (empty($qty)) continue;
 
                         $totalKg = ($gram / 1000) * $qty;
-                        $subTotal = (float) $qty * (float) ($item['price'] ?? 0);
+                        $ratePerKg = (float) ($item['rate_per_kg'] ?? 0);
+                        $subTotal = $totalKg * $ratePerKg;
 
                         SpiceSaleItem::create([
                             'spice_sale_id'   => $spiceSale->id,
@@ -203,7 +205,7 @@ class SpiceSaleController extends Controller
                             'packet_gram'     => $gram,
                             'quantity'        => $qty,
                             'total_kg'        => $totalKg,
-                            'price_per_unit'  => $item['price'] ?? 0,
+                            'price_per_kg'    => $ratePerKg,
                             'sub_total'       => $subTotal,
                         ]);
 
@@ -245,10 +247,12 @@ class SpiceSaleController extends Controller
 
     public function addPayment(Request $request, SpiceSale $spiceSale)
     {
+        $request->merge(['account_id' => $request->account_id ?: null]);
+
         $request->validate([
             'amount'       => 'required|numeric|min:0.01',
             'payment_date' => 'required|date',
-            'account_id'   => 'required|exists:accounts,id',
+            'account_id'   => 'nullable|exists:accounts,id',
             'note'         => 'nullable|string|max:500',
         ]);
 
@@ -262,10 +266,10 @@ class SpiceSaleController extends Controller
 
             SpiceSalePayment::create([
                 'spice_sale_id'  => $spiceSale->id,
-                'account_id'     => $account->id,
+                'account_id'     => $account?->id,
                 'amount'         => $amount,
                 'payment_date'   => $request->payment_date,
-                'payment_method' => $account->paymentMethodLabel(),
+                'payment_method' => $account?->paymentMethodLabel() ?? 'Other',
                 'note'           => $request->note,
             ]);
 

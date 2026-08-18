@@ -42,6 +42,11 @@ class EmployeeSalary extends Model
                 return;
             }
 
+            if (!$salary->account_id) {
+                CashLedger::remove('employee_salary', $salary->id);
+                return;
+            }
+
             $name = $salary->employee?->name ?? 'Unknown Employee';
             $desc = $salary->type === 'advance'
                 ? "Advance to {$name}"

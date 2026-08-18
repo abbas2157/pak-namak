@@ -25,6 +25,11 @@ class SpiceSalePayment extends Model
     protected static function booted(): void
     {
         $sync = function (self $payment) {
+            if (!$payment->account_id) {
+                CashLedger::remove('spice_sale_payment', $payment->id);
+                return;
+            }
+
             $shopName = $payment->sale?->shop?->name ?? 'Unknown Shop';
             CashLedger::sync('spice_sale_payment', $payment->id, 'in', (float) $payment->amount, $payment->payment_date, "Payment from {$shopName} (Spices)", $payment->account_id);
         };

@@ -116,6 +116,7 @@
                         <span class="badge pn-bdg pn-bdg-blue">{{ $totalEntries }} records</span>
                     </div>
                     <div class="card-body p-2">
+                        <div class="table-responsive">
                             <table class="table mb-0 pn-table pn-table-font" id="purchasesTable">
                                 <thead>
                                     <tr>
@@ -172,6 +173,7 @@
                                                         data-id="{{ $row->id }}"
                                                         data-vendor="{{ $row->vendor->name ?? '—' }}"
                                                         data-pending="{{ $row->pending_amount }}"
+                                                        data-advance="{{ $vendorAdvanceCredit[$row->vendor_id] ?? 0 }}"
                                                         title="Record Payment">
                                                     <i class="fas fa-hand-holding-dollar"></i>
                                                 </button>
@@ -216,6 +218,7 @@
                                 </tfoot>
                                 @endif
                             </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -364,6 +367,7 @@
                                 @foreach($accounts as $account)
                                     <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
                                 @endforeach
+                                <option value="">Other / Not from Cash &amp; Bank (کیش/بینک سے نہیں)</option>
                             </select>
                         </div>
                         <div class="col-md-12 mb-3 d-none" id="paidSummaryWrap">
@@ -428,6 +432,14 @@
                         <span class="text-muted"> — Pending: </span>
                         <span class="font-weight-bold text-danger" id="rp_pending_display"></span>
                     </p>
+                    <div class="mb-3 d-none" id="rp_advance_wrap">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="rp_use_advance" name="use_advance_credit" value="1">
+                            <label class="custom-control-label" for="rp_use_advance">
+                                Pay from vendor's advance credit (<span id="rp_advance_display"></span> available)
+                            </label>
+                        </div>
+                    </div>
                     <div class="mb-3">
                         <label class="pn-label text-uppercase font-weight-bold text-muted">Amount <span class="text-danger">*</span></label>
                         <input type="number" step="0.01" min="0.01" name="amount" class="form-control fc-pn" required>
@@ -436,12 +448,13 @@
                         <label class="pn-label text-uppercase font-weight-bold text-muted">Payment Date <span class="text-danger">*</span></label>
                         <input type="date" name="payment_date" id="rp_payment_date" class="form-control fc-pn" required>
                     </div>
-                    <div class="mb-3">
-                        <label class="pn-label text-uppercase font-weight-bold text-muted">Paid From <span class="text-danger">*</span></label>
-                        <select name="account_id" class="form-control fc-pn" required>
+                    <div class="mb-3" id="rp_account_wrap">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">Paid From</label>
+                        <select name="account_id" id="rp_account_id" class="form-control fc-pn">
                             @foreach($accounts as $account)
                                 <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
                             @endforeach
+                            <option value="">Other / Not from Cash &amp; Bank (کیش/بینک سے نہیں)</option>
                         </select>
                     </div>
                     <div class="mb-0">
@@ -515,23 +528,30 @@ function recalcRateFromGrandTotal() {
 
 $(function () {
 
-    $('#purchasesTable').DataTable({
-        paging: true,
-        pageLength: 15,
-        lengthChange: false,
-        searching: true,
-        ordering: false,
-        info: true,
-        autoWidth: false,
-        responsive: true,
-        columnDefs: [{ orderable: false, targets: [8] }, { responsivePriority: 1, targets: -1 }],
-        language: {
-            search: '',
-            searchPlaceholder: 'Search purchases...',
-            info: 'Showing _START_–_END_ of _TOTAL_',
-            paginate: { previous: '‹', next: '›' }
-        }
-    });
+    // DataTables throws on an empty (colspan "no records") table when
+    // columnDefs targets a specific column index — that column doesn't
+    // exist on the placeholder row, and the crash aborts this whole
+    // script block, silently breaking every button below it. Only
+    // initialize DataTables when there are real rows to enhance.
+    if ($('#purchasesTable tbody tr').not(':has(td[colspan])').length > 0) {
+        $('#purchasesTable').DataTable({
+            paging: true,
+            pageLength: 15,
+            lengthChange: false,
+            searching: true,
+            ordering: false,
+            info: true,
+            autoWidth: false,
+            responsive: true,
+            columnDefs: [{ orderable: false, targets: [8] }, { responsivePriority: 1, targets: -1 }],
+            language: {
+                search: '',
+                searchPlaceholder: 'Search purchases...',
+                info: 'Showing _START_–_END_ of _TOTAL_',
+                paginate: { previous: '‹', next: '›' }
+            }
+        });
+    }
 
     // Auto-calc: KG * rate => total cost
     $('#quantity_kg, #rate_per_kg').on('input', recalcTotalCost);
@@ -559,7 +579,7 @@ $(function () {
     $('#purchaseForm').on('submit', function (e) {
         e.preventDefault();
         const id  = $('#purchase_id').val();
-        const url = id ? (APP_URL + '/admin/spice-purchases/' + id) : "{{ route('admin.spice-purchases.store') }}";
+        const url = id ? (APP_URL + '/spice-purchases/' + id) : "{{ route('admin.spice-purchases.store') }}";
         const btn = $('#submitBtn');
         btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Saving...');
 
@@ -587,7 +607,7 @@ $(function () {
     // Edit
     $(document).on('click', '.editBtn', function () {
         const id = $(this).data('id');
-        $.get(APP_URL + '/admin/spice-purchases/' + id + '/edit', function (p) {
+        $.get(APP_URL + '/spice-purchases/' + id + '/edit', function (p) {
             $('#purchase_id').val(p.id);
             $('#spice_type_id').val(p.spice_type_id);
             $('#vendor_id').val(p.vendor_id);
@@ -626,7 +646,7 @@ $(function () {
         }).then(result => {
             if (!result.isConfirmed) return;
             $.ajax({
-                url: APP_URL + '/admin/spice-purchases/' + id,
+                url: APP_URL + '/spice-purchases/' + id,
                 type: 'POST',
                 data: { _method: 'DELETE', _token: '{{ csrf_token() }}' },
                 success: function () {
@@ -646,7 +666,25 @@ $(function () {
         $('#rp_vendor_name').text(btn.data('vendor') || '');
         $('#rp_pending_display').text(Number(btn.data('pending')).toLocaleString());
         $('#rp_payment_date').val(new Date().toISOString().split('T')[0]);
+
+        const advance = Number(btn.data('advance')) || 0;
+        if (advance > 0) {
+            $('#rp_advance_display').text(advance.toLocaleString());
+            $('#rp_advance_wrap').removeClass('d-none');
+        } else {
+            $('#rp_advance_wrap').addClass('d-none');
+        }
+        $('#rp_use_advance').prop('checked', false);
+        $('#rp_account_wrap').removeClass('d-none');
+
         $('#recordPaymentModal').modal('show');
+    });
+
+    // Record Payment: toggle "pay from advance" — hides the account picker
+    // since advance-credit payments don't draw from a fresh Cash & Bank account.
+    $('#rp_use_advance').on('change', function () {
+        const useAdvance = $(this).is(':checked');
+        $('#rp_account_wrap').toggleClass('d-none', useAdvance);
     });
 
     // Record Payment: submit
@@ -656,7 +694,7 @@ $(function () {
         const btn = $('#rpSubmitBtn');
         btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Saving...');
 
-        $.post(APP_URL + '/admin/spice-purchases/' + purchaseId + '/payments', $(this).serialize())
+        $.post(APP_URL + '/spice-purchases/' + purchaseId + '/payments', $(this).serialize())
             .done(function () {
                 toastr.success('Payment recorded!');
                 $('#recordPaymentModal').modal('hide');
@@ -678,7 +716,7 @@ $(function () {
         $('#historyTable tbody').html('<tr><td colspan="4" class="text-center text-muted py-3">Loading...</td></tr>');
         $('#historyModal').modal('show');
 
-        $.getJSON(APP_URL + '/admin/spice-purchases/' + purchaseId + '/payments', function (res) {
+        $.getJSON(APP_URL + '/spice-purchases/' + purchaseId + '/payments', function (res) {
             const rows = res.payments || [];
             if (!rows.length) {
                 $('#historyTable tbody').html('<tr><td colspan="4" class="text-center text-muted py-3">No payments recorded yet.</td></tr>');
@@ -707,7 +745,7 @@ $(function () {
         const purchaseId = $(this).data('purchase');
         const paymentId = $(this).data('id');
         $.ajax({
-            url: APP_URL + '/admin/spice-purchases/' + purchaseId + '/payments/' + paymentId,
+            url: APP_URL + '/spice-purchases/' + purchaseId + '/payments/' + paymentId,
             type: 'POST',
             data: { _method: 'DELETE', _token: '{{ csrf_token() }}' },
             success: function () {

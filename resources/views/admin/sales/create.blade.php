@@ -372,6 +372,7 @@
                             @foreach($accounts as $account)
                                 <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
                             @endforeach
+                            <option value="">Other / Not from Cash &amp; Bank (کیش/بینک سے نہیں)</option>
                         </select>
                     </div>
                     <div class="col-md-6 mb-3">

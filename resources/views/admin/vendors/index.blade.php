@@ -13,6 +13,9 @@
                 </ol>
             </div>
             <div class="col-sm-6 d-flex justify-content-end">
+                <a href="{{ route('admin.vendors.advance_form') }}" class="btn btn-outline-primary btn-pn px-4 mr-2">
+                    <i class="fas fa-money-bill-transfer mr-1"></i> Send Advance
+                </a>
                 <button class="btn btn-primary btn-pn px-4" id="addBtn">
                     <i class="fas fa-plus mr-1"></i> Add Vendor / فروش کار شامل کریں
                 </button>
@@ -86,6 +89,7 @@
                 </h6>
             </div>
             <div class="card-body p-0">
+                <div class="table-responsive">
                 <table class="table table-bordered table-striped pn-table pn-table-font mb-0" id="vendorsTable">
                     <thead class="thead-dark">
                         <tr>
@@ -95,6 +99,7 @@
                             <th>Address / پتہ</th>
                             <th class="text-center">Purchases / خریداری</th>
                             <th class="text-right">Pending / باقی</th>
+                            <th class="text-right">Advance Credit / ایڈوانس</th>
                             <th class="text-center">Actions / اقدامات</th>
                         </tr>
                     </thead>
@@ -111,6 +116,13 @@
                             <td class="text-right">
                                 @if(($vendor->purchases_sum_pending_amount ?? 0) > 0)
                                     <span class="font-weight-bold text-danger">{{ number_format($vendor->purchases_sum_pending_amount, 0) }}</span>
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
+                            </td>
+                            <td class="text-right">
+                                @if(($vendor->advances_sum_remaining_amount ?? 0) > 0)
+                                    <span class="font-weight-bold text-success">{{ number_format($vendor->advances_sum_remaining_amount, 0) }}</span>
                                 @else
                                     <span class="text-muted">—</span>
                                 @endif
@@ -139,7 +151,7 @@
                         </tr>
                     @empty
                         <tr id="emptyRow">
-                            <td colspan="7" class="text-center py-5">
+                            <td colspan="8" class="text-center py-5">
                                 <i class="fas fa-truck fa-3x mb-3 d-block icon-fade"></i>
                                 <p class="text-muted mb-0">No vendors added yet.</p>
                                 <button class="btn btn-sm btn-primary mt-3" id="addBtnEmpty">
@@ -150,6 +162,7 @@
                     @endforelse
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
 
@@ -247,11 +260,12 @@
                         <input type="date" name="payment_date" id="vrp_payment_date" class="form-control fc-pn" required>
                     </div>
                     <div class="mb-3">
-                        <label class="filter-lbl">Paid From <span class="text-danger">*</span></label>
-                        <select name="account_id" class="form-control fc-pn" required>
+                        <label class="filter-lbl">Paid From</label>
+                        <select name="account_id" class="form-control fc-pn">
                             @foreach($accounts as $account)
                                 <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
                             @endforeach
+                            <option value="">Other / Not from Cash &amp; Bank (کیش/بینک سے نہیں)</option>
                         </select>
                     </div>
                     <div class="mb-0">
@@ -283,6 +297,7 @@ function buildRow(v, idx) {
         <td>${v.address || '—'}</td>
         <td class="text-center"><span class="badge badge-info">0</span></td>
         <td class="text-right"><span class="text-muted">—</span></td>
+        <td class="text-right"><span class="text-muted">—</span></td>
         <td class="text-center">
             <button class="btn btn-sm btn-pn btn-act-edit editBtn mr-1" data-id="${v.id}" title="Edit">
                 <i class="fas fa-edit"></i>
@@ -296,23 +311,28 @@ function buildRow(v, idx) {
 
 $(function () {
 
-    $('#vendorsTable').DataTable({
-        paging: true,
-        pageLength: 15,
-        lengthChange: false,
-        searching: true,
-        ordering: false,
-        info: true,
-        autoWidth: false,
-        responsive: true,
-        columnDefs: [{ orderable: false, targets: [4, 6] }, { responsivePriority: 1, targets: -1 }],
-        language: {
-            search: '',
-            searchPlaceholder: 'Search vendors...',
-            info: 'Showing _START_–_END_ of _TOTAL_',
-            paginate: { previous: '‹', next: '›' }
-        }
-    });
+    // DataTables throws on an empty (colspan "no records") table when
+    // columnDefs targets a specific column index — only initialize when
+    // there are real rows to enhance.
+    if ($('#vendorsTable tbody tr').not(':has(td[colspan])').length > 0) {
+        $('#vendorsTable').DataTable({
+            paging: true,
+            pageLength: 15,
+            lengthChange: false,
+            searching: true,
+            ordering: false,
+            info: true,
+            autoWidth: false,
+            responsive: true,
+            columnDefs: [{ orderable: false, targets: [4, 7] }, { responsivePriority: 1, targets: -1 }],
+            language: {
+                search: '',
+                searchPlaceholder: 'Search vendors...',
+                info: 'Showing _START_–_END_ of _TOTAL_',
+                paginate: { previous: '‹', next: '›' }
+            }
+        });
+    }
 
     // Open add modal
     $('#addBtn, #addBtnEmpty').on('click', function () {

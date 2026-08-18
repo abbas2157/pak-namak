@@ -213,13 +213,13 @@ class SaleController extends Controller
              * -------------------------- */
             $initialReceived = min((float) ($request->received_amount ?? 0), $grandTotal);
             if ($initialReceived > 0) {
-                $account = Account::find($request->account_id) ?? Account::where('type', 'cash')->first();
+                $account = Account::find($request->account_id);
                 SalePayment::create([
                     'sale_id'        => $sale->id,
                     'account_id'     => $account?->id,
                     'amount'         => $initialReceived,
                     'payment_date'   => $sale->sale_date,
-                    'payment_method' => $account?->paymentMethodLabel() ?? 'Cash',
+                    'payment_method' => $account?->paymentMethodLabel() ?? 'Other',
                     'note'           => 'Initial payment at sale creation',
                 ]);
             }
@@ -412,10 +412,12 @@ class SaleController extends Controller
      */
     public function addPayment(Request $request, Sale $sale)
     {
+        $request->merge(['account_id' => $request->account_id ?: null]);
+
         $request->validate([
             'amount'       => 'required|numeric|min:0.01',
             'payment_date' => 'required|date',
-            'account_id'   => 'required|exists:accounts,id',
+            'account_id'   => 'nullable|exists:accounts,id',
             'note'         => 'nullable|string|max:500',
         ]);
 
@@ -429,10 +431,10 @@ class SaleController extends Controller
 
             SalePayment::create([
                 'sale_id'        => $sale->id,
-                'account_id'     => $account->id,
+                'account_id'     => $account?->id,
                 'amount'         => $amount,
                 'payment_date'   => $request->payment_date,
-                'payment_method' => $account->paymentMethodLabel(),
+                'payment_method' => $account?->paymentMethodLabel() ?? 'Other',
                 'note'           => $request->note,
             ]);
 

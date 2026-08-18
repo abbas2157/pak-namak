@@ -112,6 +112,7 @@
                         <span class="badge pn-bdg pn-bdg-blue">{{ $totalCount }} records</span>
                     </div>
                     <div class="card-body p-2">
+                        <div class="table-responsive">
                             <table class="table mb-0 pn-table pn-table-font" id="salesTable">
                                 <thead>
                                     <tr>
@@ -225,6 +226,7 @@
                                 </tfoot>
                                 @endif
                             </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -383,11 +385,12 @@
                         <input type="date" name="payment_date" id="rp_payment_date" class="form-control fc-pn" required>
                     </div>
                     <div class="mb-3">
-                        <label class="filter-lbl">Account <span class="text-danger">*</span></label>
-                        <select name="account_id" class="form-control fc-pn" required>
+                        <label class="filter-lbl">Account</label>
+                        <select name="account_id" class="form-control fc-pn">
                             @foreach(\App\Models\Account::where('is_active', true)->orderBy('name')->get() as $account)
                                 <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
                             @endforeach
+                            <option value="">Other / Not from Cash &amp; Bank (کیش/بینک سے نہیں)</option>
                         </select>
                     </div>
                     <div class="mb-0">
@@ -411,29 +414,36 @@
 <script>
 $(function () {
 
-    $('#salesTable').DataTable({
-        paging: true,
-        pageLength: 20,
-        lengthChange: false,
-        searching: true,
-        ordering: false,
-        info: true,
-        autoWidth: false,
-        responsive: true,
-        columnDefs: [{ orderable: false, targets: [2, 6] }, { responsivePriority: 1, targets: -1 }, { responsivePriority: 2, targets: 1 }],
-        language: {
-            search: '',
-            searchPlaceholder: 'Search sales...',
-            info: 'Showing _START_–_END_ of _TOTAL_',
-            paginate: { previous: '‹', next: '›' }
-        }
-    });
+    // DataTables throws on an empty (colspan "no records") table when
+    // columnDefs targets a specific column index — that column doesn't
+    // exist on the placeholder row, and the crash aborts this whole
+    // script block, silently breaking every button below it. Only
+    // initialize DataTables when there are real rows to enhance.
+    if ($('#salesTable tbody tr').not(':has(td[colspan])').length > 0) {
+        $('#salesTable').DataTable({
+            paging: true,
+            pageLength: 20,
+            lengthChange: false,
+            searching: true,
+            ordering: false,
+            info: true,
+            autoWidth: false,
+            responsive: true,
+            columnDefs: [{ orderable: false, targets: [2, 6] }, { responsivePriority: 1, targets: -1 }, { responsivePriority: 2, targets: 1 }],
+            language: {
+                search: '',
+                searchPlaceholder: 'Search sales...',
+                info: 'Showing _START_–_END_ of _TOTAL_',
+                paginate: { previous: '‹', next: '›' }
+            }
+        });
+    }
 
     $(document).on('click', '.viewBtn', function () {
         const id = $(this).data('id');
         $('#saleDetailBody').html('<div class="text-center py-5"><span class="spinner-border text-c-blue2"></span></div>');
         $('#saleDetailModal').modal('show');
-        $.get(APP_URL + '/admin/spice-sales/' + id, function (html) {
+        $.get(APP_URL + '/spice-sales/' + id, function (html) {
             $('#saleDetailBody').html(html);
         }).fail(function () {
             $('#saleDetailBody').html('<p class="text-danger text-center py-4">Could not load sale details.</p>');
@@ -469,7 +479,7 @@ $(function () {
         const btn = $('#rpSubmitBtn');
         btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Saving...');
 
-        $.post(APP_URL + '/admin/spice-sales/' + id + '/payments', $(this).serialize())
+        $.post(APP_URL + '/spice-sales/' + id + '/payments', $(this).serialize())
             .done(function () {
                 toastr.success('Payment recorded!');
                 $('#recordPaymentModal').modal('hide');
@@ -500,7 +510,7 @@ $(function () {
         }).then(result => {
             if (!result.isConfirmed) return;
             $.ajax({
-                url: APP_URL + '/admin/spice-sales/' + saleId + '/payments/' + payId,
+                url: APP_URL + '/spice-sales/' + saleId + '/payments/' + payId,
                 type: 'POST',
                 data: { _method: 'DELETE', _token: '{{ csrf_token() }}' },
                 success: function () {
@@ -519,7 +529,7 @@ $(function () {
         btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Saving...');
 
         $.ajax({
-            url: APP_URL + '/admin/spice-sales/' + id + '/quick-update',
+            url: APP_URL + '/spice-sales/' + id + '/quick-update',
             type: 'POST',
             data: $(this).serialize(),
             success: function () {
@@ -554,7 +564,7 @@ $(function () {
             cancelButtonText: 'Cancel'
         }).then(result => {
             if (!result.isConfirmed) return;
-            $.post(APP_URL + '/admin/spice-sales/' + id, {
+            $.post(APP_URL + '/spice-sales/' + id, {
                 _method: 'DELETE',
                 _token: '{{ csrf_token() }}'
             }, function () {

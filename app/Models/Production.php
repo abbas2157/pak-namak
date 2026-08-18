@@ -25,7 +25,7 @@ class Production extends Model
     protected static function booted(): void
     {
         $sync = function (self $production) {
-            if ((float) $production->electricity_fuel_cost <= 0) {
+            if ((float) $production->electricity_fuel_cost <= 0 || !$production->account_id) {
                 CashLedger::remove('production', $production->id);
                 return;
             }

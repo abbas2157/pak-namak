@@ -67,7 +67,7 @@ $sizeLabel = fn ($gram) => $gram >= 1000 ? (($gram / 1000) . 'kg') : ($gram . 'g
                     <div class="col-md-2"><small class="pn-form-col-lbl">Size</small></div>
                     <div class="col-md-3"><small class="pn-form-col-lbl">Qty (پیکٹ)</small></div>
                     <div class="col-md-2"><small class="pn-form-col-lbl">Total KG</small></div>
-                    <div class="col-md-2"><small class="pn-form-col-lbl">Rate/Packet</small></div>
+                    <div class="col-md-2"><small class="pn-form-col-lbl">Rate/KG</small></div>
                     <div class="col-md-3"><small class="pn-form-col-lbl">Sub Total</small></div>
                 </div>
 
@@ -91,11 +91,16 @@ $sizeLabel = fn ($gram) => $gram >= 1000 ? (($gram / 1000) . 'kg') : ($gram . 'g
                                readonly class="form-control fc-ro-pn">
                     </div>
                     <div class="col-md-2 mb-2 mb-md-0">
-                        <input type="number" name="package[{{ $spiceType->id }}][{{ $gram }}][price]"
-                               id="price_{{ $spiceType->id }}_{{ $gram }}"
+                        @php
+                            // Orders quote a per-packet price; convert to the
+                            // per-KG rate this form now expects.
+                            $prefillRate = $prefillItem?->price ? round($prefillItem->price / ($gram / 1000), 2) : '';
+                        @endphp
+                        <input type="number" name="package[{{ $spiceType->id }}][{{ $gram }}][rate_per_kg]"
+                               id="rate_{{ $spiceType->id }}_{{ $gram }}"
                                class="form-control fc-pn spice-qty" placeholder="0"
                                data-spice="{{ $spiceType->id }}" data-gram="{{ $gram }}"
-                               value="{{ $prefillItem?->price ?? '' }}">
+                               value="{{ $prefillRate }}">
                     </div>
                     <div class="col-md-3 mb-2 mb-md-0">
                         <div class="input-group">
@@ -175,6 +180,7 @@ $sizeLabel = fn ($gram) => $gram >= 1000 ? (($gram / 1000) . 'kg') : ($gram . 'g
                             @foreach($accounts as $account)
                                 <option value="{{ $account->id }}" {{ $account->type === 'cash' ? 'selected' : '' }}>{{ $account->label() }}</option>
                             @endforeach
+                            <option value="">Other / Not from Cash &amp; Bank (کیش/بینک سے نہیں)</option>
                         </select>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -223,9 +229,9 @@ $(document).ready(function () {
 
     function calcLine(spiceId, gram) {
         let qty  = num($('#qty_' + spiceId + '_' + gram).val());
-        let rate = num($('#price_' + spiceId + '_' + gram).val());
+        let rate = num($('#rate_' + spiceId + '_' + gram).val());
         let kg   = qty * (gram / 1000);
-        let sub  = qty * rate;
+        let sub  = kg * rate;
         $('#totalkg_' + spiceId + '_' + gram).val(round(kg));
         $('#subtotal_' + spiceId + '_' + gram).val(round(sub));
         calcGrandTotal();

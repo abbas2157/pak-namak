@@ -388,12 +388,13 @@ $catIconClass = [
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="pn-label text-uppercase font-weight-bold text-muted">
-                                Paid From / کہاں سے ادا کیا <span class="text-danger">*</span>
+                                Paid From / کہاں سے ادا کیا
                             </label>
-                            <select name="account_id" id="account_id" class="form-control fc-pn" required>
+                            <select name="account_id" id="account_id" class="form-control fc-pn">
                                 @foreach($accounts as $account)
                                     <option value="{{ $account->id }}">{{ $account->label() }}</option>
                                 @endforeach
+                                <option value="">Other / Not from Cash &amp; Bank (کیش/بینک سے نہیں)</option>
                             </select>
                         </div>
                         <div class="col-12 mb-3">
@@ -593,28 +594,32 @@ $(function () {
         });
     });
 
-    // DataTable (search + sort)
-    $('#expenseTable').DataTable({
-        paging: true,
-        pageLength: 15,
-        lengthChange: false,
-        searching: true,
-        ordering: false,
-        info: true,
-        autoWidth: false,
-        responsive: true,
-        columnDefs: [
-            { orderable: false, targets: [5] },
-            { className: 'text-right', targets: [3] },
-            { responsivePriority: 1, targets: -1 }
-        ],
-        language: {
-            search: '',
-            searchPlaceholder: 'Search expenses...',
-            info: 'Showing _START_–_END_ of _TOTAL_',
-            paginate: { previous: '‹', next: '›' }
-        }
-    });
+    // DataTable (search + sort) — DataTables throws on an empty (colspan
+    // "no records") table when columnDefs targets a specific column index,
+    // aborting this whole script block. Only initialize with real rows.
+    if ($('#expenseTable tbody tr').not(':has(td[colspan])').length > 0) {
+        $('#expenseTable').DataTable({
+            paging: true,
+            pageLength: 15,
+            lengthChange: false,
+            searching: true,
+            ordering: false,
+            info: true,
+            autoWidth: false,
+            responsive: true,
+            columnDefs: [
+                { orderable: false, targets: [5] },
+                { className: 'text-right', targets: [3] },
+                { responsivePriority: 1, targets: -1 }
+            ],
+            language: {
+                search: '',
+                searchPlaceholder: 'Search expenses...',
+                info: 'Showing _START_–_END_ of _TOTAL_',
+                paginate: { previous: '‹', next: '›' }
+            }
+        });
+    }
 
 });
 </script>

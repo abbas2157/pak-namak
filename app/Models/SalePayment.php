@@ -25,6 +25,11 @@ class SalePayment extends Model
     protected static function booted(): void
     {
         $sync = function (self $payment) {
+            if (!$payment->account_id) {
+                CashLedger::remove('sale_payment', $payment->id);
+                return;
+            }
+
             $shopName = $payment->sale?->shop?->name ?? 'Unknown Shop';
             CashLedger::sync('sale_payment', $payment->id, 'in', (float) $payment->amount, $payment->payment_date, "Payment from {$shopName}", $payment->account_id);
         };

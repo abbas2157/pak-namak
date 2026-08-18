@@ -51,10 +51,12 @@ class ExpenseController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge(['account_id' => $request->account_id ?: null]);
+
         $request->validate([
             'expense_date'  => 'required|date',
             'category'      => 'required|string|max:255',
-            'account_id'    => 'required|exists:accounts,id',
+            'account_id'    => 'nullable|exists:accounts,id',
             'amount'        => 'required|numeric|min:0',
             'is_investment' => 'boolean',
         ]);
@@ -64,8 +66,8 @@ class ExpenseController extends Controller
         $expense = Expense::create([
             'expense_date'   => $request->expense_date,
             'category'       => $request->category,
-            'account_id'     => $account->id,
-            'payment_method' => $account->paymentMethodLabel(),
+            'account_id'     => $account?->id,
+            'payment_method' => $account?->paymentMethodLabel() ?? 'Other',
             'amount'         => $request->amount,
             'description'    => $request->description,
             'remarks'        => $request->remarks,
@@ -82,10 +84,12 @@ class ExpenseController extends Controller
 
     public function update(Request $request, Expense $expense)
     {
+        $request->merge(['account_id' => $request->account_id ?: null]);
+
         $request->validate([
             'expense_date'  => 'required|date',
             'category'      => 'required|string|max:255',
-            'account_id'    => 'required|exists:accounts,id',
+            'account_id'    => 'nullable|exists:accounts,id',
             'amount'        => 'required|numeric|min:0',
             'is_investment' => 'boolean',
         ]);
@@ -95,8 +99,8 @@ class ExpenseController extends Controller
         $expense->update([
             'expense_date'   => $request->expense_date,
             'category'       => $request->category,
-            'account_id'     => $account->id,
-            'payment_method' => $account->paymentMethodLabel(),
+            'account_id'     => $account?->id,
+            'payment_method' => $account?->paymentMethodLabel() ?? 'Other',
             'amount'         => $request->amount,
             'description'    => $request->description,
             'remarks'        => $request->remarks,
