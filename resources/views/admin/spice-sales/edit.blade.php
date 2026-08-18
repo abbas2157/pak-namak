@@ -64,7 +64,7 @@ $itemsByKey = $spiceSale->items->keyBy(fn ($i) => $i->spice_type_id . ':' . $i->
                     <div class="col-md-2"><small class="pn-form-col-lbl">Size</small></div>
                     <div class="col-md-3"><small class="pn-form-col-lbl">Qty (پیکٹ)</small></div>
                     <div class="col-md-2"><small class="pn-form-col-lbl">Total KG</small></div>
-                    <div class="col-md-2"><small class="pn-form-col-lbl">Rate/Packet</small></div>
+                    <div class="col-md-2"><small class="pn-form-col-lbl">Rate/KG</small></div>
                     <div class="col-md-3"><small class="pn-form-col-lbl">Sub Total</small></div>
                 </div>
 
@@ -88,11 +88,11 @@ $itemsByKey = $spiceSale->items->keyBy(fn ($i) => $i->spice_type_id . ':' . $i->
                                readonly class="form-control fc-ro-pn">
                     </div>
                     <div class="col-md-2 mb-2 mb-md-0">
-                        <input type="number" name="package[{{ $spiceType->id }}][{{ $gram }}][price]"
-                               id="price_{{ $spiceType->id }}_{{ $gram }}"
+                        <input type="number" name="package[{{ $spiceType->id }}][{{ $gram }}][rate_per_kg]"
+                               id="rate_{{ $spiceType->id }}_{{ $gram }}"
                                class="form-control fc-pn spice-qty" placeholder="0"
                                data-spice="{{ $spiceType->id }}" data-gram="{{ $gram }}"
-                               value="{{ $existing?->price_per_unit ?? '' }}">
+                               value="{{ $existing?->price_per_kg ?? '' }}">
                     </div>
                     <div class="col-md-3 mb-2 mb-md-0">
                         <div class="input-group">
@@ -210,9 +210,9 @@ $(document).ready(function () {
 
     function calcLine(spiceId, gram) {
         let qty  = num($('#qty_' + spiceId + '_' + gram).val());
-        let rate = num($('#price_' + spiceId + '_' + gram).val());
+        let rate = num($('#rate_' + spiceId + '_' + gram).val());
         let kg   = qty * (gram / 1000);
-        let sub  = qty * rate;
+        let sub  = kg * rate;
         $('#totalkg_' + spiceId + '_' + gram).val(round(kg));
         $('#subtotal_' + spiceId + '_' + gram).val(round(sub));
         calcGrandTotal();

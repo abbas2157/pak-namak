@@ -12,7 +12,7 @@
             <th>Size (گرام)</th>
             <th>Quantity Sold (پیکٹ)</th>
             <th>کل وزن(KG)</th>
-            <th>Rate (فی پیکٹ قیمت)</th>
+            <th>Rate (فی کلو قیمت)</th>
             <th>Subtotal / ذیلی کل</th>
         </tr>
     </thead>
@@ -21,7 +21,7 @@
         <td>{{ $p->packet_gram ?? '' }} گرام</td>
         <td>{{ $p->quantity ?? '' }} پیکٹ</td>
         <td>{{ $p->total_kg ?? '' }} KG</td>
-        <td>Rs. {{ $p->price_per_unit ?? '' }}</td>
+        <td>Rs. {{ $p->price_per_kg ?? '' }}</td>
         <td>Rs. {{ $p->sub_total ?? '' }}</td>
     </tr>
     @endforeach

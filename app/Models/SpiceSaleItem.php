@@ -12,7 +12,7 @@ class SpiceSaleItem extends Model
         'packet_gram',
         'quantity',
         'total_kg',
-        'price_per_unit',
+        'price_per_kg',
         'sub_total',
     ];
 
