@@ -9,7 +9,7 @@
         <nav class="mt-2">
             @php
                 $shopsActive     = request()->routeIs('admin.shops.*');
-                $vendorsActive   = request()->routeIs('admin.vendors.*') || request()->routeIs('admin.vendors.payment_form');
+                $vendorsActive   = request()->routeIs('admin.vendors.*');
                 $employeesActive = request()->routeIs('admin.employees.*') || request()->routeIs('admin.holidays.*');
 
                 $ordersActive = request()->routeIs('admin.orders.*') || request()->routeIs('admin.spice-orders.*');
@@ -159,6 +159,13 @@
                                        class="nav-link {{ request()->routeIs('admin.vendors.payment_form') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Record Payment <small class="d-block nav-sub-lbl">ادائیگی درج کریں</small></p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.vendors.advance_form') }}"
+                                       class="nav-link {{ request()->routeIs('admin.vendors.advance_form') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Send Advance <small class="d-block nav-sub-lbl">ایڈوانس بھیجیں</small></p>
                                     </a>
                                 </li>
                             </ul>
