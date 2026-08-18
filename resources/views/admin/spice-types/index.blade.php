@@ -97,7 +97,7 @@ $(function () {
     $('#typeForm').submit(function (e) {
         e.preventDefault();
         let id = $('#id').val();
-        let url = id ? APP_URL + `/admin/spice-types/${id}` : "{{ route('admin.spice-types.store') }}";
+        let url = id ? APP_URL + `/spice-types/${id}` : "{{ route('admin.spice-types.store') }}";
 
         $.ajax({
             url: url,
@@ -141,7 +141,7 @@ $(function () {
     $(document).on('click', '.editBtn', function () {
         let id = $(this).data('id');
 
-        $.get( APP_URL + `/admin/spice-types/${id}/edit`, function (res) {
+        $.get( APP_URL + `/spice-types/${id}/edit`, function (res) {
             $('#id').val(res.id);
             $('#title').val(res.title);
             $('#typeModal').modal('show');
@@ -162,7 +162,7 @@ $(function () {
         }).then((result) => {
             if(result.isConfirmed) {
                 $.ajax({
-                    url: APP_URL + `/admin/spice-types/${id}`,
+                    url: APP_URL + `/spice-types/${id}`,
                     type: 'DELETE',
                     data: {_token: '{{ csrf_token() }}'},
                     success: function () {

@@ -129,6 +129,7 @@
             </div>
             <div class="card-body p-0">
                 @php $maxShopTotal = $salesByShop->max('total') ?: 1; @endphp
+                <div class="table-responsive">
                 <table class="table table-sm mb-0 pn-table pn-table-font" id="salesByShopTable">
                     <thead>
                         <tr>
@@ -189,6 +190,7 @@
                     </tfoot>
                     @endif
                 </table>
+                </div>
             </div>
         </div>
 
@@ -206,6 +208,7 @@
                 </div>
             </div>
             <div class="card-body p-0">
+                <div class="table-responsive">
                 <table class="table table-sm mb-0 pn-table pn-table-font" id="salesReportTable">
                     <thead>
                         <tr>
@@ -260,6 +263,7 @@
                         @endforelse
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
 
@@ -280,26 +284,33 @@
     }
 
     $(function () {
-        $('#salesReportTable').DataTable({
-            paging: true,
-            pageLength: 25,
-            lengthChange: false,
-            searching: true,
-            ordering: true,
-            order: [[2, 'desc']],
-            info: true,
-            autoWidth: false,
-            responsive: true,
-            columnDefs: [{ orderable: false, targets: [6] }],
-        });
+        // DataTables throws on an empty (colspan "no records") table when
+        // columnDefs targets a specific column index — only initialize
+        // when there are real rows to enhance.
+        if ($('#salesReportTable tbody tr').not(':has(td[colspan])').length > 0) {
+            $('#salesReportTable').DataTable({
+                paging: true,
+                pageLength: 25,
+                lengthChange: false,
+                searching: true,
+                ordering: true,
+                order: [[2, 'desc']],
+                info: true,
+                autoWidth: false,
+                responsive: true,
+                columnDefs: [{ orderable: false, targets: [6] }],
+            });
+        }
 
-        $('#salesByShopTable').DataTable({
-            paging: false,
-            searching: false,
-            ordering: true,
-            info: false,
-            autoWidth: false,
-        });
+        if ($('#salesByShopTable tbody tr').not(':has(td[colspan])').length > 0) {
+            $('#salesByShopTable').DataTable({
+                paging: false,
+                searching: false,
+                ordering: true,
+                info: false,
+                autoWidth: false,
+            });
+        }
     });
 </script>
 @endsection

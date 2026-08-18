@@ -480,25 +480,30 @@
 <script>
 $(function () {
 
+    {{-- DataTables throws on an empty (colspan "no records") table when
+         columnDefs targets a specific column index — only initialize when
+         there are real rows to enhance. --}}
     @if($shop)
-    $('#shopSalesTable').DataTable({
-        paging: true,
-        pageLength: 15,
-        lengthChange: false,
-        searching: true,
-        ordering: true,
-        info: true,
-        autoWidth: false,
-        responsive: true,
-        order: [[0, 'desc']],
-        columnDefs: [{ orderable: false, targets: [1, 5] }],
-        language: {
-            search: '',
-            searchPlaceholder: 'Search sales...',
-            info: 'Showing _START_–_END_ of _TOTAL_',
-            paginate: { previous: '‹', next: '›' }
-        }
-    });
+    if ($('#shopSalesTable tbody tr').not(':has(td[colspan])').length > 0) {
+        $('#shopSalesTable').DataTable({
+            paging: true,
+            pageLength: 15,
+            lengthChange: false,
+            searching: true,
+            ordering: true,
+            info: true,
+            autoWidth: false,
+            responsive: true,
+            order: [[0, 'desc']],
+            columnDefs: [{ orderable: false, targets: [1, 5] }],
+            language: {
+                search: '',
+                searchPlaceholder: 'Search sales...',
+                info: 'Showing _START_–_END_ of _TOTAL_',
+                paginate: { previous: '‹', next: '›' }
+            }
+        });
+    }
     @endif
 
     // View sale detail

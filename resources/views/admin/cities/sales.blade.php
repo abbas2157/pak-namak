@@ -319,15 +319,20 @@
 @section('scripts')
 <script>
 $(function () {
-    $('#shopBreakdownTable').DataTable({
-        paging: false,
-        searching: false,
-        ordering: true,
-        info: false,
-        autoWidth: false,
-        order: [[2, 'desc']],
-        columnDefs: [{ orderable: false, targets: [5] }],
-    });
+    // DataTables throws on an empty (colspan "no records") table when
+    // columnDefs targets a specific column index — only initialize when
+    // there are real rows to enhance.
+    if ($('#shopBreakdownTable tbody tr').not(':has(td[colspan])').length > 0) {
+        $('#shopBreakdownTable').DataTable({
+            paging: false,
+            searching: false,
+            ordering: true,
+            info: false,
+            autoWidth: false,
+            order: [[2, 'desc']],
+            columnDefs: [{ orderable: false, targets: [5] }],
+        });
+    }
 });
 </script>
 @endsection
