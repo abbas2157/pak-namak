@@ -92,12 +92,16 @@ class PurchaseController extends Controller
 
             $amountPaid = min((float) ($request->amount_paid ?? 0), (float) $request->grand_total);
             if ($amountPaid > 0) {
-                $purchase->payments()->create([
-                    'account_id'   => $request->account_id,
-                    'amount'       => $amountPaid,
-                    'payment_date' => $purchaseDate,
-                    'note'         => 'Initial payment',
-                ]);
+                if ($request->boolean('use_advance_credit')) {
+                    $this->applyAdvanceCredit($purchase, $amountPaid, $purchaseDate, 'Initial payment');
+                } else {
+                    $purchase->payments()->create([
+                        'account_id'   => $request->account_id,
+                        'amount'       => $amountPaid,
+                        'payment_date' => $purchaseDate,
+                        'note'         => 'Initial payment',
+                    ]);
+                }
             }
 
             $this->recalcTotals($purchase);

@@ -329,7 +329,7 @@
                             <select name="vendor_id" id="vendor_id" class="form-control fc-pn" required>
                                 <option value="">— Select Supplier —</option>
                                 @foreach($vendors as $vendor)
-                                    <option value="{{ $vendor->id }}">{{ $vendor->name }}{{ $vendor->shop ? ' ('.$vendor->shop.')' : '' }}</option>
+                                    <option value="{{ $vendor->id }}" data-advance="{{ $vendorAdvanceCredit[$vendor->id] ?? 0 }}">{{ $vendor->name }}{{ $vendor->shop ? ' ('.$vendor->shop.')' : '' }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -401,6 +401,14 @@
                             <input type="number" step="0.01" name="amount_paid" id="amount_paid"
                                    class="form-control fc-pn" min="0" placeholder="0 (leave blank if unpaid)">
                             <small class="text-muted">Optional — leave blank to record the full amount as pending.</small>
+                        </div>
+                        <div class="col-md-12 mb-3 d-none" id="p_advance_wrap">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="p_use_advance" name="use_advance_credit" value="1">
+                                <label class="custom-control-label" for="p_use_advance">
+                                    Pay from vendor's advance credit (<span id="p_advance_display"></span> available)
+                                </label>
+                            </div>
                         </div>
                         <div class="col-md-6 mb-3" id="paidAccountWrap">
                             <label class="pn-label text-uppercase font-weight-bold text-muted">
@@ -614,6 +622,27 @@ $(function () {
     // Auto-calc (reverse): typing Grand Total directly back-calculates Rate per KG
     $('#grand_total').on('input', recalcRateFromGrandTotal);
 
+    // Add Purchase: show "pay from advance" when the selected vendor has
+    // unused advance credit (only relevant while adding, not editing —
+    // amountPaidWrap is hidden in edit mode so we reuse it as that signal).
+    $('#vendor_id').on('change', function () {
+        const advance = Number($(this).find(':selected').data('advance')) || 0;
+        if (advance > 0 && !$('#amountPaidWrap').hasClass('d-none')) {
+            $('#p_advance_display').text(advance.toLocaleString());
+            $('#p_advance_wrap').removeClass('d-none');
+        } else {
+            $('#p_advance_wrap').addClass('d-none');
+        }
+        $('#p_use_advance').prop('checked', false);
+        $('#paidAccountWrap').removeClass('d-none');
+    });
+
+    // Add Purchase: toggle "pay from advance" — hides the account picker
+    // since advance-credit payments don't draw from a fresh Cash & Bank account.
+    $('#p_use_advance').on('change', function () {
+        $('#paidAccountWrap').toggleClass('d-none', $(this).is(':checked'));
+    });
+
     // Open add modal
     $('#addBtn, #addBtnEmpty').on('click', function () {
         $('#purchaseForm')[0].reset();
@@ -622,6 +651,8 @@ $(function () {
         $('#amountPaidWrap').removeClass('d-none');
         $('#paidAccountWrap').removeClass('d-none');
         $('#paidSummaryWrap').addClass('d-none');
+        $('#p_advance_wrap').addClass('d-none');
+        $('#p_use_advance').prop('checked', false);
         $('#modalTitle').html('<i class="fas fa-shopping-cart mr-2"></i>Add Purchase');
         $('#submitBtn').html('<i class="fas fa-save mr-1"></i> Save Purchase');
         $('#purchaseModal').modal('show');
@@ -674,6 +705,8 @@ $(function () {
             $('#p_is_investment').prop('checked', !!p.is_investment);
             $('#amountPaidWrap').addClass('d-none');
             $('#paidAccountWrap').addClass('d-none');
+            $('#p_advance_wrap').addClass('d-none');
+            $('#p_use_advance').prop('checked', false);
             $('#paidSummaryWrap').removeClass('d-none');
             $('#paidSummaryPaid').text(Number(p.paid_amount).toLocaleString());
             $('#paidSummaryPending').text(Number(p.pending_amount).toLocaleString());
