@@ -44,19 +44,19 @@ class DashboardController extends Controller
         $totalShops = Shop::count();
 
         /* -------------------------
-        * MONTH PURCHASES (operating only — investment-flagged purchases
-        * are capital expenditure, excluded from the P&L below)
+        * MONTH PURCHASES (all purchases, salt + spice — investment-flagged
+        * ones still count here and in the P&L below; "investment" is just
+        * a category tag, tracked separately on the Investments page, not
+        * an exclusion from the operating numbers)
         * ------------------------ */
         $monthSaltPurchasesTotal = Purchase::whereBetween('created_at', [$monthStart, $monthEnd])
-            ->where('is_investment', false)
             ->sum('grand_total');
         $monthSpicePurchasesTotal = SpicePurchase::whereBetween('created_at', [$monthStart, $monthEnd])
-            ->where('is_investment', false)
             ->sum('grand_total');
         $monthPurchasesTotal = $monthSaltPurchasesTotal + $monthSpicePurchasesTotal;
 
-        $saltPurchasesTotal  = Purchase::where('is_investment', false)->sum('grand_total');
-        $spicePurchasesTotal = SpicePurchase::where('is_investment', false)->sum('grand_total');
+        $saltPurchasesTotal  = Purchase::sum('grand_total');
+        $spicePurchasesTotal = SpicePurchase::sum('grand_total');
         $PurchasesTotal = $saltPurchasesTotal + $spicePurchasesTotal;
 
         /* -------------------------
