@@ -35,6 +35,7 @@ Route::middleware('web')->group(function () {
         Route::post('vendors/{vendor}/payments', [App\Http\Controllers\Admin\VendorController::class, 'recordPayment'])->name('admin.vendors.payments.store');
         Route::get('vendor-payments', [App\Http\Controllers\Admin\VendorController::class, 'paymentForm'])->name('admin.vendors.payment_form');
         Route::get('vendor-advances', [App\Http\Controllers\Admin\VendorController::class, 'advanceForm'])->name('admin.vendors.advance_form');
+        Route::get('vendor-advances/list', [App\Http\Controllers\Admin\VendorController::class, 'advancesIndex'])->name('admin.vendors.advances.index');
         Route::post('vendors/{vendor}/advances', [App\Http\Controllers\Admin\VendorController::class, 'storeAdvance'])->name('admin.vendors.advances.store');
         Route::delete('vendors/{vendor}/advances/{advance}', [App\Http\Controllers\Admin\VendorController::class, 'destroyAdvance'])->name('admin.vendors.advances.destroy');
         Route::resource('sales', App\Http\Controllers\Admin\SaleController::class, ['as' => 'admin']);
@@ -80,6 +81,7 @@ Route::middleware('web')->group(function () {
         Route::delete('holidays/{holiday}', [App\Http\Controllers\Admin\CompanyHolidayController::class, 'destroy'])->name('admin.holidays.destroy');
         Route::resource('expenses', App\Http\Controllers\Admin\ExpenseController::class, ['as' => 'admin']);
         Route::resource('assets', App\Http\Controllers\Admin\AssetController::class, ['as' => 'admin']);
+        Route::get('investments', [App\Http\Controllers\Admin\InvestmentController::class, 'index'])->name('admin.investments.index');
 
         // Receipt (new tab / print-friendly)
         Route::get('sales/{id}/receipt', \App\Http\Controllers\Admin\SaleReceiptController::class)

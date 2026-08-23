@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Vendor, Purchase, PurchasePayment, VendorAdvance, Account};
+use App\Models\{Vendor, Purchase, PurchasePayment, SpicePurchasePayment, VendorAdvance, Account};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -163,6 +163,55 @@ class VendorController extends Controller
         $advance->delete();
 
         return response()->json(['success' => true]);
+    }
+
+    /**
+     * All advances ever sent, with how much of each has been applied
+     * (drawn down against a purchase's "Record Payment") vs. still sitting
+     * as unused credit, and exactly which purchase(s) the applied portion
+     * went to — advances are drawn on by both salt and spice purchases via
+     * the `vendor_advance_id` on their payment records.
+     */
+    public function advancesIndex()
+    {
+        $advances = VendorAdvance::with('vendor')->orderByDesc('advance_date')->orderByDesc('id')->get();
+
+        $purchasePaymentsByAdvance = PurchasePayment::whereNotNull('vendor_advance_id')
+            ->get()
+            ->groupBy('vendor_advance_id');
+
+        $spicePaymentsByAdvance = SpicePurchasePayment::whereNotNull('vendor_advance_id')
+            ->get()
+            ->groupBy('vendor_advance_id');
+
+        $advances->each(function (VendorAdvance $advance) use ($purchasePaymentsByAdvance, $spicePaymentsByAdvance) {
+            $advance->applied_amount = (float) $advance->amount - (float) $advance->remaining_amount;
+
+            $appliedTo = collect();
+            foreach ($purchasePaymentsByAdvance->get($advance->id, collect()) as $payment) {
+                $appliedTo->push((object) [
+                    'type'   => 'Salt Purchase',
+                    'ref'    => $payment->purchase_id,
+                    'date'   => $payment->payment_date,
+                    'amount' => (float) $payment->amount,
+                ]);
+            }
+            foreach ($spicePaymentsByAdvance->get($advance->id, collect()) as $payment) {
+                $appliedTo->push((object) [
+                    'type'   => 'Spice Purchase',
+                    'ref'    => $payment->spice_purchase_id,
+                    'date'   => $payment->payment_date,
+                    'amount' => (float) $payment->amount,
+                ]);
+            }
+            $advance->applied_to = $appliedTo->sortByDesc('date')->values();
+        });
+
+        $totalSent      = $advances->sum('amount');
+        $totalApplied   = $advances->sum('applied_amount');
+        $totalRemaining = $advances->sum('remaining_amount');
+
+        return view('admin.vendors.advances', compact('advances', 'totalSent', 'totalApplied', 'totalRemaining'));
     }
 
     public function store(Request $request)

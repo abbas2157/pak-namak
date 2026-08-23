@@ -80,7 +80,7 @@
                 </a>
             </div>
             <div class="col-lg-3 mb-3 mb-lg-0">
-                <a href="{{ route('admin.cash_ledger.index', ['investment' => 1]) }}" class="text-decoration-none">
+                <a href="{{ route('admin.investments.index') }}" class="text-decoration-none">
                     <div class="card border-0 shadow-sm h-100" style="background:linear-gradient(135deg,#8a6d0d,#c9a227);">
                         <div class="card-body py-3 px-4 d-flex align-items-center justify-content-between text-white">
                             <div>
@@ -95,7 +95,7 @@
                 </a>
             </div>
             <div class="col-lg-3">
-                <a href="{{ route('admin.cash_ledger.index', ['investment' => 1, 'month' => $selectedMonth]) }}" class="text-decoration-none">
+                <a href="{{ route('admin.investments.index', ['month' => $selectedMonth]) }}" class="text-decoration-none">
                     <div class="card border-0 shadow-sm h-100" style="background:linear-gradient(135deg,#b8860b,#e0ac2b);">
                         <div class="card-body py-3 px-4 d-flex align-items-center justify-content-between text-white">
                             <div>

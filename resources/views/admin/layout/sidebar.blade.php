@@ -16,7 +16,7 @@
                 $overviewCatActive = request()->routeIs('dashboard') || request()->routeIs('admin.cash_ledger.*') || $ordersActive;
                 $salesCatActive    = request()->routeIs('admin.sales.*') || $shopsActive;
                 $purchCatActive    = request()->routeIs('admin.purchases.*') || $vendorsActive || request()->routeIs('admin.productions.*') || request()->routeIs('admin.stocks.*');
-                $financeCatActive  = request()->routeIs('admin.expenses.*') || request()->routeIs('admin.assets.*');
+                $financeCatActive  = request()->routeIs('admin.expenses.*') || request()->routeIs('admin.assets.*') || request()->routeIs('admin.investments.*');
                 $settingsCatActive = request()->routeIs('admin.types.*') || request()->routeIs('admin.cities.*') || request()->routeIs('admin.areas.*');
                 $spicesCatActive   = request()->routeIs('admin.spice-*');
             @endphp
@@ -168,6 +168,13 @@
                                         <p>Send Advance <small class="d-block nav-sub-lbl">ایڈوانس بھیجیں</small></p>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.vendors.advances.index') }}"
+                                       class="nav-link {{ request()->routeIs('admin.vendors.advances.index') ? 'active' : '' }}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Vendor Advances <small class="d-block nav-sub-lbl">وینڈر ایڈوانس</small></p>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
 
@@ -250,6 +257,12 @@
                             <a href="{{ route('admin.assets.index') }}" class="nav-link {{ request()->routeIs('admin.assets.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Assets <small class="d-block nav-sub-lbl">اثاثے</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.investments.index') }}" class="nav-link {{ request()->routeIs('admin.investments.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Investments <small class="d-block nav-sub-lbl">سرمایہ کاری</small></p>
                             </a>
                         </li>
                     </ul>
