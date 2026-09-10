@@ -28,8 +28,14 @@ class SpiceOrderController extends Controller
     {
         $isUnlisted = $request->boolean('unlisted');
 
+        // Quantities and prices come straight off a public, unauthenticated form
+        // and are carried into the sale when the order is converted, so they're
+        // bounded here rather than trusted.
         $rules = [
-            'remarks' => 'nullable|string|max:500',
+            'remarks'            => 'nullable|string|max:500',
+            'package'            => 'nullable|array',
+            'package.*.*.qty'    => 'nullable|numeric|min:0|max:100000',
+            'package.*.*.price'  => 'nullable|numeric|min:0|max:10000000',
         ];
 
         if ($isUnlisted) {
@@ -44,6 +50,8 @@ class SpiceOrderController extends Controller
             'shop_id.required'       => 'Please select your shop.',
             'customer_name.required' => 'Please enter your shop / name.',
             'phone.required'         => 'Please enter your phone number.',
+            'package.*.*.qty.*'      => 'Please enter a valid quantity.',
+            'package.*.*.price.*'    => 'Please enter a valid rate.',
         ]);
 
         $spiceTypes = SpiceType::orderBy('title')->get();

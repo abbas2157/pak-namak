@@ -103,4 +103,23 @@ class SpiceStockController extends Controller
             return response()->json(['success' => false, 'message' => 'Could not adjust stock.'], 422);
         }
     }
+
+    /**
+     * Remove a manual stock entry and undo its effect on the balance.
+     * Sale-linked movements are refused — they belong to their sale.
+     * Mirrors StockController::destroyMovement().
+     */
+    public function destroyMovement(SpiceStockMovement $movement)
+    {
+        if (!in_array($movement->reason, ['addition', 'adjustment'], true)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Only manual additions and adjustments can be deleted. Edit or delete the linked sale instead.',
+            ], 422);
+        }
+
+        DB::transaction(fn () => $movement->revert());
+
+        return response()->json(['success' => true]);
+    }
 }

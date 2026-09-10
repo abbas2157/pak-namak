@@ -136,4 +136,21 @@ class SpiceOrderAdminController extends Controller
         session(['prefill_spice_order_id' => $spiceOrder->id]);
         return redirect()->route('admin.spice-sales.create');
     }
+
+    /**
+     * Lets spam or duplicate submissions from the public portal be cleared out.
+     * Refused once the order has become a sale, so a real sale can't silently
+     * lose its origin. Mirrors OrderAdminController::destroy().
+     */
+    public function destroy(SpiceOrder $spiceOrder)
+    {
+        if ($spiceOrder->sale) {
+            return back()->with('error', 'This order has already been converted to a sale and cannot be deleted.');
+        }
+
+        // spice_order_items cascades at the DB level.
+        $spiceOrder->delete();
+
+        return back()->with('success', 'Order deleted.');
+    }
 }

@@ -124,6 +124,7 @@ $negativeCount = $levels->where('quantity', '<', 0)->count();
                                 <th class="text-center">Qty</th>
                                 <th>Reason</th>
                                 <th>Note</th>
+                                <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -142,10 +143,20 @@ $negativeCount = $levels->where('quantity', '<', 0)->count();
                                         @endif
                                     </td>
                                     <td class="align-middle">{{ $m->note }}</td>
+                                    <td class="align-middle text-center">
+                                        @if(in_array($m->reason, ['addition', 'adjustment']))
+                                            <button class="btn btn-sm btn-pn btn-act-delete deleteMovementBtn"
+                                                    data-id="{{ $m->id }}" title="Delete this entry">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        @else
+                                            <span class="text-muted" title="Owned by its sale — edit the sale instead">—</span>
+                                        @endif
+                                    </td>
                                 </tr>
                             @empty
                                 <tr class="empty-row">
-                                    <td colspan="6">
+                                    <td colspan="7">
                                         <i class="fas fa-history empty-icon"></i>
                                         <p class="empty-msg mb-0">No stock movements yet.</p>
                                     </td>
@@ -263,6 +274,34 @@ $negativeCount = $levels->where('quantity', '<', 0)->count();
 @section('scripts')
 <script>
 $(function () {
+    $(document).on('click', '.deleteMovementBtn', function () {
+        const id = $(this).data('id');
+        Swal.fire({
+            title: 'Delete this stock entry?',
+            text: 'The quantity will be removed from the current stock balance.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e74a3b',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, delete',
+            cancelButtonText: 'Cancel'
+        }).then(result => {
+            if (!result.isConfirmed) return;
+            $.ajax({
+                url: APP_URL + '/spice-stocks/movements/' + id,
+                type: 'POST',
+                data: { _method: 'DELETE', _token: '{{ csrf_token() }}' },
+                success: function () {
+                    toastr.success('Stock entry removed.');
+                    setTimeout(() => location.reload(), 700);
+                },
+                error: function (xhr) {
+                    toastr.error(xhr.responseJSON?.message || 'Could not delete this entry.');
+                }
+            });
+        });
+    });
+
     $('#addPackageBtn').on('click', function () {
         $('#addPackageForm')[0].reset();
         $('#addPackageModal').modal('show');

@@ -54,6 +54,22 @@ class SpiceStockMovement extends Model
     }
 
     /**
+     * Undo this movement's effect on the cached balance, then remove it.
+     * Caller is expected to already be inside a DB transaction.
+     */
+    public function revert(): void
+    {
+        $stock = SpiceStock::firstOrCreate(
+            ['spice_type_id' => $this->spice_type_id, 'size' => $this->size],
+            ['quantity' => 0, 'quantity_kg' => 0]
+        );
+        $stock->increment('quantity', -$this->quantity);
+        $stock->increment('quantity_kg', -$this->quantity_kg);
+
+        $this->delete();
+    }
+
+    /**
      * Reverse every 'sale' movement previously logged for the given model
      * (adds the stock back) and deletes those ledger rows. Used when a sale
      * is edited (before re-applying fresh deductions) or deleted.
@@ -64,14 +80,6 @@ class SpiceStockMovement extends Model
             ->where('reference_id', $reference->getKey())
             ->where('reason', $reason)
             ->get()
-            ->each(function (self $movement) {
-                $stock = SpiceStock::firstOrCreate(
-                    ['spice_type_id' => $movement->spice_type_id, 'size' => $movement->size],
-                    ['quantity' => 0, 'quantity_kg' => 0]
-                );
-                $stock->increment('quantity', -$movement->quantity);
-                $stock->increment('quantity_kg', -$movement->quantity_kg);
-                $movement->delete();
-            });
+            ->each(fn (self $movement) => $movement->revert());
     }
 }

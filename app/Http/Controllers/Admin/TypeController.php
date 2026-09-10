@@ -15,7 +15,9 @@ class TypeController extends Controller
 
     public function create()
     {
-        return view('admin.types.index');
+        // The index page adds types through a modal; returning the index view
+        // from here rendered it without $types and threw. Redirect instead.
+        return redirect()->route('admin.types.index');
     }
 
     public function store(Request $request)
@@ -37,13 +39,12 @@ class TypeController extends Controller
         ]);
     }
 
-    public function update(Request $request, SaltType $type,$id)
+    public function update(Request $request, SaltType $type)
     {
-            $request->validate([
-            'title' => 'required'
+        $request->validate([
+            'title' => 'required|string|max:255',
         ]);
 
-        $type = SaltType::findOrFail($id);
         $type->title = $request->title;
         $type->save();
 

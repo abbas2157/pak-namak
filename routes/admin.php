@@ -25,13 +25,27 @@ Route::middleware('web')->group(function () {
         Route::get('stocks', [App\Http\Controllers\Admin\StockController::class, 'index'])->name('admin.stocks.index');
         Route::post('stocks/addition', [App\Http\Controllers\Admin\StockController::class, 'storeAddition'])->name('admin.stocks.addition');
         Route::post('stocks/adjustment', [App\Http\Controllers\Admin\StockController::class, 'storeAdjustment'])->name('admin.stocks.adjustment');
+        Route::delete('stocks/movements/{movement}', [App\Http\Controllers\Admin\StockController::class, 'destroyMovement'])->name('admin.stocks.movements.destroy');
 
-        Route::resource('purchases', App\Http\Controllers\Admin\PurchaseController::class, ['as' => 'admin']);
+        // None of these controllers implement show() — registering the route
+        // anyway meant a 500 for anyone who hit /<resource>/{id} directly.
+        Route::resource('purchases', App\Http\Controllers\Admin\PurchaseController::class, ['as' => 'admin'])
+            ->except(['show']);
         Route::post('purchases/{purchase}/payments', [App\Http\Controllers\Admin\PurchaseController::class, 'recordPayment'])->name('admin.purchases.payments.store');
         Route::get('purchases/{purchase}/payments', [App\Http\Controllers\Admin\PurchaseController::class, 'payments'])->name('admin.purchases.payments.index');
         Route::delete('purchases/{purchase}/payments/{payment}', [App\Http\Controllers\Admin\PurchaseController::class, 'destroyPayment'])->name('admin.purchases.payments.destroy');
-        Route::resource('productions', App\Http\Controllers\Admin\ProductionController::class, ['as' => 'admin']);
-        Route::resource('vendors', App\Http\Controllers\Admin\VendorController::class, ['as' => 'admin']);
+        // Packaging materials (empty thaila bags / packets) bought from vendors.
+        // Costed as an operating expense, not stock — see DashboardController.
+        Route::resource('packaging-purchases', App\Http\Controllers\Admin\PackagingPurchaseController::class, ['as' => 'admin'])
+            ->except(['show', 'create']);
+        Route::post('packaging-purchases/{purchase}/payments', [App\Http\Controllers\Admin\PackagingPurchaseController::class, 'recordPayment'])->name('admin.packaging-purchases.payments.store');
+        Route::get('packaging-purchases/{purchase}/payments', [App\Http\Controllers\Admin\PackagingPurchaseController::class, 'payments'])->name('admin.packaging-purchases.payments.index');
+        Route::delete('packaging-purchases/{purchase}/payments/{payment}', [App\Http\Controllers\Admin\PackagingPurchaseController::class, 'destroyPayment'])->name('admin.packaging-purchases.payments.destroy');
+
+        Route::resource('productions', App\Http\Controllers\Admin\ProductionController::class, ['as' => 'admin'])
+            ->except(['show']);
+        Route::resource('vendors', App\Http\Controllers\Admin\VendorController::class, ['as' => 'admin'])
+            ->except(['show']);
         Route::post('vendors/{vendor}/payments', [App\Http\Controllers\Admin\VendorController::class, 'recordPayment'])->name('admin.vendors.payments.store');
         Route::get('vendor-payments', [App\Http\Controllers\Admin\VendorController::class, 'paymentForm'])->name('admin.vendors.payment_form');
         Route::get('vendor-advances', [App\Http\Controllers\Admin\VendorController::class, 'advanceForm'])->name('admin.vendors.advance_form');
@@ -65,7 +79,8 @@ Route::middleware('web')->group(function () {
         Route::get('sales-report/pdf', [App\Http\Controllers\Admin\SalesReportController::class, 'pdfAll'])->name('admin.sales.report.pdf');
 
 
-        Route::resource('types', App\Http\Controllers\Admin\TypeController::class, ['as' => 'admin']);
+        Route::resource('types', App\Http\Controllers\Admin\TypeController::class, ['as' => 'admin'])
+            ->except(['show']);
         Route::resource('employees', App\Http\Controllers\Admin\EmployeeController::class, ['as' => 'admin']);
         Route::post('employees/{employee}/advances', [App\Http\Controllers\Admin\EmployeeSalaryController::class, 'storeAdvance'])->name('admin.employees.advances.store');
         Route::post('employees/{employee}/salaries', [App\Http\Controllers\Admin\EmployeeSalaryController::class, 'storeSalary'])->name('admin.employees.salaries.store');
@@ -79,8 +94,10 @@ Route::middleware('web')->group(function () {
         Route::get('holidays', [App\Http\Controllers\Admin\CompanyHolidayController::class, 'index'])->name('admin.holidays.index');
         Route::post('holidays', [App\Http\Controllers\Admin\CompanyHolidayController::class, 'store'])->name('admin.holidays.store');
         Route::delete('holidays/{holiday}', [App\Http\Controllers\Admin\CompanyHolidayController::class, 'destroy'])->name('admin.holidays.destroy');
-        Route::resource('expenses', App\Http\Controllers\Admin\ExpenseController::class, ['as' => 'admin']);
-        Route::resource('assets', App\Http\Controllers\Admin\AssetController::class, ['as' => 'admin']);
+        Route::resource('expenses', App\Http\Controllers\Admin\ExpenseController::class, ['as' => 'admin'])
+            ->except(['show']);
+        Route::resource('assets', App\Http\Controllers\Admin\AssetController::class, ['as' => 'admin'])
+            ->except(['show']);
         Route::get('investments', [App\Http\Controllers\Admin\InvestmentController::class, 'index'])->name('admin.investments.index');
 
         // Receipt (new tab / print-friendly)
@@ -93,6 +110,7 @@ Route::middleware('web')->group(function () {
         Route::post('orders/{order}/confirm',   [App\Http\Controllers\Admin\OrderAdminController::class, 'confirm'])->name('admin.orders.confirm');
         Route::post('orders/{order}/reject',    [App\Http\Controllers\Admin\OrderAdminController::class, 'reject'])->name('admin.orders.reject');
         Route::get('orders/{order}/to-sale',    [App\Http\Controllers\Admin\OrderAdminController::class, 'toSale'])->name('admin.orders.to_sale');
+        Route::delete('orders/{order}',         [App\Http\Controllers\Admin\OrderAdminController::class, 'destroy'])->name('admin.orders.destroy');
 
         // ═══════════════════════════════════════════════════════════
         // SPICES MODULE — separate from salt (Chilli, Turmeric, ...)
@@ -104,7 +122,8 @@ Route::middleware('web')->group(function () {
         // "spice_sale", which won't implicitly bind to a camelCase $spiceSale
         // parameter and would silently inject an empty, unsaved model instead.
         Route::resource('spice-types', App\Http\Controllers\Admin\SpiceTypeController::class, ['as' => 'admin'])
-            ->parameters(['spice-types' => 'type']);
+            ->parameters(['spice-types' => 'type'])
+            ->except(['show']);
 
         // URI is plural ("spice-stocks") to avoid colliding with the public
         // singular "/spice-stock" viewing page below — same admin-plural /
@@ -113,8 +132,10 @@ Route::middleware('web')->group(function () {
         Route::get('spice-stocks', [App\Http\Controllers\Admin\SpiceStockController::class, 'index'])->name('admin.spice-stock.index');
         Route::post('spice-stocks/addition', [App\Http\Controllers\Admin\SpiceStockController::class, 'storeAddition'])->name('admin.spice-stock.addition');
         Route::post('spice-stocks/adjustment', [App\Http\Controllers\Admin\SpiceStockController::class, 'storeAdjustment'])->name('admin.spice-stock.adjustment');
+        Route::delete('spice-stocks/movements/{movement}', [App\Http\Controllers\Admin\SpiceStockController::class, 'destroyMovement'])->name('admin.spice-stock.movements.destroy');
 
-        Route::resource('spice-purchases', App\Http\Controllers\Admin\SpicePurchaseController::class, ['as' => 'admin']);
+        Route::resource('spice-purchases', App\Http\Controllers\Admin\SpicePurchaseController::class, ['as' => 'admin'])
+            ->except(['show']);
         Route::post('spice-purchases/{purchase}/payments', [App\Http\Controllers\Admin\SpicePurchaseController::class, 'recordPayment'])->name('admin.spice-purchases.payments.store');
         Route::get('spice-purchases/{purchase}/payments', [App\Http\Controllers\Admin\SpicePurchaseController::class, 'payments'])->name('admin.spice-purchases.payments.index');
         Route::delete('spice-purchases/{purchase}/payments/{payment}', [App\Http\Controllers\Admin\SpicePurchaseController::class, 'destroyPayment'])->name('admin.spice-purchases.payments.destroy');
@@ -125,11 +146,20 @@ Route::middleware('web')->group(function () {
         Route::post('spice-sales/{spiceSale}/payments', [App\Http\Controllers\Admin\SpiceSaleController::class, 'addPayment'])->name('admin.spice-sales.payments.store');
         Route::delete('spice-sales/{spiceSale}/payments/{payment}', [App\Http\Controllers\Admin\SpiceSaleController::class, 'destroyPayment'])->name('admin.spice-sales.payments.destroy');
 
+        // Spice receipt (new tab / print-friendly) — mirrors admin.sales.receipt
+        Route::get('spice-sales/{id}/receipt', \App\Http\Controllers\Admin\SpiceSaleReceiptController::class)
+            ->name('admin.spice-sales.receipt');
+
+        // Spice sales report (totals by spice type + by shop, print/PDF via browser)
+        Route::get('spice-sales-report', [App\Http\Controllers\Admin\SpiceSalesReportController::class, 'index'])
+            ->name('admin.spice-sales.report');
+
         Route::get('spice-orders',                    [App\Http\Controllers\Admin\SpiceOrderAdminController::class, 'index'])->name('admin.spice-orders.index');
         Route::get('spice-orders/{spiceOrder}',        [App\Http\Controllers\Admin\SpiceOrderAdminController::class, 'show'])->name('admin.spice-orders.show');
         Route::post('spice-orders/{spiceOrder}/confirm', [App\Http\Controllers\Admin\SpiceOrderAdminController::class, 'confirm'])->name('admin.spice-orders.confirm');
         Route::post('spice-orders/{spiceOrder}/reject', [App\Http\Controllers\Admin\SpiceOrderAdminController::class, 'reject'])->name('admin.spice-orders.reject');
         Route::get('spice-orders/{spiceOrder}/to-sale', [App\Http\Controllers\Admin\SpiceOrderAdminController::class, 'toSale'])->name('admin.spice-orders.to_sale');
+        Route::delete('spice-orders/{spiceOrder}',      [App\Http\Controllers\Admin\SpiceOrderAdminController::class, 'destroy'])->name('admin.spice-orders.destroy');
 
     });
 });

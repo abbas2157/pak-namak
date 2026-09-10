@@ -40,6 +40,13 @@ return [
     // 1000/5000/10000 represent 1kg/5kg/10kg for uniform gram-based storage/sorting.
     'spice_sizes' => [50, 100, 200, 250, 500, 1000, 2000, 2500, 3000, 4000, 5000, 10000],
 
+    // Packaging materials bought from vendors (empty bags/pouches, not product).
+    // Thaila values are kg capacity; packet values are grams.
+    'packaging_sizes' => [
+        'thaila' => [50, 10, 5],
+        'packet' => [200, 300, 400],
+    ],
+
     // Fixed weekly off for attendance/salary deduction purposes (0=Sunday ... 6=Saturday)
     'weekly_holiday' => 0,
 ];

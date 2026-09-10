@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Vendor, Purchase, PurchasePayment, SpicePurchasePayment, VendorAdvance, Account};
+use App\Models\{Vendor, Purchase, PurchasePayment, SpicePurchase, SpicePurchasePayment, PackagingPurchase, VendorAdvance, Account};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -13,11 +13,21 @@ class VendorController extends Controller
     {
         $vendors = Vendor::withCount('purchases')
             ->withSum('purchases', 'pending_amount')
+            ->withSum('spicePurchases', 'pending_amount')
+            ->withSum('packagingPurchases', 'pending_amount')
             ->withSum(['advances' => fn ($q) => $q->where('remaining_amount', '>', 0)], 'remaining_amount')
             ->orderByDesc('id')
-            ->get();
+            ->get()
+            ->each(function (Vendor $vendor) {
+                $vendor->combined_pending_amount = (float) $vendor->purchases_sum_pending_amount
+                    + (float) $vendor->spice_purchases_sum_pending_amount
+                    + (float) $vendor->packaging_purchases_sum_pending_amount;
+            });
+
         $totalVendors = $vendors->count();
-        $totalSpent   = Purchase::sum('grand_total');
+        $totalSpent   = Purchase::sum('grand_total')
+            + SpicePurchase::sum('grand_total')
+            + PackagingPurchase::sum('grand_total');
         $topVendor    = $vendors->sortByDesc('purchases_count')->first();
         $accounts     = Account::where('is_active', true)->orderBy('name')->get();
 
@@ -36,8 +46,19 @@ class VendorController extends Controller
     public function paymentForm()
     {
         $vendors = Vendor::withSum('purchases', 'pending_amount')
+            ->withSum('spicePurchases', 'pending_amount')
+            ->withSum('packagingPurchases', 'pending_amount')
             ->orderByDesc('id')
-            ->get();
+            ->get()
+            ->each(function (Vendor $vendor) {
+                $vendor->salt_pending = (float) $vendor->purchases_sum_pending_amount;
+                $vendor->spice_pending = (float) $vendor->spice_purchases_sum_pending_amount;
+                $vendor->packaging_pending = (float) $vendor->packaging_purchases_sum_pending_amount;
+                $vendor->combined_pending_amount = $vendor->salt_pending
+                    + $vendor->spice_pending
+                    + $vendor->packaging_pending;
+            });
+
         $accounts = Account::where('is_active', true)->orderBy('name')->get();
 
         return view('admin.vendors.payment-form', compact('vendors', 'accounts'));
@@ -60,11 +81,13 @@ class VendorController extends Controller
 
         $accountId = $request->account_id;
 
-        $pendingPurchases = $vendor->purchases()
-            ->where('pending_amount', '>', 0)
-            ->orderBy('purchase_date')
-            ->orderBy('id')
-            ->get();
+        // All three payable types settle from one oldest-first queue, so a lump
+        // sum clears what the vendor is genuinely owed rather than salt only.
+        $pendingPurchases = $vendor->purchases()->where('pending_amount', '>', 0)->get()
+            ->concat($vendor->spicePurchases()->where('pending_amount', '>', 0)->get())
+            ->concat($vendor->packagingPurchases()->where('pending_amount', '>', 0)->get())
+            ->sortBy(fn ($purchase) => [(string) $purchase->purchase_date, $purchase->id])
+            ->values();
 
         $totalPending = $pendingPurchases->sum('pending_amount');
 
@@ -83,8 +106,9 @@ class VendorController extends Controller
 
                 $allocated = min($remaining, (float) $purchase->pending_amount);
 
-                PurchasePayment::create([
-                    'purchase_id'  => $purchase->id,
+                // Each purchase type's payments() relation builds the right
+                // payment model and sets its own foreign key.
+                $purchase->payments()->create([
                     'account_id'   => $accountId,
                     'amount'       => $allocated,
                     'payment_date' => $request->payment_date,

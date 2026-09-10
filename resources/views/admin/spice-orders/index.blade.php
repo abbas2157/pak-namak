@@ -221,6 +221,17 @@
                                         <i class="fas fa-exchange-alt"></i>
                                     </a>
                                 @endif
+
+                                @if(!$order->sale)
+                                    <form action="{{ route('admin.spice-orders.destroy', $order) }}" method="POST"
+                                          class="d-inline js-delete-order">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="action-btn ab-reject ml-1" title="Delete order" type="submit">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @empty
@@ -249,4 +260,27 @@
 
     </div>
 </section>
+@endsection
+
+@section('scripts')
+<script>
+$(function () {
+    $(document).on('submit', '.js-delete-order', function (e) {
+        e.preventDefault();
+        const form = this;
+        Swal.fire({
+            title: 'Delete this order?',
+            text: 'The order and its items will be removed. This cannot be undone.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e74a3b',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, delete',
+            cancelButtonText: 'Cancel'
+        }).then(result => {
+            if (result.isConfirmed) form.submit();
+        });
+    });
+});
+</script>
 @endsection

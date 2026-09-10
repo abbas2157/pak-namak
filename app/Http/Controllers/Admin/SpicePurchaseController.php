@@ -64,19 +64,20 @@ class SpicePurchaseController extends Controller
         $request->merge(['account_id' => $request->account_id ?: null]);
 
         $request->validate([
-            'vendor_id'     => 'required|exists:vendors,id',
-            'spice_type_id' => 'required|exists:spice_types,id',
-            'quantity_kg'   => 'required|numeric|min:0',
-            'rate_per_kg'   => 'required|numeric|min:0',
-            'total_cost'    => 'required|numeric|min:0',
-            'grand_total'   => 'required|numeric|min:0',
-            'amount_paid'   => 'nullable|numeric|min:0',
-            'account_id'    => 'nullable|exists:accounts,id',
-            'is_investment' => 'boolean',
+            'vendor_id'              => 'required|exists:vendors,id',
+            'spice_type_id'          => 'required|exists:spice_types,id',
+            'quantity_kg'            => 'required|numeric|min:0',
+            'rate_per_kg'            => 'required|numeric|min:0',
+            'transport_cost'         => 'nullable|numeric|min:0',
+            'loading_unloading_cost' => 'nullable|numeric|min:0',
+            'amount_paid'            => 'nullable|numeric|min:0',
+            'account_id'             => 'nullable|exists:accounts,id',
+            'is_investment'          => 'boolean',
         ]);
 
         $purchase = DB::transaction(function () use ($request) {
             $purchaseDate = $request->purchase_date ?: now()->toDateString();
+            [$totalCost, $grandTotal] = $this->computeTotals($request);
 
             $purchase = SpicePurchase::create([
                 'vendor_id'              => $request->vendor_id,
@@ -84,15 +85,15 @@ class SpicePurchaseController extends Controller
                 'purchase_date'          => $purchaseDate,
                 'quantity_kg'            => $request->quantity_kg,
                 'rate_per_kg'            => $request->rate_per_kg,
-                'total_cost'             => $request->total_cost,
+                'total_cost'             => $totalCost,
                 'transport_cost'         => $request->transport_cost ?? 0,
                 'loading_unloading_cost' => $request->loading_unloading_cost ?? 0,
-                'grand_total'            => $request->grand_total,
+                'grand_total'            => $grandTotal,
                 'remarks'                => $request->remarks,
                 'is_investment'          => $request->boolean('is_investment'),
             ]);
 
-            $amountPaid = min((float) ($request->amount_paid ?? 0), (float) $request->grand_total);
+            $amountPaid = min((float) ($request->amount_paid ?? 0), $grandTotal);
             if ($amountPaid > 0) {
                 $purchase->payments()->create([
                     'account_id'   => $request->account_id,
@@ -123,26 +124,28 @@ class SpicePurchaseController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'vendor_id'     => 'required|exists:vendors,id',
-            'spice_type_id' => 'required|exists:spice_types,id',
-            'quantity_kg'   => 'required|numeric|min:0',
-            'rate_per_kg'   => 'required|numeric|min:0',
-            'total_cost'    => 'required|numeric|min:0',
-            'grand_total'   => 'required|numeric|min:0',
-            'is_investment' => 'boolean',
+            'vendor_id'              => 'required|exists:vendors,id',
+            'spice_type_id'          => 'required|exists:spice_types,id',
+            'quantity_kg'            => 'required|numeric|min:0',
+            'rate_per_kg'            => 'required|numeric|min:0',
+            'transport_cost'         => 'nullable|numeric|min:0',
+            'loading_unloading_cost' => 'nullable|numeric|min:0',
+            'is_investment'          => 'boolean',
         ]);
 
         $purchase = SpicePurchase::findOrFail($id);
+        [$totalCost, $grandTotal] = $this->computeTotals($request);
+
         $purchase->update([
             'vendor_id'              => $request->vendor_id,
             'spice_type_id'          => $request->spice_type_id,
             'purchase_date'          => $request->purchase_date ?: $purchase->purchase_date,
             'quantity_kg'            => $request->quantity_kg,
             'rate_per_kg'            => $request->rate_per_kg,
-            'total_cost'             => $request->total_cost,
+            'total_cost'             => $totalCost,
             'transport_cost'         => $request->transport_cost ?? 0,
             'loading_unloading_cost' => $request->loading_unloading_cost ?? 0,
-            'grand_total'            => $request->grand_total,
+            'grand_total'            => $grandTotal,
             'remarks'                => $request->remarks,
             'is_investment'          => $request->boolean('is_investment'),
         ]);
@@ -228,6 +231,26 @@ class SpicePurchaseController extends Controller
         });
 
         return response()->json(['success' => true]);
+    }
+
+    /**
+     * Cost is always derived here, never taken from the posted total — a stale
+     * or hand-edited form can otherwise store a grand_total that doesn't match
+     * its own quantity × rate, leaving the purchase ledger unreconcilable.
+     *
+     * @return array{0: float, 1: float} [total_cost, grand_total]
+     */
+    private function computeTotals(Request $request): array
+    {
+        $totalCost = round((float) $request->quantity_kg * (float) $request->rate_per_kg, 2);
+        $grandTotal = round(
+            $totalCost
+            + (float) ($request->transport_cost ?? 0)
+            + (float) ($request->loading_unloading_cost ?? 0),
+            2
+        );
+
+        return [$totalCost, $grandTotal];
     }
 
     private function recalcTotals(SpicePurchase $purchase): void

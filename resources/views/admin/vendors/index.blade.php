@@ -114,8 +114,8 @@
                                 <span class="badge badge-info">{{ $vendor->purchases_count }}</span>
                             </td>
                             <td class="text-right">
-                                @if(($vendor->purchases_sum_pending_amount ?? 0) > 0)
-                                    <span class="font-weight-bold text-danger">{{ number_format($vendor->purchases_sum_pending_amount, 0) }}</span>
+                                @if(($vendor->combined_pending_amount ?? 0) > 0)
+                                    <span class="font-weight-bold text-danger">{{ number_format($vendor->combined_pending_amount, 0) }}</span>
                                 @else
                                     <span class="text-muted">—</span>
                                 @endif
@@ -128,11 +128,11 @@
                                 @endif
                             </td>
                             <td class="text-center text-nowrap">
-                                @if(($vendor->purchases_sum_pending_amount ?? 0) > 0)
+                                @if(($vendor->combined_pending_amount ?? 0) > 0)
                                 <button class="btn btn-sm btn-pn btn-act-confirm vendorRecordPaymentBtn mr-1"
                                         data-id="{{ $vendor->id }}"
                                         data-name="{{ $vendor->name }}"
-                                        data-pending="{{ $vendor->purchases_sum_pending_amount }}"
+                                        data-pending="{{ $vendor->combined_pending_amount }}"
                                         title="Record Payment">
                                     <i class="fas fa-hand-holding-dollar"></i>
                                 </button>

@@ -17,15 +17,27 @@ class ShopController extends Controller
     {
         $shops = Shop::with('cityRecord', 'area')
             ->withCount('sales')
+            ->withCount('spiceSales')
             ->withSum('sales', 'total_amount')
             ->withSum('sales', 'pending_amount')
+            ->withSum('spiceSales', 'total_amount')
+            ->withSum('spiceSales', 'pending_amount')
             ->orderByDesc('id')
             ->get();
 
+        // A shop's money owed spans both product lines — reporting salt alone
+        // understated what every shop actually owes.
+        $shops->each(function (Shop $shop) {
+            $shop->combined_total_amount = (float) $shop->sales_sum_total_amount
+                + (float) $shop->spice_sales_sum_total_amount;
+            $shop->combined_pending_amount = (float) $shop->sales_sum_pending_amount
+                + (float) $shop->spice_sales_sum_pending_amount;
+        });
+
         $totalShops   = $shops->count();
         $activeShops  = $shops->where('status', 'active')->count();
-        $totalRevenue = $shops->sum('sales_sum_total_amount');
-        $totalPending = $shops->sum('sales_sum_pending_amount');
+        $totalRevenue = $shops->sum('combined_total_amount');
+        $totalPending = $shops->sum('combined_pending_amount');
 
         $cities = City::with('areas')->orderBy('name')->get();
         $accounts = Account::where('is_active', true)->orderBy('name')->get();
@@ -48,8 +60,16 @@ class ShopController extends Controller
     {
         $shops = Shop::with('area')
             ->withSum('sales', 'pending_amount')
-            ->orderByDesc('sales_sum_pending_amount')
-            ->get();
+            ->withSum('spiceSales', 'pending_amount')
+            ->get()
+            ->each(function (Shop $shop) {
+                $shop->salt_pending = (float) $shop->sales_sum_pending_amount;
+                $shop->spice_pending = (float) $shop->spice_sales_sum_pending_amount;
+                $shop->combined_pending_amount = $shop->salt_pending + $shop->spice_pending;
+            })
+            ->sortByDesc('combined_pending_amount')
+            ->values();
+
         $accounts = Account::where('is_active', true)->orderBy('name')->get();
 
         return view('admin.shops.payment-form', compact('shops', 'accounts'));
@@ -144,11 +164,13 @@ class ShopController extends Controller
 
         $account = Account::find($request->account_id);
 
-        $pendingSales = $shop->sales()
-            ->where('pending_amount', '>', 0)
-            ->orderBy('sale_date')
-            ->orderBy('id')
-            ->get();
+        // Salt and spice sales are settled from one queue, oldest first, so a
+        // lump sum clears the shop's genuine outstanding balance rather than
+        // only the salt half of it.
+        $pendingSales = $shop->sales()->where('pending_amount', '>', 0)->get()
+            ->concat($shop->spiceSales()->where('pending_amount', '>', 0)->get())
+            ->sortBy(fn ($sale) => [(string) $sale->sale_date, $sale->id])
+            ->values();
 
         $totalPending = $pendingSales->sum('pending_amount');
 
@@ -167,8 +189,9 @@ class ShopController extends Controller
 
                 $allocated = min($remaining, (float) $sale->pending_amount);
 
-                SalePayment::create([
-                    'sale_id'        => $sale->id,
+                // Works for both Sale and SpiceSale — each one's payments()
+                // relation creates the right payment model and sets its own FK.
+                $sale->payments()->create([
                     'account_id'     => $account?->id,
                     'amount'         => $allocated,
                     'payment_date'   => $request->payment_date,
@@ -192,9 +215,12 @@ class ShopController extends Controller
 
     public function info(Shop $shop): \Illuminate\Http\JsonResponse
     {
-        $stats = $shop->sales()
+        $sumsFor = fn ($relation) => $relation
             ->selectRaw('COALESCE(SUM(total_amount),0) as total_amount, COALESCE(SUM(received_amount),0) as received_amount, COALESCE(SUM(pending_amount),0) as pending_amount')
             ->first();
+
+        $stats = $sumsFor($shop->sales());
+        $spiceStats = $sumsFor($shop->spiceSales());
 
         $orders = Order::where('shop_id', $shop->id)
             ->whereIn('status', ['pending', 'confirmed'])
@@ -203,10 +229,19 @@ class ShopController extends Controller
             ->orderByDesc('id')
             ->get(['id', 'reference', 'status', 'created_at', 'remarks']);
 
+        // Both product lines, tagged so the popup can show which is which.
         $pendingSales = $shop->sales()
             ->where('pending_amount', '>', 0)
-            ->orderBy('sale_date')
-            ->get(['id', 'sale_date', 'pending_amount']);
+            ->get(['id', 'sale_date', 'pending_amount'])
+            ->map(fn ($s) => tap($s, fn ($sale) => $sale->product_line = 'Salt'))
+            ->concat(
+                $shop->spiceSales()
+                    ->where('pending_amount', '>', 0)
+                    ->get(['id', 'sale_date', 'pending_amount'])
+                    ->map(fn ($s) => tap($s, fn ($sale) => $sale->product_line = 'Spices'))
+            )
+            ->sortBy(fn ($sale) => [(string) $sale->sale_date, $sale->id])
+            ->values();
 
         return response()->json([
             'shop' => [
@@ -215,9 +250,11 @@ class ShopController extends Controller
                 'phone_number' => $shop->phone_number,
             ],
             'financials' => [
-                'total_amount'    => (float) $stats->total_amount,
-                'received_amount' => (float) $stats->received_amount,
-                'pending_amount'  => (float) $stats->pending_amount,
+                'total_amount'    => (float) $stats->total_amount + (float) $spiceStats->total_amount,
+                'received_amount' => (float) $stats->received_amount + (float) $spiceStats->received_amount,
+                'pending_amount'  => (float) $stats->pending_amount + (float) $spiceStats->pending_amount,
+                'salt_pending'    => (float) $stats->pending_amount,
+                'spice_pending'   => (float) $spiceStats->pending_amount,
             ],
             'orders' => $orders->map(fn($o) => [
                 'id'          => $o->id,
@@ -230,6 +267,7 @@ class ShopController extends Controller
                 'id'             => $s->id,
                 'sale_date'      => $s->sale_date ? \Carbon\Carbon::parse($s->sale_date)->format('d M Y') : '-',
                 'pending_amount' => (float) $s->pending_amount,
+                'product_line'   => $s->product_line,
             ])->values(),
         ]);
     }

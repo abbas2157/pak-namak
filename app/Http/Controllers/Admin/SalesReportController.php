@@ -46,10 +46,16 @@ class SalesReportController extends Controller
             DB::raw('COALESCE(SUM(sub_total),0) as total'),
         ]);
 
-        if ($from && $to) {
-            foreach ([$dallaAgg, $thailaAgg, $packageAgg] as $q) {
-                $q->whereHas('sale', fn($s) => $s->whereBetween('sale_date', [$from, $to]));
-            }
+        // whereHas('sale') is applied unconditionally, not just when a date range
+        // is given: line-item rows outlived their sale before the cascade was
+        // added, and counting those orphans made these product totals disagree
+        // with $grandTotal above.
+        foreach ([$dallaAgg, $thailaAgg, $packageAgg] as $q) {
+            $q->whereHas('sale', function ($s) use ($from, $to) {
+                if ($from && $to) {
+                    $s->whereBetween('sale_date', [$from, $to]);
+                }
+            });
         }
 
         $dallaStats   = $dallaAgg->first();

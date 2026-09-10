@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\GeneratesOrderReference;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
+    use GeneratesOrderReference;
+
     protected $fillable = [
         'reference', 'shop_id', 'customer_name', 'phone',
         'city', 'remarks', 'status', 'ip_address',
@@ -26,11 +29,9 @@ class Order extends Model
         return $this->hasOne(\App\Models\Sale::class);
     }
 
-    public static function generateReference(): string
+    protected static function referencePrefix(): string
     {
-        $year = date('Y');
-        $count = static::whereYear('created_at', $year)->count();
-        return 'ORD-' . $year . '-' . str_pad($count + 1, 5, '0', STR_PAD_LEFT);
+        return 'ORD';
     }
 
     public function getDisplayNameAttribute(): string

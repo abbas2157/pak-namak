@@ -42,7 +42,7 @@ $sizeLabel = fn ($gram) => $gram >= 1000 ? (($gram / 1000) . 'kg') : ($gram . 'g
             </div>
         </div>
         @endif
-        <form action="{{ route('admin.spice-sales.store') }}" method="POST" id="saleForm">
+        <form action="{{ route('admin.spice-sales.store') }}" method="POST" id="saleForm" enctype="multipart/form-data">
             @csrf
             @if($prefill)
                 <input type="hidden" name="spice_order_id" value="{{ $prefill->id }}">
@@ -183,12 +183,20 @@ $sizeLabel = fn ($gram) => $gram >= 1000 ? (($gram / 1000) . 'kg') : ($gram . 'g
                             <option value="">Other / Not from Cash &amp; Bank (کیش/بینک سے نہیں)</option>
                         </select>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label class="pn-label text-uppercase font-weight-bold text-muted">
                             Remarks / ملاحظات
                         </label>
                         <textarea name="remarks" id="remarks" class="form-control fc-pn" rows="2"
                                   placeholder="Optional notes..."></textarea>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label class="pn-label text-uppercase font-weight-bold text-muted">
+                            Bill Image / بل تصویر
+                        </label>
+                        <input type="file" name="bill_image" class="form-control-file fc-pn"
+                               accept="image/jpeg,image/png,image/webp">
+                        <small class="text-muted">Optional — JPG/PNG/WebP, max 4MB.</small>
                     </div>
                 </div>
 

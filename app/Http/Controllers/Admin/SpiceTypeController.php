@@ -16,7 +16,9 @@ class SpiceTypeController extends Controller
 
     public function create()
     {
-        return view('admin.spice-types.index');
+        // The index page adds types through a modal; returning the index view
+        // from here rendered it without $types and threw. Redirect instead.
+        return redirect()->route('admin.spice-types.index');
     }
 
     public function store(Request $request)

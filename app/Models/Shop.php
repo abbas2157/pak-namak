@@ -37,4 +37,27 @@ class Shop extends Model
     {
         return $this->belongsTo(Area::class);
     }
+
+    protected static function booted(): void
+    {
+        // Deleting a shop cascades its spice sales and their payments at the DB
+        // level, which never fires the payment models' Eloquent `deleted` hooks.
+        // Without this the matching cash_ledger rows survive as phantom cash-in
+        // that permanently inflates the balance with no UI to find it.
+        static::deleting(function (self $shop) {
+            $saleIds = $shop->sales()->pluck('id');
+            if ($saleIds->isNotEmpty()) {
+                CashLedger::where('source_type', 'sale_payment')
+                    ->whereIn('source_id', SalePayment::whereIn('sale_id', $saleIds)->pluck('id'))
+                    ->delete();
+            }
+
+            $spiceSaleIds = $shop->spiceSales()->pluck('id');
+            if ($spiceSaleIds->isNotEmpty()) {
+                CashLedger::where('source_type', 'spice_sale_payment')
+                    ->whereIn('source_id', SpiceSalePayment::whereIn('spice_sale_id', $spiceSaleIds)->pluck('id'))
+                    ->delete();
+            }
+        });
+    }
 }

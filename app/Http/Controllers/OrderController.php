@@ -25,8 +25,19 @@ class OrderController extends Controller
     {
         $isUnlisted = $request->boolean('unlisted');
 
+        // Quantities and prices come straight off a public, unauthenticated form
+        // and are carried into the sale when the order is converted, so they're
+        // bounded here rather than trusted.
         $rules = [
-            'remarks' => 'nullable|string|max:500',
+            'remarks'          => 'nullable|string|max:500',
+            'dalla_qty'        => 'nullable|numeric|min:0|max:100000',
+            'dalla_price'      => 'nullable|numeric|min:0|max:10000000',
+            'thaila'           => 'nullable|array',
+            'thaila.*.qty'     => 'nullable|numeric|min:0|max:100000',
+            'thaila.*.price'   => 'nullable|numeric|min:0|max:10000000',
+            'package'          => 'nullable|array',
+            'package.*.qty'    => 'nullable|numeric|min:0|max:100000',
+            'package.*.price'  => 'nullable|numeric|min:0|max:10000000',
         ];
 
         if ($isUnlisted) {
@@ -41,12 +52,18 @@ class OrderController extends Controller
             'shop_id.required'       => 'Please select your shop.',
             'customer_name.required' => 'Please enter your shop / name.',
             'phone.required'         => 'Please enter your phone number.',
+            'dalla_qty.*'            => 'Please enter a valid Dalla quantity.',
+            'dalla_price.*'          => 'Please enter a valid Dalla rate.',
+            'thaila.*.qty.*'         => 'Please enter a valid Thaila quantity.',
+            'thaila.*.price.*'       => 'Please enter a valid Thaila rate.',
+            'package.*.qty.*'        => 'Please enter a valid Package quantity.',
+            'package.*.price.*'      => 'Please enter a valid Package rate.',
         ]);
 
         // Ensure at least one item has quantity > 0
         $hasItem = false;
         if ((float) $request->input('dalla_qty', 0) > 0) $hasItem = true;
-        foreach ([5, 10, 30, 35, 40, 50] as $s) {
+        foreach (config('admin.thaila_sizes', []) as $s) {
             if ((float) $request->input("thaila.$s.qty", 0) > 0) { $hasItem = true; break; }
         }
         foreach (array_keys(config('admin.packages')) as $g) {
@@ -84,7 +101,7 @@ class OrderController extends Controller
             }
 
             // Thaila
-            foreach ([5, 10, 30, 35, 40, 50] as $size) {
+            foreach (config('admin.thaila_sizes', []) as $size) {
                 $qty = (float) $request->input("thaila.$size.qty", 0);
                 if ($qty > 0) {
                     $price = (float) $request->input("thaila.$size.price", 0) ?: null;

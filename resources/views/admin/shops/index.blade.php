@@ -164,13 +164,18 @@
                                         </a>
                                     </td>
                                     <td class="align-middle text-right font-weight-bold pn-text-heading">
-                                        {{ number_format($shop->sales_sum_total_amount ?? 0, 0) }}
+                                        {{ number_format($shop->combined_total_amount ?? 0, 0) }}
                                     </td>
                                     <td class="align-middle text-right">
-                                        @if(($shop->sales_sum_pending_amount ?? 0) > 0)
+                                        @if(($shop->combined_pending_amount ?? 0) > 0)
                                             <span class="font-weight-bold text-c-red">
-                                                {{ number_format($shop->sales_sum_pending_amount, 0) }}
+                                                {{ number_format($shop->combined_pending_amount, 0) }}
                                             </span>
+                                            @if(($shop->spice_sales_sum_pending_amount ?? 0) > 0)
+                                                <small class="d-block text-muted">
+                                                    incl. {{ number_format($shop->spice_sales_sum_pending_amount, 0) }} spices
+                                                </small>
+                                            @endif
                                         @else
                                             <span class="text-muted">—</span>
                                         @endif
@@ -193,11 +198,11 @@
                                                 title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                        @if(($shop->sales_sum_pending_amount ?? 0) > 0)
+                                        @if(($shop->combined_pending_amount ?? 0) > 0)
                                         <button class="btn btn-sm btn-pn btn-act-confirm shopRecordPaymentBtn mr-1"
                                                 data-id="{{ $shop->id }}"
                                                 data-name="{{ $shop->name }}"
-                                                data-pending="{{ $shop->sales_sum_pending_amount }}"
+                                                data-pending="{{ $shop->combined_pending_amount }}"
                                                 title="Record Payment">
                                             <i class="fas fa-hand-holding-dollar"></i>
                                         </button>

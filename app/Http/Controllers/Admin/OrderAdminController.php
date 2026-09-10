@@ -141,4 +141,22 @@ class OrderAdminController extends Controller
         session(['prefill_order_id' => $order->id]);
         return redirect()->route('admin.sales.create');
     }
+
+    /**
+     * Lets spam or duplicate submissions from the public portal be cleared out.
+     * An order already turned into a sale is refused: sales.order_id is
+     * nullOnDelete, so deleting it would silently strip a real sale of its
+     * origin rather than failing loudly.
+     */
+    public function destroy(Order $order)
+    {
+        if ($order->sale) {
+            return back()->with('error', 'This order has already been converted to a sale and cannot be deleted.');
+        }
+
+        // order_items cascades at the DB level.
+        $order->delete();
+
+        return back()->with('success', 'Order deleted.');
+    }
 }

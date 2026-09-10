@@ -38,10 +38,14 @@
                             <select id="rp_vendor_id" class="form-control fc-pn select2" style="width:100%;">
                                 <option value="">— Search for a vendor —</option>
                                 @foreach($vendors as $vendor)
-                                    <option value="{{ $vendor->id }}" data-pending="{{ $vendor->purchases_sum_pending_amount ?? 0 }}">
+                                    <option value="{{ $vendor->id }}"
+                                            data-pending="{{ $vendor->combined_pending_amount }}"
+                                            data-salt-pending="{{ $vendor->salt_pending }}"
+                                            data-spice-pending="{{ $vendor->spice_pending }}"
+                                            data-packaging-pending="{{ $vendor->packaging_pending }}">
                                         {{ $vendor->name }}{{ $vendor->shop ? ' — '.$vendor->shop : '' }}
-                                        @if(($vendor->purchases_sum_pending_amount ?? 0) > 0)
-                                            (Pending: {{ number_format($vendor->purchases_sum_pending_amount, 0) }})
+                                        @if($vendor->combined_pending_amount > 0)
+                                            (Pending: {{ number_format($vendor->combined_pending_amount, 0) }})
                                         @endif
                                     </option>
                                 @endforeach
@@ -52,6 +56,11 @@
                             <span class="text-muted">Total Pending for </span>
                             <strong id="rp_vendor_name"></strong>
                             <span class="font-weight-bold text-c-red float-right" id="rp_pending_display"></span>
+                            <div class="clearfix"></div>
+                            <small class="text-muted d-block mt-2" id="rp_pending_breakdown"></small>
+                            <small class="text-muted d-block mt-1">
+                                Payment is applied to the oldest unpaid purchases first, across salt, spices and packaging.
+                            </small>
                         </div>
 
                         <form id="recordPaymentForm">
@@ -112,8 +121,19 @@ $(function () {
             return;
         }
 
+        const saltPending      = parseFloat(opt.data('salt-pending')) || 0;
+        const spicePending     = parseFloat(opt.data('spice-pending')) || 0;
+        const packagingPending = parseFloat(opt.data('packaging-pending')) || 0;
+
         $('#rp_vendor_name').text(opt.text().split(' (Pending:')[0]);
         $('#rp_pending_display').text(pending.toLocaleString());
+
+        const parts = [];
+        if (saltPending > 0)      parts.push('Salt ' + saltPending.toLocaleString());
+        if (spicePending > 0)     parts.push('Spices ' + spicePending.toLocaleString());
+        if (packagingPending > 0) parts.push('Packaging ' + packagingPending.toLocaleString());
+        $('#rp_pending_breakdown').text(parts.length > 1 ? parts.join('  +  ') : '');
+
         $('#rp_pending_box').toggleClass('d-none', pending <= 0);
         $('#rp_fieldset').prop('disabled', pending <= 0);
     });

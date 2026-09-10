@@ -73,6 +73,25 @@ class SaleController extends Controller
 
     public function store(Request $request)
     {
+        // Validated before the transaction: a ValidationException thrown inside
+        // the try below would be swallowed by its catch and the user would get
+        // a useless generic error instead of the actual field messages.
+        // The wildcard rules cover the dynamically-keyed line-item inputs
+        // (e.g. thaila[50][sold_quantity_kilo_50]) so no price or quantity can
+        // arrive negative and produce a negative sale total.
+        $request->validate([
+            'shop_id'         => 'required|exists:shops,id',
+            'sale_date'       => 'required|date',
+            'order_id'        => 'nullable|exists:orders,id',
+            'remarks'         => 'nullable|string|max:1000',
+            'received_amount' => 'nullable|numeric|min:0',
+            'account_id'      => 'nullable|exists:accounts,id',
+            'bill_image'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'dalla.*'         => 'nullable|numeric|min:0',
+            'thaila.*.*'      => 'nullable|numeric|min:0',
+            'package.*.*'     => 'nullable|numeric|min:0',
+        ]);
+
         DB::beginTransaction();
 
         try {
@@ -81,10 +100,6 @@ class SaleController extends Controller
             $billImagePath = null;
 
             if ($request->hasFile('bill_image')) {
-                $request->validate([
-                    'bill_image' => 'image|mimes:jpg,jpeg,png,webp|max:4096',
-                ]);
-
                 $uploadDir = public_path('uploads/sales/bills');
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0755, true);

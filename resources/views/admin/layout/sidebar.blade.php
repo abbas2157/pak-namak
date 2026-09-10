@@ -15,7 +15,7 @@
                 $ordersActive = request()->routeIs('admin.orders.*') || request()->routeIs('admin.spice-orders.*');
                 $overviewCatActive = request()->routeIs('dashboard') || request()->routeIs('admin.cash_ledger.*') || $ordersActive;
                 $salesCatActive    = request()->routeIs('admin.sales.*') || $shopsActive;
-                $purchCatActive    = request()->routeIs('admin.purchases.*') || $vendorsActive || request()->routeIs('admin.productions.*') || request()->routeIs('admin.stocks.*');
+                $purchCatActive    = request()->routeIs('admin.purchases.*') || request()->routeIs('admin.packaging-purchases.*') || $vendorsActive || request()->routeIs('admin.productions.*') || request()->routeIs('admin.stocks.*');
                 $financeCatActive  = request()->routeIs('admin.expenses.*') || request()->routeIs('admin.assets.*') || request()->routeIs('admin.investments.*');
                 $settingsCatActive = request()->routeIs('admin.types.*') || request()->routeIs('admin.cities.*') || request()->routeIs('admin.areas.*');
                 $spicesCatActive   = request()->routeIs('admin.spice-*');
@@ -100,6 +100,20 @@
                                 <p>All Sales <small class="d-block nav-sub-lbl">تمام فروخت</small></p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.sales.report') }}"
+                               class="nav-link {{ request()->routeIs('admin.sales.report') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Sales Report <small class="d-block nav-sub-lbl">فروخت رپورٹ</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.sales.by_shop') }}"
+                               class="nav-link {{ request()->routeIs('admin.sales.by_shop') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Sales by Shop <small class="d-block nav-sub-lbl">دکان کے مطابق</small></p>
+                            </a>
+                        </li>
 
                         {{-- Shops sub-menu --}}
                         <li class="nav-item has-treeview {{ $shopsActive ? 'menu-open' : '' }}">
@@ -138,6 +152,12 @@
                             <a href="{{ route('admin.purchases.index') }}" class="nav-link {{ request()->routeIs('admin.purchases.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Purchases <small class="d-block nav-sub-lbl">خریداری</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.packaging-purchases.index') }}" class="nav-link {{ request()->routeIs('admin.packaging-purchases.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Packaging <small class="d-block nav-sub-lbl">پیکنگ خریداری</small></p>
                             </a>
                         </li>
 
@@ -202,9 +222,15 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('admin.spice-sales.index') }}" class="nav-link {{ request()->routeIs('admin.spice-sales.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.spice-sales.index') }}" class="nav-link {{ request()->routeIs('admin.spice-sales.*') && !request()->routeIs('admin.spice-sales.report') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Spice Sales <small class="d-block nav-sub-lbl">مصالحہ فروخت</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.spice-sales.report') }}" class="nav-link {{ request()->routeIs('admin.spice-sales.report') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Spice Sales Report <small class="d-block nav-sub-lbl">مصالحہ رپورٹ</small></p>
                             </a>
                         </li>
                         <li class="nav-item">

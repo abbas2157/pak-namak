@@ -114,6 +114,27 @@ class StockController extends Controller
     }
 
     /**
+     * Remove a manual stock entry and undo its effect on the balance.
+     *
+     * Sale-linked movements are refused: they're owned by their sale, and
+     * reverting one here would leave the stock disagreeing with the sale that
+     * caused it. Correct those by editing or deleting the sale itself.
+     */
+    public function destroyMovement(StockMovement $movement)
+    {
+        if (!in_array($movement->reason, ['addition', 'adjustment'], true)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Only manual additions and adjustments can be deleted. Edit or delete the linked sale instead.',
+            ], 422);
+        }
+
+        DB::transaction(fn () => $movement->revert());
+
+        return response()->json(['success' => true]);
+    }
+
+    /**
      * Validate a product_type/size/bundle_size/quantity line and compute its quantity_kg.
      */
     private function validateLine(Request $request, bool $signed = false): array

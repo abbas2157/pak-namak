@@ -39,10 +39,13 @@
                                 <option value="">— Search for a shop —</option>
                                 @foreach($shops as $shop)
                                     @php $shopArea = $shop->area?->name ?? $shop->city; @endphp
-                                    <option value="{{ $shop->id }}" data-pending="{{ $shop->sales_sum_pending_amount ?? 0 }}">
+                                    <option value="{{ $shop->id }}"
+                                            data-pending="{{ $shop->combined_pending_amount }}"
+                                            data-salt-pending="{{ $shop->salt_pending }}"
+                                            data-spice-pending="{{ $shop->spice_pending }}">
                                         {{ $shop->name }}{{ $shopArea ? ' — '.$shopArea : '' }}
-                                        @if(($shop->sales_sum_pending_amount ?? 0) > 0)
-                                            (Pending: {{ number_format($shop->sales_sum_pending_amount, 0) }})
+                                        @if($shop->combined_pending_amount > 0)
+                                            (Pending: {{ number_format($shop->combined_pending_amount, 0) }})
                                         @endif
                                     </option>
                                 @endforeach
@@ -53,6 +56,11 @@
                             <span class="text-muted">Total Pending for </span>
                             <strong id="rp_shop_name"></strong>
                             <span class="font-weight-bold text-c-red float-right" id="rp_pending_display"></span>
+                            <div class="clearfix"></div>
+                            <small class="text-muted d-block mt-2" id="rp_pending_breakdown"></small>
+                            <small class="text-muted d-block mt-1">
+                                Payment is applied to the oldest unpaid sales first, across both salt and spices.
+                            </small>
                         </div>
 
                         <form id="recordPaymentForm">
@@ -113,8 +121,17 @@ $(function () {
             return;
         }
 
+        const saltPending  = parseFloat(opt.data('salt-pending')) || 0;
+        const spicePending = parseFloat(opt.data('spice-pending')) || 0;
+
         $('#rp_shop_name').text(opt.text().split(' (Pending:')[0]);
         $('#rp_pending_display').text(pending.toLocaleString());
+
+        const parts = [];
+        if (saltPending > 0)  parts.push('Salt ' + saltPending.toLocaleString());
+        if (spicePending > 0) parts.push('Spices ' + spicePending.toLocaleString());
+        $('#rp_pending_breakdown').text(parts.length > 1 ? parts.join('  +  ') : '');
+
         $('#rp_pending_box').toggleClass('d-none', pending <= 0);
         $('#rp_fieldset').prop('disabled', pending <= 0);
     });

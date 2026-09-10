@@ -51,6 +51,22 @@ class StockMovement extends Model
     }
 
     /**
+     * Undo this movement's effect on the cached balance, then remove it.
+     * Caller is expected to already be inside a DB transaction.
+     */
+    public function revert(): void
+    {
+        $stock = Stock::firstOrCreate(
+            ['product_type' => $this->product_type, 'size' => $this->size, 'bundle_size' => $this->bundle_size],
+            ['quantity' => 0, 'quantity_kg' => 0]
+        );
+        $stock->increment('quantity', -$this->quantity);
+        $stock->increment('quantity_kg', -$this->quantity_kg);
+
+        $this->delete();
+    }
+
+    /**
      * Reverse every 'sale' movement previously logged for the given model
      * (adds the stock back) and deletes those ledger rows. Used when a sale
      * is edited (before re-applying fresh deductions) or deleted.
@@ -61,14 +77,6 @@ class StockMovement extends Model
             ->where('reference_id', $reference->getKey())
             ->where('reason', $reason)
             ->get()
-            ->each(function (self $movement) {
-                $stock = Stock::firstOrCreate(
-                    ['product_type' => $movement->product_type, 'size' => $movement->size, 'bundle_size' => $movement->bundle_size],
-                    ['quantity' => 0, 'quantity_kg' => 0]
-                );
-                $stock->increment('quantity', -$movement->quantity);
-                $stock->increment('quantity_kg', -$movement->quantity_kg);
-                $movement->delete();
-            });
+            ->each(fn (self $movement) => $movement->revert());
     }
 }

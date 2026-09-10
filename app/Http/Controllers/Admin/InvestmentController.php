@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Expense, Purchase, SpicePurchase, Asset};
+use App\Models\{Expense, Purchase, SpicePurchase, PackagingPurchase, Asset};
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -66,6 +66,19 @@ class InvestmentController extends Controller
                 'amount'      => (float) $p->grand_total,
             ]);
 
+        $packagingPurchases = PackagingPurchase::where('is_investment', true)
+            ->when($range, fn ($q) => $q->whereBetween('purchase_date', $range))
+            ->with('vendor')
+            ->get()
+            ->map(fn ($p) => (object) [
+                'source'      => 'packaging_purchase',
+                'source_label'=> 'Packaging Purchase',
+                'date'        => $p->purchase_date,
+                'label'       => $p->vendor?->name ?? 'Unknown Vendor',
+                'sub'         => trim($p->sizeLabel().' — '.($p->remarks ?? ''), ' —'),
+                'amount'      => (float) $p->grand_total,
+            ]);
+
         $assets = Asset::where('is_investment', true)
             ->when($range, fn ($q) => $q->whereBetween('purchase_date', $range))
             ->get()
@@ -78,7 +91,7 @@ class InvestmentController extends Controller
                 'amount'      => $a->totalValue(),
             ]);
 
-        $items = $expenses->concat($purchases)->concat($spicePurchases)->concat($assets)
+        $items = $expenses->concat($purchases)->concat($spicePurchases)->concat($packagingPurchases)->concat($assets)
             ->sortByDesc('date')
             ->values();
 

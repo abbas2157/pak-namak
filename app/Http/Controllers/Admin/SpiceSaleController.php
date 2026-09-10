@@ -71,6 +71,21 @@ class SpiceSaleController extends Controller
 
     public function store(Request $request)
     {
+        // Validated before the transaction — a ValidationException raised inside
+        // the try below would be caught by its handler and the real field
+        // messages lost. Mirrors SaleController::store().
+        $request->validate([
+            'shop_id'                 => 'required|exists:shops,id',
+            'sale_date'               => 'required|date',
+            'spice_order_id'          => 'nullable|exists:spice_orders,id',
+            'remarks'                 => 'nullable|string|max:1000',
+            'received_amount'         => 'nullable|numeric|min:0',
+            'account_id'              => 'nullable|exists:accounts,id',
+            'bill_image'              => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'package.*.*.qty'         => 'nullable|numeric|min:0',
+            'package.*.*.rate_per_kg' => 'nullable|numeric|min:0',
+        ]);
+
         DB::beginTransaction();
 
         try {
@@ -84,6 +99,7 @@ class SpiceSaleController extends Controller
                 'received_amount' => 0,
                 'pending_amount'  => 0,
                 'remarks'         => $request->remarks,
+                'bill_image'      => $this->storeBillImage($request),
             ]);
 
             if (!empty($request->package)) {
@@ -230,6 +246,30 @@ class SpiceSaleController extends Controller
             DB::rollBack();
             return back()->with('error', 'Could not update sale: ' . $e->getMessage())->withInput();
         }
+    }
+
+    /**
+     * Mirrors SaleController's bill upload. Returns null when no file was sent,
+     * so it can be assigned straight into the create payload.
+     */
+    private function storeBillImage(Request $request): ?string
+    {
+        if (!$request->hasFile('bill_image')) {
+            return null;
+        }
+
+        $uploadDir = public_path('uploads/spice-sales/bills');
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        $file = $request->file('bill_image');
+        $ext = strtolower($file->getClientOriginalExtension() ?: 'jpg');
+        $fileName = 'spice_sale_bill_'.time().'_'.bin2hex(random_bytes(6)).'.'.$ext;
+
+        $file->move($uploadDir, $fileName);
+
+        return 'uploads/spice-sales/bills/'.$fileName;
     }
 
     public function quickUpdate(Request $request, SpiceSale $spiceSale)

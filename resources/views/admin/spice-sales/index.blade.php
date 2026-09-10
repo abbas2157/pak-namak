@@ -185,6 +185,12 @@
                                                         title="Record Payment">
                                                     <i class="fas fa-hand-holding-dollar"></i>
                                                 </button>
+                                                <a href="{{ route('admin.spice-sales.receipt', $sale->id) }}"
+                                                   target="_blank"
+                                                   class="btn btn-sm btn-pn btn-act-view mr-1"
+                                                   title="Print Receipt">
+                                                    <i class="fas fa-receipt"></i>
+                                                </a>
                                                 <a href="{{ route('admin.spice-sales.edit', $sale->id) }}"
                                                    class="btn btn-sm btn-pn btn-act-view mr-1"
                                                    title="Full Edit">
