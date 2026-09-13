@@ -77,6 +77,8 @@ Route::middleware('web')->group(function () {
         // Sales report (all sales + Dalla/Thailas/Packages totals + print/PDF via browser)
         Route::get('sales-report', [App\Http\Controllers\Admin\SalesReportController::class, 'index'])->name('admin.sales.report');
         Route::get('sales-report/pdf', [App\Http\Controllers\Admin\SalesReportController::class, 'pdfAll'])->name('admin.sales.report.pdf');
+        // Month × size comparison (Dalla / Thaila 5-10-50kg / Package 200-800g)
+        Route::get('sales-report/monthly', [App\Http\Controllers\Admin\MonthlyComparisonReportController::class, 'salt'])->name('admin.sales.report.monthly');
 
         // Recovery sheet — every shop's pending balance for field collection.
         // Page is print-styled (browser Save-as-PDF); /excel is a native .xlsx.
@@ -158,6 +160,9 @@ Route::middleware('web')->group(function () {
         // Spice sales report (totals by spice type + by shop, print/PDF via browser)
         Route::get('spice-sales-report', [App\Http\Controllers\Admin\SpiceSalesReportController::class, 'index'])
             ->name('admin.spice-sales.report');
+        // Month × packet-size comparison per spice type
+        Route::get('spice-sales-report/monthly', [App\Http\Controllers\Admin\MonthlyComparisonReportController::class, 'spices'])
+            ->name('admin.spice-sales.report.monthly');
 
         Route::get('spice-orders',                    [App\Http\Controllers\Admin\SpiceOrderAdminController::class, 'index'])->name('admin.spice-orders.index');
         Route::get('spice-orders/{spiceOrder}',        [App\Http\Controllers\Admin\SpiceOrderAdminController::class, 'show'])->name('admin.spice-orders.show');

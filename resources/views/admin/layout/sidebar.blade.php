@@ -14,11 +14,13 @@
 
                 $ordersActive = request()->routeIs('admin.orders.*') || request()->routeIs('admin.spice-orders.*');
                 $overviewCatActive = request()->routeIs('dashboard') || request()->routeIs('admin.cash_ledger.*') || $ordersActive;
-                $salesCatActive    = request()->routeIs('admin.sales.*') || $shopsActive;
+                $reportsCatActive  = request()->routeIs('admin.sales.report*') || request()->routeIs('admin.sales.by_shop')
+                                  || request()->routeIs('admin.spice-sales.report*') || request()->routeIs('admin.recovery_sheet*');
+                $salesCatActive    = (request()->routeIs('admin.sales.*') && !$reportsCatActive) || $shopsActive;
                 $purchCatActive    = request()->routeIs('admin.purchases.*') || request()->routeIs('admin.packaging-purchases.*') || $vendorsActive || request()->routeIs('admin.productions.*') || request()->routeIs('admin.stocks.*');
                 $financeCatActive  = request()->routeIs('admin.expenses.*') || request()->routeIs('admin.assets.*') || request()->routeIs('admin.investments.*');
                 $settingsCatActive = request()->routeIs('admin.types.*') || request()->routeIs('admin.cities.*') || request()->routeIs('admin.areas.*');
-                $spicesCatActive   = request()->routeIs('admin.spice-*');
+                $spicesCatActive   = request()->routeIs('admin.spice-*') && !$reportsCatActive;
             @endphp
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
 
@@ -100,21 +102,6 @@
                                 <p>All Sales <small class="d-block nav-sub-lbl">تمام فروخت</small></p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.sales.report') }}"
-                               class="nav-link {{ request()->routeIs('admin.sales.report') ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Sales Report <small class="d-block nav-sub-lbl">فروخت رپورٹ</small></p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.sales.by_shop') }}"
-                               class="nav-link {{ request()->routeIs('admin.sales.by_shop') ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Sales by Shop <small class="d-block nav-sub-lbl">دکان کے مطابق</small></p>
-                            </a>
-                        </li>
-
                         {{-- Shops sub-menu --}}
                         <li class="nav-item has-treeview {{ $shopsActive ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link {{ $shopsActive ? 'active' : '' }}">
@@ -214,6 +201,58 @@
                     </ul>
                 </li>
 
+                {{-- ═══ REPORTS ═══ --}}
+                <li class="nav-item has-treeview {{ $reportsCatActive ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link nav-cat-link {{ $reportsCatActive ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-chart-bar"></i>
+                        <p>Reports <small class="d-block nav-sub-lbl">رپورٹس</small> <i class="fas fa-angle-left right"></i></p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.sales.report.monthly') }}"
+                               class="nav-link {{ request()->routeIs('admin.sales.report.monthly') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Salt Monthly Comparison <small class="d-block nav-sub-lbl">نمک ماہانہ موازنہ</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.spice-sales.report.monthly') }}"
+                               class="nav-link {{ request()->routeIs('admin.spice-sales.report.monthly') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Spice Monthly Comparison <small class="d-block nav-sub-lbl">مصالحہ ماہانہ موازنہ</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.sales.report') }}"
+                               class="nav-link {{ request()->routeIs('admin.sales.report') || request()->routeIs('admin.sales.report.pdf') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Salt Sales Report <small class="d-block nav-sub-lbl">نمک فروخت رپورٹ</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.spice-sales.report') }}"
+                               class="nav-link {{ request()->routeIs('admin.spice-sales.report') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Spice Sales Report <small class="d-block nav-sub-lbl">مصالحہ فروخت رپورٹ</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.sales.by_shop') }}"
+                               class="nav-link {{ request()->routeIs('admin.sales.by_shop') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Sales by Shop <small class="d-block nav-sub-lbl">دکان کے مطابق</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.recovery_sheet') }}"
+                               class="nav-link {{ request()->routeIs('admin.recovery_sheet*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Recovery Sheet <small class="d-block nav-sub-lbl">وصولی شیٹ</small></p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 {{-- ═══ SPICES ═══ --}}
                 <li class="nav-item has-treeview {{ $spicesCatActive ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link nav-cat-link {{ $spicesCatActive ? 'active' : '' }}">
@@ -222,15 +261,9 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('admin.spice-sales.index') }}" class="nav-link {{ request()->routeIs('admin.spice-sales.*') && !request()->routeIs('admin.spice-sales.report') ? 'active' : '' }}">
+                            <a href="{{ route('admin.spice-sales.index') }}" class="nav-link {{ request()->routeIs('admin.spice-sales.*') && !request()->routeIs('admin.spice-sales.report*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Spice Sales <small class="d-block nav-sub-lbl">مصالحہ فروخت</small></p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.spice-sales.report') }}" class="nav-link {{ request()->routeIs('admin.spice-sales.report') ? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Spice Sales Report <small class="d-block nav-sub-lbl">مصالحہ رپورٹ</small></p>
                             </a>
                         </li>
                         <li class="nav-item">

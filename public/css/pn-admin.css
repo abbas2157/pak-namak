@@ -678,3 +678,45 @@
     .pn-icon-md i { font-size: 15px !important; }
     .card-body.px-4 { padding-left: .75rem !important; padding-right: .75rem !important; }
 }
+
+/* ── Monthly comparison matrix (salt + spice size × month reports) ── */
+.mm-matrix th.mm-month     { min-width: 96px; white-space: nowrap; }
+.mm-matrix .mm-total-col   { min-width: 96px; background: #f8f9fc; }
+.mm-matrix .mm-sticky      { position: sticky; left: 0; background: #fff; z-index: 1; white-space: nowrap; }
+.mm-matrix .pn-total-row .mm-sticky,
+.mm-matrix .mm-group-row .mm-sticky { background: #f8f9fc; }
+.mm-group-row td           { background: #eef2fb; font-size: 12px; letter-spacing: .3px; }
+.mm-unit-badge             { font-size: 10px; font-weight: 600; text-transform: none; letter-spacing: 0; }
+.mm-cell.mm-empty          { color: #b5b9c4; }
+.mm-matrix.show-total .mm-cell.best-total,
+.mm-matrix.show-qty   .mm-cell.best-qty,
+.mm-matrix.show-kg    .mm-cell.best-kg { background: rgba(28,200,138,.12); font-weight: 700; }
+.mm-legend-best            { display:inline-block; width:12px; height:12px; border-radius:3px; background: rgba(28,200,138,.35); vertical-align:middle; }
+.mm-bar-col                { width: 160px; min-width: 120px; }
+.mm-grand td               { border-top: 3px double #d1d5e0; font-weight: 700; }
+
+/* one metric visible at a time — toggled by #metricToggle */
+.mm-matrix .m-total, .mm-matrix .m-qty, .mm-matrix .m-kg { display: none; }
+.mm-matrix.show-total .m-total,
+.mm-matrix.show-qty   .m-qty,
+.mm-matrix.show-kg    .m-kg   { display: inline; }
+
+@media print {
+    .mm-matrix .mm-sticky { position: static; }
+    .mm-matrix th.mm-month, .mm-matrix .mm-total-col { min-width: 0; }
+    .mm-matrix.show-total .mm-cell.best-total,
+    .mm-matrix.show-qty   .mm-cell.best-qty,
+    .mm-matrix.show-kg    .mm-cell.best-kg { background: #e6f7ef !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* charts on the monthly comparison pages */
+.mm-chart-box     { position: relative; height: 300px; width: 100%; }
+.mm-chart-box-sm  { height: 200px; }
+.mm-swatch        { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:8px; vertical-align:middle; }
+.mm-legend        { font-size: 12px; color: #52514e; }
+.mm-legend li + li { border-top: 1px solid #f0f0f0; }
+.mm-unit-note     { margin-top: 2px; }
+@media print {
+    #mm-charts .col-lg-8, #mm-charts .col-lg-4 { flex: 0 0 100%; max-width: 100%; }
+    .mm-chart-box { height: 260px; }
+}
