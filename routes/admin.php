@@ -78,6 +78,11 @@ Route::middleware('web')->group(function () {
         Route::get('sales-report', [App\Http\Controllers\Admin\SalesReportController::class, 'index'])->name('admin.sales.report');
         Route::get('sales-report/pdf', [App\Http\Controllers\Admin\SalesReportController::class, 'pdfAll'])->name('admin.sales.report.pdf');
 
+        // Recovery sheet — every shop's pending balance for field collection.
+        // Page is print-styled (browser Save-as-PDF); /excel is a native .xlsx.
+        Route::get('recovery-sheet',       [App\Http\Controllers\Admin\RecoverySheetController::class, 'index'])->name('admin.recovery_sheet');
+        Route::get('recovery-sheet/excel', [App\Http\Controllers\Admin\RecoverySheetController::class, 'excel'])->name('admin.recovery_sheet.excel');
+
 
         Route::resource('types', App\Http\Controllers\Admin\TypeController::class, ['as' => 'admin'])
             ->except(['show']);

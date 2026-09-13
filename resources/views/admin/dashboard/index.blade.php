@@ -56,6 +56,9 @@
                 <a href="{{ route('admin.shops.payment_form') }}" class="btn btn-pn px-4 mr-2 mb-2 text-white" style="background:linear-gradient(135deg,#0d5c5c,#1a8a8a);">
                     <i class="fas fa-hand-holding-dollar mr-1"></i> Record Payment / ادائیگی
                 </a>
+                <a href="{{ route('admin.recovery_sheet') }}" target="_blank" rel="noopener" class="btn btn-pn px-4 mr-2 mb-2 text-white" style="background:linear-gradient(135deg,#5a3d0d,#8a6d27);" title="Every shop's pending balance — print, save as PDF, or download Excel">
+                    <i class="fas fa-clipboard-list mr-1"></i> Recovery Sheet / ریکوری شیٹ
+                </a>
                 <a href="{{ route('admin.employees.advance_form') }}" class="btn btn-pn px-4 mb-2 text-white" style="background:linear-gradient(135deg,#8a6d0d,#c9a227);">
                     <i class="fas fa-hand-holding-dollar mr-1"></i> Advance / ایڈوانس
                 </a>
