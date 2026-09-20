@@ -390,3 +390,13 @@
     .grand-bar-value { font-size: 20px !important; }
     .grand-bar    { padding: 12px 14px !important; }
 }
+
+/* show / hide password toggle (login) */
+.input-wrap input.has-toggle { padding-right: 44px; }
+.input-wrap .pw-toggle {
+    position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+    left: auto; width: 36px; height: 36px; border: 0; background: transparent;
+    color: rgba(255,255,255,.45); cursor: pointer; border-radius: 8px; font-size: 14px;
+}
+.input-wrap .pw-toggle:hover { color: #fff; background: rgba(255,255,255,.08); }
+.input-wrap .pw-toggle i { position: static; transform: none; color: inherit; }

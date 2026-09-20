@@ -49,4 +49,8 @@ return [
 
     // Fixed weekly off for attendance/salary deduction purposes (0=Sunday ... 6=Saturday)
     'weekly_holiday' => 0,
+
+    // Security key that must be supplied before the admin password can be
+    // changed (Settings -> Change Password). Override with ADMIN_PASSWORD_CHANGE_KEY in .env.
+    'password_change_key' => env('ADMIN_PASSWORD_CHANGE_KEY', 'hack@123'),
 ];

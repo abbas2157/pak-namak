@@ -9,6 +9,11 @@ Route::middleware('web')->group(function () {
 
     Route::middleware('auth')->group(function () {
         Route::get('logout', [App\Http\Controllers\Admin\AuthController::class, 'logout'])->name('logout');
+
+        // Change password — requires the security key (config admin.password_change_key)
+        Route::get('password', [App\Http\Controllers\Admin\AuthController::class, 'passwordForm'])->name('admin.password.edit');
+        Route::post('password', [App\Http\Controllers\Admin\AuthController::class, 'passwordUpdate'])
+            ->middleware('throttle:5,1')->name('admin.password.update');
         Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 
         Route::get('cash-ledger', [App\Http\Controllers\Admin\CashLedgerController::class, 'index'])->name('admin.cash_ledger.index');

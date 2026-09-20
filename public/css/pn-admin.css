@@ -779,3 +779,13 @@
     .pn-filter-grid .pn-filter-actions .btn { flex: 1; }
 }
 @media print { .pn-filters { display: none !important; } }
+
+/* ── SHOW / HIDE PASSWORD TOGGLE ─────────────────────────────── */
+.pw-field { position: relative; }
+.pw-field .form-control { padding-right: 42px; }
+.pw-field .pw-toggle {
+    position: absolute; right: 4px; top: 4px; width: 32px; height: calc(100% - 8px);
+    border: 0; background: transparent; color: #9ca3af; border-radius: 6px; cursor: pointer;
+}
+.pw-field .pw-toggle:hover { color: var(--pn-mid); background: var(--pn-pale); }
+.pw-field .form-control.is-invalid { background-position: right 38px center; }

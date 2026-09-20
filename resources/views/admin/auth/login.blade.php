@@ -58,7 +58,10 @@
                     <label class="field-label">Password / پاس ورڈ</label>
                     <div class="input-wrap">
                         <i class="fas fa-lock"></i>
-                        <input type="password" name="password" placeholder="••••••••" required>
+                        <input type="password" name="password" id="password" class="has-toggle" placeholder="••••••••" required>
+                        <button type="button" class="pw-toggle" data-target="#password" aria-label="Show password" title="Show / hide">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -93,5 +96,17 @@
 
         <div class="login-footer">{{ config('admin.pak_namak.website') }}</div>
     </div>
+    <script>
+        // Show / hide password
+        document.querySelectorAll('.pw-toggle').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var input = document.querySelector(btn.getAttribute('data-target'));
+                var show = input.type === 'password';
+                input.type = show ? 'text' : 'password';
+                btn.querySelector('i').className = show ? 'fas fa-eye-slash' : 'fas fa-eye';
+                btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+            });
+        });
+    </script>
 </body>
 </html>

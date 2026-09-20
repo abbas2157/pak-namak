@@ -8,7 +8,12 @@
     </ul>
     <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('logout') }}">
+            <a class="nav-link" href="{{ route('admin.password.edit') }}" title="Change Password">
+                <i class="fas fa-key"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('logout') }}" title="Logout">
                 <i class="fas fa-sign-out"></i>
             </a>
         </li>

@@ -20,7 +20,7 @@
                 $salesCatActive    = (request()->routeIs('admin.sales.*') && !$reportsCatActive) || $shopsActive;
                 $purchCatActive    = request()->routeIs('admin.purchases.*') || request()->routeIs('admin.packaging-purchases.*') || $vendorsActive || request()->routeIs('admin.productions.*') || request()->routeIs('admin.stocks.*');
                 $financeCatActive  = request()->routeIs('admin.expenses.*') || request()->routeIs('admin.assets.*') || request()->routeIs('admin.investments.*');
-                $settingsCatActive = request()->routeIs('admin.types.*') || request()->routeIs('admin.cities.*') || request()->routeIs('admin.areas.*');
+                $settingsCatActive = request()->routeIs('admin.types.*') || request()->routeIs('admin.cities.*') || request()->routeIs('admin.areas.*') || request()->routeIs('admin.password.*');
                 $spicesCatActive   = request()->routeIs('admin.spice-*') && !$reportsCatActive;
             @endphp
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
@@ -402,6 +402,12 @@
                             <a href="{{ route('admin.areas.index') }}" class="nav-link {{ request()->routeIs('admin.areas.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Areas <small class="d-block nav-sub-lbl">علاقے</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.password.edit') }}" class="nav-link {{ request()->routeIs('admin.password.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Change Password <small class="d-block nav-sub-lbl">پاس ورڈ تبدیل کریں</small></p>
                             </a>
                         </li>
                     </ul>
