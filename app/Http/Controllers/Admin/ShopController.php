@@ -185,22 +185,37 @@ class ShopController extends Controller
             'payment_date' => 'required|date',
             'account_id' => 'nullable|exists:accounts,id',
             'note' => 'nullable|string|max:500',
+            'product_line' => 'nullable|in:salt,spice,both',
         ]);
 
         $account = Account::find($request->account_id);
+        $line = $request->input('product_line', 'both');
 
-        // Salt and spice sales are settled from one queue, oldest first, so a
-        // lump sum clears the shop's genuine outstanding balance rather than
-        // only the salt half of it.
-        $pendingSales = $shop->sales()->where('pending_amount', '>', 0)->get()
-            ->concat($shop->spiceSales()->where('pending_amount', '>', 0)->get())
-            ->sortBy(fn ($sale) => [(string) $sale->sale_date, $sale->id])
-            ->values();
+        // The payer says which udhaar this money is for. Within the chosen
+        // line(s) it is settled oldest-first; "both" is one queue across salt
+        // and spice so a lump sum clears the shop's genuine outstanding balance.
+        $pendingSales = collect();
+        if ($line !== 'spice') {
+            $pendingSales = $pendingSales->concat($shop->sales()->where('pending_amount', '>', 0)->get());
+        }
+        if ($line !== 'salt') {
+            $pendingSales = $pendingSales->concat($shop->spiceSales()->where('pending_amount', '>', 0)->get());
+        }
+        $pendingSales = $pendingSales->sortBy(fn ($sale) => [(string) $sale->sale_date, $sale->id])->values();
 
         $totalPending = $pendingSales->sum('pending_amount');
 
         if ($totalPending <= 0) {
-            return response()->json(['success' => false, 'message' => 'This shop has no pending amount.'], 422);
+            $label = ['salt' => 'salt', 'spice' => 'spice', 'both' => ''][$line];
+
+            return response()->json(['success' => false, 'message' => "This shop has no pending {$label} amount."], 422);
+        }
+
+        if ((float) $request->amount > (float) $totalPending + 0.001) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Amount exceeds the pending balance for the selected line ('.number_format($totalPending, 0).').',
+            ], 422);
         }
 
         $remaining = min((float) $request->amount, (float) $totalPending);

@@ -262,6 +262,8 @@
                                                 data-id="{{ $shop->id }}"
                                                 data-name="{{ $shop->name }}"
                                                 data-pending="{{ $shop->combined_pending_amount }}"
+                                                data-salt-pending="{{ (float) $shop->sales_sum_pending_amount }}"
+                                                data-spice-pending="{{ (float) $shop->spice_sales_sum_pending_amount }}"
                                                 title="Record Payment">
                                             <i class="fas fa-hand-holding-dollar"></i>
                                         </button>
@@ -445,10 +447,14 @@
                         <span class="text-muted"> — Total Pending: </span>
                         <span class="font-weight-bold text-c-red" id="srp_pending_display"></span>
                     </p>
-                    <p class="text-muted small mb-3">Applied to this shop's oldest pending sales first.</p>
+                    <div class="mb-3">
+                        <label class="filter-lbl">Pay Against / ادائیگی کس کی <span class="text-danger">*</span></label>
+                        <select name="product_line" id="srp_product_line" class="form-control fc-pn" required></select>
+                        <small class="text-muted">Applied to the oldest pending sales of the selected line first.</small>
+                    </div>
                     <div class="mb-3">
                         <label class="filter-lbl">Amount <span class="text-danger">*</span></label>
-                        <input type="number" step="0.01" min="0.01" name="amount" class="form-control fc-pn" placeholder="0" required>
+                        <input type="number" step="0.01" min="0.01" name="amount" id="srp_amount" class="form-control fc-pn" placeholder="0" required>
                     </div>
                     <div class="mb-3">
                         <label class="filter-lbl">Payment Date <span class="text-danger">*</span></label>
@@ -692,7 +698,24 @@ $(function () {
         $('#srp_shop_name').text(btn.data('name') || '');
         $('#srp_pending_display').text(Number(btn.data('pending')).toLocaleString());
         $('#srp_payment_date').val(new Date().toISOString().split('T')[0]);
+
+        // Which udhaar is being paid — only lines that actually have pending.
+        const salt  = parseFloat(btn.data('salt-pending'))  || 0;
+        const spice = parseFloat(btn.data('spice-pending')) || 0;
+        const fmt   = n => Number(n).toLocaleString();
+        const opts  = [];
+        if (salt > 0)  opts.push({ v: 'salt',  t: 'Salt / نمک — ' + fmt(salt), max: salt });
+        if (spice > 0) opts.push({ v: 'spice', t: 'Spice / مصالحہ — ' + fmt(spice), max: spice });
+        if (salt > 0 && spice > 0) opts.push({ v: 'both', t: 'Both (oldest first) — ' + fmt(salt + spice), max: salt + spice });
+        $('#srp_product_line').html(opts.map(o => `<option value="${o.v}" data-max="${o.max}">${o.t}</option>`).join(''));
+        $('#srp_amount').attr('max', opts[0]?.max);
+
         $('#shopRecordPaymentModal').modal('show');
+    });
+
+    // Cap the amount at the selected line's pending
+    $('#srp_product_line').on('change', function () {
+        $('#srp_amount').attr('max', $(this).find(':selected').data('max'));
     });
 
     $('#shopRecordPaymentForm').on('submit', function (e) {

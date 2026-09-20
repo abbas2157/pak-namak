@@ -67,8 +67,13 @@
                             <fieldset id="rp_fieldset" disabled>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
+                                        <label class="filter-lbl">Pay Against / ادائیگی کس کی <span class="text-danger">*</span></label>
+                                        <select name="product_line" id="rp_product_line" class="form-control fc-pn" required></select>
+                                        <small class="text-muted">Which pending balance this money is for.</small>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
                                         <label class="filter-lbl">Amount <span class="text-danger">*</span></label>
-                                        <input type="number" step="0.01" min="0.01" name="amount" class="form-control fc-pn" placeholder="0" required>
+                                        <input type="number" step="0.01" min="0.01" name="amount" id="rp_amount" class="form-control fc-pn" placeholder="0" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="filter-lbl">Payment Date <span class="text-danger">*</span></label>
@@ -88,7 +93,7 @@
                                         <input type="text" name="note" class="form-control fc-pn" placeholder="Optional">
                                     </div>
                                 </div>
-                                <p class="text-muted small mb-3">Applied to this shop's oldest pending sales first.</p>
+                                <p class="text-muted small mb-3">Applied to the oldest pending sales of the selected line first.</p>
                                 <button class="btn btn-primary btn-pn px-4" type="submit" id="rpSubmitBtn">
                                     <i class="fas fa-save mr-1"></i> Record Payment
                                 </button>
@@ -131,8 +136,22 @@ $(function () {
         if (spicePending > 0) parts.push('Spices ' + spicePending.toLocaleString());
         $('#rp_pending_breakdown').text(parts.length > 1 ? parts.join('  +  ') : '');
 
+        // Which udhaar is being paid — only lines that actually have pending.
+        const fmt  = n => Number(n).toLocaleString();
+        const opts = [];
+        if (saltPending > 0)  opts.push({ v: 'salt',  t: 'Salt / نمک — ' + fmt(saltPending), max: saltPending });
+        if (spicePending > 0) opts.push({ v: 'spice', t: 'Spice / مصالحہ — ' + fmt(spicePending), max: spicePending });
+        if (saltPending > 0 && spicePending > 0) opts.push({ v: 'both', t: 'Both (oldest first) — ' + fmt(pending), max: pending });
+        $('#rp_product_line').html(opts.map(o => `<option value="${o.v}" data-max="${o.max}">${o.t}</option>`).join(''));
+        $('#rp_amount').attr('max', opts[0]?.max);
+
         $('#rp_pending_box').toggleClass('d-none', pending <= 0);
         $('#rp_fieldset').prop('disabled', pending <= 0);
+    });
+
+    // Cap the amount at the selected line's pending
+    $('#rp_product_line').on('change', function () {
+        $('#rp_amount').attr('max', $(this).find(':selected').data('max'));
     });
 
     $('#recordPaymentForm').on('submit', function (e) {
