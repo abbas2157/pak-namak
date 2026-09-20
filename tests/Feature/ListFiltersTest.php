@@ -88,4 +88,24 @@ class ListFiltersTest extends TestCase
         $this->actingAs($user)->get(route('admin.shops.index', ['sales' => 'none']))
             ->assertOk()->assertViewHas('totalShops', 1)->assertSee('Gamma Shop');
     }
+
+    public function test_sales_index_paginates_100_per_page_with_totals_over_all_pages(): void
+    {
+        $d = $this->fixtures();
+        $user = User::factory()->create();
+
+        for ($i = 0; $i < 130; $i++) {
+            Sale::create(['shop_id' => $d['s3']->id, 'sale_date' => '2026-07-01', 'total_amount' => 10, 'received_amount' => 4, 'pending_amount' => 6]);
+        }
+
+        $res = $this->actingAs($user)->get(route('admin.sales.index'))->assertOk();
+        $res->assertViewHas('totalCount', 132);
+        $res->assertViewHas('totalRevenue', 1300.0 + 3000.0);
+        $res->assertViewHas('sales', fn ($p) => $p->count() === 100 && $p->total() === 132 && $p->lastPage() === 2);
+        $res->assertSee('Showing 1–100 of 132 sales');
+
+        $this->actingAs($user)->get(route('admin.sales.index', ['page' => 2]))
+            ->assertOk()
+            ->assertViewHas('sales', fn ($p) => $p->count() === 32);
+    }
 }

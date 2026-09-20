@@ -34,6 +34,6 @@ class ExpenseFilterTest extends TestCase
         $get(['account_id' => $bank->id])->assertViewHas('grandTotal', 20000.0);
         $get(['type' => 'investment'])->assertViewHas('grandTotal', 700.0);
         $get(['type' => 'operating', 'category' => 'Fuel'])->assertViewHas('grandTotal', 500.0);
-        $get(['category' => 'Fuel', 'from' => '2026-09-01'])->assertViewHas('grandTotal', 500.0)->assertSee('Clear Filters');
+        $get(['category' => 'Fuel', 'from' => '2026-09-01'])->assertViewHas('grandTotal', 500.0)->assertSee('Clear all filters');
     }
 }

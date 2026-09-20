@@ -2,10 +2,23 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Account;
+use App\Models\Area;
+use App\Models\City;
+use App\Models\Order;
+use App\Models\Sale;
+use App\Models\SaleDalla;
+use App\Models\SalePackage;
+use App\Models\SalePayment;
+use App\Models\SaleThaila;
+use App\Models\SaltType;
+use App\Models\Shop;
+use App\Models\Stock;
+use App\Models\StockMovement;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\{Sale, SaleDalla, SaleThaila, SalePackage, SalePayment, SaltType, Shop, Area, City, Order, StockMovement, Account};
 
 class SaleController extends Controller
 {
@@ -35,18 +48,32 @@ class SaleController extends Controller
             $query->whereHas('shop', fn ($q) => $q->where('area_id', $request->area_id));
         }
 
-        $sales = $query->get();
+        // Totals cover the whole filtered set, in SQL, while the table itself is
+        // paginated — loading every sale with its line items was what made the
+        // page slow.
+        $agg = (clone $query)->reorder()->selectRaw(
+            'COUNT(*) as c, COALESCE(SUM(total_amount),0) as t, COALESCE(SUM(received_amount),0) as r, COALESCE(SUM(pending_amount),0) as p'
+        )->first();
 
-        $totalRevenue  = $sales->sum('total_amount');
-        $totalReceived = $sales->sum('received_amount');
-        $totalPending  = $sales->sum('pending_amount');
-        $totalCount    = $sales->count();
+        $totalRevenue = (float) $agg->t;
+        $totalReceived = (float) $agg->r;
+        $totalPending = (float) $agg->p;
+        $totalCount = (int) $agg->c;
+
+        $saleIds = (clone $query)->reorder()->select('sales.id');
+        $breakdown = [
+            'dalla' => (float) SaleDalla::whereIn('sale_id', $saleIds)->sum('sub_total'),
+            'thaila' => (float) SaleThaila::whereIn('sale_id', $saleIds)->sum('sub_total'),
+            'package' => (float) SalePackage::whereIn('sale_id', $saleIds)->sum('sub_total'),
+        ];
+
+        $sales = $query->paginate(100)->appends($request->query());
 
         // Month options built in PHP so the query stays portable (MySQL + SQLite tests).
         $months = Sale::whereNotNull('sale_date')->pluck('sale_date')
-            ->map(fn ($d) => \Carbon\Carbon::parse($d)->format('Y-m'))
+            ->map(fn ($d) => Carbon::parse($d)->format('Y-m'))
             ->unique()->sortDesc()->values()
-            ->map(fn ($ym) => (object) ['value' => $ym, 'label' => \Carbon\Carbon::createFromFormat('Y-m', $ym)->format('F Y')]);
+            ->map(fn ($ym) => (object) ['value' => $ym, 'label' => Carbon::createFromFormat('Y-m', $ym)->format('F Y')]);
 
         $selectedMonth = $request->month;
         $filters = $request->only(['month', 'from', 'to', 'shop_id', 'city_id', 'area_id']);
@@ -58,14 +85,14 @@ class SaleController extends Controller
 
         return view('admin.sales.index', compact(
             'sales', 'totalRevenue', 'totalReceived', 'totalPending', 'totalCount',
-            'months', 'selectedMonth', 'shops', 'areas', 'cities', 'filters', 'hasFilters'
+            'months', 'selectedMonth', 'shops', 'areas', 'cities', 'filters', 'hasFilters', 'breakdown'
         ));
     }
 
     public function create()
     {
-        $shops  = Shop::with('area')->orderBy('id', 'desc')->get();
-        $types  = SaltType::get();
+        $shops = Shop::with('area')->orderBy('id', 'desc')->get();
+        $types = SaltType::get();
         $prefill = null;
 
         if (session('prefill_order_id')) {
@@ -73,11 +100,12 @@ class SaleController extends Controller
             session()->forget('prefill_order_id');
         }
 
-        $stockLevels = \App\Models\Stock::levels()->keyBy(fn ($l) => \App\Models\Stock::key($l['product_type'], $l['size'], $l['bundle_size']));
+        $stockLevels = Stock::levels()->keyBy(fn ($l) => Stock::key($l['product_type'], $l['size'], $l['bundle_size']));
         $accounts = Account::where('is_active', true)->orderBy('name')->get();
 
         return view('admin.sales.create', compact('shops', 'types', 'prefill', 'stockLevels', 'accounts'));
     }
+
     public function show($id)
     {
         $sale = Sale::with([
@@ -100,16 +128,16 @@ class SaleController extends Controller
         // (e.g. thaila[50][sold_quantity_kilo_50]) so no price or quantity can
         // arrive negative and produce a negative sale total.
         $request->validate([
-            'shop_id'         => 'required|exists:shops,id',
-            'sale_date'       => 'required|date',
-            'order_id'        => 'nullable|exists:orders,id',
-            'remarks'         => 'nullable|string|max:1000',
+            'shop_id' => 'required|exists:shops,id',
+            'sale_date' => 'required|date',
+            'order_id' => 'nullable|exists:orders,id',
+            'remarks' => 'nullable|string|max:1000',
             'received_amount' => 'nullable|numeric|min:0',
-            'account_id'      => 'nullable|exists:accounts,id',
-            'bill_image'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
-            'dalla.*'         => 'nullable|numeric|min:0',
-            'thaila.*.*'      => 'nullable|numeric|min:0',
-            'package.*.*'     => 'nullable|numeric|min:0',
+            'account_id' => 'nullable|exists:accounts,id',
+            'bill_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+            'dalla.*' => 'nullable|numeric|min:0',
+            'thaila.*.*' => 'nullable|numeric|min:0',
+            'package.*.*' => 'nullable|numeric|min:0',
         ]);
 
         DB::beginTransaction();
@@ -121,55 +149,53 @@ class SaleController extends Controller
 
             if ($request->hasFile('bill_image')) {
                 $uploadDir = public_path('uploads/sales/bills');
-                if (!is_dir($uploadDir)) {
+                if (! is_dir($uploadDir)) {
                     mkdir($uploadDir, 0755, true);
                 }
 
                 $file = $request->file('bill_image');
                 $ext = strtolower($file->getClientOriginalExtension() ?: 'jpg');
-                $fileName = 'sale_bill_' . time() . '_' . bin2hex(random_bytes(6)) . '.' . $ext;
+                $fileName = 'sale_bill_'.time().'_'.bin2hex(random_bytes(6)).'.'.$ext;
 
                 $file->move($uploadDir, $fileName);
 
-                $billImagePath = 'uploads/sales/bills/' . $fileName;
+                $billImagePath = 'uploads/sales/bills/'.$fileName;
             }
-
 
             /* ---------------------------
              * CREATE SALE
              * -------------------------- */
             $sale = Sale::create([
-                'shop_id'         => $request->shop_id,
-                'order_id'        => $request->order_id ?: null,
-                'sale_date'       => $request->sale_date,
-                'total_amount'    => 0,
+                'shop_id' => $request->shop_id,
+                'order_id' => $request->order_id ?: null,
+                'sale_date' => $request->sale_date,
+                'total_amount' => 0,
                 'received_amount' => 0,
-                'pending_amount'  => 0,
-                'remarks'         => $request->remarks,
-                'bill_image'     => $billImagePath,
+                'pending_amount' => 0,
+                'remarks' => $request->remarks,
+                'bill_image' => $billImagePath,
             ]);
-
 
             /* ---------------------------
              * DALLA
              * -------------------------- */
-            if (!empty($request->dalla)) {
+            if (! empty($request->dalla)) {
 
                 $d = $request->dalla;
 
                 if (
-                    !empty($d['sold_quantity_mann']) ||
-                    !empty($d['sold_quantity_kilo'])
+                    ! empty($d['sold_quantity_mann']) ||
+                    ! empty($d['sold_quantity_kilo'])
                 ) {
                     $subTotal = ($d['sold_quantity_mann'] ?? 0) * ($d['pirce_per_mann'] ?? 0);
 
                     SaleDalla::create([
-                        'sale_id'        => $sale->id,
-                        'quantity_mann'  => $d['sold_quantity_mann'] ?? 0,
-                        'quantity_kg'    => $d['sold_quantity_kilo'] ?? 0,
+                        'sale_id' => $sale->id,
+                        'quantity_mann' => $d['sold_quantity_mann'] ?? 0,
+                        'quantity_kg' => $d['sold_quantity_kilo'] ?? 0,
                         'price_per_mann' => $d['pirce_per_mann'] ?? 0,
-                        'price_per_kg'   => $d['pirce_per_kg'] ?? 0,
-                        'sub_total'      => $subTotal,
+                        'price_per_kg' => $d['pirce_per_kg'] ?? 0,
+                        'sub_total' => $subTotal,
                     ]);
 
                     StockMovement::record('dalla', null, -($d['sold_quantity_mann'] ?? 0), -($d['sold_quantity_kilo'] ?? 0), 'sale', $sale);
@@ -181,7 +207,7 @@ class SaleController extends Controller
             /* ---------------------------
              * THAILA (5kg, 10kg, 50kg)
              * -------------------------- */
-            if (!empty($request->thaila)) {
+            if (! empty($request->thaila)) {
                 foreach ($request->thaila as $kg => $item) {
 
                     $soldKg = $item["sold_quantity_kilo_{$kg}"] ?? null;
@@ -194,13 +220,13 @@ class SaleController extends Controller
                         ?? ($soldKg * ($item['pirce_per_kg'] ?? 0));
 
                     SaleThaila::create([
-                        'sale_id'       => $sale->id,
-                        'bag_size_kg'   => $kg,
-                        'quantity'      => $soldKg ,
-                        'total_kg'      => $soldKg * $kg,
+                        'sale_id' => $sale->id,
+                        'bag_size_kg' => $kg,
+                        'quantity' => $soldKg,
+                        'total_kg' => $soldKg * $kg,
                         'price_per_bag' => $item['pirce_per_thaila'] ?? 0,
-                        'price_per_kg'  => $item['pirce_per_kg'] ?? 0,
-                        'sub_total'     => $subTotal,
+                        'price_per_kg' => $item['pirce_per_kg'] ?? 0,
+                        'sub_total' => $subTotal,
                     ]);
 
                     StockMovement::record('thaila', (int) $kg, -$soldKg, -($soldKg * $kg), 'sale', $sale);
@@ -212,7 +238,7 @@ class SaleController extends Controller
             /* ---------------------------
              * PACKAGES (250–700g)
              * -------------------------- */
-            if (!empty($request->package)) {
+            if (! empty($request->package)) {
                 foreach ($request->package as $gram => $item) {
 
                     $bundleQty = $item["sold_bundles_quantity_{$gram}_gram"] ?? null;
@@ -228,13 +254,13 @@ class SaleController extends Controller
                         ?? ($bundleQty * ($item['price_per_bundle'] ?? 0));
 
                     SalePackage::create([
-                        'sale_id'          => $sale->id,
-                        'packet_gram'      => $gram,
-                        'bundle_size'      => $bundleSize,
-                        'bundle_quantity'  => $bundleQty,
-                        'total_kg'         => $totalKg,
+                        'sale_id' => $sale->id,
+                        'packet_gram' => $gram,
+                        'bundle_size' => $bundleSize,
+                        'bundle_quantity' => $bundleQty,
+                        'total_kg' => $totalKg,
                         'price_per_bundle' => $item['price_per_bundle'] ?? 0,
-                        'sub_total'        => $subTotal,
+                        'sub_total' => $subTotal,
                     ]);
 
                     StockMovement::record('package', (int) $gram, -$bundleQty, -$totalKg, 'sale', $sale, null, null, (int) $bundleSize);
@@ -250,20 +276,20 @@ class SaleController extends Controller
             if ($initialReceived > 0) {
                 $account = Account::find($request->account_id);
                 SalePayment::create([
-                    'sale_id'        => $sale->id,
-                    'account_id'     => $account?->id,
-                    'amount'         => $initialReceived,
-                    'payment_date'   => $sale->sale_date,
+                    'sale_id' => $sale->id,
+                    'account_id' => $account?->id,
+                    'amount' => $initialReceived,
+                    'payment_date' => $sale->sale_date,
                     'payment_method' => $account?->paymentMethodLabel() ?? 'Other',
-                    'note'           => 'Initial payment at sale creation',
+                    'note' => 'Initial payment at sale creation',
                 ]);
             }
 
             $receivedAmount = $sale->payments()->sum('amount');
             $sale->update([
-                'total_amount'    => $grandTotal,
+                'total_amount' => $grandTotal,
                 'received_amount' => $receivedAmount,
-                'pending_amount'  => $grandTotal - $receivedAmount,
+                'pending_amount' => $grandTotal - $receivedAmount,
             ]);
 
             DB::commit();
@@ -272,6 +298,7 @@ class SaleController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
+
             return redirect()->route('admin.sales.index')->with('error', 'Sale not created successfully.');
         }
     }
@@ -280,27 +307,27 @@ class SaleController extends Controller
     {
         $sale->load(['shop', 'dalla', 'thailas', 'packages']);
         $shops = Shop::with('area')->orderBy('name')->get();
-        $stockLevels = \App\Models\Stock::levels()
-            ->keyBy(fn ($l) => \App\Models\Stock::key($l['product_type'], $l['size'], $l['bundle_size']))
+        $stockLevels = Stock::levels()
+            ->keyBy(fn ($l) => Stock::key($l['product_type'], $l['size'], $l['bundle_size']))
             ->all();
 
         // Add back this sale's own already-reserved quantities, since update()
         // reverses them before re-deducting — so "in stock" here should reflect
         // what will actually be available for this edit, not just the current balance.
         if ($sale->dalla) {
-            $key = \App\Models\Stock::key('dalla', null, null);
+            $key = Stock::key('dalla', null, null);
             if (isset($stockLevels[$key])) {
                 $stockLevels[$key]['quantity'] += $sale->dalla->quantity_mann;
             }
         }
         foreach ($sale->thailas as $t) {
-            $key = \App\Models\Stock::key('thaila', $t->bag_size_kg, null);
+            $key = Stock::key('thaila', $t->bag_size_kg, null);
             if (isset($stockLevels[$key])) {
                 $stockLevels[$key]['quantity'] += $t->quantity;
             }
         }
         foreach ($sale->packages as $p) {
-            $key = \App\Models\Stock::key('package', $p->packet_gram, $p->bundle_size);
+            $key = Stock::key('package', $p->packet_gram, $p->bundle_size);
             if (isset($stockLevels[$key])) {
                 $stockLevels[$key]['quantity'] += $p->bundle_quantity;
             }
@@ -312,9 +339,9 @@ class SaleController extends Controller
     public function update(Request $request, Sale $sale)
     {
         $request->validate([
-            'shop_id'   => 'required|exists:shops,id',
+            'shop_id' => 'required|exists:shops,id',
             'sale_date' => 'required|date',
-            'remarks'   => 'nullable|string',
+            'remarks' => 'nullable|string',
         ]);
 
         DB::beginTransaction();
@@ -329,19 +356,21 @@ class SaleController extends Controller
                     unlink(public_path($billImagePath));
                 }
                 $uploadDir = public_path('uploads/sales/bills');
-                if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+                if (! is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
                 $file = $request->file('bill_image');
-                $ext  = strtolower($file->getClientOriginalExtension() ?: 'jpg');
-                $fileName = 'sale_bill_' . time() . '_' . bin2hex(random_bytes(6)) . '.' . $ext;
+                $ext = strtolower($file->getClientOriginalExtension() ?: 'jpg');
+                $fileName = 'sale_bill_'.time().'_'.bin2hex(random_bytes(6)).'.'.$ext;
                 $file->move($uploadDir, $fileName);
-                $billImagePath = 'uploads/sales/bills/' . $fileName;
+                $billImagePath = 'uploads/sales/bills/'.$fileName;
             }
 
             // Update header (totals re-set below)
             $sale->update([
-                'shop_id'    => $request->shop_id,
-                'sale_date'  => $request->sale_date,
-                'remarks'    => $request->remarks,
+                'shop_id' => $request->shop_id,
+                'sale_date' => $request->sale_date,
+                'remarks' => $request->remarks,
                 'bill_image' => $billImagePath,
             ]);
 
@@ -350,17 +379,17 @@ class SaleController extends Controller
 
             // ── DALLA ──
             $sale->dalla()->delete();
-            if (!empty($request->dalla)) {
+            if (! empty($request->dalla)) {
                 $d = $request->dalla;
-                if (!empty($d['sold_quantity_mann']) || !empty($d['sold_quantity_kilo'])) {
+                if (! empty($d['sold_quantity_mann']) || ! empty($d['sold_quantity_kilo'])) {
                     $subTotal = ($d['sold_quantity_mann'] ?? 0) * ($d['pirce_per_mann'] ?? 0);
                     SaleDalla::create([
-                        'sale_id'        => $sale->id,
-                        'quantity_mann'  => $d['sold_quantity_mann'] ?? 0,
-                        'quantity_kg'    => $d['sold_quantity_kilo'] ?? 0,
+                        'sale_id' => $sale->id,
+                        'quantity_mann' => $d['sold_quantity_mann'] ?? 0,
+                        'quantity_kg' => $d['sold_quantity_kilo'] ?? 0,
                         'price_per_mann' => $d['pirce_per_mann'] ?? 0,
-                        'price_per_kg'   => $d['pirce_per_kg'] ?? 0,
-                        'sub_total'      => $subTotal,
+                        'price_per_kg' => $d['pirce_per_kg'] ?? 0,
+                        'sub_total' => $subTotal,
                     ]);
                     StockMovement::record('dalla', null, -($d['sold_quantity_mann'] ?? 0), -($d['sold_quantity_kilo'] ?? 0), 'sale', $sale);
                     $grandTotal += $subTotal;
@@ -369,19 +398,21 @@ class SaleController extends Controller
 
             // ── THAILA ──
             $sale->thailas()->delete();
-            if (!empty($request->thaila)) {
+            if (! empty($request->thaila)) {
                 foreach ($request->thaila as $kg => $item) {
                     $soldKg = $item["sold_quantity_kilo_{$kg}"] ?? null;
-                    if (empty($soldKg)) continue;
+                    if (empty($soldKg)) {
+                        continue;
+                    }
                     $subTotal = $item['sub_total'] ?? ($soldKg * ($item['pirce_per_thaila'] ?? 0));
                     SaleThaila::create([
-                        'sale_id'       => $sale->id,
-                        'bag_size_kg'   => $kg,
-                        'quantity'      => $soldKg,
-                        'total_kg'      => $soldKg * $kg,
+                        'sale_id' => $sale->id,
+                        'bag_size_kg' => $kg,
+                        'quantity' => $soldKg,
+                        'total_kg' => $soldKg * $kg,
                         'price_per_bag' => $item['pirce_per_thaila'] ?? 0,
-                        'price_per_kg'  => $item['pirce_per_kg'] ?? 0,
-                        'sub_total'     => $subTotal,
+                        'price_per_kg' => $item['pirce_per_kg'] ?? 0,
+                        'sub_total' => $subTotal,
                     ]);
                     StockMovement::record('thaila', (int) $kg, -$soldKg, -($soldKg * $kg), 'sale', $sale);
                     $grandTotal += $subTotal;
@@ -390,21 +421,23 @@ class SaleController extends Controller
 
             // ── PACKAGES ──
             $sale->packages()->delete();
-            if (!empty($request->package)) {
+            if (! empty($request->package)) {
                 foreach ($request->package as $gram => $item) {
                     $bundleQty = $item["sold_bundles_quantity_{$gram}_gram"] ?? null;
-                    if (empty($bundleQty)) continue;
+                    if (empty($bundleQty)) {
+                        continue;
+                    }
                     $bundleSize = $item["bundle_type_{$gram}_gram"];
-                    $totalKg    = ($gram / 1000) * $bundleSize * $bundleQty;
-                    $subTotal   = $item['sub_total'] ?? ($bundleQty * ($item['price_per_bundle'] ?? 0));
+                    $totalKg = ($gram / 1000) * $bundleSize * $bundleQty;
+                    $subTotal = $item['sub_total'] ?? ($bundleQty * ($item['price_per_bundle'] ?? 0));
                     SalePackage::create([
-                        'sale_id'          => $sale->id,
-                        'packet_gram'      => $gram,
-                        'bundle_size'      => $bundleSize,
-                        'bundle_quantity'  => $bundleQty,
-                        'total_kg'         => $totalKg,
+                        'sale_id' => $sale->id,
+                        'packet_gram' => $gram,
+                        'bundle_size' => $bundleSize,
+                        'bundle_quantity' => $bundleQty,
+                        'total_kg' => $totalKg,
                         'price_per_bundle' => $item['price_per_bundle'] ?? 0,
-                        'sub_total'        => $subTotal,
+                        'sub_total' => $subTotal,
                     ]);
                     StockMovement::record('package', (int) $gram, -$bundleQty, -$totalKg, 'sale', $sale, null, null, (int) $bundleSize);
                     $grandTotal += $subTotal;
@@ -414,26 +447,28 @@ class SaleController extends Controller
             // ── TOTALS ── (received_amount is derived from the payment ledger, untouched by line-item edits)
             $receivedAmount = $sale->payments()->sum('amount');
             $sale->update([
-                'total_amount'    => $grandTotal,
+                'total_amount' => $grandTotal,
                 'received_amount' => $receivedAmount,
-                'pending_amount'  => $grandTotal - $receivedAmount,
+                'pending_amount' => $grandTotal - $receivedAmount,
             ]);
 
             DB::commit();
+
             return redirect()->route('admin.sales.index')->with('success', 'Sale updated successfully.');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Could not update sale: ' . $e->getMessage())->withInput();
+
+            return back()->with('error', 'Could not update sale: '.$e->getMessage())->withInput();
         }
     }
 
     public function quickUpdate(Request $request, Sale $sale)
     {
         $request->validate([
-            'shop_id'   => 'required|exists:shops,id',
+            'shop_id' => 'required|exists:shops,id',
             'sale_date' => 'required|date',
-            'remarks'   => 'nullable|string',
+            'remarks' => 'nullable|string',
         ]);
 
         $sale->update($request->only(['shop_id', 'sale_date', 'remarks']));
@@ -450,10 +485,10 @@ class SaleController extends Controller
         $request->merge(['account_id' => $request->account_id ?: null]);
 
         $request->validate([
-            'amount'       => 'required|numeric|min:0.01',
+            'amount' => 'required|numeric|min:0.01',
             'payment_date' => 'required|date',
-            'account_id'   => 'nullable|exists:accounts,id',
-            'note'         => 'nullable|string|max:500',
+            'account_id' => 'nullable|exists:accounts,id',
+            'note' => 'nullable|string|max:500',
         ]);
 
         if ($sale->pending_amount <= 0) {
@@ -465,18 +500,18 @@ class SaleController extends Controller
             $account = Account::find($request->account_id);
 
             SalePayment::create([
-                'sale_id'        => $sale->id,
-                'account_id'     => $account?->id,
-                'amount'         => $amount,
-                'payment_date'   => $request->payment_date,
+                'sale_id' => $sale->id,
+                'account_id' => $account?->id,
+                'amount' => $amount,
+                'payment_date' => $request->payment_date,
                 'payment_method' => $account?->paymentMethodLabel() ?? 'Other',
-                'note'           => $request->note,
+                'note' => $request->note,
             ]);
 
             $received = $sale->payments()->sum('amount');
             $sale->update([
                 'received_amount' => $received,
-                'pending_amount'  => $sale->total_amount - $received,
+                'pending_amount' => $sale->total_amount - $received,
             ]);
         });
 
@@ -495,7 +530,7 @@ class SaleController extends Controller
             $received = $sale->payments()->sum('amount');
             $sale->update([
                 'received_amount' => $received,
-                'pending_amount'  => $sale->total_amount - $received,
+                'pending_amount' => $sale->total_amount - $received,
             ]);
         });
 

@@ -93,6 +93,8 @@
             </div>
         </div>
 
+        @include('admin.sales.partials.filters', ['indexRoute' => 'admin.sales.index'])
+
         {{-- ===== TABLE + SIDEBAR ===== --}}
         <div class="row">
 
@@ -250,13 +252,23 @@
                             </table>
                         </div>
                     </div>
+                    @if($sales->total() > 0)
+                    <div class="d-flex align-items-center justify-content-between px-4 py-3 tbl-toolbar">
+                        <small class="text-muted">
+                            Showing {{ $sales->firstItem() }}–{{ $sales->lastItem() }} of {{ number_format($sales->total()) }} sales
+                            @if($sales->hasPages()) · page {{ $sales->currentPage() }} of {{ $sales->lastPage() }} @endif
+                        </small>
+                        @if($sales->hasPages())
+                            {{ $sales->links() }}
+                        @endif
+                    </div>
+                    @endif
                 </div>
             </div>
 
             {{-- SIDEBAR --}}
             <div class="col-lg-3">
 
-                @include('admin.sales.partials.filters', ['indexRoute' => 'admin.sales.index'])
 
                 {{-- Payment summary --}}
                 @if($totalRevenue > 0)
@@ -308,9 +320,10 @@
                 {{-- Product type breakdown --}}
                 @if($sales->count() > 0)
                 @php
-                    $dallaTotal   = $sales->sum(fn($s) => $s->dalla?->sub_total ?? 0);
-                    $thailaTotal  = $sales->flatMap(fn($s) => $s->thailas)->sum('sub_total');
-                    $packageTotal = $sales->flatMap(fn($s) => $s->packages)->sum('sub_total');
+                    // Whole filtered set (SQL), not just the current page
+                    $dallaTotal   = $breakdown['dalla'];
+                    $thailaTotal  = $breakdown['thaila'];
+                    $packageTotal = $breakdown['package'];
                     $typeGrand    = $dallaTotal + $thailaTotal + $packageTotal;
                 @endphp
                 @if($typeGrand > 0)
@@ -516,13 +529,13 @@ $(function () {
     // initialize DataTables when there are real rows to enhance.
 
     if ($('#salesTable tbody tr').not(':has(td[colspan])').length > 0) {
+    // Paging is server-side (100 per page); DataTables only adds in-page search.
     $('#salesTable').DataTable({
-        paging: true,
-        pageLength: 20,
+        paging: false,
         lengthChange: false,
         searching: true,
         ordering: false,
-        info: true,
+        info: false,
         autoWidth: false,
         responsive: true,
         columnDefs: [{ orderable: false, targets: [2, 6] }, { responsivePriority: 1, targets: -1 }, { responsivePriority: 2, targets: 1 }],

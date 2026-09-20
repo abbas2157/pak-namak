@@ -139,6 +139,87 @@ $catIconClass = [
             </div>
         </div>
 
+        {{-- ===== FILTER BAR (same design as Sales / Shops) ===== --}}
+        @php $activeCount = collect($filters)->filter()->count(); @endphp
+        <div class="card card-pn shadow-sm pn-filters mb-3">
+            <div class="pn-filters-head">
+                <h6 class="pn-filters-title"><i class="fas fa-filter"></i>Filters <span class="text-muted font-weight-normal">/ فلٹر</span></h6>
+                @if($activeCount)
+                    <span class="pn-filters-count">{{ $activeCount }} active</span>
+                @endif
+            </div>
+            <div class="pn-filters-body">
+                <form method="GET" id="expenseFilterForm">
+                    <div class="pn-filter-grid">
+                        <div class="pn-filter-field">
+                            <label class="filter-lbl">Month / مہینہ</label>
+                            <select name="month" class="form-control fc-pn filter-select" data-placeholder="All Time">
+                                <option value="">All Time</option>
+                                @foreach($months as $m)
+                                    <option value="{{ $m['value'] }}" {{ $selectedMonth == $m['value'] ? 'selected' : '' }}>{{ $m['label'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="pn-filter-field is-wide">
+                            <label class="filter-lbl">Date / تاریخ</label>
+                            <div class="pn-date-pair">
+                                <input type="date" name="from" class="form-control fc-pn" value="{{ $filters['from'] ?? '' }}" title="From">
+                                <span>TO</span>
+                                <input type="date" name="to" class="form-control fc-pn" value="{{ $filters['to'] ?? '' }}" title="To">
+                            </div>
+                        </div>
+
+                        <div class="pn-filter-field">
+                            <label class="filter-lbl">Category / زمرہ</label>
+                            <select name="category" class="form-control fc-pn filter-select" data-placeholder="All Categories">
+                                <option value="">All Categories</option>
+                                @foreach($categories as $cat)
+                                    <option value="{{ $cat }}" {{ ($filters['category'] ?? '') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="pn-filter-field">
+                            <label class="filter-lbl">Paid From / کہاں سے</label>
+                            <select name="account_id" class="form-control fc-pn filter-select" data-placeholder="All Accounts">
+                                <option value="">All Accounts</option>
+                                @foreach($accounts as $account)
+                                    <option value="{{ $account->id }}" {{ (string) ($filters['account_id'] ?? '') === (string) $account->id ? 'selected' : '' }}>{{ $account->label() }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="pn-filter-field">
+                            <label class="filter-lbl">Type / قسم</label>
+                            <select name="type" class="form-control fc-pn filter-select" data-placeholder="All Types">
+                                <option value="">All Types</option>
+                                <option value="operating" {{ ($filters['type'] ?? '') === 'operating' ? 'selected' : '' }}>Operating expense</option>
+                                <option value="investment" {{ ($filters['type'] ?? '') === 'investment' ? 'selected' : '' }}>Investment</option>
+                            </select>
+                        </div>
+
+                        <div class="pn-filter-field pn-filter-actions">
+                            <button class="btn btn-primary btn-pn px-3"><i class="fas fa-search mr-1"></i> Apply</button>
+                            @if($hasFilters)
+                                <a href="{{ route('admin.expenses.index') }}" class="btn btn-pn btn-clear-filter px-3" title="Clear all filters"><i class="fas fa-times mr-1"></i> Clear</a>
+                            @endif
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        @push('filter-scripts')
+        <script>
+        $(function () {
+            $('#expenseFilterForm .filter-select').each(function () {
+                $(this).select2({ placeholder: $(this).data('placeholder'), allowClear: true, width: '100%' });
+            });
+        });
+        </script>
+        @endpush
+
         {{-- ===== TABLE + SIDEBAR ===== --}}
         <div class="row">
 
@@ -252,75 +333,6 @@ $catIconClass = [
 
             {{-- SIDEBAR --}}
             <div class="col-lg-4">
-
-                {{-- Filters: month, date range, category, account, type — all searchable dropdowns --}}
-                <div class="card border-0 shadow-sm mb-3 card-pn">
-                    <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0 font-weight-bold text-c-blue2">
-                            <i class="fas fa-filter mr-2"></i>Filters / فلٹر
-                        </h6>
-                        @if($hasFilters)
-                            <span class="badge pn-bdg pn-bdg-blue">on</span>
-                        @endif
-                    </div>
-                    <div class="card-body py-3">
-                        <form method="GET" id="expenseFilterForm">
-                            <label class="filter-lbl">Month / مہینہ</label>
-                            <select name="month" class="form-control form-control-sm fc-pn mb-2 filter-select" data-placeholder="All Time">
-                                <option value="">All Time</option>
-                                @foreach($months as $m)
-                                    <option value="{{ $m['value'] }}" {{ $selectedMonth == $m['value'] ? 'selected' : '' }}>{{ $m['label'] }}</option>
-                                @endforeach
-                            </select>
-
-                            <label class="filter-lbl">Date / تاریخ</label>
-                            <div class="d-flex mb-2">
-                                <input type="date" name="from" class="form-control form-control-sm fc-pn mr-1" value="{{ $filters['from'] ?? '' }}" title="From">
-                                <input type="date" name="to" class="form-control form-control-sm fc-pn" value="{{ $filters['to'] ?? '' }}" title="To">
-                            </div>
-
-                            <label class="filter-lbl">Category / زمرہ</label>
-                            <select name="category" class="form-control form-control-sm fc-pn mb-2 filter-select" data-placeholder="All Categories">
-                                <option value="">All Categories</option>
-                                @foreach($categories as $cat)
-                                    <option value="{{ $cat }}" {{ ($filters['category'] ?? '') === $cat ? 'selected' : '' }}>{{ $cat }}</option>
-                                @endforeach
-                            </select>
-
-                            <label class="filter-lbl">Paid From / کہاں سے ادا کیا</label>
-                            <select name="account_id" class="form-control form-control-sm fc-pn mb-2 filter-select" data-placeholder="All Accounts">
-                                <option value="">All Accounts</option>
-                                @foreach($accounts as $account)
-                                    <option value="{{ $account->id }}" {{ (string) ($filters['account_id'] ?? '') === (string) $account->id ? 'selected' : '' }}>{{ $account->label() }}</option>
-                                @endforeach
-                            </select>
-
-                            <label class="filter-lbl">Type / قسم</label>
-                            <select name="type" class="form-control form-control-sm fc-pn mb-3 filter-select" data-placeholder="All Types">
-                                <option value="">All Types</option>
-                                <option value="operating" {{ ($filters['type'] ?? '') === 'operating' ? 'selected' : '' }}>Operating expense</option>
-                                <option value="investment" {{ ($filters['type'] ?? '') === 'investment' ? 'selected' : '' }}>Investment</option>
-                            </select>
-
-                            <button class="btn btn-block btn-sm btn-primary btn-pn"><i class="fas fa-search mr-1"></i> Apply / لاگو کریں</button>
-                            @if($hasFilters)
-                                <a href="{{ route('admin.expenses.index') }}" class="btn btn-block btn-sm btn-pn btn-clear-filter mt-1">
-                                    <i class="fas fa-times mr-1"></i> Clear Filters
-                                </a>
-                            @endif
-                        </form>
-                    </div>
-                </div>
-
-                @push('filter-scripts')
-                <script>
-                $(function () {
-                    $('#expenseFilterForm .filter-select').each(function () {
-                        $(this).select2({ placeholder: $(this).data('placeholder'), allowClear: true, width: '100%' });
-                    });
-                });
-                </script>
-                @endpush
 
                 {{-- Category Breakdown --}}
                 @if($categoryTotals->count())
