@@ -162,8 +162,8 @@
                                 @if($order->display_phone !== '—')
                                     <div class="shop-meta"><i class="fas fa-phone mr-1 icon-9"></i>{{ $order->display_phone }}</div>
                                 @endif
-                                @if($order->shop?->city ?? $order->city)
-                                    <div class="shop-meta"><i class="fas fa-map-marker-alt mr-1 icon-9"></i>{{ $order->shop?->city ?? $order->city }}</div>
+                                @if($order->shop?->location ?: $order->city)
+                                    <div class="shop-meta"><i class="fas fa-map-marker-alt mr-1 icon-9"></i>{{ $order->shop?->location ?: $order->city }}</div>
                                 @endif
                             </td>
                             <td>

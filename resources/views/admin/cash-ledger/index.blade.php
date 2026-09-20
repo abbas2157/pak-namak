@@ -7,6 +7,8 @@ $sourceMeta = [
     'expense'          => ['label' => 'Expense',        'short' => 'Expenses',         'badge' => 'badge-danger',    'icon' => 'fa-receipt'],
     'purchase_payment' => ['label' => 'Vendor Payment',  'short' => 'Vendor Payments',  'badge' => 'badge-warning',   'icon' => 'fa-truck'],
     'employee_salary'  => ['label' => 'Salary/Advance',  'short' => 'Salary/Advances',  'badge' => 'badge-info',      'icon' => 'fa-users'],
+    'production'       => ['label' => 'Salt Production', 'short' => 'Salt Production',  'badge' => 'badge-danger',    'icon' => 'fa-industry'],
+    'spice_production' => ['label' => 'Spice Production','short' => 'Spice Production', 'badge' => 'badge-danger',    'icon' => 'fa-pepper-hot'],
     'manual'           => ['label' => 'Manual',          'short' => 'Manual Entries',   'badge' => 'badge-secondary', 'icon' => 'fa-pen'],
     'opening_balance'  => ['label' => 'Opening Balance', 'short' => 'Opening Balance',  'badge' => 'badge-dark',      'icon' => 'fa-flag'],
     'transfer'         => ['label' => 'Transfer',        'short' => 'Transfers',        'badge' => 'badge-primary',   'icon' => 'fa-right-left'],

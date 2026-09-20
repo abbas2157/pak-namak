@@ -286,9 +286,8 @@
                         <select name="shop_id" id="shop_id" class="form-control fc-pn select2" required>
                             <option value="">Select Shop</option>
                             @foreach($shops as $shop)
-                                @php $shopArea = $shop->area?->name ?? $shop->city; @endphp
-                                <option value="{{ $shop->id }}" {{ $sale->shop_id == $shop->id ? 'selected' : '' }}>
-                                    {{ $shop->name }}{{ $shopArea ? ' — ' . $shopArea : '' }}
+                                                                <option value="{{ $shop->id }}" {{ $sale->shop_id == $shop->id ? 'selected' : '' }}>
+                                    {{ $shop->name }}{{ $shop->location ? ' — ' . $shop->location : '' }}
                                 </option>
                             @endforeach
                         </select>

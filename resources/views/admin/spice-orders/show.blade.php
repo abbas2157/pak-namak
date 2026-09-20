@@ -194,9 +194,9 @@
                             <div class="text-muted pn-table-font">
                                 <i class="fas fa-phone mr-1"></i>{{ $spiceOrder->shop->phone_number ?? '—' }}
                             </div>
-                            @if($spiceOrder->shop->city)
+                            @if($spiceOrder->shop->location)
                             <div class="text-muted pn-table-font">
-                                <i class="fas fa-map-marker-alt mr-1"></i>{{ $spiceOrder->shop->city }}
+                                <i class="fas fa-map-marker-alt mr-1"></i>{{ $spiceOrder->shop->location }}
                             </div>
                             @endif
                             <div class="mt-2">

@@ -77,5 +77,6 @@
         };
     </script>
     @yield('scripts')
+    @stack('filter-scripts')
 </body>
 </html>

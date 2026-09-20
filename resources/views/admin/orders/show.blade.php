@@ -222,9 +222,9 @@
                             <div class="text-muted pn-table-font">
                                 <i class="fas fa-phone mr-1"></i>{{ $order->shop->phone_number ?? '—' }}
                             </div>
-                            @if($order->shop->city)
+                            @if($order->shop->location)
                             <div class="text-muted pn-table-font">
-                                <i class="fas fa-map-marker-alt mr-1"></i>{{ $order->shop->city }}
+                                <i class="fas fa-map-marker-alt mr-1"></i>{{ $order->shop->location }}
                             </div>
                             @endif
                             <div class="mt-2">

@@ -238,31 +238,7 @@
             </div>
 
             <div class="col-lg-3">
-                <div class="card border-0 shadow-sm mb-3 card-pn">
-                    <div class="card-header bg-white border-bottom py-3">
-                        <h6 class="mb-0 font-weight-bold text-c-blue2">
-                            <i class="fas fa-calendar-alt mr-2"></i>Filter by Month / مہینے کے مطابق فلٹر
-                        </h6>
-                    </div>
-                    <div class="card-body py-3">
-                        <form method="GET">
-                            <select name="month" class="form-control mb-2 fc-pn" onchange="this.form.submit()">
-                                <option value="">All Time</option>
-                                @foreach($months as $m)
-                                    <option value="{{ $m->value }}" {{ $selectedMonth == $m->value ? 'selected' : '' }}>
-                                        {{ $m->label }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </form>
-                        @if($selectedMonth)
-                            <a href="{{ route('admin.spice-sales.index') }}"
-                               class="btn btn-block btn-sm btn-pn btn-clear-filter mt-1">
-                                <i class="fas fa-times mr-1"></i> Show All Time
-                            </a>
-                        @endif
-                    </div>
-                </div>
+                @include('admin.sales.partials.filters', ['indexRoute' => 'admin.spice-sales.index'])
             </div>
         </div>
 
@@ -425,8 +401,9 @@ $(function () {
     // exist on the placeholder row, and the crash aborts this whole
     // script block, silently breaking every button below it. Only
     // initialize DataTables when there are real rows to enhance.
+
     if ($('#salesTable tbody tr').not(':has(td[colspan])').length > 0) {
-        $('#salesTable').DataTable({
+    $('#salesTable').DataTable({
             paging: true,
             pageLength: 20,
             lengthChange: false,

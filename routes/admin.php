@@ -74,6 +74,10 @@ Route::middleware('web')->group(function () {
         // Shop sales (new page for shop-wise sales list)
         Route::get('sales-by-shop', [App\Http\Controllers\Admin\ShopSalesController::class, 'index'])->name('admin.sales.by_shop');
 
+        // Day-by-day reports for one month (salt & spices side by side), one for sales, one for production
+        Route::get('daily-sales-report', [App\Http\Controllers\Admin\DailyReportController::class, 'sales'])->name('admin.reports.daily_sales');
+        Route::get('daily-production-report', [App\Http\Controllers\Admin\DailyReportController::class, 'production'])->name('admin.reports.daily_production');
+
         // Sales report (all sales + Dalla/Thailas/Packages totals + print/PDF via browser)
         Route::get('sales-report', [App\Http\Controllers\Admin\SalesReportController::class, 'index'])->name('admin.sales.report');
         Route::get('sales-report/pdf', [App\Http\Controllers\Admin\SalesReportController::class, 'pdfAll'])->name('admin.sales.report.pdf');
@@ -140,6 +144,12 @@ Route::middleware('web')->group(function () {
         Route::post('spice-stocks/addition', [App\Http\Controllers\Admin\SpiceStockController::class, 'storeAddition'])->name('admin.spice-stock.addition');
         Route::post('spice-stocks/adjustment', [App\Http\Controllers\Admin\SpiceStockController::class, 'storeAdjustment'])->name('admin.spice-stock.adjustment');
         Route::delete('spice-stocks/movements/{movement}', [App\Http\Controllers\Admin\SpiceStockController::class, 'destroyMovement'])->name('admin.spice-stock.movements.destroy');
+
+        // Spice production — separate from salt productions (see Route::resource
+        // note above: multi-word resource needs an explicit camelCase parameter).
+        Route::resource('spice-productions', App\Http\Controllers\Admin\SpiceProductionController::class, ['as' => 'admin'])
+            ->parameters(['spice-productions' => 'spiceProduction'])
+            ->except(['show', 'create']);
 
         Route::resource('spice-purchases', App\Http\Controllers\Admin\SpicePurchaseController::class, ['as' => 'admin'])
             ->except(['show']);

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use App\Models\{Sale, SaleDalla, SaleThaila, SalePackage, SalePayment, SaltType, Shop, Order, StockMovement, Account};
+use App\Models\{Sale, SaleDalla, SaleThaila, SalePackage, SalePayment, SaltType, Shop, Area, City, Order, StockMovement, Account};
 
 class SaleController extends Controller
 {
@@ -14,9 +14,25 @@ class SaleController extends Controller
         $query = Sale::with(['shop', 'dalla', 'thailas', 'packages'])
             ->orderByDesc('id');
 
+        // Filters: month (legacy), date range, shop, area — all optional and combinable.
         if ($request->month) {
             [$year, $month] = explode('-', $request->month);
             $query->whereYear('sale_date', $year)->whereMonth('sale_date', $month);
+        }
+        if ($request->from) {
+            $query->whereDate('sale_date', '>=', $request->from);
+        }
+        if ($request->to) {
+            $query->whereDate('sale_date', '<=', $request->to);
+        }
+        if ($request->shop_id) {
+            $query->where('shop_id', $request->shop_id);
+        }
+        if ($request->city_id) {
+            $query->whereHas('shop', fn ($q) => $q->where('city_id', $request->city_id));
+        }
+        if ($request->area_id) {
+            $query->whereHas('shop', fn ($q) => $q->where('area_id', $request->area_id));
         }
 
         $sales = $query->get();
@@ -26,19 +42,23 @@ class SaleController extends Controller
         $totalPending  = $sales->sum('pending_amount');
         $totalCount    = $sales->count();
 
-        $months = Sale::selectRaw("DATE_FORMAT(sale_date,'%Y-%m') as value, DATE_FORMAT(sale_date,'%M %Y') as label")
-            ->whereNotNull('sale_date')
-            ->groupBy('value', 'label')
-            ->orderByDesc('value')
-            ->get();
+        // Month options built in PHP so the query stays portable (MySQL + SQLite tests).
+        $months = Sale::whereNotNull('sale_date')->pluck('sale_date')
+            ->map(fn ($d) => \Carbon\Carbon::parse($d)->format('Y-m'))
+            ->unique()->sortDesc()->values()
+            ->map(fn ($ym) => (object) ['value' => $ym, 'label' => \Carbon\Carbon::createFromFormat('Y-m', $ym)->format('F Y')]);
 
         $selectedMonth = $request->month;
+        $filters = $request->only(['month', 'from', 'to', 'shop_id', 'city_id', 'area_id']);
+        $hasFilters = collect($filters)->filter()->isNotEmpty();
 
-        $shops = Shop::orderBy('name')->get();
+        $shops = Shop::with('area')->orderBy('name')->get();
+        $areas = Area::with('city:id,name')->orderBy('name')->get();
+        $cities = City::orderBy('name')->get();
 
         return view('admin.sales.index', compact(
             'sales', 'totalRevenue', 'totalReceived', 'totalPending', 'totalCount',
-            'months', 'selectedMonth', 'shops'
+            'months', 'selectedMonth', 'shops', 'areas', 'cities', 'filters', 'hasFilters'
         ));
     }
 

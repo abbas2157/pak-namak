@@ -1,9 +1,11 @@
 @extends('admin.layout.app')
-@section('title', 'Productions')
+@section('title', 'Spice Production')
 
 @php
-// "10kg×50, 50kg×20" style breakdown for a batch's items of one type
-$breakdown = fn ($p, $type) => $p->items->where('product_type', $type)
+$sizeLabel = fn ($gram) => $gram >= 1000 ? (($gram / 1000) . 'kg') : ($gram . 'g');
+
+// "250g × 40, 1kg × 10" breakdown for one batch
+$breakdown = fn ($p) => $p->items
     ->map(fn ($i) => $i->label() . ' × ' . number_format($i->quantity, 0))
     ->implode(', ');
 @endphp
@@ -13,10 +15,10 @@ $breakdown = fn ($p, $type) => $p->items->where('product_type', $type)
     <div class="container-fluid">
         <div class="row mb-2 align-items-center">
             <div class="col-sm-6">
-                <h1 class="m-0">Salt Production <small class="text-muted ch-sub">نمک پیداوار</small></h1>
+                <h1 class="m-0">Spice Production <small class="text-muted ch-sub">مصالحہ پیداوار</small></h1>
                 <ol class="breadcrumb mt-1">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                    <li class="breadcrumb-item active">Salt Production</li>
+                    <li class="breadcrumb-item active">Spice Production</li>
                 </ol>
             </div>
             <div class="col-sm-6 d-flex justify-content-end">
@@ -31,7 +33,7 @@ $breakdown = fn ($p, $type) => $p->items->where('product_type', $type)
 <section class="content">
     <div class="container-fluid">
 
-        {{-- ── DATE FILTER ────────────────────────────── --}}
+        {{-- ── FILTER ─────────────────────────────────── --}}
         <div class="card card-pn border-0 shadow-sm mb-4">
             <div class="card-body py-3 px-4">
                 <form method="GET" class="form-inline">
@@ -39,8 +41,15 @@ $breakdown = fn ($p, $type) => $p->items->where('product_type', $type)
                     <input type="date" name="from" class="form-control fc-pn mr-3 mb-2 mb-md-0" value="{{ $from->toDateString() }}">
                     <label class="filter-lbl mr-2">To / تک</label>
                     <input type="date" name="to" class="form-control fc-pn mr-3 mb-2 mb-md-0" value="{{ $to->toDateString() }}">
+                    <label class="filter-lbl mr-2">Spice / مصالحہ</label>
+                    <select name="spice_type_id" class="form-control fc-pn mr-3 mb-2 mb-md-0">
+                        <option value="">All</option>
+                        @foreach($spiceTypes as $st)
+                            <option value="{{ $st->id }}" {{ (string) request('spice_type_id') === (string) $st->id ? 'selected' : '' }}>{{ $st->title }}</option>
+                        @endforeach
+                    </select>
                     <button class="btn btn-primary btn-pn px-4 mr-2"><i class="fas fa-filter mr-1"></i> Filter</button>
-                    <a href="{{ route('admin.productions.index') }}" class="btn btn-light btn-pn px-3">This Month</a>
+                    <a href="{{ route('admin.spice-productions.index') }}" class="btn btn-light btn-pn px-3">This Month</a>
                 </form>
             </div>
         </div>
@@ -52,14 +61,14 @@ $breakdown = fn ($p, $type) => $p->items->where('product_type', $type)
                     <div class="card-body py-3 px-4">
                         <div class="pn-stat-lbl">Batches / بیچز</div>
                         <div class="pn-stat-num-md text-c-blue2">{{ $productions->count() }}</div>
-                        <div class="pn-stat-sub">{{ $daily->count() }} production days</div>
+                        <div class="pn-stat-sub">{{ $daily->pluck('date')->unique()->count() }} production days</div>
                     </div>
                 </div>
             </div>
             <div class="col-xl col-md-4 col-sm-6 mb-3">
                 <div class="card card-pn border-0 shadow-sm h-100">
                     <div class="card-body py-3 px-4">
-                        <div class="pn-stat-lbl">Raw Salt / خام نمک</div>
+                        <div class="pn-stat-lbl">Raw Spice / خام مصالحہ</div>
                         <div class="pn-stat-num-md text-muted">{{ number_format($totalRaw, 0) }}</div>
                         <div class="pn-stat-sub">KG processed</div>
                     </div>
@@ -68,27 +77,18 @@ $breakdown = fn ($p, $type) => $p->items->where('product_type', $type)
             <div class="col-xl col-md-4 col-sm-6 mb-3">
                 <div class="card card-pn border-0 shadow-sm h-100 pn-bl-teal">
                     <div class="card-body py-3 px-4">
-                        <div class="pn-stat-lbl">Finished / تیار نمک</div>
+                        <div class="pn-stat-lbl">Finished / تیار</div>
                         <div class="pn-stat-num-md text-c-teal">{{ number_format($totalFinished, 0) }}</div>
                         <div class="pn-stat-sub">KG · {{ $efficiency }}% efficiency</div>
                     </div>
                 </div>
             </div>
             <div class="col-xl col-md-4 col-sm-6 mb-3">
-                <div class="card card-pn border-0 shadow-sm h-100 pn-bl-teal">
-                    <div class="card-body py-3 px-4">
-                        <div class="pn-stat-lbl">Thaila / تھیلے</div>
-                        <div class="pn-stat-num-md text-c-teal">{{ number_format($totalThaila, 0) }}</div>
-                        <div class="pn-stat-sub">bags packed</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl col-md-4 col-sm-6 mb-3">
                 <div class="card card-pn border-0 shadow-sm h-100 pn-bl-blue">
                     <div class="card-body py-3 px-4">
-                        <div class="pn-stat-lbl">Packages / پیکٹ</div>
-                        <div class="pn-stat-num-md text-c-blue2">{{ number_format($totalPackages, 0) }}</div>
-                        <div class="pn-stat-sub">bundles packed</div>
+                        <div class="pn-stat-lbl">Packets / پیکٹ</div>
+                        <div class="pn-stat-num-md text-c-blue2">{{ number_format($totalPackets, 0) }}</div>
+                        <div class="pn-stat-sub">packets packed</div>
                     </div>
                 </div>
             </div>
@@ -97,7 +97,7 @@ $breakdown = fn ($p, $type) => $p->items->where('product_type', $type)
                     <div class="card-body py-3 px-4">
                         <div class="pn-stat-lbl">Packed / پیک شدہ</div>
                         <div class="pn-stat-num-md text-muted">{{ number_format($totalPackedKg, 0) }}</div>
-                        <div class="pn-stat-sub">KG in thaila + packages</div>
+                        <div class="pn-stat-sub">KG in packets</div>
                     </div>
                 </div>
             </div>
@@ -123,11 +123,11 @@ $breakdown = fn ($p, $type) => $p->items->where('product_type', $type)
                     <thead>
                         <tr>
                             <th class="pl-3">Date / تاریخ</th>
+                            <th>Spice / مصالحہ</th>
                             <th class="text-center">Batches</th>
                             <th class="text-right">Raw (KG)</th>
                             <th class="text-right">Finished (KG)</th>
-                            <th class="text-right">Thaila / تھیلے</th>
-                            <th class="text-right">Packages / پیکٹ</th>
+                            <th class="text-right">Packets / پیکٹ</th>
                             <th class="text-right">Packed (KG)</th>
                             <th class="text-right pr-3">Cost (PKR)</th>
                         </tr>
@@ -136,28 +136,27 @@ $breakdown = fn ($p, $type) => $p->items->where('product_type', $type)
                     @forelse($daily as $d)
                         <tr>
                             <td class="pl-3 font-weight-bold">{{ \Carbon\Carbon::parse($d['date'])->format('D, d M Y') }}</td>
+                            <td>{{ $d['spice'] }}</td>
                             <td class="text-center">{{ $d['batches'] }}</td>
                             <td class="text-right">{{ number_format($d['raw'], 0) }}</td>
                             <td class="text-right text-c-teal">{{ number_format($d['finished'], 0) }}</td>
-                            <td class="text-right font-weight-bold text-c-teal">{{ number_format($d['thaila'], 0) }}</td>
-                            <td class="text-right font-weight-bold text-c-blue2">{{ number_format($d['packages'], 0) }}</td>
-                            <td class="text-right">{{ number_format($d['packed_kg'], 0) }}</td>
+                            <td class="text-right font-weight-bold text-c-blue2">{{ number_format($d['packets'], 0) }}</td>
+                            <td class="text-right">{{ number_format($d['packed_kg'], 1) }}</td>
                             <td class="text-right pr-3">{{ $d['cost'] ? number_format($d['cost'], 0) : '—' }}</td>
                         </tr>
                     @empty
-                        <tr class="empty-row"><td colspan="8"><p class="empty-msg mb-0 py-2">No production in this period.</p></td></tr>
+                        <tr class="empty-row"><td colspan="8"><p class="empty-msg mb-0 py-2">No spice production in this period.</p></td></tr>
                     @endforelse
                     </tbody>
                     @if($daily->count() > 0)
                     <tfoot>
                         <tr class="pn-total-row font-weight-bold pn-table-font">
-                            <td class="pl-3">Total / کل</td>
+                            <td class="pl-3" colspan="2">Total / کل</td>
                             <td class="text-center">{{ $productions->count() }}</td>
                             <td class="text-right">{{ number_format($totalRaw, 0) }}</td>
                             <td class="text-right text-c-teal">{{ number_format($totalFinished, 0) }}</td>
-                            <td class="text-right text-c-teal">{{ number_format($totalThaila, 0) }}</td>
-                            <td class="text-right text-c-blue2">{{ number_format($totalPackages, 0) }}</td>
-                            <td class="text-right">{{ number_format($totalPackedKg, 0) }}</td>
+                            <td class="text-right text-c-blue2">{{ number_format($totalPackets, 0) }}</td>
+                            <td class="text-right">{{ number_format($totalPackedKg, 1) }}</td>
                             <td class="text-right pr-3">{{ number_format($totalCost, 0) }}</td>
                         </tr>
                     </tfoot>
@@ -170,7 +169,7 @@ $breakdown = fn ($p, $type) => $p->items->where('product_type', $type)
         {{-- ── BATCH TABLE ────────────────────────────── --}}
         <div class="card card-pn border-0 shadow-sm">
             <div class="card-header bg-white border-0 pt-3 pb-0 px-4">
-                <h6 class="mb-0 font-weight-bold"><i class="fas fa-industry mr-2 text-c-blue2"></i>Production Batches / پیداواری بیچز</h6>
+                <h6 class="mb-0 font-weight-bold"><i class="fas fa-pepper-hot mr-2 text-c-red"></i>Production Batches / پیداواری بیچز</h6>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -178,11 +177,11 @@ $breakdown = fn ($p, $type) => $p->items->where('product_type', $type)
                     <thead>
                         <tr>
                             <th class="pl-3">Date / تاریخ</th>
+                            <th>Spice / مصالحہ</th>
                             <th class="text-right">Raw (KG) / خام</th>
                             <th class="text-right">Finished (KG) / تیار</th>
                             <th class="text-right">Wastage / ضیاع</th>
-                            <th>Thaila / تھیلے</th>
-                            <th>Packages / پیکٹ</th>
+                            <th>Packets / پیکٹ</th>
                             <th class="text-right">Packed (KG)</th>
                             <th>Machine / مشین</th>
                             <th class="text-right">Cost / لاگت</th>
@@ -192,27 +191,22 @@ $breakdown = fn ($p, $type) => $p->items->where('product_type', $type)
                     <tbody>
                     @forelse($productions as $p)
                         @php
-                            $eff = $p->raw_salt_used > 0 ? round(($p->finished_salt / $p->raw_salt_used) * 100, 1) : 0;
+                            $eff = $p->raw_spice_used > 0 ? round(($p->finished_spice / $p->raw_spice_used) * 100, 1) : 0;
                         @endphp
                         <tr id="prodRow{{ $p->id }}">
                             <td class="pl-3">
-                                <span class="font-weight-bold pn-table-font d-block">
-                                    {{ \Carbon\Carbon::parse($p->production_date)->format('d M Y') }}
-                                </span>
+                                <span class="font-weight-bold pn-table-font d-block">{{ \Carbon\Carbon::parse($p->production_date)->format('d M Y') }}</span>
                                 <span class="badge pn-bdg {{ $eff >= 90 ? 'badge-success' : ($eff >= 75 ? 'badge-warning' : 'badge-danger') }}">{{ $eff }}%</span>
                             </td>
-                            <td class="text-right pn-table-font">{{ number_format($p->raw_salt_used, 0) }}</td>
-                            <td class="text-right font-weight-bold pn-table-font text-c-teal">{{ number_format($p->finished_salt, 0) }}</td>
+                            <td class="font-weight-bold">{{ $p->spiceType?->title ?? '—' }}</td>
+                            <td class="text-right pn-table-font">{{ number_format($p->raw_spice_used, 0) }}</td>
+                            <td class="text-right font-weight-bold pn-table-font text-c-teal">{{ number_format($p->finished_spice, 0) }}</td>
                             <td class="text-right pn-table-font text-c-red">{{ number_format($p->wastage ?? 0, 0) }}</td>
                             <td>
-                                <span class="font-weight-bold text-c-teal">{{ number_format($p->thailaCount(), 0) }}</span>
-                                <small class="d-block text-muted">{{ $breakdown($p, 'thaila') ?: '—' }}</small>
+                                <span class="font-weight-bold text-c-blue2">{{ number_format($p->packetCount(), 0) }}</span>
+                                <small class="d-block text-muted">{{ $breakdown($p) ?: '—' }}</small>
                             </td>
-                            <td>
-                                <span class="font-weight-bold text-c-blue2">{{ number_format($p->packageCount(), 0) }}</span>
-                                <small class="d-block text-muted">{{ $breakdown($p, 'package') ?: '—' }}</small>
-                            </td>
-                            <td class="text-right pn-table-font">{{ number_format($p->packedKg(), 0) }}</td>
+                            <td class="text-right pn-table-font">{{ number_format($p->packedKg(), 1) }}</td>
                             <td class="text-muted pn-stat-sub">
                                 {{ $p->machine_used ?: '—' }}
                                 @if($p->remarks)
@@ -228,8 +222,8 @@ $breakdown = fn ($p, $type) => $p->items->where('product_type', $type)
                     @empty
                         <tr class="empty-row">
                             <td colspan="10">
-                                <i class="fas fa-industry empty-icon"></i>
-                                <p class="empty-msg mb-0">No production records in this period.</p>
+                                <i class="fas fa-pepper-hot empty-icon"></i>
+                                <p class="empty-msg mb-0">No spice production records in this period.</p>
                             </td>
                         </tr>
                     @endforelse
@@ -251,85 +245,67 @@ $breakdown = fn ($p, $type) => $p->items->where('product_type', $type)
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalTitle">
-                        <i class="fas fa-industry mr-2"></i>Add Production / پیداوار شامل کریں
+                        <i class="fas fa-pepper-hot mr-2"></i>Add Spice Production / مصالحہ پیداوار
                     </h5>
                     <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal"><span>&times;</span></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-4 mb-3">
+                            <label class="filter-lbl">Spice / مصالحہ <span class="text-danger">*</span></label>
+                            <select name="spice_type_id" id="spice_type_id" class="form-control fc-pn" required>
+                                @foreach($spiceTypes as $st)
+                                    <option value="{{ $st->id }}">{{ $st->title }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
                             <label class="filter-lbl">Production Date / پیداواری تاریخ <span class="text-danger">*</span></label>
                             <input type="date" class="form-control fc-pn" name="production_date" id="production_date" value="{{ date('Y-m-d') }}" required>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="filter-lbl">Machine Used / مشین</label>
-                            <input type="text" class="form-control fc-pn" name="machine_used" id="machine_used" placeholder="e.g. Machine #1">
+                            <input type="text" class="form-control fc-pn" name="machine_used" id="machine_used" placeholder="e.g. Grinder #1">
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
+                            <label class="filter-lbl">Raw Spice (KG) / خام <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control fc-pn" name="raw_spice_used" id="raw_spice_used" min="0" step="0.01" placeholder="0" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="filter-lbl">Finished (KG) / تیار <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control fc-pn" name="finished_spice" id="finished_spice" min="0" step="0.01" placeholder="0" required>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="filter-lbl">Wastage (KG) / ضیاع</label>
+                            <input type="number" class="form-control fc-pn" name="wastage" id="wastage" min="0" step="0.01" placeholder="0">
+                        </div>
+                        <div class="col-md-3 mb-3">
                             <label class="filter-lbl">Efficiency / کارکردگی</label>
                             <div class="input-group">
                                 <input type="text" class="form-control fc-ro-pn" id="efficiency_display" readonly placeholder="—">
                                 <div class="input-group-append"><span class="input-group-text fc-ro-pn">%</span></div>
                             </div>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="filter-lbl">Raw Salt (KG) / خام نمک <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control fc-pn" name="raw_salt_used" id="raw_salt_used" min="0" step="0.01" placeholder="0" required>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="filter-lbl">Finished Salt (KG) / تیار نمک <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control fc-pn" name="finished_salt" id="finished_salt" min="0" step="0.01" placeholder="0" required>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="filter-lbl">Wastage (KG) / ضیاع</label>
-                            <input type="number" class="form-control fc-pn" name="wastage" id="wastage" min="0" step="0.01" placeholder="0">
-                        </div>
                     </div>
 
-                    {{-- Packaged output: thaila + packages --}}
-                    <div class="row">
-                        <div class="col-lg-5 mb-3">
-                            <div class="border rounded p-3 h-100">
-                                <h6 class="font-weight-bold mb-1"><i class="fas fa-shopping-bag mr-1 text-c-teal"></i>Thaila Packed / تھیلے</h6>
-                                <p class="text-muted small mb-3">How many bags of each size were filled today.</p>
-                                <div class="row">
-                                    @foreach(config('admin.thaila_sizes') as $size)
-                                        <div class="col-6 mb-2">
-                                            <div class="input-group input-group-sm">
-                                                <div class="input-group-prepend"><span class="input-group-text">{{ $size }}KG</span></div>
-                                                <input type="number" step="1" min="0" name="thaila[{{ $size }}]" class="form-control item-input" data-kg="{{ $size }}" placeholder="0">
-                                            </div>
-                                        </div>
-                                    @endforeach
+                    {{-- Packets produced per size --}}
+                    <div class="border rounded p-3 mb-3">
+                        <h6 class="font-weight-bold mb-1"><i class="fas fa-box mr-1 text-c-blue2"></i>Packets Packed / پیکٹ</h6>
+                        <p class="text-muted small mb-2">How many packets of each size were filled — leave the rest blank.</p>
+                        <div class="row">
+                            @foreach(config('admin.spice_sizes') as $gram)
+                                <div class="col-6 col-md-3 mb-2">
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-prepend"><span class="input-group-text">{{ $sizeLabel($gram) }}</span></div>
+                                        <input type="number" step="1" min="0" name="package[{{ $gram }}]" class="form-control item-input" data-kg="{{ $gram / 1000 }}" placeholder="0">
+                                    </div>
                                 </div>
-                            </div>
+                            @endforeach
                         </div>
-                        <div class="col-lg-7 mb-3">
-                            <div class="border rounded p-3 h-100">
-                                <h6 class="font-weight-bold mb-1"><i class="fas fa-box mr-1 text-c-blue2"></i>Packages Packed / پیکٹ</h6>
-                                <p class="text-muted small mb-2">Bundles made per gram size — 10-pack and 20-pack are counted separately.</p>
-                                <div class="table-responsive">
-                                    <table class="table table-sm pn-table-font mb-0">
-                                        <thead><tr><th>Size</th><th>10-Pack Qty</th><th>20-Pack Qty</th></tr></thead>
-                                        <tbody>
-                                            @foreach(config('admin.package_grams') as $gram)
-                                                <tr>
-                                                    <td class="align-middle">{{ $gram }}g</td>
-                                                    <td><input type="number" step="1" min="0" name="package[{{ $gram }}][10]" class="form-control form-control-sm item-input" data-kg="{{ $gram / 1000 * 10 }}" placeholder="0"></td>
-                                                    <td><input type="number" step="1" min="0" name="package[{{ $gram }}][20]" class="form-control form-control-sm item-input" data-kg="{{ $gram / 1000 * 20 }}" placeholder="0"></td>
-                                                </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 mb-3">
-                            <div class="alert alert-light border mb-0 py-2 px-3 small">
-                                <i class="fas fa-calculator mr-1"></i>
-                                Packed total: <strong id="packed_kg_display">0</strong> KG
-                                <span class="text-muted">(added to Stock on save)</span>
-                            </div>
+                        <div class="alert alert-light border mb-0 py-2 px-3 small">
+                            <i class="fas fa-calculator mr-1"></i>
+                            Packed total: <strong id="packed_kg_display">0</strong> KG
+                            <span class="text-muted">(added to Spice Stock on save)</span>
                         </div>
                     </div>
 
@@ -369,10 +345,8 @@ $breakdown = fn ($p, $type) => $p->items->where('product_type', $type)
 @section('scripts')
 <script>
 $(document).ready(function () {
+    const BASE = "{{ route('admin.spice-productions.index') }}";
 
-    // DataTables throws on an empty (colspan "no records") table when
-    // columnDefs targets a specific column index — only initialize when
-    // there are real rows to enhance.
     if ($('#productionsTable tbody tr').not(':has(td[colspan])').length > 0) {
         $('#productionsTable').DataTable({
             paging: true,
@@ -388,19 +362,18 @@ $(document).ready(function () {
     }
 
     function calcEfficiency() {
-        const raw = parseFloat($('#raw_salt_used').val()) || 0;
-        const fin = parseFloat($('#finished_salt').val()) || 0;
+        const raw = parseFloat($('#raw_spice_used').val()) || 0;
+        const fin = parseFloat($('#finished_spice').val()) || 0;
         $('#efficiency_display').val(raw > 0 ? (fin / raw * 100).toFixed(1) : '');
     }
-    $('#raw_salt_used, #finished_salt').on('input', calcEfficiency);
+    $('#raw_spice_used, #finished_spice').on('input', calcEfficiency);
 
-    // Live packed-KG total from the thaila/package grids
     function calcPacked() {
         let kg = 0;
         $('.item-input').each(function () {
             kg += (parseFloat($(this).val()) || 0) * parseFloat($(this).data('kg'));
         });
-        $('#packed_kg_display').text(kg.toLocaleString(undefined, { maximumFractionDigits: 1 }));
+        $('#packed_kg_display').text(kg.toLocaleString(undefined, { maximumFractionDigits: 2 }));
     }
     $(document).on('input', '.item-input', calcPacked);
 
@@ -414,7 +387,7 @@ $(document).ready(function () {
 
     $('#addBtn').on('click', function () {
         resetForm();
-        $('#modalTitle').html('<i class="fas fa-industry mr-2"></i>Add Production');
+        $('#modalTitle').html('<i class="fas fa-pepper-hot mr-2"></i>Add Spice Production');
         $('#submitBtn').html('<i class="fas fa-save mr-1"></i> Save');
         $('#productionModal').modal('show');
     });
@@ -422,7 +395,7 @@ $(document).ready(function () {
     $('#productionForm').on('submit', function (e) {
         e.preventDefault();
         const id  = $('#production_id').val();
-        const url = id ? (APP_URL + '/productions/' + id) : "{{ route('admin.productions.store') }}";
+        const url = id ? (BASE + '/' + id) : BASE;
 
         const btn = $('#submitBtn');
         btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-1"></i> Saving…');
@@ -431,7 +404,7 @@ $(document).ready(function () {
             url, type: 'POST',
             data: $(this).serialize() + (id ? '&_method=PUT' : ''),
             success: function () {
-                toastr.success('Production saved!');
+                toastr.success('Spice production saved!');
                 $('#productionModal').modal('hide');
                 setTimeout(() => location.reload(), 600);
             },
@@ -450,26 +423,24 @@ $(document).ready(function () {
 
     $(document).on('click', '.editBtn', function () {
         const id = $(this).data('id');
-        $.get(APP_URL + '/productions/' + id + '/edit', function (p) {
+        $.get(BASE + '/' + id + '/edit', function (p) {
             resetForm();
             $('#production_id').val(p.id);
+            $('#spice_type_id').val(p.spice_type_id);
             $('#production_date').val(p.production_date);
-            $('#raw_salt_used').val(p.raw_salt_used);
-            $('#finished_salt').val(p.finished_salt);
+            $('#raw_spice_used').val(p.raw_spice_used);
+            $('#finished_spice').val(p.finished_spice);
             $('#wastage').val(p.wastage);
             $('#machine_used').val(p.machine_used);
             $('#electricity_fuel_cost').val(p.electricity_fuel_cost);
             $('#account_id').val(p.account_id ?? '');
             $('#remarks').val(p.remarks);
             (p.items || []).forEach(function (it) {
-                const name = it.product_type === 'thaila'
-                    ? 'thaila[' + it.size + ']'
-                    : 'package[' + it.size + '][' + it.bundle_size + ']';
-                $('[name="' + name + '"]').val(parseFloat(it.quantity));
+                $('[name="package[' + it.size + ']"]').val(parseFloat(it.quantity));
             });
             calcEfficiency();
             calcPacked();
-            $('#modalTitle').html('<i class="fas fa-edit mr-2"></i>Edit Production');
+            $('#modalTitle').html('<i class="fas fa-edit mr-2"></i>Edit Spice Production');
             $('#submitBtn').html('<i class="fas fa-save mr-1"></i> Update');
             $('#productionModal').modal('show');
         });
@@ -478,8 +449,8 @@ $(document).ready(function () {
     $(document).on('click', '.deleteBtn', function () {
         const id = $(this).data('id');
         Swal.fire({
-            title: 'Delete this production record?',
-            text: 'Its thaila/packages will be removed from Stock too. This cannot be undone.',
+            title: 'Delete this spice production record?',
+            text: 'Its packets will be removed from Spice Stock too. This cannot be undone.',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#e74a3b',
@@ -489,18 +460,17 @@ $(document).ready(function () {
         }).then(result => {
             if (!result.isConfirmed) return;
             $.ajax({
-                url: APP_URL + '/productions/' + id,
+                url: BASE + '/' + id,
                 type: 'POST',
                 data: { _method: 'DELETE', _token: '{{ csrf_token() }}' },
                 success: function () {
-                    toastr.success('Production deleted.');
+                    toastr.success('Spice production deleted.');
                     setTimeout(() => location.reload(), 600);
                 },
                 error: function () { toastr.error('Delete failed.'); }
             });
         });
     });
-
 });
 </script>
 @endsection

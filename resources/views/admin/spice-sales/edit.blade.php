@@ -125,9 +125,8 @@ $itemsByKey = $spiceSale->items->keyBy(fn ($i) => $i->spice_type_id . ':' . $i->
                         <select name="shop_id" id="shop_id" class="form-control fc-pn select2" required>
                             <option value="">Select Shop</option>
                             @foreach($shops as $shop)
-                                @php $shopArea = $shop->area?->name ?? $shop->city; @endphp
-                                <option value="{{ $shop->id }}" {{ $spiceSale->shop_id == $shop->id ? 'selected' : '' }}>
-                                    {{ $shop->name }}{{ $shopArea ? ' — ' . $shopArea : '' }}
+                                                                <option value="{{ $shop->id }}" {{ $spiceSale->shop_id == $shop->id ? 'selected' : '' }}>
+                                    {{ $shop->name }}{{ $shop->location ? ' — ' . $shop->location : '' }}
                                 </option>
                             @endforeach
                         </select>

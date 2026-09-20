@@ -5,7 +5,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Models\{Sale, Purchase, Shop, Expense, SaleDalla, SaleThaila, SalePackage, EmployeeSalary, Vendor, Employee, Order, City, CashLedger, Asset, Production, SpiceSale, SpicePurchase, SpiceOrder, PackagingPurchase};
+use App\Models\{Sale, Purchase, Shop, Expense, SaleDalla, SaleThaila, SalePackage, EmployeeSalary, Vendor, Employee, Order, City, CashLedger, Asset, Production, SpiceProduction, SpiceSale, SpicePurchase, SpiceOrder, PackagingPurchase};
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -109,12 +109,17 @@ class DashboardController extends Controller
 
         /* -------------------------
         * MONTH / TOTAL PRODUCTION COST (electricity/fuel spent processing
-        * raw salt — a real operating cost, subtracted from profit below)
+        * raw salt + raw spice — a real operating cost, subtracted from profit
+        * below; salt and spice production are separate modules, combined here
+        * the same way sales/purchases are)
         * ------------------------ */
         $monthProductionCost = Production::whereBetween('production_date', [$monthStart, $monthEnd])
+            ->sum('electricity_fuel_cost')
+            + SpiceProduction::whereBetween('production_date', [$monthStart, $monthEnd])
             ->sum('electricity_fuel_cost');
 
-        $totalProductionCost = Production::sum('electricity_fuel_cost');
+        $totalProductionCost = Production::sum('electricity_fuel_cost')
+            + SpiceProduction::sum('electricity_fuel_cost');
 
         /* -------------------------
         * PENDING (UDHAAR)

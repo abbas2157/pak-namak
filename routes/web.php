@@ -31,6 +31,8 @@ Route::post('/spice-order',                    [SpiceOrderController::class, 'st
     ->middleware('throttle:10,1')->name('spice-order.store');
 Route::get('/spice-order/confirm/{reference}', [SpiceOrderController::class, 'confirm'])
     ->middleware('throttle:30,1')->name('spice-order.confirm');
+Route::get('/spice-order/shop/{shop}/info',    [SpiceOrderController::class, 'shopInfo'])
+    ->middleware('throttle:60,1')->name('spice-order.shop.info');
 
 // Public spice stock availability
 Route::get('/spice-stock',                     [SpiceOrderController::class, 'stockView'])->name('spice-stock.public');

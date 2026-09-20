@@ -269,6 +269,7 @@
                 <h6 class="mb-0 font-weight-bold text-white">
                     <i class="fas fa-store mr-2"></i>
                     <span id="sip-shop-name">—</span>
+                    <small class="ml-2 font-weight-normal" style="opacity:.8;" id="sip-shop-location"></small>
                     <small class="ml-2 font-weight-normal" style="opacity:.8;">کھاتہ خلاصہ · Account Summary</small>
                 </h6>
                 <a id="sip-whatsapp-btn" href="#" target="_blank" rel="noopener"
@@ -325,10 +326,9 @@
                         <select name="shop_id" id="shop_id" class="form-control fc-pn select2" required>
                             <option value="">Select Shop</option>
                             @foreach($shops as $shop)
-                                @php $shopArea = $shop->area?->name ?? $shop->city; @endphp
-                                <option value="{{ $shop->id }}"
+                                                                <option value="{{ $shop->id }}"
                                     {{ ($prefill && $prefill->shop_id == $shop->id) ? 'selected' : '' }}>
-                                    {{ $shop->name }}{{ $shopArea ? ' — ' . $shopArea : '' }}
+                                    {{ $shop->name }}{{ $shop->location ? ' — ' . $shop->location : '' }}
                                 </option>
                             @endforeach
                         </select>
@@ -520,6 +520,7 @@ $(document).ready(function () {
         }
         $.getJSON(sipInfoUrl.replace('__ID__', shopId), function (data) {
             $('#sip-shop-name').text(data.shop.name);
+            $('#sip-shop-location').html(data.shop.location ? '<i class="fas fa-map-marker-alt mr-1"></i>' + data.shop.location : '');
             $('#sip-total').text(sipFmt(data.financials.total_amount));
             $('#sip-received').text(sipFmt(data.financials.received_amount));
             $('#sip-pending').text(sipFmt(data.financials.pending_amount));

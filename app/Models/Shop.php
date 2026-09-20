@@ -38,6 +38,16 @@ class Shop extends Model
         return $this->belongsTo(Area::class);
     }
 
+    /**
+     * "Area, City" for dropdowns and order screens — area first because that is
+     * how the salesmen know a shop; city alone when no area is set. Callers
+     * should eager-load `area` when rendering lists.
+     */
+    public function getLocationAttribute(): string
+    {
+        return collect([$this->area?->name, $this->city])->filter()->unique()->implode(', ');
+    }
+
     protected static function booted(): void
     {
         // Deleting a shop cascades its spice sales and their payments at the DB

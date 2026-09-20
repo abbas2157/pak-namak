@@ -140,6 +140,8 @@ $negativeCount = $levels->where('quantity', '<', 0)->count();
                                         {{ $m->reason }}
                                         @if($m->reference_type && str_ends_with($m->reference_type, 'SpiceSale'))
                                             <a href="{{ route('admin.spice-sales.index') }}#row_{{ $m->reference_id }}" class="ml-1">#{{ $m->reference_id }}</a>
+                                        @elseif($m->reference_type === \App\Models\SpiceProduction::class)
+                                            <a href="{{ route('admin.spice-productions.index') }}" class="ml-1" title="Posted by a production batch">#{{ $m->reference_id }}</a>
                                         @endif
                                     </td>
                                     <td class="align-middle">{{ $m->note }}</td>
@@ -150,7 +152,7 @@ $negativeCount = $levels->where('quantity', '<', 0)->count();
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         @else
-                                            <span class="text-muted" title="Owned by its sale — edit the sale instead">—</span>
+                                            <span class="text-muted" title="Owned by its sale / production — edit that record instead">—</span>
                                         @endif
                                     </td>
                                 </tr>

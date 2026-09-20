@@ -78,7 +78,8 @@ Sales track `received_amount` and `pending_amount` (credit/udhaar system). Bill 
 - `vendors` — salt suppliers
 - `salt_types` — product categories
 - `salt_purchases` — raw material inbound
-- `productions` — manufacturing records (raw → finished, wastage)
+- `productions` + `production_items` — salt manufacturing per day (raw → finished, wastage) plus how many thaila (per kg size) and package bundles (per gram × 10/20) were packed; saving posts `reason=production` stock-in movements to `stocks`
+- `spice_productions` + `spice_production_items` — separate spice equivalent (one record per spice type per day, packets per gram size); posts to `spice_stocks`
 - `employees`, `assets`, `expenses` — operational records
 - `sale_payments` — payment installments per sale
 
@@ -91,7 +92,8 @@ All controllers live under `app/Http/Controllers/Admin/`.
 | DashboardController | `/admin/` |
 | SaleController | `/admin/sales` |
 | PurchaseController | `/admin/purchases` |
-| ProductionController | `/admin/productions` |
+| ProductionController | `/admin/productions` (salt) |
+| SpiceProductionController | `/admin/spice-productions` |
 | ShopController | `/admin/shops` |
 | VendorController | `/admin/vendors` |
 | EmployeeController | `/admin/employees` |
@@ -116,7 +118,7 @@ All controllers live under `app/Http/Controllers/Admin/`.
 - 1 Mann = 40 kg (local unit for bulk salt)
 - `grand_total` on purchases = `total_cost + transport_cost + loading_unloading_cost`
 - `pending_amount` = `total_amount - received_amount` (tracked per sale)
-- Dashboard profit = total sales - purchases - expenses - production costs
+- Dashboard profit = total sales - purchases - expenses - production costs (salt + spice production combined)
 - Dashboard supports month-level filtering (Oct 2025 onwards)
 
 ## Authentication

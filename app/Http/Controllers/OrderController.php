@@ -12,9 +12,10 @@ class OrderController extends Controller
 {
     public function form()
     {
-        $shops = Shop::where('status', 'active')
+        $shops = Shop::with('area:id,name')
+            ->where('status', 'active')
             ->orderBy('name')
-            ->get(['id', 'name', 'city', 'phone_number']);
+            ->get(['id', 'name', 'city', 'area_id', 'phone_number']);
 
         $stockLevels = Stock::levels()->keyBy(fn ($l) => Stock::key($l['product_type'], $l['size'], $l['bundle_size']));
 
@@ -202,6 +203,7 @@ class OrderController extends Controller
                 'id'           => $shop->id,
                 'name'         => $shop->name,
                 'phone_number' => $shop->phone_number,
+                'location'     => $shop->location,
             ],
             'financials' => [
                 'total_amount'    => (float) $stats->total_amount,

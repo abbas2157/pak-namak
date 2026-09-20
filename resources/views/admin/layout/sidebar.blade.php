@@ -15,7 +15,8 @@
                 $ordersActive = request()->routeIs('admin.orders.*') || request()->routeIs('admin.spice-orders.*');
                 $overviewCatActive = request()->routeIs('dashboard') || request()->routeIs('admin.cash_ledger.*') || $ordersActive;
                 $reportsCatActive  = request()->routeIs('admin.sales.report*') || request()->routeIs('admin.sales.by_shop')
-                                  || request()->routeIs('admin.spice-sales.report*') || request()->routeIs('admin.recovery_sheet*');
+                                  || request()->routeIs('admin.spice-sales.report*') || request()->routeIs('admin.recovery_sheet*')
+                                  || request()->routeIs('admin.reports.*');
                 $salesCatActive    = (request()->routeIs('admin.sales.*') && !$reportsCatActive) || $shopsActive;
                 $purchCatActive    = request()->routeIs('admin.purchases.*') || request()->routeIs('admin.packaging-purchases.*') || $vendorsActive || request()->routeIs('admin.productions.*') || request()->routeIs('admin.stocks.*');
                 $financeCatActive  = request()->routeIs('admin.expenses.*') || request()->routeIs('admin.assets.*') || request()->routeIs('admin.investments.*');
@@ -188,7 +189,7 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.productions.index') }}" class="nav-link {{ request()->routeIs('admin.productions.*') ? 'active' : '' }}">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Production <small class="d-block nav-sub-lbl">پیداوار</small></p>
+                                <p>Salt Production <small class="d-block nav-sub-lbl">نمک پیداوار</small></p>
                             </a>
                         </li>
 
@@ -208,6 +209,20 @@
                         <p>Reports <small class="d-block nav-sub-lbl">رپورٹس</small> <i class="fas fa-angle-left right"></i></p>
                     </a>
                     <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.reports.daily_sales') }}"
+                               class="nav-link {{ request()->routeIs('admin.reports.daily_sales') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Daily Sales Report <small class="d-block nav-sub-lbl">روزانہ فروخت رپورٹ</small></p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.reports.daily_production') }}"
+                               class="nav-link {{ request()->routeIs('admin.reports.daily_production') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Daily Production Report <small class="d-block nav-sub-lbl">روزانہ پیداوار رپورٹ</small></p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.sales.report.monthly') }}"
                                class="nav-link {{ request()->routeIs('admin.sales.report.monthly') ? 'active' : '' }}">
@@ -282,6 +297,12 @@
                                         <span class="badge badge-warning right icon-10">{{ $pendingSpiceOrders }}</span>
                                     @endif
                                 </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.spice-productions.index') }}" class="nav-link {{ request()->routeIs('admin.spice-productions.*') ? 'active' : '' }}">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Spice Production <small class="d-block nav-sub-lbl">مصالحہ پیداوار</small></p>
                             </a>
                         </li>
                         <li class="nav-item">

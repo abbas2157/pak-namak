@@ -26,7 +26,7 @@ Do not introduce a service/repository layer for a single feature — it would be
 | Public order intake | `orders`+`order_items`, `spice_orders`+`spice_order_items` | — |
 | Stock | `stocks`+`stock_movements`, `spice_stocks`+`spice_stock_movements` | — |
 | Money | — | `accounts`, `cash_ledger`, `account_transfers` |
-| Operations | `productions` (salt only — no spice equivalent) | `employees`, `employee_salaries`, `employee_absences`, `company_holidays`, `expenses`, `assets`, investments (flag on assets/expenses/purchases) |
+| Operations | `productions`+`production_items` (salt: thaila/package output per batch), `spice_productions`+`spice_production_items` (packets per batch) — both post `reason=production` movements into their Stock tables | `employees`, `employee_salaries`, `employee_absences`, `company_holidays`, `expenses`, `assets`, investments (flag on assets/expenses/purchases) |
 
 **Salt and Spices are deliberately separate parallel modules**, not one schema with a product-type column. Spices (`Spice*` controllers/models, `spice_*` tables, `resources/views/admin/spice-*`) mirrors Salt's shape 1:1 but package-only (no Dalla/Thaila bulk or bagged-kg equivalent, no bundle concept — spices sell as individual packets). This was an explicit decision to avoid regression risk on working Salt code and because the product lines are structurally different (different units, no bundling for spices).
 

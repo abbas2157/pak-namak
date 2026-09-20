@@ -92,11 +92,50 @@
             </div>
         </div>
 
-        {{-- ===== FILTER TABS ===== --}}
-        <div class="mb-3">
-            <button class="btn btn-sm btn-secondary filter-btn active mr-1" data-filter="all">All</button>
-            <button class="btn btn-sm btn-success filter-btn mr-1" data-filter="active">Active</button>
-            <button class="btn btn-sm btn-warning filter-btn" data-filter="inactive">Inactive</button>
+        {{-- ===== FILTERS: status tabs (client-side) + city / area / sales (server-side) ===== --}}
+        <div class="card border-0 shadow-sm card-pn mb-3">
+            <div class="card-body py-3 px-4">
+                <form method="GET" class="form-inline" id="shopFilterForm">
+                    <div class="mr-3 mb-2 mb-md-0">
+                        <button type="button" class="btn btn-sm btn-secondary filter-btn active mr-1" data-filter="all">All</button>
+                        <button type="button" class="btn btn-sm btn-success filter-btn mr-1" data-filter="active">Active</button>
+                        <button type="button" class="btn btn-sm btn-warning filter-btn" data-filter="inactive">Inactive</button>
+                    </div>
+
+                    <label class="filter-lbl mr-2">City / شہر</label>
+                    <select name="city_id" id="filterCity" class="form-control form-control-sm fc-pn mr-3 mb-2 mb-md-0 filter-select" data-placeholder="All cities" style="min-width:160px;">
+                        <option value="">All</option>
+                        @foreach($cities as $city)
+                            <option value="{{ $city->id }}" {{ (string) ($filters['city_id'] ?? '') === (string) $city->id ? 'selected' : '' }}>{{ $city->name }}</option>
+                        @endforeach
+                    </select>
+
+                    <label class="filter-lbl mr-2">Area / علاقہ</label>
+                    <select name="area_id" id="filterArea" class="form-control form-control-sm fc-pn mr-3 mb-2 mb-md-0 filter-select" data-placeholder="All areas" style="min-width:200px;">
+                        <option value="">All</option>
+                        @foreach($cities as $city)
+                            @foreach($city->areas as $area)
+                                <option value="{{ $area->id }}" data-city="{{ $city->id }}" {{ (string) ($filters['area_id'] ?? '') === (string) $area->id ? 'selected' : '' }}>
+                                    {{ $area->name }} — {{ $city->name }}
+                                </option>
+                            @endforeach
+                        @endforeach
+                    </select>
+
+                    <label class="filter-lbl mr-2">Sales / فروخت</label>
+                    <select name="sales" class="form-control form-control-sm fc-pn mr-3 mb-2 mb-md-0 filter-select" data-placeholder="All shops" style="min-width:180px;">
+                        <option value="">All shops</option>
+                        <option value="with" {{ ($filters['sales'] ?? '') === 'with' ? 'selected' : '' }}>With sales</option>
+                        <option value="pending" {{ ($filters['sales'] ?? '') === 'pending' ? 'selected' : '' }}>With pending balance</option>
+                        <option value="none" {{ ($filters['sales'] ?? '') === 'none' ? 'selected' : '' }}>No sales yet</option>
+                    </select>
+
+                    <button class="btn btn-sm btn-primary btn-pn px-3 mr-2"><i class="fas fa-search mr-1"></i> Apply</button>
+                    @if($hasFilters)
+                        <a href="{{ route('admin.shops.index') }}" class="btn btn-sm btn-pn btn-clear-filter"><i class="fas fa-times mr-1"></i> Clear</a>
+                    @endif
+                </form>
+            </div>
         </div>
 
         {{-- ===== TABLE ===== --}}
@@ -447,6 +486,24 @@ $(function () {
             }
         });
     }
+
+    // Searchable filter dropdowns
+    $('.filter-select').each(function () {
+        $(this).select2({ placeholder: $(this).data('placeholder'), allowClear: true, width: 'style' });
+    });
+
+    // City → Area: only list areas of the chosen city (all areas when no city).
+    // Options are disabled, not hidden — select2 skips disabled ones.
+    function syncAreaOptions() {
+        const city = $('#filterCity').val();
+        $('#filterArea option[data-city]').each(function () {
+            $(this).prop('disabled', !(!city || String($(this).data('city')) === city));
+        });
+        if ($('#filterArea option:selected').prop('disabled')) $('#filterArea').val('');
+        $('#filterArea').trigger('change.select2');
+    }
+    $('#filterCity').on('change', syncAreaOptions);
+    syncAreaOptions();
 
     // Status filter
     $('.filter-btn').on('click', function () {

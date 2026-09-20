@@ -38,12 +38,11 @@
                             <select id="rp_shop_id" class="form-control fc-pn select2" style="width:100%;">
                                 <option value="">— Search for a shop —</option>
                                 @foreach($shops as $shop)
-                                    @php $shopArea = $shop->area?->name ?? $shop->city; @endphp
                                     <option value="{{ $shop->id }}"
                                             data-pending="{{ $shop->combined_pending_amount }}"
                                             data-salt-pending="{{ $shop->salt_pending }}"
                                             data-spice-pending="{{ $shop->spice_pending }}">
-                                        {{ $shop->name }}{{ $shopArea ? ' — '.$shopArea : '' }}
+                                        {{ $shop->name }}{{ $shop->location ? ' — '.$shop->location : '' }}
                                         @if($shop->combined_pending_amount > 0)
                                             (Pending: {{ number_format($shop->combined_pending_amount, 0) }})
                                         @endif

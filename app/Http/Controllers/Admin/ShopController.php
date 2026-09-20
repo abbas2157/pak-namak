@@ -2,28 +2,52 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use App\Models\Account;
+use App\Models\City;
 use App\Models\Order;
 use App\Models\Shop;
-use App\Models\City;
-use App\Models\SalePayment;
-use App\Models\Account;
+use App\Models\SpiceOrder;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 class ShopController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $shops = Shop::with('cityRecord', 'area')
+        $query = Shop::with('cityRecord', 'area')
             ->withCount('sales')
             ->withCount('spiceSales')
             ->withSum('sales', 'total_amount')
             ->withSum('sales', 'pending_amount')
             ->withSum('spiceSales', 'total_amount')
             ->withSum('spiceSales', 'pending_amount')
-            ->orderByDesc('id')
-            ->get();
+            ->orderByDesc('id');
+
+        // Filters: city, area, and sales activity (either product line).
+        if ($request->city_id) {
+            $query->where('city_id', $request->city_id);
+        }
+        if ($request->area_id) {
+            $query->where('area_id', $request->area_id);
+        }
+        if ($request->sales === 'with') {
+            $query->where(fn ($q) => $q->has('sales')->orHas('spiceSales'));
+        } elseif ($request->sales === 'none') {
+            $query->doesntHave('sales')->doesntHave('spiceSales');
+        }
+
+        $shops = $query->get();
+
+        // Pending is a computed sum across two relations, so it's filtered in memory.
+        if ($request->sales === 'pending') {
+            $shops = $shops->filter(fn ($s) => (float) $s->sales_sum_pending_amount + (float) $s->spice_sales_sum_pending_amount > 0)->values();
+        }
+
+        $filters = $request->only(['city_id', 'area_id', 'sales']);
+        $hasFilters = collect($filters)->filter()->isNotEmpty();
 
         // A shop's money owed spans both product lines — reporting salt alone
         // understated what every shop actually owes.
@@ -34,8 +58,8 @@ class ShopController extends Controller
                 + (float) $shop->spice_sales_sum_pending_amount;
         });
 
-        $totalShops   = $shops->count();
-        $activeShops  = $shops->where('status', 'active')->count();
+        $totalShops = $shops->count();
+        $activeShops = $shops->where('status', 'active')->count();
         $totalRevenue = $shops->sum('combined_total_amount');
         $totalPending = $shops->sum('combined_pending_amount');
 
@@ -43,7 +67,7 @@ class ShopController extends Controller
         $accounts = Account::where('is_active', true)->orderBy('name')->get();
 
         return view('admin.shops.index', compact(
-            'shops', 'totalShops', 'activeShops', 'totalRevenue', 'totalPending', 'cities', 'accounts'
+            'shops', 'totalShops', 'activeShops', 'totalRevenue', 'totalPending', 'cities', 'accounts', 'filters', 'hasFilters'
         ));
     }
 
@@ -78,14 +102,14 @@ class ShopController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'         => 'required|string|max:255',
-            'owner_name'   => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            'owner_name' => 'nullable|string|max:255',
             'phone_number' => 'required|string|max:20',
-            'email'        => 'nullable|email|unique:shops,email|max:255',
-            'address'      => 'required|string|max:500',
-            'city_id'      => 'nullable|exists:cities,id',
-            'area_id'      => 'nullable|exists:areas,id',
-            'status'       => 'required|in:active,inactive',
+            'email' => 'nullable|email|unique:shops,email|max:255',
+            'address' => 'required|string|max:500',
+            'city_id' => 'nullable|exists:cities,id',
+            'area_id' => 'nullable|exists:areas,id',
+            'status' => 'required|in:active,inactive',
         ]);
 
         $shop = Shop::create($request->only([
@@ -94,7 +118,7 @@ class ShopController extends Controller
 
         $shop->load('cityRecord', 'area');
         $shop->loadCount('sales');
-        $shop->sales_sum_total_amount   = 0;
+        $shop->sales_sum_total_amount = 0;
         $shop->sales_sum_pending_amount = 0;
 
         return response()->json(['success' => true, 'shop' => $shop]);
@@ -121,14 +145,14 @@ class ShopController extends Controller
         $shop = Shop::findOrFail($id);
 
         $request->validate([
-            'name'         => 'required|string|max:255',
-            'owner_name'   => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            'owner_name' => 'nullable|string|max:255',
             'phone_number' => 'required|string|max:20',
-            'email'        => 'nullable|email|unique:shops,email,' . $id . '|max:255',
-            'address'      => 'required|string|max:500',
-            'city_id'      => 'nullable|exists:cities,id',
-            'area_id'      => 'nullable|exists:areas,id',
-            'status'       => 'required|in:active,inactive',
+            'email' => 'nullable|email|unique:shops,email,'.$id.'|max:255',
+            'address' => 'required|string|max:500',
+            'city_id' => 'nullable|exists:cities,id',
+            'area_id' => 'nullable|exists:areas,id',
+            'status' => 'required|in:active,inactive',
         ]);
 
         $shop->update($request->only([
@@ -143,6 +167,7 @@ class ShopController extends Controller
     public function destroy($id)
     {
         Shop::findOrFail($id)->delete();
+
         return response()->json(['success' => true]);
     }
 
@@ -156,10 +181,10 @@ class ShopController extends Controller
         $request->merge(['account_id' => $request->account_id ?: null]);
 
         $request->validate([
-            'amount'       => 'required|numeric|min:0.01',
+            'amount' => 'required|numeric|min:0.01',
             'payment_date' => 'required|date',
-            'account_id'   => 'nullable|exists:accounts,id',
-            'note'         => 'nullable|string|max:500',
+            'account_id' => 'nullable|exists:accounts,id',
+            'note' => 'nullable|string|max:500',
         ]);
 
         $account = Account::find($request->account_id);
@@ -192,17 +217,17 @@ class ShopController extends Controller
                 // Works for both Sale and SpiceSale — each one's payments()
                 // relation creates the right payment model and sets its own FK.
                 $sale->payments()->create([
-                    'account_id'     => $account?->id,
-                    'amount'         => $allocated,
-                    'payment_date'   => $request->payment_date,
+                    'account_id' => $account?->id,
+                    'amount' => $allocated,
+                    'payment_date' => $request->payment_date,
                     'payment_method' => $account?->paymentMethodLabel() ?? 'Other',
-                    'note'           => $request->note,
+                    'note' => $request->note,
                 ]);
 
                 $received = $sale->payments()->sum('amount');
                 $sale->update([
                     'received_amount' => $received,
-                    'pending_amount'  => $sale->total_amount - $received,
+                    'pending_amount' => $sale->total_amount - $received,
                 ]);
 
                 $remaining -= $allocated;
@@ -213,7 +238,7 @@ class ShopController extends Controller
         return response()->json(['success' => true, 'sales_paid' => $salesPaid]);
     }
 
-    public function info(Shop $shop): \Illuminate\Http\JsonResponse
+    public function info(Shop $shop): JsonResponse
     {
         $sumsFor = fn ($relation) => $relation
             ->selectRaw('COALESCE(SUM(total_amount),0) as total_amount, COALESCE(SUM(received_amount),0) as received_amount, COALESCE(SUM(pending_amount),0) as pending_amount')
@@ -223,6 +248,14 @@ class ShopController extends Controller
         $spiceStats = $sumsFor($shop->spiceSales());
 
         $orders = Order::where('shop_id', $shop->id)
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->whereDoesntHave('sale')
+            ->withCount('items')
+            ->orderByDesc('id')
+            ->get(['id', 'reference', 'status', 'created_at', 'remarks']);
+
+        // Same for the spice side, so the spice sale form can list them.
+        $spiceOrders = SpiceOrder::where('shop_id', $shop->id)
             ->whereIn('status', ['pending', 'confirmed'])
             ->whereDoesntHave('sale')
             ->withCount('items')
@@ -245,29 +278,37 @@ class ShopController extends Controller
 
         return response()->json([
             'shop' => [
-                'id'           => $shop->id,
-                'name'         => $shop->name,
+                'id' => $shop->id,
+                'name' => $shop->name,
                 'phone_number' => $shop->phone_number,
+                'location' => $shop->location,
             ],
             'financials' => [
-                'total_amount'    => (float) $stats->total_amount + (float) $spiceStats->total_amount,
+                'total_amount' => (float) $stats->total_amount + (float) $spiceStats->total_amount,
                 'received_amount' => (float) $stats->received_amount + (float) $spiceStats->received_amount,
-                'pending_amount'  => (float) $stats->pending_amount + (float) $spiceStats->pending_amount,
-                'salt_pending'    => (float) $stats->pending_amount,
-                'spice_pending'   => (float) $spiceStats->pending_amount,
+                'pending_amount' => (float) $stats->pending_amount + (float) $spiceStats->pending_amount,
+                'salt_pending' => (float) $stats->pending_amount,
+                'spice_pending' => (float) $spiceStats->pending_amount,
             ],
-            'orders' => $orders->map(fn($o) => [
-                'id'          => $o->id,
-                'reference'   => $o->reference,
-                'status'      => $o->status,
-                'created_at'  => $o->created_at->format('d M Y'),
+            'orders' => $orders->map(fn ($o) => [
+                'id' => $o->id,
+                'reference' => $o->reference,
+                'status' => $o->status,
+                'created_at' => $o->created_at->format('d M Y'),
                 'items_count' => $o->items_count,
             ])->values(),
-            'pending_sales' => $pendingSales->map(fn($s) => [
-                'id'             => $s->id,
-                'sale_date'      => $s->sale_date ? \Carbon\Carbon::parse($s->sale_date)->format('d M Y') : '-',
+            'spice_orders' => $spiceOrders->map(fn ($o) => [
+                'id' => $o->id,
+                'reference' => $o->reference,
+                'status' => $o->status,
+                'created_at' => $o->created_at->format('d M Y'),
+                'items_count' => $o->items_count,
+            ])->values(),
+            'pending_sales' => $pendingSales->map(fn ($s) => [
+                'id' => $s->id,
+                'sale_date' => $s->sale_date ? Carbon::parse($s->sale_date)->format('d M Y') : '-',
                 'pending_amount' => (float) $s->pending_amount,
-                'product_line'   => $s->product_line,
+                'product_line' => $s->product_line,
             ])->values(),
         ]);
     }

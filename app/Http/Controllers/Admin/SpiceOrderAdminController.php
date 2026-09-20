@@ -30,7 +30,7 @@ class SpiceOrderAdminController extends Controller
         $dateTo    = $request->input('date_to');
         $perPage   = in_array($request->input('per_page'), [20, 50, 100]) ? (int) $request->input('per_page') : 20;
 
-        $query = SpiceOrder::with(['shop:id,name,phone_number,city', 'items.spiceType', 'sale:id,spice_order_id'])
+        $query = SpiceOrder::with(['shop:id,name,phone_number,city,area_id', 'shop.area:id,name', 'items.spiceType', 'sale:id,spice_order_id'])
             ->orderByDesc('id');
 
         if ($status !== 'all') {
@@ -61,7 +61,7 @@ class SpiceOrderAdminController extends Controller
 
     public function show(SpiceOrder $spiceOrder)
     {
-        $spiceOrder->load(['shop', 'items.spiceType', 'sale:id,spice_order_id,sale_date,total_amount']);
+        $spiceOrder->load(['shop.area', 'items.spiceType', 'sale:id,spice_order_id,sale_date,total_amount']);
 
         $shopSalesTotal   = null;
         $shopSalesPending = null;

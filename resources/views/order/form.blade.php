@@ -61,7 +61,7 @@
                         <option value="">— Search your shop —</option>
                         @foreach($shops as $shop)
                             <option value="{{ $shop->id }}" {{ old('shop_id') == $shop->id ? 'selected' : '' }}>
-                                {{ $shop->name }}{{ $shop->city ? ' — '.$shop->city : '' }}
+                                {{ $shop->name }}{{ $shop->location ? ' — '.$shop->location : '' }}
                             </option>
                         @endforeach
                     </select>
@@ -71,7 +71,10 @@
                 <div id="pub-shop-info" class="d-none mt-3">
                     <div class="rounded-3 p-3" style="background:#f0f9ff;border:1.5px solid #bee3f8;">
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="fw-bold" id="pub-sip-name">—</span>
+                            <span>
+                                <span class="fw-bold" id="pub-sip-name">—</span>
+                                <small class="text-muted d-block" id="pub-sip-location"></small>
+                            </span>
                             <a id="pub-wa-btn" href="#" target="_blank" rel="noopener"
                                class="btn btn-sm fw-bold" style="background:#25D366;color:#fff;border:none;">
                                 <i class="fab fa-whatsapp me-1"></i> WhatsApp
@@ -384,6 +387,7 @@ $(function () {
         if (!shopId) { $('#pub-shop-info').addClass('d-none'); return; }
         $.getJSON(pubShopInfoUrl.replace('__ID__', shopId), function (data) {
             $('#pub-sip-name').text(data.shop.name);
+            $('#pub-sip-location').html(data.shop.location ? '<i class="fas fa-map-marker-alt me-1"></i>' + data.shop.location : '');
             $('#pub-sip-total').text(pubFmt(data.financials.total_amount));
             $('#pub-sip-received').text(pubFmt(data.financials.received_amount));
             $('#pub-sip-pending').text(pubFmt(data.financials.pending_amount));
