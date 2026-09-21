@@ -102,6 +102,35 @@
 
                     </div>
                 </div>
+
+                {{-- Payment history for the selected shop (salt + spice, newest first) --}}
+                <div id="rp_history" class="card card-pn border-0 shadow-sm mt-3 d-none">
+                    <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 font-weight-bold text-c-teal">
+                            <i class="fas fa-history mr-2"></i>Payment History / ادائیگی کی تاریخ
+                            <small class="text-muted font-weight-normal ml-1" id="rp_history_shop"></small>
+                        </h6>
+                        <span class="badge pn-bdg pn-bdg-blue" id="rp_history_count"></span>
+                    </div>
+                    <div class="px-4 py-2 tbl-toolbar-top small text-muted" id="rp_history_totals"></div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-sm pn-table pn-table-font mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="pl-3">Date / تاریخ</th>
+                                        <th>Line</th>
+                                        <th class="text-right">Amount</th>
+                                        <th>Received Into</th>
+                                        <th>Against Sale</th>
+                                        <th class="pr-3">Note</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rp_history_rows"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -115,6 +144,38 @@ $(function () {
     $('.select2').select2({ placeholder: '— Search for a shop —', allowClear: true, width: '100%' });
     $('#rp_payment_date').val(new Date().toISOString().split('T')[0]);
 
+    // Payment history for the selected shop
+    const fmtMoney = n => 'PKR ' + Number(n).toLocaleString('en-PK', { maximumFractionDigits: 0 });
+    const esc = s => $('<div>').text(s == null ? '' : String(s)).html();
+
+    function loadHistory(shopId, shopName) {
+        if (!shopId) { $('#rp_history').addClass('d-none'); return; }
+        $.getJSON(APP_URL + '/shops/' + shopId + '/payments', function (res) {
+            $('#rp_history_shop').text('— ' + shopName);
+            $('#rp_history_count').text(res.count + ' payment' + (res.count === 1 ? '' : 's'));
+            $('#rp_history_totals').html(
+                res.count
+                    ? 'Received so far: <strong>' + fmtMoney(res.total) + '</strong>'
+                      + ' <span class="ml-2">Salt ' + fmtMoney(res.salt_total) + '</span>'
+                      + ' <span class="ml-2">Spice ' + fmtMoney(res.spice_total) + '</span>'
+                      + (res.count > res.payments.length ? ' <span class="ml-2">(latest ' + res.payments.length + ' shown)</span>' : '')
+                    : 'No payments recorded for this shop yet.'
+            );
+            const rows = res.payments.map(p =>
+                '<tr>'
+                + '<td class="pl-3 font-weight-bold">' + esc(p.date_label) + '</td>'
+                + '<td><span class="badge pn-bdg ' + (p.line === 'Salt' ? 'badge-info' : 'badge-warning') + '">' + esc(p.line) + '</span></td>'
+                + '<td class="text-right font-weight-bold text-c-teal">' + Number(p.amount).toLocaleString() + '</td>'
+                + '<td>' + esc(p.account) + '</td>'
+                + '<td><small class="text-muted">#' + esc(p.sale_id) + ' · ' + esc(p.sale_date) + ' · ' + Number(p.sale_total).toLocaleString() + '</small></td>'
+                + '<td class="pr-3"><small class="text-muted">' + esc(p.note || '—') + '</small></td>'
+                + '</tr>'
+            ).join('');
+            $('#rp_history_rows').html(rows || '<tr><td colspan="6" class="text-center text-muted py-3">No payments yet.</td></tr>');
+            $('#rp_history').removeClass('d-none');
+        });
+    }
+
     $('#rp_shop_id').on('change', function () {
         const opt = $(this).find('option:selected');
         const pending = parseFloat(opt.data('pending')) || 0;
@@ -122,8 +183,11 @@ $(function () {
         if (!$(this).val()) {
             $('#rp_pending_box').addClass('d-none');
             $('#rp_fieldset').prop('disabled', true);
+            $('#rp_history').addClass('d-none');
             return;
         }
+
+        loadHistory($(this).val(), opt.text().split(' (Pending:')[0].trim());
 
         const saltPending  = parseFloat(opt.data('salt-pending')) || 0;
         const spicePending = parseFloat(opt.data('spice-pending')) || 0;
@@ -166,7 +230,8 @@ $(function () {
                     'Payment recorded across ' + (res.sales_paid || 0) + ' sale(s).'
                 );
                 toastr.success('Payment recorded!');
-                setTimeout(() => location.reload(), 1200);
+                // Reload with the shop kept selected so the refreshed history + pending show
+                setTimeout(() => { location.href = location.pathname + '?shop=' + shopId; }, 1200);
             })
             .fail(function (xhr) {
                 if (xhr.status === 422) {
@@ -177,6 +242,12 @@ $(function () {
             })
             .always(() => btn.prop('disabled', false).html('<i class="fas fa-save mr-1"></i> Record Payment'));
     });
+
+    // Re-select the shop after a save (or when linked here with ?shop=ID)
+    const preselect = new URLSearchParams(location.search).get('shop');
+    if (preselect && $('#rp_shop_id option[value="' + preselect + '"]').length) {
+        $('#rp_shop_id').val(preselect).trigger('change');
+    }
 });
 </script>
 @endsection

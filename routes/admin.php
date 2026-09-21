@@ -64,6 +64,7 @@ Route::middleware('web')->group(function () {
         Route::resource('shops', App\Http\Controllers\Admin\ShopController::class, ['as' => 'admin']);
         Route::get('shops/{shop}/info', [App\Http\Controllers\Admin\ShopController::class, 'info'])->name('admin.shops.info');
         Route::post('shops/{shop}/payments', [App\Http\Controllers\Admin\ShopController::class, 'recordPayment'])->name('admin.shops.payments.store');
+        Route::get('shops/{shop}/payments', [App\Http\Controllers\Admin\ShopController::class, 'payments'])->name('admin.shops.payments.index');
         Route::get('shop-payments', [App\Http\Controllers\Admin\ShopController::class, 'paymentForm'])->name('admin.shops.payment_form');
         Route::resource('cities', App\Http\Controllers\Admin\CityController::class, ['as' => 'admin'])->except(['create', 'show']);
         Route::get('cities/{city}/sales', [App\Http\Controllers\Admin\CityController::class, 'sales'])->name('admin.cities.sales');

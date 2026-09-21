@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Account;
 use App\Models\City;
 use App\Models\Order;
+use App\Models\SalePayment;
 use App\Models\Shop;
 use App\Models\SpiceOrder;
+use App\Models\SpiceSalePayment;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -251,6 +253,52 @@ class ShopController extends Controller
         });
 
         return response()->json(['success' => true, 'sales_paid' => $salesPaid]);
+    }
+
+    /**
+     * Payment history for one shop — salt and spice payments merged, newest
+     * first — for the Record Payment page.
+     */
+    public function payments(Shop $shop): JsonResponse
+    {
+        $saltIds = $shop->sales()->pluck('id');
+        $spiceIds = $shop->spiceSales()->pluck('id');
+
+        $salt = SalePayment::with(['account', 'sale:id,sale_date,total_amount'])
+            ->whereIn('sale_id', $saltIds)->get()
+            ->map(fn ($p) => $this->paymentRow($p, 'Salt', $p->sale));
+
+        $spice = SpiceSalePayment::with(['account', 'sale:id,sale_date,total_amount'])
+            ->whereIn('spice_sale_id', $spiceIds)->get()
+            ->map(fn ($p) => $this->paymentRow($p, 'Spice', $p->sale));
+
+        $payments = $salt->concat($spice)
+            ->sortByDesc(fn ($r) => [$r['payment_date'], $r['id']])
+            ->values();
+
+        return response()->json([
+            'payments' => $payments->take(100)->values(),
+            'count' => $payments->count(),
+            'total' => (float) $payments->sum('amount'),
+            'salt_total' => (float) $salt->sum('amount'),
+            'spice_total' => (float) $spice->sum('amount'),
+        ]);
+    }
+
+    private function paymentRow($payment, string $line, $sale): array
+    {
+        return [
+            'id' => $payment->id,
+            'line' => $line,
+            'amount' => (float) $payment->amount,
+            'payment_date' => $payment->payment_date ? Carbon::parse($payment->payment_date)->toDateString() : null,
+            'date_label' => $payment->payment_date ? Carbon::parse($payment->payment_date)->format('d M Y') : '—',
+            'account' => $payment->account?->label() ?? ($payment->payment_method ?: 'Other'),
+            'note' => $payment->note,
+            'sale_id' => $sale?->id,
+            'sale_date' => $sale?->sale_date ? Carbon::parse($sale->sale_date)->format('d M Y') : '—',
+            'sale_total' => (float) ($sale?->total_amount ?? 0),
+        ];
     }
 
     public function info(Shop $shop): JsonResponse

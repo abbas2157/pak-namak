@@ -80,4 +80,26 @@ class ShopPaymentLineTest extends TestCase
         $this->pay($shop, ['amount' => 50, 'product_line' => 'spice'])->assertStatus(422);
         $this->pay($shop, ['amount' => 50, 'product_line' => 'salt'])->assertOk();
     }
+
+    public function test_payment_history_lists_both_lines_newest_first(): void
+    {
+        $d = $this->shopWithBothPending();
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->postJson(route('admin.shops.payments.store', $d['shop']), ['amount' => 200, 'product_line' => 'spice', 'payment_date' => '2026-09-10'])->assertOk();
+        $this->actingAs($user)->postJson(route('admin.shops.payments.store', $d['shop']), ['amount' => 300, 'product_line' => 'salt', 'payment_date' => '2026-09-15', 'note' => 'cash at shop'])->assertOk();
+
+        $res = $this->actingAs($user)->getJson(route('admin.shops.payments.index', $d['shop']))->assertOk();
+        $res->assertJsonPath('count', 2)
+            ->assertJsonPath('total', 500)
+            ->assertJsonPath('salt_total', 300)
+            ->assertJsonPath('spice_total', 200)
+            ->assertJsonPath('payments.0.line', 'Salt')
+            ->assertJsonPath('payments.0.note', 'cash at shop')
+            ->assertJsonPath('payments.1.line', 'Spice');
+
+        // Another shop sees nothing of it
+        $other = Shop::create(['name' => 'Other', 'phone_number' => '0300', 'address' => 'x', 'city' => 'Lahore', 'status' => 'active']);
+        $this->actingAs($user)->getJson(route('admin.shops.payments.index', $other))->assertOk()->assertJsonPath('count', 0);
+    }
 }
