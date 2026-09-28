@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use App\Models\Account;
 use App\Models\Employee;
 use App\Models\EmployeeSalary;
-use App\Models\Account;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class EmployeeSalaryController extends Controller
 {
@@ -31,21 +31,21 @@ class EmployeeSalaryController extends Controller
         $request->merge(['account_id' => $request->account_id ?: null]);
 
         $request->validate([
-            'amount'       => 'required|numeric|min:0.01',
+            'amount' => 'required|numeric|min:0.01',
             'payment_date' => 'required|date',
-            'account_id'   => 'nullable|exists:accounts,id',
-            'note'         => 'nullable|string|max:500',
+            'account_id' => 'nullable|exists:accounts,id',
+            'note' => 'nullable|string|max:500',
         ]);
 
         $month = Carbon::parse($request->payment_date)->startOfMonth()->toDateString();
 
         $salary = $employee->salaries()->create([
-            'type'       => 'advance',
+            'type' => 'advance',
             'account_id' => $request->account_id,
-            'month'      => $month,
-            'amount'     => $request->amount,
-            'paid_at'    => $request->payment_date,
-            'note'       => $request->note,
+            'month' => $month,
+            'amount' => $request->amount,
+            'paid_at' => $request->payment_date,
+            'note' => $request->note,
         ]);
 
         return response()->json(['success' => true, 'salary' => $salary]);
@@ -60,10 +60,10 @@ class EmployeeSalaryController extends Controller
         $request->merge(['account_id' => $request->account_id ?: null]);
 
         $request->validate([
-            'month'      => 'required',
-            'paid_at'    => 'nullable|date',
+            'month' => 'required',
+            'paid_at' => 'nullable|date',
             'account_id' => 'nullable|exists:accounts,id',
-            'note'       => 'nullable|string|max:500',
+            'note' => 'nullable|string|max:500',
         ]);
 
         $month = Carbon::parse($request->month)->startOfMonth()->toDateString();
@@ -76,16 +76,16 @@ class EmployeeSalaryController extends Controller
         $breakdown = $this->computeBreakdown($employee, $month);
 
         $salary = $employee->salaries()->create([
-            'type'             => 'salary',
-            'account_id'       => $request->account_id,
-            'month'            => $month,
-            'amount'           => $breakdown['net'],
-            'gross_amount'     => $breakdown['gross'],
+            'type' => 'salary',
+            'account_id' => $request->account_id,
+            'month' => $month,
+            'amount' => $breakdown['net'],
+            'gross_amount' => $breakdown['gross'],
             'advance_deducted' => $breakdown['advance_total'],
-            'absent_days'      => $breakdown['absent_days'],
+            'absent_days' => $breakdown['absent_days'],
             'absence_deducted' => $breakdown['absence_deducted'],
-            'paid_at'          => $request->paid_at ?: null,
-            'note'             => $request->note,
+            'paid_at' => $request->paid_at ?: null,
+            'note' => $request->note,
         ]);
 
         return response()->json(['success' => true, 'salary' => $salary]);
@@ -111,7 +111,7 @@ class EmployeeSalaryController extends Controller
     private function computeBreakdown(Employee $employee, string $month): array
     {
         $start = Carbon::parse($month)->startOfMonth();
-        $end   = Carbon::parse($month)->endOfMonth();
+        $end = Carbon::parse($month)->endOfMonth();
 
         $gross = (float) $employee->salary;
 
@@ -120,27 +120,29 @@ class EmployeeSalaryController extends Controller
             ->whereDate('month', $month)
             ->sum('amount');
 
-        $absentDays = $employee->absences()
+        // Days are fractional: a half day counts 0.5, a quarter day 0.25.
+        $absentDays = (float) $employee->absences()
             ->whereBetween('date', [$start->toDateString(), $end->toDateString()])
             ->where('paid', false)
-            ->count();
+            ->sum('portion');
 
         $absenceDeducted = round($gross / 30 * $absentDays, 2);
 
         $net = max($gross - $advanceTotal - $absenceDeducted, 0);
 
         return [
-            'gross'            => $gross,
-            'advance_total'    => $advanceTotal,
-            'absent_days'      => $absentDays,
+            'gross' => $gross,
+            'advance_total' => $advanceTotal,
+            'absent_days' => $absentDays,
             'absence_deducted' => $absenceDeducted,
-            'net'              => $net,
+            'net' => $net,
         ];
     }
 
     public function destroy(Employee $employee, EmployeeSalary $salary)
     {
         $salary->delete();
+
         return response()->json(['success' => true]);
     }
 
@@ -153,18 +155,18 @@ class EmployeeSalaryController extends Controller
         abort_unless($salary->employee_id === $employee->id && $salary->type === 'salary', 404);
 
         $start = $salary->month->copy()->startOfMonth();
-        $end   = $salary->month->copy()->endOfMonth();
+        $end = $salary->month->copy()->endOfMonth();
 
-        $paidLeaveDays = $employee->absences()
+        $paidLeaveDays = (float) $employee->absences()
             ->whereBetween('date', [$start->toDateString(), $end->toDateString()])
             ->where('paid', true)
-            ->count();
+            ->sum('portion');
 
-        $daysPresent = max(30 - $salary->absent_days - $paidLeaveDays, 0);
+        $daysPresent = max(30 - (float) $salary->absent_days - $paidLeaveDays, 0);
 
         $totalDeductions = (float) $salary->advance_deducted + (float) $salary->absence_deducted;
 
-        $netInWords = $this->numberToWords((int) round($salary->amount)) . ' Rupees Only';
+        $netInWords = $this->numberToWords((int) round($salary->amount)).' Rupees Only';
 
         return view('admin.employees.payslip', compact(
             'employee', 'salary', 'paidLeaveDays', 'daysPresent', 'totalDeductions', 'netInWords'
@@ -193,7 +195,8 @@ class EmployeeSalaryController extends Controller
             }
             $ten = intdiv($n, 10);
             $rest = $n % 10;
-            return trim($tens[$ten] . ' ' . $ones[$rest]);
+
+            return trim($tens[$ten].' '.$ones[$rest]);
         };
 
         $threeDigits = function (int $n) use ($twoDigits, $ones): string {
@@ -202,10 +205,11 @@ class EmployeeSalaryController extends Controller
             }
             $hundred = intdiv($n, 100);
             $rest = $n % 100;
-            $words = $ones[$hundred] . ' Hundred';
+            $words = $ones[$hundred].' Hundred';
             if ($rest > 0) {
-                $words .= ' ' . $twoDigits($rest);
+                $words .= ' '.$twoDigits($rest);
             }
+
             return $words;
         };
 
@@ -218,10 +222,18 @@ class EmployeeSalaryController extends Controller
         $hundred = $number;
 
         $parts = [];
-        if ($crore > 0)    $parts[] = $threeDigits($crore) . ' Crore';
-        if ($lakh > 0)     $parts[] = $threeDigits($lakh) . ' Lakh';
-        if ($thousand > 0) $parts[] = $threeDigits($thousand) . ' Thousand';
-        if ($hundred > 0)  $parts[] = $threeDigits($hundred);
+        if ($crore > 0) {
+            $parts[] = $threeDigits($crore).' Crore';
+        }
+        if ($lakh > 0) {
+            $parts[] = $threeDigits($lakh).' Lakh';
+        }
+        if ($thousand > 0) {
+            $parts[] = $threeDigits($thousand).' Thousand';
+        }
+        if ($hundred > 0) {
+            $parts[] = $threeDigits($hundred);
+        }
 
         return implode(' ', $parts);
     }

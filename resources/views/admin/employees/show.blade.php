@@ -170,7 +170,7 @@
                                         @if($sal->type === 'salary')
                                             Gross {{ number_format($sal->gross_amount, 0) }}
                                             @if($sal->advance_deducted > 0) &minus; Adv {{ number_format($sal->advance_deducted, 0) }} @endif
-                                            @if($sal->absent_days > 0) &minus; {{ $sal->absent_days }}d absence ({{ number_format($sal->absence_deducted, 0) }}) @endif
+                                            @if($sal->absent_days > 0) &minus; {{ \App\Models\EmployeeAbsence::formatDays((float) $sal->absent_days) }}d absence ({{ number_format($sal->absence_deducted, 0) }}) @endif
                                         @else
                                             &mdash;
                                         @endif
@@ -216,6 +216,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Date</th>
+                                    <th>Duration</th>
                                     <th>Type</th>
                                     <th>Note</th>
                                     <th>Action</th>
@@ -226,6 +227,12 @@
                                 <tr id="absRow{{ $abs->id }}">
                                     <td>{{ $i + 1 }}</td>
                                     <td><strong>{{ $abs->date->format('d M Y') }}</strong></td>
+                                    <td>
+                                        <span class="badge {{ (float) $abs->portion == 1.0 ? 'badge-secondary' : 'badge-info' }}">
+                                            {{ $abs->portionLabel() }}
+                                        </span>
+                                        <small class="text-muted d-block">{{ $abs->portionLabelUrdu() }}</small>
+                                    </td>
                                     <td>
                                         @if($abs->paid)
                                             <span class="badge badge-warning">Paid Leave</span>
@@ -242,7 +249,7 @@
                                 </tr>
                             @empty
                                 <tr id="noAbsRow">
-                                    <td colspan="5" class="text-center py-3 text-muted">No absences recorded.</td>
+                                    <td colspan="6" class="text-center py-3 text-muted">No absences recorded.</td>
                                 </tr>
                             @endforelse
                             </tbody>
@@ -362,6 +369,15 @@
                     <div class="mb-3">
                         <label>Date / تاریخ <span class="text-danger">*</span></label>
                         <input type="date" class="form-control" name="date" value="{{ date('Y-m-d') }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Duration / دورانیہ <span class="text-danger">*</span></label>
+                        <select class="form-control" name="portion" required>
+                            <option value="1.00">Full Day / پورا دن</option>
+                            <option value="0.50">Half Day / آدھا دن</option>
+                            <option value="0.25">Quarter Day / چوتھائی دن</option>
+                        </select>
+                        <small class="text-muted">Deduction is salary ÷ 30 × this fraction.</small>
                     </div>
                     <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" name="paid" id="absencePaid" value="1">
@@ -500,7 +516,10 @@ $(document).ready(function () {
         $.get("{{ route('admin.employees.salaries.preview', $employee->id) }}", { month: month }, function (res) {
             $('#sp_gross').text(Number(res.gross).toLocaleString());
             $('#sp_advance').text('- ' + Number(res.advance_total).toLocaleString());
-            $('#sp_absent_label').text('Absence Deduction (' + res.absent_days + ' day' + (res.absent_days == 1 ? '' : 's') + ')');
+            // Days can be fractional (half / quarter) — trim trailing zeros
+            const days = parseFloat(res.absent_days) || 0;
+            const daysLabel = String(Math.round(days * 100) / 100);
+            $('#sp_absent_label').text('Absence Deduction (' + daysLabel + ' day' + (days == 1 ? '' : 's') + ')');
             $('#sp_absence').text('- ' + Number(res.absence_deducted).toLocaleString());
             $('#sp_net').text(Number(res.net).toLocaleString());
             $('#sp_settled_warning').toggleClass('d-none', !res.already_settled);
@@ -598,7 +617,7 @@ $(document).ready(function () {
                 if (res.success) {
                     $('#absRow' + id).remove();
                     if ($('#absenceTable tbody tr').length === 0) {
-                        $('#absenceTable tbody').append('<tr id="noAbsRow"><td colspan="5" class="text-center py-3 text-muted">No absences recorded.</td></tr>');
+                        $('#absenceTable tbody').append('<tr id="noAbsRow"><td colspan="6" class="text-center py-3 text-muted">No absences recorded.</td></tr>');
                     }
                 }
             },

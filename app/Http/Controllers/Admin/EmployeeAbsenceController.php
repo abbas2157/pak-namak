@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\EmployeeAbsence;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
 class EmployeeAbsenceController extends Controller
 {
@@ -13,6 +13,7 @@ class EmployeeAbsenceController extends Controller
     {
         $request->validate([
             'date' => 'required|date',
+            'portion' => 'nullable|in:1,1.00,0.5,0.50,0.25',
             'paid' => 'nullable|boolean',
             'note' => 'nullable|string|max:500',
         ]);
@@ -28,6 +29,7 @@ class EmployeeAbsenceController extends Controller
 
         $absence = $employee->absences()->create([
             'date' => $request->date,
+            'portion' => (float) ($request->portion ?: 1),
             'paid' => $request->boolean('paid'),
             'note' => $request->note,
         ]);

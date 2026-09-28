@@ -50,10 +50,10 @@
             <div class="cell"><span class="lbl">Pay Period</span><span class="val">{{ $salary->month->format('F Y') }}</span></div>
             <div class="cell"><span class="lbl">Payment Date</span><span class="val">{{ $salary->paid_at ? $salary->paid_at->format('d M Y') : '—' }}</span></div>
 
-            <div class="cell"><span class="lbl">Days Present (approx.)</span><span class="val">{{ $daysPresent }} / 30</span></div>
-            <div class="cell"><span class="lbl">Unpaid Absences</span><span class="val">{{ $salary->absent_days }} day{{ $salary->absent_days == 1 ? '' : 's' }}</span></div>
+            <div class="cell"><span class="lbl">Days Present (approx.)</span><span class="val">{{ \App\Models\EmployeeAbsence::formatDays($daysPresent) }} / 30</span></div>
+            <div class="cell"><span class="lbl">Unpaid Absences</span><span class="val">{{ \App\Models\EmployeeAbsence::formatDays((float) $salary->absent_days) }} day{{ (float) $salary->absent_days == 1 ? '' : 's' }}</span></div>
 
-            <div class="cell"><span class="lbl">Paid Leave Taken</span><span class="val">{{ $paidLeaveDays }} day{{ $paidLeaveDays == 1 ? '' : 's' }}</span></div>
+            <div class="cell"><span class="lbl">Paid Leave Taken</span><span class="val">{{ \App\Models\EmployeeAbsence::formatDays($paidLeaveDays) }} day{{ $paidLeaveDays == 1 ? '' : 's' }}</span></div>
             <div class="cell"><span class="lbl">Employee Status</span><span class="val text-capitalize">{{ str_replace('_',' ', $employee->status) }}</span></div>
         </div>
 
@@ -77,7 +77,8 @@
                     <thead><tr><th>Description</th><th class="amt">Amount (PKR)</th></tr></thead>
                     <tbody>
                         <tr><td>Advance Deduction</td><td class="amt">{{ number_format($salary->advance_deducted, 2) }}</td></tr>
-                        <tr><td>Absence Deduction ({{ $salary->absent_days }} day{{ $salary->absent_days == 1 ? '' : 's' }})</td><td class="amt">{{ number_format($salary->absence_deducted, 2) }}</td></tr>
+                        @php $absDays = (float) $salary->absent_days; @endphp
+                        <tr><td>Absence Deduction ({{ \App\Models\EmployeeAbsence::formatDays($absDays) }} day{{ $absDays == 1 ? '' : 's' }})</td><td class="amt">{{ number_format($salary->absence_deducted, 2) }}</td></tr>
                     </tbody>
                     <tfoot>
                         <tr><td>Total Deductions</td><td class="amt">{{ number_format($totalDeductions, 2) }}</td></tr>
