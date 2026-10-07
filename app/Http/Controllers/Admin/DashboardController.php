@@ -198,10 +198,14 @@ class DashboardController extends Controller
         $saltByShop  = Sale::query()->groupBy('shop_id')->pluck(DB::raw('SUM(total_amount)'), 'shop_id');
         $spiceByShop = SpiceSale::query()->groupBy('shop_id')->pluck(DB::raw('SUM(total_amount)'), 'shop_id');
 
-        $totalsByShop = collect($saltByShop)
-            ->mapWithKeys(fn ($total, $shopId) => [$shopId => (float) $total])
-            ->mergeRecursive(collect($spiceByShop)->mapWithKeys(fn ($total, $shopId) => [$shopId => (float) $total]))
-            ->map(fn ($total) => is_array($total) ? array_sum($total) : (float) $total)
+        // Sum per shop_id explicitly — mergeRecursive() renumbers integer keys,
+        // which detached every total from its shop.
+        $totalsByShop = collect($saltByShop)->keys()
+            ->merge(collect($spiceByShop)->keys())
+            ->unique()
+            ->mapWithKeys(fn ($shopId) => [
+                $shopId => (float) ($saltByShop[$shopId] ?? 0) + (float) ($spiceByShop[$shopId] ?? 0),
+            ])
             ->sortDesc()
             ->take(5);
 
