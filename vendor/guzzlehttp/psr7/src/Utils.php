@@ -79,11 +79,19 @@ final class Utils
         $result = [];
 
         foreach ($keys as &$key) {
+<<<<<<< HEAD
             $key = self::asciiToLower((string) $key);
         }
 
         foreach ($data as $k => $v) {
             if (!in_array(self::asciiToLower((string) $k), $keys)) {
+=======
+            $key = strtr((string) $key, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+        }
+
+        foreach ($data as $k => $v) {
+            if (!in_array(strtr((string) $k, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), $keys)) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 $result[$k] = $v;
             }
         }
@@ -271,7 +279,11 @@ final class Utils
             if ($host !== '') {
                 if (isset($changes['set_headers']) && is_array($changes['set_headers'])) {
                     foreach (array_keys($changes['set_headers']) as $header) {
+<<<<<<< HEAD
                         if (self::asciiToLower((string) $header) === 'host') {
+=======
+                        if (strtr((string) $header, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') === 'host') {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                             throw new \InvalidArgumentException(
                                 'Cannot modify request with both a URI containing a host and an explicit Host header.'
                             );
@@ -307,7 +319,11 @@ final class Utils
 
         $hasHost = false;
         foreach (array_keys($headers) as $header) {
+<<<<<<< HEAD
             if (self::asciiToLower((string) $header) === 'host') {
+=======
+            if (strtr((string) $header, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') === 'host') {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 $hasHost = true;
                 break;
             }
@@ -343,7 +359,11 @@ final class Utils
             $addedHeaders = [];
             foreach ($headers as $header => $value) {
                 $header = (string) $header;
+<<<<<<< HEAD
                 $normalized = self::asciiToLower($header);
+=======
+                $normalized = strtr($header, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
                 if (isset($addedHeaders[$normalized])) {
                     /** @var RequestInterface */

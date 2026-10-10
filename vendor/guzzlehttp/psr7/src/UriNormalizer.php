@@ -161,7 +161,11 @@ final class UriNormalizer
                 throw new \RuntimeException('Unable to remove duplicate slashes from URI path: '.preg_last_error_msg());
             }
 
+<<<<<<< HEAD
             $uri = self::withGuardedPath($uri, $path);
+=======
+            $uri = $uri->withPath($path);
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         }
 
         if ($flags & self::SORT_QUERY_PARAMETERS && $uri->getQuery() !== '') {
@@ -200,7 +204,12 @@ final class UriNormalizer
             return Utils::asciiToUpper($match[0]);
         };
 
+<<<<<<< HEAD
         return self::withGuardedPath($uri, self::normalizePercentEncodingInComponent($uri->getPath(), $regex, $callback))
+=======
+        return $uri
+            ->withPath(self::normalizePercentEncodingInComponent($uri->getPath(), $regex, $callback))
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             ->withQuery(self::normalizePercentEncodingInComponent($uri->getQuery(), $regex, $callback))
             ->withFragment(self::normalizePercentEncodingInComponent($uri->getFragment(), $regex, $callback));
     }
@@ -213,12 +222,18 @@ final class UriNormalizer
             return rawurldecode($match[0]);
         };
 
+<<<<<<< HEAD
         return self::withGuardedPath($uri, self::normalizePercentEncodingInComponent($uri->getPath(), $regex, $callback))
+=======
+        return $uri
+            ->withPath(self::normalizePercentEncodingInComponent($uri->getPath(), $regex, $callback))
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             ->withQuery(self::normalizePercentEncodingInComponent($uri->getQuery(), $regex, $callback))
             ->withFragment(self::normalizePercentEncodingInComponent($uri->getFragment(), $regex, $callback));
     }
 
     /**
+<<<<<<< HEAD
      * Writes the given path only when it differs from the current one, guarded so the write cannot throw.
      */
     private static function withGuardedPath(UriInterface $uri, string $path): UriInterface
@@ -231,6 +246,8 @@ final class UriNormalizer
     }
 
     /**
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      * @param callable(array): string $callback
      */
     private static function normalizePercentEncodingInComponent(string $component, string $regex, callable $callback): string

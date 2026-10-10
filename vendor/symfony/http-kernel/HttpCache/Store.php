@@ -75,7 +75,11 @@ class Store implements StoreInterface
 
         if (!isset($this->locks[$key])) {
             $path = $this->getPath($key);
+<<<<<<< HEAD
             if (!is_dir(\dirname($path)) && !@mkdir(\dirname($path), 0o777, true) && !is_dir(\dirname($path))) {
+=======
+            if (!is_dir(\dirname($path)) && false === @mkdir(\dirname($path), 0o777, true) && !is_dir(\dirname($path))) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 return $path;
             }
             $h = fopen($path, 'c');
@@ -381,7 +385,11 @@ class Store implements StoreInterface
                 return false;
             }
         } else {
+<<<<<<< HEAD
             if (!is_dir(\dirname($path)) && !@mkdir(\dirname($path), 0o777, true) && !is_dir(\dirname($path))) {
+=======
+            if (!is_dir(\dirname($path)) && false === @mkdir(\dirname($path), 0o777, true) && !is_dir(\dirname($path))) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 return false;
             }
 

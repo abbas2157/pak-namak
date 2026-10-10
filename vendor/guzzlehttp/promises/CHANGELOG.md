@@ -1,6 +1,7 @@
 # CHANGELOG
 
 
+<<<<<<< HEAD
 ## 2.5.3 - 2026-08-24
 
 ### Added
@@ -16,6 +17,8 @@
 - Fixed `EachPromise` admitting new work after its aggregate has settled
 
 
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 ## 2.5.1 - 2026-07-08
 
 ### Fixed

@@ -5,7 +5,11 @@ namespace GuzzleHttp;
 /**
  * This class contains a list of built-in Guzzle request options.
  *
+<<<<<<< HEAD
  * @see https://github.com/guzzle/guzzle/blob/7.15/docs/request-options.md
+=======
+ * @see https://github.com/guzzle/guzzle/blob/7.14/docs/request-options.md
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
  */
 final class RequestOptions
 {
@@ -203,17 +207,25 @@ final class RequestOptions
     public const MULTIPART = 'multipart';
 
     /**
+<<<<<<< HEAD
      * multiplex: (string) Controls how a request sent through a built-in
      * cURL handler relates to shared, multiplexed connections: how an HTTP/2
      * request pursues one, or, with Multiplexing::NONE, whether the transfer
      * may share its connection at all. When the option is not set,
      * multiplexing is left to libcurl: nothing waits, and established
      * multiplex-capable connections are still shared. Use
+=======
+     * multiplex: (string) Controls how an HTTP/2 request sent through a
+     * built-in cURL handler pursues a shared, multiplexed connection. When the
+     * option is not set, multiplexing is left to libcurl: nothing waits, and
+     * established multiplex-capable connections are still shared. Use
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      * Multiplexing::EAGER to explicitly never wait for pending connections,
      * Multiplexing::WAIT to wait on libcurl-eligible pending connections with
      * CURLOPT_PIPEWAIT, normally to the same origin,
      * Multiplexing::REQUIRE_EAGER to fail unless a multiplexed protocol is
      * guaranteed while dialing eagerly, or Multiplexing::REQUIRE_WAIT for the
+<<<<<<< HEAD
      * same guarantee while also waiting on pending connections. The required
      * modes require a handler that permits actual multiplexing, not merely a
      * multiplexed protocol, and are rejected on a Multiplexing::NONE handler.
@@ -229,6 +241,15 @@ final class RequestOptions
      * which set it), CURLOPT_PROXYAUTH, CURLOPT_FOLLOWLOCATION,
      * CURLOPT_HTTPHEADER, CURLOPT_ALTSVC, CURLOPT_ALTSVC_CTRL, or
      * CURLOPT_PROXYTYPE cURL options. The required family also
+=======
+     * same guarantee while also waiting on pending connections. The stream
+     * handler ignores EAGER and WAIT, and rejects the required family;
+     * CurlHandler has no multi handle to multiplex over. Explicit modes
+     * reject deprecated raw cURL options they conflict with: the required
+     * family cannot be combined with a raw CURLOPT_HTTP_VERSION, CURLOPT_URL,
+     * or CURLOPT_FOLLOWLOCATION, and no explicit mode can be combined with a
+     * raw CURLOPT_PIPEWAIT on the CurlMultiHandler. The required family also
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      * rejects final CURLOPT_HTTPAUTH masks that permit NTLM, which libcurl
      * retries over HTTP/1.1. The required family validates its cleartext
      * proxy rule against the final cURL configuration, after raw options
@@ -237,6 +258,7 @@ final class RequestOptions
      * pre-proxy there, and raw host-specific patterns are conservatively
      * treated as leaving them active. These rejections are
      * configuration-conflict checks, not remote security checks.
+<<<<<<< HEAD
      *
      * Multiplexing::NONE disables multiplexing for a whole handler when
      * passed as the "multiplex" client configuration option, which
@@ -286,6 +308,8 @@ final class RequestOptions
      * Guzzle does not guarantee it is honored, and a client-level
      * Multiplexing::NONE with a custom handler flows to it as a default
      * request option without client-side enforcement.
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      */
     public const MULTIPLEX = 'multiplex';
 

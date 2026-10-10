@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ### 3.12.1 (2026-09-29)
 
   * Fixed `Logger` silently dropping every record for the rest of the process once the infinite loop guard aborted a nested logging cycle, which could hit long-running workers (#2072)
@@ -34,6 +35,8 @@
   * Fixed `AbstractProcessingHandler::handle()` reading `$bubble` directly instead of calling `getBubble()`, so overrides of it were ignored (#2031)
   * Fixed warning on PHP 8.5 when `ErrorHandler` sets the HTTP response code and a status line was already registered (#2027)
 
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 ### 3.10.0 (2026-01-02)
 
   * Added automatic directory cleanup in RotatingFileHandler (#2000)

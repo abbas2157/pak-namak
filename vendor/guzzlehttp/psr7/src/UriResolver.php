@@ -120,10 +120,13 @@ final class UriResolver
             $targetQuery = $rel->getQuery();
         }
 
+<<<<<<< HEAD
         if ($targetPath !== $base->getPath()) {
             $targetPath = self::guardedPath($base, $targetPath);
         }
 
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         return $base
             ->withPath($targetPath)
             ->withQuery($targetQuery)

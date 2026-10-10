@@ -569,7 +569,11 @@ class Cursor
         $advance = $offset + $matchLength;
 
         // The remainder we matched against had any partially-consumed tab expanded into spaces,
+<<<<<<< HEAD
         // so those columns must be advanced by column instead of by character.
+=======
+        // so those columns must be advanced by column instead of by character
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         if ($this->partiallyConsumedTab) {
             $charsToTab = 4 - ($this->column % 4);
             if ($advance < $charsToTab) {
@@ -583,6 +587,7 @@ class Cursor
         }
 
         $this->advanceBy($advance);
+<<<<<<< HEAD
 
         return $matches[0][0];
     }
@@ -636,6 +641,8 @@ class Cursor
         }
 
         $this->advanceBy($offset + $matchLength);
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
         return $matches[0][0];
     }

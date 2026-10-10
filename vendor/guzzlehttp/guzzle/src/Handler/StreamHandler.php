@@ -4,7 +4,10 @@ namespace GuzzleHttp\Handler;
 
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
+<<<<<<< HEAD
 use GuzzleHttp\Exception\TransferException;
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 use GuzzleHttp\Multiplexing;
 use GuzzleHttp\Promise as P;
 use GuzzleHttp\Promise\FulfilledPromise;
@@ -124,9 +127,13 @@ class StreamHandler
 
         $multiplex = $options['multiplex'] ?? null;
 
+<<<<<<< HEAD
         // Multiplexing::NONE is trivially satisfied: the stream handler sends
         // one HTTP/1.x request per connection and never multiplexes.
         if (null !== $multiplex && !\in_array($multiplex, [Multiplexing::NONE, Multiplexing::EAGER, Multiplexing::WAIT, Multiplexing::REQUIRE_EAGER, Multiplexing::REQUIRE_WAIT], true)) {
+=======
+        if (null !== $multiplex && !\in_array($multiplex, [Multiplexing::EAGER, Multiplexing::WAIT, Multiplexing::REQUIRE_EAGER, Multiplexing::REQUIRE_WAIT], true)) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             throw new \InvalidArgumentException(\sprintf(
                 'The "multiplex" option must be null or a GuzzleHttp\\Multiplexing::* constant; received %s.',
                 \get_debug_type($multiplex)
@@ -188,10 +195,18 @@ class StreamHandler
         } catch (\InvalidArgumentException $e) {
             throw $e;
         } catch (\Exception $e) {
+<<<<<<< HEAD
             if (!$e instanceof TransferException) {
                 $e = self::isConnectionError($e->getMessage())
                     ? new ConnectException($e->getMessage(), $request, $e)
                     : new RequestException($e->getMessage(), $request, null, $e);
+=======
+            // Determine if the error was a networking error.
+            if (self::isConnectionError($e->getMessage())) {
+                $e = new ConnectException($e->getMessage(), $request, $e);
+            } else {
+                $e = $e instanceof RequestException ? $e : new RequestException($e->getMessage(), $request, null, $e);
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             }
             $this->invokeStats($options, $request, $startTime, null, $e);
 
@@ -413,6 +428,22 @@ class StreamHandler
         $scheme = $uri->getScheme();
         if ($scheme === '') {
             throw new RequestException('URI must include a scheme and host. Use an absolute URI, a network-path reference starting with //, or configure a base_uri.', $request);
+<<<<<<< HEAD
+=======
+        }
+
+        if (!\in_array($scheme, ['http', 'https'], true)) {
+            throw new RequestException(\sprintf("The scheme '%s' is not supported.", $scheme), $request);
+        }
+
+        $protocols = Utils::normalizeProtocols($options['protocols'] ?? ['http', 'https']);
+        if (!\in_array($scheme, $protocols, true)) {
+            throw new RequestException(\sprintf('The scheme "%s" is not allowed by the protocols request option.', $scheme), $request);
+        }
+
+        if ($uri->getHost() === '') {
+            throw new RequestException('URI must include a scheme and host. Use an absolute URI, a network-path reference starting with //, or configure a base_uri.', $request);
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         }
 
         if (!\in_array($scheme, ['http', 'https'], true)) {
@@ -530,6 +561,7 @@ class StreamHandler
         $uri = $request->getUri();
 
         $host = $uri->getHost();
+<<<<<<< HEAD
 
         // Fold a numeric IPv4 spelling to the dotted quad libcurl connects
         // to, rather than leaving it to the platform resolver: macOS reads
@@ -542,6 +574,8 @@ class StreamHandler
             $host = $canonicalHost;
         }
 
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         $hostForIpCheck = $host !== '' && $host[0] === '[' && \substr($host, -1) === ']'
             ? \substr($host, 1, -1)
             : $host;
@@ -649,6 +683,7 @@ class StreamHandler
     {
         $headers = '';
         foreach ($request->getHeaders() as $name => $value) {
+<<<<<<< HEAD
             // A first-class Proxy-Authorization header is proxy-scoped. Keep
             // it out of the origin context; add_proxy() adds one
             // validated canonical line only when Guzzle selects a proxy; PHP
@@ -657,6 +692,15 @@ class StreamHandler
             // locale-independent, unlike strcasecmp(), so a locale cannot
             // make this match miss and re-leak the credential.
             if (Psr7\Utils::caselessEquals((string) $name, 'Proxy-Authorization')) {
+=======
+            // A first-class Proxy-Authorization header is proxy-scoped and
+            // PHP's stream wrapper has no separate proxy-only header option,
+            // so the field is never serialized before routing; add_proxy()
+            // restores one validated value only after selecting a proxy. The
+            // strtr() table is locale-independent, unlike strcasecmp(), so a
+            // locale cannot make this match miss and re-leak the credential.
+            if (\strtr((string) $name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') === 'proxy-authorization') {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 continue;
             }
 
@@ -878,7 +922,11 @@ class StreamHandler
             return false;
         }
 
+<<<<<<< HEAD
         $type = Psr7\Utils::asciiToLower($options['auth'][2]);
+=======
+        $type = \strtr($options['auth'][2], 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         if ($type === 'digest') {
             $httpAuth = \defined('CURLAUTH_DIGEST') ? \constant('CURLAUTH_DIGEST') : null;
         } elseif ($type === 'ntlm') {
@@ -944,7 +992,11 @@ class StreamHandler
             throw new \InvalidArgumentException(\sprintf('%s must be a non-empty string', $option));
         }
 
+<<<<<<< HEAD
         if (Psr7\Utils::asciiToUpper($value) !== 'PEM') {
+=======
+        if (\strtoupper($value) !== 'PEM') {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             throw new \InvalidArgumentException(\sprintf('The stream handler only supports "PEM" for the %s request option.', $option));
         }
     }
@@ -976,6 +1028,7 @@ class StreamHandler
 
         $parsed = $this->parse_proxy($uri);
 
+<<<<<<< HEAD
         // PHP extracts and removes only one Proxy-Authorization line for a
         // CONNECT tunnel. Serialize exactly one validated first-class value;
         // more than one could leave a credential in the tunneled origin
@@ -987,10 +1040,29 @@ class StreamHandler
         }
         if ($managed !== [] && \strpbrk($managed[0], "\r\n") !== false) {
             throw new \InvalidArgumentException('Proxy-Authorization request header values must not contain a carriage return or line feed.');
+=======
+        // PHP's stream wrapper extracts one Proxy-Authorization line for a
+        // CONNECT tunnel and removes it from the tunneled origin request. A
+        // plain HTTP proxy receives the same line on its forward request. Add
+        // one canonical line only after proxy selection so direct and bypassed
+        // routes cannot receive it. The first-class value is authoritative
+        // over proxy URI userinfo, including when it is empty.
+        $managed = $request->getHeader('Proxy-Authorization');
+        if (\count($managed) > 1) {
+            throw new \InvalidArgumentException('The stream handler supports exactly one Proxy-Authorization request header value through a proxy.');
+        }
+
+        if ($managed !== []) {
+            $managedValue = (string) $managed[0];
+            if (\strpbrk($managedValue, "\r\n") !== false) {
+                throw new \InvalidArgumentException('Proxy-Authorization request header values must not contain a carriage return or line feed.');
+            }
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         }
 
         $options['http']['proxy'] = $parsed['proxy'];
 
+<<<<<<< HEAD
         if (($managed !== [] || $parsed['auth']) && !isset($options['http']['header'])) {
             $options['http']['header'] = '';
         }
@@ -1003,6 +1075,17 @@ class StreamHandler
 
             return true;
         }
+=======
+        $proxyAuthorization = $managedValue ?? $parsed['auth'];
+        if ($proxyAuthorization !== null) {
+            if (!isset($options['http']['header'])) {
+                $options['http']['header'] = '';
+            }
+            $options['http']['header'] .= "\r\nProxy-Authorization: {$proxyAuthorization}";
+
+            return true;
+        }
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
         return false;
     }
@@ -1028,7 +1111,11 @@ class StreamHandler
             }
         }
 
+<<<<<<< HEAD
         if (\is_array($parsed) && isset($parsed['scheme']) && Psr7\Utils::caselessEquals($parsed['scheme'], 'http')) {
+=======
+        if (\is_array($parsed) && isset($parsed['scheme']) && \strcasecmp($parsed['scheme'], 'http') === 0) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             if (isset($parsed['host'], $parsed['port'])) {
                 $user = $parsed['user'] ?? '';
                 $pass = $parsed['pass'] ?? '';

@@ -62,12 +62,20 @@ trait MessageTrait
 
     public function hasHeader($header): bool
     {
+<<<<<<< HEAD
         return isset($this->headerNames[Utils::asciiToLower($header)]);
+=======
+        return isset($this->headerNames[strtr($header, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')]);
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     }
 
     public function getHeader($header): array
     {
+<<<<<<< HEAD
         $header = Utils::asciiToLower($header);
+=======
+        $header = strtr($header, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
         if (!isset($this->headerNames[$header])) {
             return [];
@@ -103,7 +111,11 @@ trait MessageTrait
             }
         }
         $value = $this->normalizeHeaderValue($value);
+<<<<<<< HEAD
         $normalized = Utils::asciiToLower($header);
+=======
+        $normalized = strtr($header, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
         $new = clone $this;
         if (isset($new->headerNames[$normalized])) {
@@ -135,7 +147,11 @@ trait MessageTrait
             }
         }
         $value = $this->normalizeHeaderValue($value);
+<<<<<<< HEAD
         $normalized = Utils::asciiToLower($header);
+=======
+        $normalized = strtr($header, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
         $new = clone $this;
         if (isset($new->headerNames[$normalized])) {
@@ -154,7 +170,11 @@ trait MessageTrait
      */
     public function withoutHeader($header): MessageInterface
     {
+<<<<<<< HEAD
         $normalized = Utils::asciiToLower($header);
+=======
+        $normalized = strtr($header, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
         if (!isset($this->headerNames[$normalized])) {
             return $this;
@@ -218,7 +238,11 @@ trait MessageTrait
                 }
             }
             $value = $this->normalizeHeaderValue($value);
+<<<<<<< HEAD
             $normalized = Utils::asciiToLower($header);
+=======
+            $normalized = strtr($header, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             if (isset($this->headerNames[$normalized])) {
                 $header = $this->headerNames[$normalized];
                 $this->headers[$header] = array_merge($this->headers[$header], $value);

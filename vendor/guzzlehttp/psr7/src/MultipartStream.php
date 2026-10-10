@@ -227,9 +227,15 @@ final class MultipartStream implements StreamInterface
      */
     private static function getHeader(array $headers, string $key): ?string
     {
+<<<<<<< HEAD
         $lowercaseHeader = Utils::asciiToLower($key);
         foreach ($headers as $k => $v) {
             if (Utils::asciiToLower((string) $k) === $lowercaseHeader) {
+=======
+        $lowercaseHeader = strtr($key, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+        foreach ($headers as $k => $v) {
+            if (strtr((string) $k, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') === $lowercaseHeader) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 return $v;
             }
         }

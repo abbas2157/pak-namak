@@ -69,6 +69,7 @@ final class EntryParser
      */
     private static function splitStringIntoParts(string $line)
     {
+<<<<<<< HEAD
         $result = \explode('=', $line, 2);
 
         if (isset($result[1])) {
@@ -76,6 +77,14 @@ final class EntryParser
         } else {
             $result = [$line, null];
         }
+=======
+        /** @var array{string, string|null} */
+        $result = Str::pos($line, '=')->map(static function () use ($line) {
+            return \array_map(static function (string $part) {
+                return \trim($part, " \n\r\t\0\x0B");
+            }, \explode('=', $line, 2));
+        })->getOrElse([$line, null]);
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
         if ($result[0] === '') {
             return Error::create(self::getErrorMessage('an unexpected equals', $line));
@@ -96,8 +105,13 @@ final class EntryParser
      */
     private static function parseName(string $name)
     {
+<<<<<<< HEAD
         if (\strlen($name) > 6 && \substr($name, 0, 6) === 'export' && \ctype_space($name[6])) {
             $name = \ltrim(\substr($name, 6), " \t\n\r\v\f");
+=======
+        if (Str::len($name) > 8 && Str::substr($name, 0, 6) === 'export' && \ctype_space(Str::substr($name, 6, 1))) {
+            $name = \ltrim(Str::substr($name, 6), " \t\n\r\v\f");
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         }
 
         if (self::isQuotedName($name)) {
@@ -161,6 +175,7 @@ final class EntryParser
     private static function parseValue(string $value)
     {
         if (\trim($value, " \n\r\t\0\x0B") === '') {
+<<<<<<< HEAD
             return Success::create(Value::blank());
         }
 
@@ -181,6 +196,22 @@ final class EntryParser
 
             if ($result->error()->isDefined()) {
                 return Error::create(self::getErrorMessage($result->error()->get(), $value));
+=======
+            /** @var \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Value, string> */
+            return Success::create(Value::blank());
+        }
+
+        return \array_reduce(\iterator_to_array(Lexer::lex($value)), static function (Result $data, string $token) {
+            return $data->flatMap(static function (array $data) use ($token) {
+                return self::processToken($data[1], $token)->map(static function (array $val) use ($data) {
+                    return [$data[0]->append($val[0], $val[1]), $val[2]];
+                });
+            });
+        }, Success::create([Value::blank(), self::INITIAL_STATE]))->flatMap(static function (array $result) {
+            if (in_array($result[1], self::REJECT_STATES, true)) {
+                /** @var \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Value, string> */
+                return Error::create('a missing closing quote');
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             }
 
             [$chunk, $var, $state] = $result->success()->get();

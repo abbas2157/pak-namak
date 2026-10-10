@@ -74,11 +74,19 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
      */
     private static array $freshCache = [];
 
+<<<<<<< HEAD
     public const VERSION = '7.4.20';
     public const VERSION_ID = 70420;
     public const MAJOR_VERSION = 7;
     public const MINOR_VERSION = 4;
     public const RELEASE_VERSION = 20;
+=======
+    public const VERSION = '7.4.14';
+    public const VERSION_ID = 70414;
+    public const MAJOR_VERSION = 7;
+    public const MINOR_VERSION = 4;
+    public const RELEASE_VERSION = 14;
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     public const EXTRA_VERSION = '';
 
     public const END_OF_MAINTENANCE = '11/2028';
@@ -601,14 +609,24 @@ abstract class Kernel implements KernelInterface, RebootableInterface, Terminabl
             'kernel.runtime_mode.cli' => '%env(not:default:kernel.runtime_mode.web:)%',
             'kernel.runtime_mode.worker' => '%env(bool:default::key:worker:default:kernel.runtime_mode:)%',
             'kernel.debug' => $this->debug,
+<<<<<<< HEAD
             'kernel.build_dir' => $escape(realpath($buildDir = $this->warmupDir ?: $this->getBuildDir()) ?: $buildDir),
             'kernel.cache_dir' => $escape(realpath($cacheDir = ($this->getCacheDir() === $this->getBuildDir() ? ($this->warmupDir ?: $this->getCacheDir()) : $this->getCacheDir())) ?: $cacheDir),
             'kernel.logs_dir' => $escape(realpath($this->getLogDir()) ?: $this->getLogDir()),
+=======
+            'kernel.build_dir' => realpath($dir = $this->warmupDir ?: $this->getBuildDir()) ?: $dir,
+            'kernel.cache_dir' => realpath($dir = ($this->getCacheDir() === $this->getBuildDir() ? ($this->warmupDir ?: $this->getCacheDir()) : $this->getCacheDir())) ?: $dir,
+            'kernel.logs_dir' => realpath($dir = $this->getLogDir()) ?: $dir,
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             'kernel.bundles' => $bundles,
             'kernel.bundles_metadata' => $bundlesMetadata,
             'kernel.charset' => $this->getCharset(),
             'kernel.container_class' => $this->getContainerClass(),
+<<<<<<< HEAD
         ] + (null !== ($dir = $this->getShareDir()) ? ['kernel.share_dir' => $escape(realpath($dir) ?: $dir)] : []);
+=======
+        ] + (null !== ($dir = $this->getShareDir()) ? ['kernel.share_dir' => realpath($dir) ?: $dir] : []);
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     }
 
     /**

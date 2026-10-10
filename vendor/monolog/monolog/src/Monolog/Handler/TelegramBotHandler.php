@@ -276,7 +276,11 @@ class TelegramBotHandler extends AbstractProcessingHandler
         if ('' === trim($message)) {
             return;
         }
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         $ch = curl_init();
         $url = $this->getBotApiUrl() . $this->apiKey . '/SendMessage';
         curl_setopt($ch, CURLOPT_URL, $url);

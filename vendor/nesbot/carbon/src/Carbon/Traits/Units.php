@@ -333,6 +333,7 @@ trait Units
         }
 
         if ($unit === 'weekday') {
+<<<<<<< HEAD
             $absoluteValue = abs($value);
             $sign = $value < 0 ? -1 : 1;
             $intAbsoluteValue = (int) $absoluteValue;
@@ -352,6 +353,8 @@ trait Units
                 return $date;
             }
 
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             $weekendDays = $this->transmitFactory(static::getWeekendDays(...));
 
             if ($weekendDays !== [static::SATURDAY, static::SUNDAY]) {

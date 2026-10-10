@@ -664,6 +664,7 @@ class Request
     public static function setTrustedHosts(array $hostPatterns): void
     {
         self::$trustedHostPatterns = array_map(static fn ($hostPattern) => \sprintf('{%s}i', $hostPattern), $hostPatterns);
+<<<<<<< HEAD
         self::$trustedHostsLiterals = [];
         $regexpPatterns = [];
 
@@ -677,6 +678,10 @@ class Request
         }
 
         self::$trustedHostsRegexps = self::compileHostPatterns($regexpPatterns);
+=======
+        // we need to reset trusted hosts on trusted host patterns change
+        self::$trustedHosts = [];
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     }
 
     /**
@@ -2281,6 +2286,7 @@ class Request
         // use preg_replace() instead of preg_match() to prevent DoS attacks with long host names
         return '' === preg_replace('/[-a-zA-Z0-9_]++\.?/', '', $host);
     }
+<<<<<<< HEAD
 
     /**
      * Combines host patterns into as few regexps as PCRE can compile.
@@ -2308,4 +2314,6 @@ class Request
             self::compileHostPatterns(\array_slice($hostPatterns, $half))
         );
     }
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 }

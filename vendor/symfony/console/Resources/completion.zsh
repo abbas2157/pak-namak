@@ -65,9 +65,14 @@ _sf_{{ COMMAND_NAME }}() {
         inputs=(-i' ')
     fi
 
+<<<<<<< HEAD
     # The request is run without being read again by the shell, so that a
     # "$(...)" or a backtick typed on the command line is not executed
     out=$(SHELL_VERBOSITY=0 "${requestComp[@]}" "${inputs[@]}" 2>/dev/null)
+=======
+    # Use eval to handle any environment variables and such
+    out=$(eval SHELL_VERBOSITY=0 ${requestComp} 2>/dev/null)
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
     while IFS='\n' read -r comp; do
         if [ -n "$comp" ]; then

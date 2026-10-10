@@ -19,8 +19,11 @@ namespace Symfony\Polyfill\Php84;
  */
 final class Php84
 {
+<<<<<<< HEAD
     private const BCMATH_WELL_FORMED = '/^[+-]?[0-9]*+(?:\.[0-9]*+)?$/D';
 
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     /** @return string|false */
     public static function mb_ucfirst(string $string, ?string $encoding = null)
     {
@@ -265,6 +268,7 @@ final class Php84
             ? '\X'
             : '(?:\r\n|[\x{1F1E6}-\x{1F1FF}][\x{1F1E6}-\x{1F1FF}]?|(?:[ -~\x{200C}\x{200D}]|[ᆨ-ᇹ]+|[ᄀ-ᅟ]*(?:[가개갸걔거게겨계고과괘괴교구궈궤귀규그긔기까깨꺄꺠꺼께껴꼐꼬꽈꽤꾀꾜꾸꿔꿰뀌뀨끄끠끼나내냐냬너네녀녜노놔놰뇌뇨누눠눼뉘뉴느늬니다대댜댸더데뎌뎨도돠돼되됴두둬뒈뒤듀드듸디따때땨떄떠떼뗘뗴또똬뙈뙤뚀뚜뚸뛔뛰뜌뜨띄띠라래랴럐러레려례로롸뢔뢰료루뤄뤠뤼류르릐리마매먀먜머메며몌모뫄뫠뫼묘무뭐뭬뮈뮤므믜미바배뱌뱨버베벼볘보봐봬뵈뵤부붜붸뷔뷰브븨비빠빼뺘뺴뻐뻬뼈뼤뽀뽜뽸뾔뾰뿌뿨쀄쀠쀼쁘쁴삐사새샤섀서세셔셰소솨쇄쇠쇼수숴쉐쉬슈스싀시싸쌔쌰썌써쎄쎠쎼쏘쏴쐐쐬쑈쑤쒀쒜쒸쓔쓰씌씨아애야얘어에여예오와왜외요우워웨위유으의이자재쟈쟤저제져졔조좌좨죄죠주줘줴쥐쥬즈즤지짜째쨔쨰쩌쩨쪄쪠쪼쫘쫴쬐쬬쭈쭤쮀쮜쮸쯔쯰찌차채챠챼처체쳐쳬초촤쵀최쵸추춰췌취츄츠츼치카캐캬컈커케켜켸코콰쾌쾨쿄쿠쿼퀘퀴큐크킈키타태탸턔터테텨톄토톼퇘퇴툐투퉈퉤튀튜트틔티파패퍄퍠퍼페펴폐포퐈퐤푀표푸풔풰퓌퓨프픠피하해햐햬허헤혀혜호화홰회효후훠훼휘휴흐희히]?[ᅠ-ᆢ]+|[가-힣])[ᆨ-ᇹ]*|[ᄀ-ᅟ]+|[^\p{Cc}\p{Cf}\p{Zl}\p{Zp}])[\p{Mn}\p{Mc}\p{Me}\x{09BE}\x{09D7}\x{0B3E}\x{0B57}\x{0BBE}\x{0BD7}\x{0CC2}\x{0CD5}\x{0CD6}\x{0D3E}\x{0D57}\x{0DCF}\x{0DDF}\x{200C}\x{1D165}\x{1D16E}-\x{1D172}\x{1F3FB}-\x{1F3FF}\x{FE0E}-\x{FE0F}\x{E0020}-\x{E007F}]*(?:\x{200D}(?:[\x{1F1E6}-\x{1F1FF}]|[ -~\x{200C}\x{200D}]|[ᆨ-ᇹ]+|[ᄀ-ᅟ]*(?:[가-힣]?[ᅠ-ᆢ]+|[가-힣])[ᆨ-ᇹ]*|[ᄀ-ᅟ]+|[^\p{Cc}\p{Cf}\p{Zl}\p{Zp}])[\p{Mn}\p{Mc}\p{Me}\x{09BE}\x{09D7}\x{0B3E}\x{0B57}\x{0BBE}\x{0BD7}\x{0CC2}\x{0CD5}\x{0CD6}\x{0D3E}\x{0D57}\x{0DCF}\x{0DDF}\x{200C}\x{1D165}\x{1D16E}-\x{1D172}\x{1F3FB}-\x{1F3FF}\x{FE0E}-\x{FE0F}\x{E0020}-\x{E007F}]*)*|[\p{Cc}\p{Cf}\p{Zl}\p{Zp}])';
 
+<<<<<<< HEAD
         if (preg_match_all('/'.$regex.'/u', $string, $matches)) {
             $graphemes = $matches[0];
         } else {
@@ -272,6 +276,9 @@ final class Php84
         }
 
         if (!$graphemes) {
+=======
+        if (!preg_match_all('/'.$regex.'/u', $string, $matches)) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             return false;
         }
 
@@ -289,7 +296,11 @@ final class Php84
 
     public static function bcceil(string $num): string
     {
+<<<<<<< HEAD
         if (!preg_match(self::BCMATH_WELL_FORMED, $num)) {
+=======
+        if (!is_numeric($num)) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             throw new \ValueError('bcceil(): Argument #1 ($num) is not well-formed');
         }
 
@@ -308,7 +319,11 @@ final class Php84
 
     public static function bcfloor(string $num): string
     {
+<<<<<<< HEAD
         if (!preg_match(self::BCMATH_WELL_FORMED, $num)) {
+=======
+        if (!is_numeric($num)) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             throw new \ValueError('bcfloor(): Argument #1 ($num) is not well-formed');
         }
 
@@ -320,7 +335,11 @@ final class Php84
      */
     public static function bcround(string $num, int $precision = 0, $mode = \RoundingMode::HalfAwayFromZero): string
     {
+<<<<<<< HEAD
         if (!preg_match(self::BCMATH_WELL_FORMED, $num)) {
+=======
+        if (!is_numeric($num)) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             throw new \ValueError('bcround(): Argument #1 ($num) is not well-formed');
         }
 
@@ -501,6 +520,7 @@ final class Php84
         $length = \strlen($digits);
 
         return $length ? \ord($digits[$length - 1]) - 48 : 0;
+<<<<<<< HEAD
     }
 
     /**
@@ -545,5 +565,7 @@ final class Php84
         }
 
         return $graphemes;
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     }
 }

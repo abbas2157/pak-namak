@@ -234,8 +234,13 @@ class QuestionHelper extends Helper
     /**
      * Autocompletes a question.
      *
+<<<<<<< HEAD
      * @param resource                      $inputStream
      * @param callable(string):list<string> $autocomplete
+=======
+     * @param resource                  $inputStream
+     * @param callable(string):string[] $autocomplete
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      */
     private function autocomplete(OutputInterface $output, Question $question, $inputStream, callable $autocomplete): string
     {

@@ -531,6 +531,7 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
     );
 
     public static $classMap = array (
+<<<<<<< HEAD
         'App\\Http\\Controllers\\Admin\\AccountController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AccountController.php',
         'App\\Http\\Controllers\\Admin\\AreaController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AreaController.php',
         'App\\Http\\Controllers\\Admin\\AssetController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AssetController.php',
@@ -551,11 +552,27 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'App\\Http\\Controllers\\Admin\\ProductionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ProductionController.php',
         'App\\Http\\Controllers\\Admin\\PurchaseController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/PurchaseController.php',
         'App\\Http\\Controllers\\Admin\\RecoverySheetController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/RecoverySheetController.php',
+=======
+        'App\\Http\\Controllers\\Admin\\AdminController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AdminController.php',
+        'App\\Http\\Controllers\\Admin\\AreaController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AreaController.php',
+        'App\\Http\\Controllers\\Admin\\AssetController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AssetController.php',
+        'App\\Http\\Controllers\\Admin\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AuthController.php',
+        'App\\Http\\Controllers\\Admin\\CityController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/CityController.php',
+        'App\\Http\\Controllers\\Admin\\DashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/DashboardController.php',
+        'App\\Http\\Controllers\\Admin\\EmployeeController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/EmployeeController.php',
+        'App\\Http\\Controllers\\Admin\\EmployeeSalaryController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/EmployeeSalaryController.php',
+        'App\\Http\\Controllers\\Admin\\ExpenseController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ExpenseController.php',
+        'App\\Http\\Controllers\\Admin\\OrderAdminController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/OrderAdminController.php',
+        'App\\Http\\Controllers\\Admin\\PackageController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/PackageController.php',
+        'App\\Http\\Controllers\\Admin\\ProductionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ProductionController.php',
+        'App\\Http\\Controllers\\Admin\\PurchaseController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/PurchaseController.php',
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         'App\\Http\\Controllers\\Admin\\SaleController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SaleController.php',
         'App\\Http\\Controllers\\Admin\\SaleReceiptController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SaleReceiptController.php',
         'App\\Http\\Controllers\\Admin\\SalesReportController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SalesReportController.php',
         'App\\Http\\Controllers\\Admin\\ShopController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ShopController.php',
         'App\\Http\\Controllers\\Admin\\ShopSalesController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ShopSalesController.php',
+<<<<<<< HEAD
         'App\\Http\\Controllers\\Admin\\SpiceOrderAdminController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SpiceOrderAdminController.php',
         'App\\Http\\Controllers\\Admin\\SpiceProductionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SpiceProductionController.php',
         'App\\Http\\Controllers\\Admin\\SpicePurchaseController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SpicePurchaseController.php',
@@ -565,10 +582,13 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'App\\Http\\Controllers\\Admin\\SpiceStockController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SpiceStockController.php',
         'App\\Http\\Controllers\\Admin\\SpiceTypeController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SpiceTypeController.php',
         'App\\Http\\Controllers\\Admin\\StockController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/StockController.php',
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         'App\\Http\\Controllers\\Admin\\TypeController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/TypeController.php',
         'App\\Http\\Controllers\\Admin\\VendorController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/VendorController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\OrderController' => __DIR__ . '/../..' . '/app/Http/Controllers/OrderController.php',
+<<<<<<< HEAD
         'App\\Http\\Controllers\\SpiceOrderController' => __DIR__ . '/../..' . '/app/Http/Controllers/SpiceOrderController.php',
         'App\\Http\\Requests\\ProductionRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ProductionRequest.php',
         'App\\Http\\Requests\\SaleRequest' => __DIR__ . '/../..' . '/app/Http/Requests/SaleRequest.php',
@@ -582,6 +602,14 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'App\\Models\\Concerns\\GeneratesOrderReference' => __DIR__ . '/../..' . '/app/Models/Concerns/GeneratesOrderReference.php',
         'App\\Models\\Employee' => __DIR__ . '/../..' . '/app/Models/Employee.php',
         'App\\Models\\EmployeeAbsence' => __DIR__ . '/../..' . '/app/Models/EmployeeAbsence.php',
+=======
+        'App\\Http\\Requests\\ProductionRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ProductionRequest.php',
+        'App\\Http\\Requests\\SaleRequest' => __DIR__ . '/../..' . '/app/Http/Requests/SaleRequest.php',
+        'App\\Models\\Area' => __DIR__ . '/../..' . '/app/Models/Area.php',
+        'App\\Models\\Asset' => __DIR__ . '/../..' . '/app/Models/Asset.php',
+        'App\\Models\\City' => __DIR__ . '/../..' . '/app/Models/City.php',
+        'App\\Models\\Employee' => __DIR__ . '/../..' . '/app/Models/Employee.php',
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         'App\\Models\\EmployeeSalary' => __DIR__ . '/../..' . '/app/Models/EmployeeSalary.php',
         'App\\Models\\Expense' => __DIR__ . '/../..' . '/app/Models/Expense.php',
         'App\\Models\\Order' => __DIR__ . '/../..' . '/app/Models/Order.php',
@@ -591,9 +619,13 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'App\\Models\\PackagingPurchasePayment' => __DIR__ . '/../..' . '/app/Models/PackagingPurchasePayment.php',
         'App\\Models\\Post' => __DIR__ . '/../..' . '/app/Models/Post.php',
         'App\\Models\\Production' => __DIR__ . '/../..' . '/app/Models/Production.php',
+<<<<<<< HEAD
         'App\\Models\\ProductionItem' => __DIR__ . '/../..' . '/app/Models/ProductionItem.php',
         'App\\Models\\Purchase' => __DIR__ . '/../..' . '/app/Models/Purchase.php',
         'App\\Models\\PurchasePayment' => __DIR__ . '/../..' . '/app/Models/PurchasePayment.php',
+=======
+        'App\\Models\\Purchase' => __DIR__ . '/../..' . '/app/Models/Purchase.php',
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         'App\\Models\\Sale' => __DIR__ . '/../..' . '/app/Models/Sale.php',
         'App\\Models\\SaleDalla' => __DIR__ . '/../..' . '/app/Models/SaleDalla.php',
         'App\\Models\\SalePackage' => __DIR__ . '/../..' . '/app/Models/SalePackage.php',
@@ -601,6 +633,7 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'App\\Models\\SaleThaila' => __DIR__ . '/../..' . '/app/Models/SaleThaila.php',
         'App\\Models\\SaltType' => __DIR__ . '/../..' . '/app/Models/SaltType.php',
         'App\\Models\\Shop' => __DIR__ . '/../..' . '/app/Models/Shop.php',
+<<<<<<< HEAD
         'App\\Models\\SpiceOrder' => __DIR__ . '/../..' . '/app/Models/SpiceOrder.php',
         'App\\Models\\SpiceOrderItem' => __DIR__ . '/../..' . '/app/Models/SpiceOrderItem.php',
         'App\\Models\\SpiceProduction' => __DIR__ . '/../..' . '/app/Models/SpiceProduction.php',
@@ -618,6 +651,10 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Models\\Vendor' => __DIR__ . '/../..' . '/app/Models/Vendor.php',
         'App\\Models\\VendorAdvance' => __DIR__ . '/../..' . '/app/Models/VendorAdvance.php',
+=======
+        'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
+        'App\\Models\\Vendor' => __DIR__ . '/../..' . '/app/Models/Vendor.php',
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',
@@ -3665,9 +3702,12 @@ class ComposerStaticInitc514d8f7b9fc5970bdd94287905ef584
         'League\\Uri\\UriTemplate\\VariableBag' => __DIR__ . '/..' . '/league/uri/UriTemplate/VariableBag.php',
         'League\\Uri\\Urn' => __DIR__ . '/..' . '/league/uri/Urn.php',
         'League\\Uri\\UrnComparisonMode' => __DIR__ . '/..' . '/league/uri-interfaces/UrnComparisonMode.php',
+<<<<<<< HEAD
         'Mockery\\Adapter\\Phpunit\\Extension' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/Extension.php',
         'Mockery\\Adapter\\Phpunit\\Extension\\Subscriber\\TestFinishedSubscriber' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/Extension/Subscriber/TestFinishedSubscriber.php',
         'Mockery\\Adapter\\Phpunit\\Extension\\Subscriber\\TestSuiteStartedSubscriber' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/Extension/Subscriber/TestSuiteStartedSubscriber.php',
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegration' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegration.php',
         'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegrationAssertPostConditions' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegrationAssertPostConditions.php',
         'Mockery\\Adapter\\Phpunit\\MockeryTestCase' => __DIR__ . '/..' . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryTestCase.php',

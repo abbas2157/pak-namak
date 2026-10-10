@@ -3,6 +3,7 @@
 Please refer to [UPGRADING](UPGRADING.md) guide for upgrading to a major version.
 
 
+<<<<<<< HEAD
 ## 7.15.5 - 2026-08-24
 
 ### Changed
@@ -92,6 +93,8 @@ Please refer to [UPGRADING](UPGRADING.md) guide for upgrading to a major version
 - Stop re-applying the `delay` request option to followed redirects
 
 
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 ## 7.14.2 - 2026-07-14
 
 ### Security

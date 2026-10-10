@@ -64,7 +64,11 @@ class CurlHandler
             : null;
 
         $this->factory = $this->shareHandleState !== null
+<<<<<<< HEAD
             ? new CurlFactory(3, $this->shareHandleState->mode, $this->shareHandleState)
+=======
+            ? new CurlFactory(3, $this->shareHandleState->mode, $this->shareHandleState->handle)
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             : new CurlFactory(3);
     }
 

@@ -54,7 +54,11 @@ final class Address
             throw new InvalidArgumentException('Email address contains control characters.');
         }
 
+<<<<<<< HEAD
         if (!self::isValidAddrSpec($this->address)) {
+=======
+        if (!self::$validator->isValid($this->address, class_exists(MessageIDValidation::class) ? new MessageIDValidation() : new RFCValidation())) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             throw new RfcComplianceException(\sprintf('Email "%s" does not comply with addr-spec of RFC 2822.', $address));
         }
     }

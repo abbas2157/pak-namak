@@ -151,7 +151,11 @@ final class UriTemplate
                 $variable = self::stringifyValue($variable);
 
                 if ($value['modifier'] === ':' && isset($value['position'])) {
+<<<<<<< HEAD
                     $variable = self::prefixValue($variable, $value['position']);
+=======
+                    $variable = \substr($variable, 0, $value['position']);
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 }
                 $expanded = self::encodeValue($variable, $allowReserved);
             }
@@ -273,6 +277,7 @@ final class UriTemplate
         return $value;
     }
 
+<<<<<<< HEAD
     /**
      * Select a prefix by Unicode code points and pct-encoded characters.
      *
@@ -359,6 +364,8 @@ final class UriTemplate
         throw new \RuntimeException(\sprintf('Unable to process template: %s', \preg_last_error_msg()));
     }
 
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     private static function encodeValue(string $value, bool $allowReserved): string
     {
         if ($value === '') {

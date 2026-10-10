@@ -25,7 +25,11 @@
         "symfony/http-kernel": "^6.4|^7.0|^8.0",
         "symfony/process": "^6.4|^7.0|^8.0",
         "symfony/uid": "^6.4|^7.0|^8.0",
+<<<<<<< HEAD
         "twig/twig": "^3.12|^4.0"
+=======
+        "twig/twig": "^3.12"
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     },
     "conflict": {
         "symfony/console": "<6.4"

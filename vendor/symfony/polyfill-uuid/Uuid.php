@@ -64,10 +64,13 @@ final class Uuid
             case self::UUID_TYPE_DEFAULT:
                 return self::uuid_generate_random();
             default:
+<<<<<<< HEAD
                 if (80000 <= \PHP_VERSION_ID) {
                     throw new \ValueError(\sprintf('uuid_create(): Argument #1 ($uuid_type) Unknown/invalid UUID type \'%d\'', $uuid_type));
                 }
 
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 trigger_error(\sprintf("Unknown/invalid UUID type '%d' requested, using default type instead", $uuid_type), \E_USER_WARNING);
 
                 return self::uuid_generate_random();
@@ -457,6 +460,7 @@ final class Uuid
             }
         }
 
+<<<<<<< HEAD
         if (6 === $version) {
             // https://www.rfc-editor.org/rfc/rfc9562#section-5.6
             return \sprintf('%08s-%04s-6%03s-%04x-%012s',
@@ -475,6 +479,8 @@ final class Uuid
             );
         }
 
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         return \sprintf('%08s-%04s-1%03s-%04x-%012s',
             // 32 bits for "time_low"
             substr($time, -8),

@@ -7,7 +7,11 @@
 
 namespace Nette\Schema;
 
+<<<<<<< HEAD
 use function array_key_exists, implode, preg_replace_callback;
+=======
+use function implode, preg_replace_callback;
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
 
 /**
@@ -89,9 +93,13 @@ final class Message
 
 		return preg_replace_callback('~( ?)%(\w+)%~', function ($m) use ($vars) {
 			[, $space, $key] = $m;
+<<<<<<< HEAD
 			return array_key_exists($key, $vars)
 				? ($vars[$key] === null ? '' : $space . $vars[$key])
 				: $m[0];
+=======
+			return $vars[$key] === null ? '' : $space . $vars[$key];
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 		}, $this->message);
 	}
 }

@@ -280,6 +280,10 @@ class Process implements \IteratorAggregate
      * @throws RuntimeException         When process is already running
      * @throws ProcessTimedOutException When process timed out
      * @throws ProcessSignaledException When process stopped after receiving signal
+<<<<<<< HEAD
+=======
+     * @throws LogicException           In case a callback is provided and output has been disabled
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      *
      * @final
      */

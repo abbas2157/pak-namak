@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+<<<<<<< HEAD
     'App\\Http\\Controllers\\Admin\\AccountController' => $baseDir . '/app/Http/Controllers/Admin/AccountController.php',
     'App\\Http\\Controllers\\Admin\\AreaController' => $baseDir . '/app/Http/Controllers/Admin/AreaController.php',
     'App\\Http\\Controllers\\Admin\\AssetController' => $baseDir . '/app/Http/Controllers/Admin/AssetController.php',
@@ -26,11 +27,27 @@ return array(
     'App\\Http\\Controllers\\Admin\\ProductionController' => $baseDir . '/app/Http/Controllers/Admin/ProductionController.php',
     'App\\Http\\Controllers\\Admin\\PurchaseController' => $baseDir . '/app/Http/Controllers/Admin/PurchaseController.php',
     'App\\Http\\Controllers\\Admin\\RecoverySheetController' => $baseDir . '/app/Http/Controllers/Admin/RecoverySheetController.php',
+=======
+    'App\\Http\\Controllers\\Admin\\AdminController' => $baseDir . '/app/Http/Controllers/Admin/AdminController.php',
+    'App\\Http\\Controllers\\Admin\\AreaController' => $baseDir . '/app/Http/Controllers/Admin/AreaController.php',
+    'App\\Http\\Controllers\\Admin\\AssetController' => $baseDir . '/app/Http/Controllers/Admin/AssetController.php',
+    'App\\Http\\Controllers\\Admin\\AuthController' => $baseDir . '/app/Http/Controllers/Admin/AuthController.php',
+    'App\\Http\\Controllers\\Admin\\CityController' => $baseDir . '/app/Http/Controllers/Admin/CityController.php',
+    'App\\Http\\Controllers\\Admin\\DashboardController' => $baseDir . '/app/Http/Controllers/Admin/DashboardController.php',
+    'App\\Http\\Controllers\\Admin\\EmployeeController' => $baseDir . '/app/Http/Controllers/Admin/EmployeeController.php',
+    'App\\Http\\Controllers\\Admin\\EmployeeSalaryController' => $baseDir . '/app/Http/Controllers/Admin/EmployeeSalaryController.php',
+    'App\\Http\\Controllers\\Admin\\ExpenseController' => $baseDir . '/app/Http/Controllers/Admin/ExpenseController.php',
+    'App\\Http\\Controllers\\Admin\\OrderAdminController' => $baseDir . '/app/Http/Controllers/Admin/OrderAdminController.php',
+    'App\\Http\\Controllers\\Admin\\PackageController' => $baseDir . '/app/Http/Controllers/Admin/PackageController.php',
+    'App\\Http\\Controllers\\Admin\\ProductionController' => $baseDir . '/app/Http/Controllers/Admin/ProductionController.php',
+    'App\\Http\\Controllers\\Admin\\PurchaseController' => $baseDir . '/app/Http/Controllers/Admin/PurchaseController.php',
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     'App\\Http\\Controllers\\Admin\\SaleController' => $baseDir . '/app/Http/Controllers/Admin/SaleController.php',
     'App\\Http\\Controllers\\Admin\\SaleReceiptController' => $baseDir . '/app/Http/Controllers/Admin/SaleReceiptController.php',
     'App\\Http\\Controllers\\Admin\\SalesReportController' => $baseDir . '/app/Http/Controllers/Admin/SalesReportController.php',
     'App\\Http\\Controllers\\Admin\\ShopController' => $baseDir . '/app/Http/Controllers/Admin/ShopController.php',
     'App\\Http\\Controllers\\Admin\\ShopSalesController' => $baseDir . '/app/Http/Controllers/Admin/ShopSalesController.php',
+<<<<<<< HEAD
     'App\\Http\\Controllers\\Admin\\SpiceOrderAdminController' => $baseDir . '/app/Http/Controllers/Admin/SpiceOrderAdminController.php',
     'App\\Http\\Controllers\\Admin\\SpiceProductionController' => $baseDir . '/app/Http/Controllers/Admin/SpiceProductionController.php',
     'App\\Http\\Controllers\\Admin\\SpicePurchaseController' => $baseDir . '/app/Http/Controllers/Admin/SpicePurchaseController.php',
@@ -40,10 +57,13 @@ return array(
     'App\\Http\\Controllers\\Admin\\SpiceStockController' => $baseDir . '/app/Http/Controllers/Admin/SpiceStockController.php',
     'App\\Http\\Controllers\\Admin\\SpiceTypeController' => $baseDir . '/app/Http/Controllers/Admin/SpiceTypeController.php',
     'App\\Http\\Controllers\\Admin\\StockController' => $baseDir . '/app/Http/Controllers/Admin/StockController.php',
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     'App\\Http\\Controllers\\Admin\\TypeController' => $baseDir . '/app/Http/Controllers/Admin/TypeController.php',
     'App\\Http\\Controllers\\Admin\\VendorController' => $baseDir . '/app/Http/Controllers/Admin/VendorController.php',
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\OrderController' => $baseDir . '/app/Http/Controllers/OrderController.php',
+<<<<<<< HEAD
     'App\\Http\\Controllers\\SpiceOrderController' => $baseDir . '/app/Http/Controllers/SpiceOrderController.php',
     'App\\Http\\Requests\\ProductionRequest' => $baseDir . '/app/Http/Requests/ProductionRequest.php',
     'App\\Http\\Requests\\SaleRequest' => $baseDir . '/app/Http/Requests/SaleRequest.php',
@@ -57,6 +77,14 @@ return array(
     'App\\Models\\Concerns\\GeneratesOrderReference' => $baseDir . '/app/Models/Concerns/GeneratesOrderReference.php',
     'App\\Models\\Employee' => $baseDir . '/app/Models/Employee.php',
     'App\\Models\\EmployeeAbsence' => $baseDir . '/app/Models/EmployeeAbsence.php',
+=======
+    'App\\Http\\Requests\\ProductionRequest' => $baseDir . '/app/Http/Requests/ProductionRequest.php',
+    'App\\Http\\Requests\\SaleRequest' => $baseDir . '/app/Http/Requests/SaleRequest.php',
+    'App\\Models\\Area' => $baseDir . '/app/Models/Area.php',
+    'App\\Models\\Asset' => $baseDir . '/app/Models/Asset.php',
+    'App\\Models\\City' => $baseDir . '/app/Models/City.php',
+    'App\\Models\\Employee' => $baseDir . '/app/Models/Employee.php',
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     'App\\Models\\EmployeeSalary' => $baseDir . '/app/Models/EmployeeSalary.php',
     'App\\Models\\Expense' => $baseDir . '/app/Models/Expense.php',
     'App\\Models\\Order' => $baseDir . '/app/Models/Order.php',
@@ -66,9 +94,13 @@ return array(
     'App\\Models\\PackagingPurchasePayment' => $baseDir . '/app/Models/PackagingPurchasePayment.php',
     'App\\Models\\Post' => $baseDir . '/app/Models/Post.php',
     'App\\Models\\Production' => $baseDir . '/app/Models/Production.php',
+<<<<<<< HEAD
     'App\\Models\\ProductionItem' => $baseDir . '/app/Models/ProductionItem.php',
     'App\\Models\\Purchase' => $baseDir . '/app/Models/Purchase.php',
     'App\\Models\\PurchasePayment' => $baseDir . '/app/Models/PurchasePayment.php',
+=======
+    'App\\Models\\Purchase' => $baseDir . '/app/Models/Purchase.php',
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     'App\\Models\\Sale' => $baseDir . '/app/Models/Sale.php',
     'App\\Models\\SaleDalla' => $baseDir . '/app/Models/SaleDalla.php',
     'App\\Models\\SalePackage' => $baseDir . '/app/Models/SalePackage.php',
@@ -76,6 +108,7 @@ return array(
     'App\\Models\\SaleThaila' => $baseDir . '/app/Models/SaleThaila.php',
     'App\\Models\\SaltType' => $baseDir . '/app/Models/SaltType.php',
     'App\\Models\\Shop' => $baseDir . '/app/Models/Shop.php',
+<<<<<<< HEAD
     'App\\Models\\SpiceOrder' => $baseDir . '/app/Models/SpiceOrder.php',
     'App\\Models\\SpiceOrderItem' => $baseDir . '/app/Models/SpiceOrderItem.php',
     'App\\Models\\SpiceProduction' => $baseDir . '/app/Models/SpiceProduction.php',
@@ -93,6 +126,10 @@ return array(
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'App\\Models\\Vendor' => $baseDir . '/app/Models/Vendor.php',
     'App\\Models\\VendorAdvance' => $baseDir . '/app/Models/VendorAdvance.php',
+=======
+    'App\\Models\\User' => $baseDir . '/app/Models/User.php',
+    'App\\Models\\Vendor' => $baseDir . '/app/Models/Vendor.php',
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Brick\\Math\\BigDecimal' => $vendorDir . '/brick/math/src/BigDecimal.php',
@@ -3140,9 +3177,12 @@ return array(
     'League\\Uri\\UriTemplate\\VariableBag' => $vendorDir . '/league/uri/UriTemplate/VariableBag.php',
     'League\\Uri\\Urn' => $vendorDir . '/league/uri/Urn.php',
     'League\\Uri\\UrnComparisonMode' => $vendorDir . '/league/uri-interfaces/UrnComparisonMode.php',
+<<<<<<< HEAD
     'Mockery\\Adapter\\Phpunit\\Extension' => $vendorDir . '/mockery/mockery/library/Mockery/Adapter/Phpunit/Extension.php',
     'Mockery\\Adapter\\Phpunit\\Extension\\Subscriber\\TestFinishedSubscriber' => $vendorDir . '/mockery/mockery/library/Mockery/Adapter/Phpunit/Extension/Subscriber/TestFinishedSubscriber.php',
     'Mockery\\Adapter\\Phpunit\\Extension\\Subscriber\\TestSuiteStartedSubscriber' => $vendorDir . '/mockery/mockery/library/Mockery/Adapter/Phpunit/Extension/Subscriber/TestSuiteStartedSubscriber.php',
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegration' => $vendorDir . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegration.php',
     'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegrationAssertPostConditions' => $vendorDir . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegrationAssertPostConditions.php',
     'Mockery\\Adapter\\Phpunit\\MockeryTestCase' => $vendorDir . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryTestCase.php',

@@ -29,6 +29,8 @@ composer require guzzlehttp/psr7
 
 See [UPGRADING.md](UPGRADING.md) for notes on upgrading from 1.x to 2.0.
 
+See [UPGRADING.md](UPGRADING.md) for notes on upgrading from 1.x to 2.0.
+
 
 ## AppendStream
 

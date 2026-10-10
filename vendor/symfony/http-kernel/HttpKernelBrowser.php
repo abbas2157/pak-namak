@@ -198,6 +198,7 @@ class HttpKernelBrowser extends AbstractBrowser
      */
     protected function filterResponse(object $response): DomResponse
     {
+<<<<<<< HEAD
         if ($response === $this->sentResponse) {
             $content = $this->sentContent;
             $this->sentResponse = null;
@@ -215,6 +216,19 @@ class HttpKernelBrowser extends AbstractBrowser
             } finally {
                 ob_end_clean();
             }
+=======
+        $content = '';
+        ob_start(static function ($chunk) use (&$content) {
+            $content .= $chunk;
+
+            return '';
+        });
+
+        try {
+            $response->sendContent();
+        } finally {
+            ob_end_clean();
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         }
 
         return new DomResponse($content, $response->getStatusCode(), $response->headers->all());

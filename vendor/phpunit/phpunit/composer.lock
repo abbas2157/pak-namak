@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "2b5f4dd05c5be78a1dcb63ae9e6de9f8",
+=======
+    "content-hash": "c9c54df4ab2b1a8fce3d96b2ddc47379",
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     "packages": [
         {
             "name": "myclabs/deep-copy",
@@ -68,6 +72,7 @@
         },
         {
             "name": "nikic/php-parser",
+<<<<<<< HEAD
             "version": "v5.9.0",
             "source": {
                 "type": "git",
@@ -78,6 +83,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/9e33da9553fe7786f0962b35f4e4ecf01be89def",
                 "reference": "9e33da9553fe7786f0962b35f4e4ecf01be89def",
+=======
+            "version": "v5.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nikic/PHP-Parser.git",
+                "reference": "044a6a392ff8ad0d61f14370a5fbbd0a0107152f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/044a6a392ff8ad0d61f14370a5fbbd0a0107152f",
+                "reference": "044a6a392ff8ad0d61f14370a5fbbd0a0107152f",
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 "shasum": ""
             },
             "require": {
@@ -119,9 +136,15 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/nikic/PHP-Parser/tree/v5.9.0"
             },
             "time": "2026-09-13T18:51:52+00:00"
+=======
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.8.0"
+            },
+            "time": "2026-07-04T14:30:18+00:00"
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         },
         {
             "name": "phar-io/manifest",

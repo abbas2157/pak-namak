@@ -132,10 +132,17 @@ class ServerEvent implements \IteratorAggregate
 
         if (is_iterable($this->data)) {
             foreach ($this->data as $data) {
+<<<<<<< HEAD
                 yield self::field('data: ', $data);
             }
         } elseif ('' !== $this->data) {
             yield self::field('data: ', $this->data);
+=======
+                yield \sprintf('data: %s', $data)."\n";
+            }
+        } elseif ('' !== $this->data) {
+            yield \sprintf('data: %s', $this->data)."\n";
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         }
 
         yield "\n";

@@ -93,6 +93,15 @@ class HandleExceptions
         }
 
         if (! static::$app->bound('config')) {
+<<<<<<< HEAD
+=======
+            return;
+        }
+
+        try {
+            $logger = static::$app->make(LogManager::class);
+        } catch (Exception) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             return;
         }
 

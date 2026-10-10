@@ -8,7 +8,11 @@ use GuzzleHttp\Multiplexing;
 use GuzzleHttp\Promise as P;
 use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
+<<<<<<< HEAD
 use GuzzleHttp\Psr7;
+=======
+use GuzzleHttp\RequestOptions;
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 use GuzzleHttp\TransportSharing;
 use GuzzleHttp\Utils;
 use Psr\Http\Message\RequestInterface;
@@ -28,7 +32,10 @@ class CurlMultiHandler
         'handle_factory' => true,
         'max_host_connections' => true,
         'max_total_connections' => true,
+<<<<<<< HEAD
         'multiplex' => true,
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         'options' => true,
         'select_timeout' => true,
         'transport_sharing' => true,
@@ -116,6 +123,7 @@ class CurlMultiHandler
     private $_mh;
 
     /**
+<<<<<<< HEAD
      * @var int Depth of nested guarded native operations (execution and
      *          handle removal, both of which can run user callbacks). A
      *          callback can re-enter tick(), and the nested frame must not
@@ -132,10 +140,19 @@ class CurlMultiHandler
 
     /**
      * @var array<int, array{easy: EasyHandle, attached: bool}>
+=======
+     * @var bool
+     */
+    private $executingMulti = false;
+
+    /**
+     * @var array<int, EasyHandle>
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      */
     private $deferredCancels = [];
 
     /**
+<<<<<<< HEAD
      * @var array<int, object|null> Wait tokens of requests created from inside
      *                              a cURL callback, keyed by handle id; native
      *                              attachment is deferred until the outermost
@@ -144,6 +161,8 @@ class CurlMultiHandler
     private $deferredAdds = [];
 
     /**
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      * @var string|null Owner signature of the proxy tunnels the multi handle's
      *                  connection cache may hold
      */
@@ -172,10 +191,13 @@ class CurlMultiHandler
      *   out while selecting curl handles. Defaults to 1 second.
      * - max_host_connections: Optional maximum concurrent connections per host.
      * - max_total_connections: Optional maximum concurrent connections overall.
+<<<<<<< HEAD
      * - multiplex: Optional Multiplexing::NONE to disallow multiplexing on
      *   this handler's multi handle. The eager, wait, and required modes are
      *   request options, not handler options; Multiplexing::NONE is also
      *   conditionally accepted as a request option value.
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      * - options: An associative array of CURLMOPT_* options and
      *   corresponding values for curl_multi_setopt()
      */
@@ -187,6 +209,7 @@ class CurlMultiHandler
             }
         }
 
+<<<<<<< HEAD
         $handlerMultiplex = $options['multiplex'] ?? null;
         if (null !== $handlerMultiplex && Multiplexing::NONE !== $handlerMultiplex) {
             if (\in_array($handlerMultiplex, [Multiplexing::EAGER, Multiplexing::WAIT, Multiplexing::REQUIRE_EAGER, Multiplexing::REQUIRE_WAIT], true)) {
@@ -204,6 +227,8 @@ class CurlMultiHandler
             throw new \InvalidArgumentException('The "multiplex" CurlMultiHandler option requires CURLMOPT_PIPELINING, but it is not available in the installed PHP cURL extension.');
         }
 
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         CurlShareHandleState::assertNoRequiredSharingCustomFactoryConflict($options, 'CurlMultiHandler');
         $transportSharing = $options['transport_sharing'] ?? null;
         $sharingMode = CurlShareHandleState::normalizeMode($transportSharing, 'transport_sharing');
@@ -211,14 +236,21 @@ class CurlMultiHandler
         if (\array_key_exists('handle_factory', $options) && $options['handle_factory'] !== null) {
             $this->shareHandleState = null;
             $this->factory = $options['handle_factory'];
+<<<<<<< HEAD
             $this->customHandleFactory = true;
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         } else {
             $this->shareHandleState = $sharingMode !== TransportSharing::NONE
                 ? CurlShareHandleState::fromOption($transportSharing)
                 : null;
 
             $this->factory = $this->shareHandleState !== null
+<<<<<<< HEAD
                 ? new CurlFactory(50, $this->shareHandleState->mode, $this->shareHandleState)
+=======
+                ? new CurlFactory(50, $this->shareHandleState->mode, $this->shareHandleState->handle)
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 : new CurlFactory(50);
         }
 
@@ -244,6 +276,7 @@ class CurlMultiHandler
         $multiOptions = $options['options'] ?? [];
         if (\is_array($multiOptions)) {
             self::rejectConnectionCapOptionConflicts($options, $multiOptions);
+<<<<<<< HEAD
 
             if ($this->multiplexDisabled && \array_key_exists(\CURLMOPT_PIPELINING, $multiOptions)) {
                 // Key presence alone conflicts, even with an agreeing value:
@@ -256,12 +289,18 @@ class CurlMultiHandler
             throw new \InvalidArgumentException('options must be an array of cURL multi options when using connection cap options.');
         } elseif ($this->multiplexDisabled) {
             throw new \InvalidArgumentException('options must be an array of cURL multi options when using the "multiplex" option.');
+=======
+            self::triggerConflictingCurlMultiOptionDeprecations($multiOptions);
+        } elseif (self::hasConnectionCapOption($options)) {
+            throw new \InvalidArgumentException('options must be an array of cURL multi options when using connection cap options.');
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         }
 
         $this->options = $multiOptions;
 
         if (\is_array($multiOptions)) {
             $this->addConnectionCapOptions($options);
+<<<<<<< HEAD
 
             if ($this->multiplexDisabled) {
                 // CURLPIPE_NOTHING; the constant itself needs libcurl 7.43
@@ -271,6 +310,8 @@ class CurlMultiHandler
                 $this->options[\CURLMOPT_PIPELINING] = 0;
                 $this->requiredOptions[\CURLMOPT_PIPELINING] = true;
             }
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         }
 
         // unsetting the property forces the first access to go through
@@ -305,6 +346,7 @@ class CurlMultiHandler
                     continue;
                 }
 
+<<<<<<< HEAD
                 if (isset($this->requiredOptions[$option])) {
                     // A first-class option such as a connection cap must
                     // never be silently dropped.
@@ -323,6 +365,12 @@ class CurlMultiHandler
             }
 
             throw $e;
+=======
+        foreach ($this->options as $option => $value) {
+            if (true !== @curl_multi_setopt($this->_mh, $option, $value)) {
+                \trigger_error(\sprintf('Unable to apply the cURL multi option %s; it was ignored by the runtime libcurl.', self::formatCurlMultiOption($option)), \E_USER_WARNING);
+            }
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         }
 
         $this->_mh = $multiHandle;
@@ -362,7 +410,10 @@ class CurlMultiHandler
 
         try {
             $this->rejectMultiplexPipeliningConflict($easy, $options);
+<<<<<<< HEAD
             $this->applyMultiplexNone($easy, $options);
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             $this->applyProxyTunnelOwnership($easy);
         } catch (\Throwable $e) {
             try {
@@ -376,6 +427,7 @@ class CurlMultiHandler
 
         $id = (int) $easy->handle;
 
+<<<<<<< HEAD
         $waitToken = new \stdClass();
 
         $promise = null;
@@ -410,6 +462,18 @@ class CurlMultiHandler
                 // The entry is gone or belongs to another request, so
                 // attribute from this easy handle.
                 $promise->reject(new RequestException($message, $easy->request, $easy->response));
+=======
+        $sync = !empty($options[RequestOptions::SYNCHRONOUS]);
+        $waitToken = new \stdClass();
+
+        $promise = new Promise(
+            function () use ($id, $sync, $waitToken): void {
+                if ($sync) {
+                    $this->executeUntil($id, $waitToken);
+                } else {
+                    $this->execute();
+                }
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             },
             function () use ($id, $waitToken) {
                 return $this->cancel($id, $waitToken);
@@ -468,12 +532,15 @@ class CurlMultiHandler
             return;
         }
 
+<<<<<<< HEAD
         if ($this->multiplexDisabled) {
             // Checked before the raw option: the handler wrote its own
             // CURLMOPT_PIPELINING value when "multiplex" disabled it.
             throw new \InvalidArgumentException('The "multiplex" request option cannot be combined with a CurlMultiHandler whose "multiplex" option is Multiplexing::NONE; remove the handler option or set the request option to "eager".');
         }
 
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         if (!\is_array($this->options) || !\array_key_exists(\CURLMOPT_PIPELINING, $this->options)) {
             // A legacy non-array "options" value is tolerated by the
             // constructor and cannot contain the option.
@@ -497,6 +564,7 @@ class CurlMultiHandler
     }
 
     /**
+<<<<<<< HEAD
      * A Multiplexing::NONE request option is a sole-use guarantee: the
      * transfer must not share its connection with any concurrent transfer.
      * It holds structurally on a handler whose "multiplex" option is
@@ -582,6 +650,8 @@ class CurlMultiHandler
     }
 
     /**
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      * @param array<mixed> $options
      */
     private static function triggerConflictingCurlMultiOptionDeprecations(array $options): void
@@ -591,15 +661,22 @@ class CurlMultiHandler
         }
 
         $conflictingOptions = self::conflictingCurlMultiOptions();
+<<<<<<< HEAD
         $sinceOverrides = self::conflictingCurlMultiOptionSinceOverrides();
         foreach ($options as $option => $_) {
             if (\array_key_exists($option, $conflictingOptions)) {
                 \trigger_deprecation('guzzlehttp/guzzle', $sinceOverrides[$option] ?? '7.14', \sprintf('Passing %s in the cURL multi handler "options" is deprecated; guzzlehttp/guzzle 8.0 will reject this option. Use %s instead.', self::formatCurlMultiOption($option), $conflictingOptions[$option]));
+=======
+        foreach ($options as $option => $_) {
+            if (\array_key_exists($option, $conflictingOptions)) {
+                \trigger_deprecation('guzzlehttp/guzzle', '7.14', \sprintf('Passing %s in the cURL multi handler "options" is deprecated; guzzlehttp/guzzle 8.0 will reject this option. Use %s instead.', self::formatCurlMultiOption($option), $conflictingOptions[$option]));
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             }
         }
     }
 
     /**
+<<<<<<< HEAD
      * @return array<int, string>
      */
     private static function conflictingCurlMultiOptionSinceOverrides(): array
@@ -614,6 +691,8 @@ class CurlMultiHandler
     }
 
     /**
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      * @param array<mixed> $options
      */
     private static function hasConnectionCapOption(array $options): bool
@@ -668,8 +747,11 @@ class CurlMultiHandler
             }
 
             $this->options[$option] = $value;
+<<<<<<< HEAD
             $this->requiredOptions[$option] = true;
             $this->connectionCapsApplied = true;
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         }
     }
 
@@ -715,7 +797,10 @@ class CurlMultiHandler
 
         self::addConflictingCurlMultiOption($options, 'CURLMOPT_MAX_HOST_CONNECTIONS', 'the "max_host_connections" client option or cURL multi handler option');
         self::addConflictingCurlMultiOption($options, 'CURLMOPT_MAX_TOTAL_CONNECTIONS', 'the "max_total_connections" client option or cURL multi handler option');
+<<<<<<< HEAD
         self::addConflictingCurlMultiOption($options, 'CURLMOPT_PIPELINING', 'Multiplexing::NONE via the "multiplex" cURL multi handler or client option to disable multiplexing, or remove the raw option for the runtime default (multiplexing defaults on from libcurl 7.62, except 7.65.0 and 7.65.1)');
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
         return $options;
     }
@@ -756,7 +841,11 @@ class CurlMultiHandler
 
         if (
             $this->handles === []
+<<<<<<< HEAD
             && 0 === $this->multiExecDepth
+=======
+            && !$this->executingMulti
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             && 0 === $this->messageProcessingDepth
             && $this->deferredCancels === []
         ) {
@@ -797,11 +886,14 @@ class CurlMultiHandler
         }
 
         $this->markProxyTunnelActive($easy);
+<<<<<<< HEAD
 
         $id = (int) $easy->handle;
         if (isset($this->handles[$id])) {
             $this->handles[$id]['attached'] = true;
         }
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     }
 
     /**
@@ -809,6 +901,7 @@ class CurlMultiHandler
      */
     private function removeCompletedHandleFromMulti(int $id, $handle): void
     {
+<<<<<<< HEAD
         $this->removeHandleFromMulti($handle);
         $this->unmarkProxyTunnelActiveById($id);
     }
@@ -832,6 +925,12 @@ class CurlMultiHandler
         }
     }
 
+=======
+        \curl_multi_remove_handle($this->_mh, $handle);
+        $this->unmarkProxyTunnelActiveById($id);
+    }
+
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     private function isolateFromForeignActiveProxyTunnel(EasyHandle $easy): void
     {
         $signature = $easy->proxyTunnelSignature;
@@ -928,10 +1027,15 @@ class CurlMultiHandler
      */
     private function tickFor(?int $targetId, ?object $waitToken): void
     {
+<<<<<<< HEAD
         // Add any delayed handles if needed. Attachment is skipped while a
         // callback has native execution busy; the outer frame attaches due
         // transfers once it unwinds.
         if ($this->delays && 0 === $this->multiExecDepth) {
+=======
+        // Add any delayed handles if needed.
+        if ($this->delays) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             $currentTime = Utils::currentTime();
             foreach ($this->delays as $id => $delay) {
                 if ($currentTime >= $delay) {
@@ -961,6 +1065,7 @@ class CurlMultiHandler
             // Step through the task queue which may add additional requests.
             P\Utils::queue()->run();
 
+<<<<<<< HEAD
             if ($this->multiExecDepth > 0) {
                 // A cURL callback re-entered the handler while native
                 // execution is running; the outer frame drives native cURL
@@ -979,6 +1084,11 @@ class CurlMultiHandler
             return;
         }
 
+=======
+            $this->processMessages();
+        } while (!P\Utils::queue()->isEmpty());
+
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         if ($targetId !== null && !$this->hasRequest($targetId, $waitToken)) {
             return;
         }
@@ -990,7 +1100,18 @@ class CurlMultiHandler
         }
 
         do {
+<<<<<<< HEAD
             $exec = $this->executeMulti();
+=======
+            $this->executingMulti = true;
+
+            try {
+                $exec = \curl_multi_exec($this->_mh, $this->active);
+            } finally {
+                $this->executingMulti = false;
+                $this->cleanupDeferredCancels();
+            }
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
             // Prevent busy looping for slow HTTP requests.
             if ($exec === \CURLM_CALL_MULTI_PERFORM) {
@@ -1006,6 +1127,7 @@ class CurlMultiHandler
      */
     private function tickInQueue(): void
     {
+<<<<<<< HEAD
         if ($this->multiExecDepth > 0) {
             // A cURL callback re-entered the handler while native execution
             // is running; the outer frame drives native cURL once it unwinds.
@@ -1020,6 +1142,17 @@ class CurlMultiHandler
 
         $exec = $this->executeMulti();
 
+=======
+        $this->executingMulti = true;
+
+        try {
+            $exec = \curl_multi_exec($this->_mh, $this->active);
+        } finally {
+            $this->executingMulti = false;
+            $this->cleanupDeferredCancels();
+        }
+
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         if ($exec === \CURLM_CALL_MULTI_PERFORM) {
             \curl_multi_select($this->_mh, 0);
             P\Utils::queue()->add(Closure::fromCallable([$this, 'tickInQueue']));
@@ -1099,18 +1232,29 @@ class CurlMultiHandler
     }
 
     /**
+<<<<<<< HEAD
      * Runs the event loop until the given transfer has finished, so waiting
      * on a promise does not wait for every other transfer on the handler
      * like execute() does.
+=======
+     * Runs the event loop until the given transfer has finished, so a
+     * synchronous transfer does not wait for every other transfer on the
+     * handler like execute() does.
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      *
      * The native cURL handle ID can be reused by a request created from a
      * completion callback, so the wait token guards against waiting on an
      * unrelated transfer that inherited the ID.
+<<<<<<< HEAD
      *
      * @return bool Whether another request had reused the native cURL handle
      *              ID by the time the loop stopped
      */
     private function executeUntil(int $id, object $waitToken): bool
+=======
+     */
+    private function executeUntil(int $id, object $waitToken): void
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     {
         $queue = P\Utils::queue();
 
@@ -1123,6 +1267,7 @@ class CurlMultiHandler
             $this->tickFor($id, $waitToken);
         }
 
+<<<<<<< HEAD
         // Sample before the drain below, which can add or remove an entry
         // under this ID and so rewrite the answer.
         $idReused = isset($this->handles[$id]);
@@ -1132,6 +1277,11 @@ class CurlMultiHandler
         }
 
         return $idReused;
+=======
+        if (!$queue->isEmpty()) {
+            $queue->run();
+        }
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     }
 
     /**
@@ -1165,8 +1315,14 @@ class CurlMultiHandler
         }
 
         $this->handles[$id] = $entry;
+<<<<<<< HEAD
 
         if (!empty($easy->options['delay'])) {
+=======
+        if (empty($easy->options['delay'])) {
+            $this->addCurlHandle($easy);
+        } else {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             $this->delays[$id] = Utils::currentTime() + ($easy->options['delay'] / 1000);
         } elseif ($this->multiExecDepth > 0) {
             // A request created from inside a cURL callback cannot be added
@@ -1264,6 +1420,25 @@ class CurlMultiHandler
     }
 
     /**
+     * Rolls back a request that can no longer be attached, releasing the
+     * easy handle exactly once and preserving the original failure.
+     *
+     * @param array{easy: EasyHandle, deferred: Promise, wait_token?: object|null} $entry
+     */
+    private function discardPendingRequest(int $id, array $entry, \Throwable $failure): \Throwable
+    {
+        unset($this->handles[$id], $this->delays[$id]);
+
+        try {
+            $this->factory->release($entry['easy']);
+        } catch (\Throwable $e) {
+            // Preserve the original failure.
+        }
+
+        return $failure;
+    }
+
+    /**
      * Cancels a handle from sending and removes references to it.
      *
      * @param int         $id        Handle ID to cancel and remove.
@@ -1284,6 +1459,7 @@ class CurlMultiHandler
             return false;
         }
 
+<<<<<<< HEAD
         $entry = $this->handles[$id];
         $easy = $entry['easy'];
         $attached = !empty($entry['attached']);
@@ -1291,16 +1467,31 @@ class CurlMultiHandler
 
         if ($this->multiExecDepth > 0) {
             $this->deferredCancels[$id] = ['easy' => $easy, 'attached' => $attached];
+=======
+        $easy = $this->handles[$id]['easy'];
+        unset($this->delays[$id], $this->handles[$id]);
+
+        if ($this->executingMulti) {
+            $this->deferredCancels[$id] = $easy;
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
             return true;
         }
 
+<<<<<<< HEAD
         $this->cleanupCancelledHandle($easy, $attached);
+=======
+        $this->cleanupCancelledHandle($easy);
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
         return true;
     }
 
+<<<<<<< HEAD
     private function cleanupDeferredCancels(?\Throwable &$failure): void
+=======
+    private function cleanupDeferredCancels(): void
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     {
         if ($this->deferredCancels === []) {
             return;
@@ -1309,6 +1500,7 @@ class CurlMultiHandler
         $entries = $this->deferredCancels;
         $this->deferredCancels = [];
 
+<<<<<<< HEAD
         foreach ($entries as $entry) {
             try {
                 $this->cleanupCancelledHandle($entry['easy'], $entry['attached']);
@@ -1354,6 +1546,21 @@ class CurlMultiHandler
 
         if ($failure !== null) {
             throw $failure;
+=======
+        foreach ($entries as $easy) {
+            $this->cleanupCancelledHandle($easy);
+        }
+    }
+
+    private function cleanupCancelledHandle(EasyHandle $easy): void
+    {
+        $handle = $easy->handle;
+        \curl_multi_remove_handle($this->_mh, $handle);
+        $this->unmarkProxyTunnelActive($easy);
+
+        if (PHP_VERSION_ID < 80000) {
+            \curl_close($handle);
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         }
     }
 

@@ -114,10 +114,13 @@ class HtmlDescriptor implements DumpDescriptorInterface
                 </ul>
             </div>
             HTML;
+<<<<<<< HEAD
     }
 
     private static function escape(string $value): string
     {
         return htmlspecialchars($value, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     }
 }

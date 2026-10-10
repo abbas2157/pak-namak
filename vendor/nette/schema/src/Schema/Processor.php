@@ -68,10 +68,14 @@ final class Processor
 	}
 
 
+<<<<<<< HEAD
 	/**
 	 * Returns all deprecation warnings collected during the last processing run.
 	 * @return list<string>
 	 */
+=======
+	/** @return list<string> */
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 	public function getWarnings(): array
 	{
 		$res = [];

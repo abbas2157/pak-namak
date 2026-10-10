@@ -428,8 +428,13 @@ class CarbonPeriod extends DatePeriodBase implements Countable, JsonSerializable
     }
 
     public static function monthly(
+<<<<<<< HEAD
         DateTimeInterface|string|int|float|null $start = null,
         DateTimeInterface|string|int|float|null $end = null,
+=======
+        DateTimeInterface|string|int|null $start = null,
+        DateTimeInterface|string|int|null $end = null,
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         ?int $recurrences = null,
         ?int $anchorDay = null,
         OverflowMode $mode = OverflowMode::AnchorDay,
@@ -445,8 +450,13 @@ class CarbonPeriod extends DatePeriodBase implements Countable, JsonSerializable
     }
 
     public static function quarterly(
+<<<<<<< HEAD
         DateTimeInterface|string|int|float|null $start = null,
         DateTimeInterface|string|int|float|null $end = null,
+=======
+        DateTimeInterface|string|int|null $start = null,
+        DateTimeInterface|string|int|null $end = null,
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         ?int $recurrences = null,
         ?int $anchorDay = null,
         OverflowMode $mode = OverflowMode::AnchorDay,
@@ -471,8 +481,13 @@ class CarbonPeriod extends DatePeriodBase implements Countable, JsonSerializable
     }
 
     public static function yearly(
+<<<<<<< HEAD
         DateTimeInterface|string|int|float|null $start = null,
         DateTimeInterface|string|int|float|null $end = null,
+=======
+        DateTimeInterface|string|int|null $start = null,
+        DateTimeInterface|string|int|null $end = null,
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         ?int $recurrences = null,
         ?int $anchorDay = null,
         OverflowMode $mode = OverflowMode::AnchorDay,
@@ -484,10 +499,17 @@ class CarbonPeriod extends DatePeriodBase implements Countable, JsonSerializable
             $start,
             match ($mode) {
                 OverflowMode::AnchorDay => CarbonInterval::yearWithAnchorDay(
+<<<<<<< HEAD
                     $anchorDay ?? (int) $start->format('d'),
                 ),
                 OverflowMode::NoOverflow => CarbonInterval::yearNoOverflow(),
                 OverflowMode::Overflow => CarbonInterval::year(),
+=======
+                    $anchorDay ?? $start->day,
+                ),
+                OverflowMode::NoOverflow => CarbonInterval::yearNoOverflow(),
+                OverflowMode::Overflow => CarbonInterval::month(),
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             },
             $end ?? $recurrences,
         ))->setOptions($options ?? self::IMMUTABLE);
@@ -567,8 +589,13 @@ class CarbonPeriod extends DatePeriodBase implements Countable, JsonSerializable
     }
 
     private static function getStartAndEndForCyclePeriod(
+<<<<<<< HEAD
         DateTimeInterface|string|int|float|null $start = null,
         DateTimeInterface|string|int|float|null $end = null,
+=======
+        DateTimeInterface|string|int|null $start = null,
+        DateTimeInterface|string|int|null $end = null,
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         ?int $recurrences = null,
         ?int $anchorDay = null,
         OverflowMode $mode = OverflowMode::AnchorDay,
@@ -585,7 +612,11 @@ class CarbonPeriod extends DatePeriodBase implements Countable, JsonSerializable
             );
         }
 
+<<<<<<< HEAD
         if (\is_int($start) || \is_float($start)) {
+=======
+        if (\is_int($start)) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             $start = CarbonImmutable::createFromTimestamp($start);
         } elseif (\is_string($start)) {
             $start = CarbonImmutable::parse($start);
@@ -593,7 +624,11 @@ class CarbonPeriod extends DatePeriodBase implements Countable, JsonSerializable
 
         $start ??= CarbonImmutable::now();
 
+<<<<<<< HEAD
         if (\is_int($end) || \is_float($end)) {
+=======
+        if (\is_int($end)) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             $end = CarbonImmutable::createFromTimestamp($end);
         }
 
@@ -607,7 +642,11 @@ class CarbonPeriod extends DatePeriodBase implements Countable, JsonSerializable
     ): CarbonInterval {
         return match ($mode) {
             OverflowMode::AnchorDay => CarbonInterval::monthWithAnchorDay(
+<<<<<<< HEAD
                 $anchorDay ?? (int) $start->format('d'),
+=======
+                $anchorDay ?? $start->day,
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             ),
             OverflowMode::NoOverflow => CarbonInterval::monthNoOverflow(),
             OverflowMode::Overflow => CarbonInterval::month(),

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+<<<<<<< HEAD
 ## 2.13.1 - 2026-08-24
 
 ### Added
@@ -26,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use locale-independent ASCII case folding everywhere case is normalized
 - Trigger a runtime deprecation for previously deprecated functionality in 2.3.0
 
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 ## 2.12.5 - 2026-07-13
 
 ### Fixed

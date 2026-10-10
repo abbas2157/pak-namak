@@ -82,10 +82,14 @@ final class Structure implements Schema
 	}
 
 
+<<<<<<< HEAD
 	/**
 	 * Creates a new structure by merging this shape with additional properties.
 	 * @param  Schema[]|self  $shape
 	 */
+=======
+	/** @param Schema[]|self  $shape */
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 	public function extend(array|self $shape): self
 	{
 		$shape = $shape instanceof self ? $shape->items : $shape;

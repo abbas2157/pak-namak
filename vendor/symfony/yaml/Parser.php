@@ -244,7 +244,11 @@ class Parser
                     array_pop($this->refsBeingParsed);
                 }
             } elseif (
+<<<<<<< HEAD
                 self::preg_match('#^(?P<key>(?:![^\s]++\s++)?(?:'.Inline::REGEX_QUOTED_STRING.'|[^ \'"\[\{!].*?)|![^\s]++(?= +\:)) *\:(( |\t)++(?P<value>.+))?$#u', rtrim($this->currentLine), $values)
+=======
+                self::preg_match('#^(?P<key>(?:![^\s]++\s++)?(?:'.Inline::REGEX_QUOTED_STRING.'|[^ \'"\[\{!].*?)) *\:(( |\t)++(?P<value>.+))?$#u', rtrim($this->currentLine), $values)
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 && (!str_contains($values['key'], ' #') || \in_array($values['key'][0], ['"', "'"], true))
             ) {
                 if ($context && 'sequence' == $context) {
@@ -1076,6 +1080,7 @@ class Parser
 
         $value = str_replace(["\r\n", "\r"], "\n", $value);
 
+<<<<<<< HEAD
         // remove the YAML header, and the comments and empty lines before the content
         $value = $this->removeLeadingLines('#^(?:[ \t]*+(?:\#[^\n]*+)?+\n)*+(?:%YAML[: ][\d.]++[^\n]*+\n(?:[ \t]*+(?:\#[^\n]*+)?+\n)*+)?+#', $value);
 
@@ -1100,6 +1105,30 @@ class Parser
 
         if (self::preg_match('#^(?:---|\.\.\.)(?:[ \t][^\n]*+)?+$#m', $value, $matches, \PREG_OFFSET_CAPTURE)) {
             throw new ParseException('Multiple documents are not supported.', $this->offset + substr_count($value, "\n", 0, $matches[0][1]) + 1, $matches[0][0], $this->filename);
+=======
+        // strip YAML header
+        $count = 0;
+        $value = preg_replace('#^%YAML[: ][\d.]++[^\n]*+\n#u', '', $value, -1, $count);
+        $this->offset += $count;
+
+        // remove leading comments
+        $trimmedValue = preg_replace('#^(?:\#[^\n]*+\n)++#', '', $value, -1, $count);
+        if (1 === $count) {
+            // items have been removed, update the offset
+            $this->offset += substr_count($value, "\n") - substr_count($trimmedValue, "\n");
+            $value = $trimmedValue;
+        }
+
+        // remove start of the document marker (---)
+        $trimmedValue = preg_replace('#^---[^\n]*+\n#', '', $value, -1, $count);
+        if (1 === $count) {
+            // items have been removed, update the offset
+            $this->offset += substr_count($value, "\n") - substr_count($trimmedValue, "\n");
+            $value = $trimmedValue;
+
+            // remove end of the document marker (...)
+            $value = preg_replace('#\.\.\.\s*+$#', '', $value);
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         }
 
         return $value;

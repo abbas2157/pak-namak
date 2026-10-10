@@ -158,6 +158,7 @@ class XliffUtils
      */
     private static function fixXmlLocation(string $schemaSource, string $xmlUri): string
     {
+<<<<<<< HEAD
         static $newPath;
 
         if (null === $newPath) {
@@ -179,6 +180,24 @@ class XliffUtils
             }
         }
 
+=======
+        $path = __DIR__.'/../Resources/schemas/xml.xsd';
+
+        if (0 === stripos($path, 'phar://')) {
+            if ($tmpfile = tempnam(sys_get_temp_dir(), 'symfony')) {
+                copy($path, $tmpfile);
+                $newPath = self::getFileUrl($tmpfile);
+            } else {
+                $parts = explode('/', '\\' === \DIRECTORY_SEPARATOR ? str_replace('\\', '/', $path) : $path);
+                array_shift($parts);
+                $drive = '\\' === \DIRECTORY_SEPARATOR ? array_shift($parts).'/' : '';
+                $newPath = 'phar:///'.$drive.implode('/', array_map('rawurlencode', $parts));
+            }
+        } else {
+            $newPath = self::getFileUrl($path);
+        }
+
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         return str_replace($xmlUri, $newPath, $schemaSource);
     }
 

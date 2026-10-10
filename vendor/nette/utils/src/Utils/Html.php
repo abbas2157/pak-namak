@@ -229,9 +229,12 @@ use const E_USER_DEPRECATED, ENT_HTML5, ENT_NOQUOTES, ENT_QUOTES;
  * @method self width(?int $val)
  * @method self wrap(?string $val)
  *
+<<<<<<< HEAD
  * @method static static text(mixed $text)
  * @method static static html(mixed $html)
  *
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
  * @implements \IteratorAggregate<int, self|string>
  * @implements \ArrayAccess<int, self|string>
  */

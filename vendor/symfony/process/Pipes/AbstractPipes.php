@@ -182,6 +182,18 @@ abstract class AbstractPipes implements PipesInterface
         return null;
     }
 
+    private function closeBrokenInputPipe(): void
+    {
+        $this->lastError = error_get_last()['message'] ?? null;
+        if (\is_resource($this->pipes[0] ?? null)) {
+            fclose($this->pipes[0]);
+        }
+        unset($this->pipes[0]);
+
+        $this->input = null;
+        $this->inputBuffer = '';
+    }
+
     /**
      * Tells whether the next chunk of input can be written without waiting.
      */

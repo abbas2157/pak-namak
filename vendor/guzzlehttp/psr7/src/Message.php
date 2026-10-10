@@ -33,7 +33,11 @@ final class Message
         }
 
         foreach ($message->getHeaders() as $name => $values) {
+<<<<<<< HEAD
             if (is_string($name) && Utils::asciiToLower($name) === 'set-cookie') {
+=======
+            if (is_string($name) && strtr($name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') === 'set-cookie') {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 foreach ($values as $value) {
                     $msg .= "\r\n{$name}: ".$value;
                 }
@@ -294,7 +298,11 @@ final class Message
             // Numeric array keys are converted to int by PHP.
             $k = (string) $k;
 
+<<<<<<< HEAD
             return Utils::asciiToLower($k) === 'host';
+=======
+            return strtr($k, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') === 'host';
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         });
 
         if (!$hostKey) {

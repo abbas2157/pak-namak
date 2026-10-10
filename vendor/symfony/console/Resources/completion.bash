@@ -50,11 +50,16 @@ _sf_{{ COMMAND_NAME }}() {
     local cur prev words cword
     _get_comp_words_by_ref -n := cur prev words cword
 
+<<<<<<< HEAD
     # Use newline as only separator to allow space in completion values
     local IFS=$'\n'
 
     local completecmd=("${sf_cmd_parts[@]}" "_complete" "--no-interaction" "-sbash" "-c$cword" "-a{{ VERSION }}")
     for w in "${words[@]}"; do
+=======
+    local completecmd=("$sf_cmd" "_complete" "--no-interaction" "-sbash" "-c$cword" "-a{{ VERSION }}")
+    for w in ${words[@]}; do
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         w="${w//\\\\/\\}"
         # remove quotes from typed values
         quote="${w:0:1}"
@@ -72,7 +77,11 @@ _sf_{{ COMMAND_NAME }}() {
     done
 
     local sfcomplete
+<<<<<<< HEAD
     if sfcomplete=$(SHELL_VERBOSITY=0 "${completecmd[@]}" 2>&1); then
+=======
+    if sfcomplete=$(SHELL_VERBOSITY=0 ${completecmd[@]} 2>&1); then
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         local quote suggestions
 
         # for the "--option=value" form, the suggestions are the values: readline

@@ -31,6 +31,7 @@ class InvalidOptionException extends \InvalidArgumentException implements Except
 
         return new self($error);
     }
+<<<<<<< HEAD
 
     /**
      * @internal
@@ -39,4 +40,6 @@ class InvalidOptionException extends \InvalidArgumentException implements Except
     {
         return new self(\sprintf('The value "%s" is not valid for the "%s" option. Expected a value of type "%s".', $value, $name, $type));
     }
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 }

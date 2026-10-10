@@ -412,6 +412,7 @@ class Inline
                     continue;
                 }
 
+<<<<<<< HEAD
                 if (!isset($sequence[$i])) {
                     break;
                 }
@@ -428,6 +429,20 @@ class Inline
                     default:
                         $value = self::parseScalar($sequence, $flags, [',', ']'], $i, null === $tag, $references, $isQuoted, $state);
 
+=======
+                switch ($sequence[$i]) {
+                    case '[':
+                        // nested sequence
+                        $value = self::parseSequence($state, $sequence, $flags, $i, $references);
+                        break;
+                    case '{':
+                        // nested mapping
+                        $value = self::parseMapping($state, $sequence, $flags, $i, $references);
+                        break;
+                    default:
+                        $value = self::parseScalar($sequence, $flags, [',', ']'], $i, null === $tag, $references, $isQuoted, $state);
+
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                         // the value can be an array if a reference has been resolved to an array var
                         if (\is_string($value) && !$isQuoted && str_contains($value, ': ')) {
                             // embedded mapping?
@@ -536,7 +551,11 @@ class Inline
                 if (!$isKeyQuoted) {
                     $evaluatedKey = self::evaluateScalar($state, $key, $flags, $references);
 
+<<<<<<< HEAD
                     if ('' !== $key && $evaluatedKey !== $key && (!\is_string($evaluatedKey) || '!' === $key[0]) && !\is_int($evaluatedKey)) {
+=======
+                    if ('' !== $key && $evaluatedKey !== $key && !\is_string($evaluatedKey) && !\is_int($evaluatedKey)) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                         throw new ParseException('Implicit casting of incompatible mapping keys to strings is not supported. Quote your evaluable mapping keys instead.', self::$parsedLineNumber + 1, $mapping);
                     }
                 }
@@ -575,10 +594,13 @@ class Inline
                         continue 2;
                     }
 
+<<<<<<< HEAD
                     if (!isset($mapping[$i])) {
                         break;
                     }
 
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                     switch ($mapping[$i]) {
                         case '[':
                             // nested sequence
@@ -929,6 +951,12 @@ class Inline
         if ('' === $parsedBinaryData || '' === $parsedBinaryData = self::parseScalar($parsedBinaryData)) {
             return '';
         }
+
+        if (!\is_scalar($parsedBinaryData ?? '') && !$parsedBinaryData instanceof \Stringable) {
+            throw new ParseException(\sprintf('The "!!binary" tag only supports a base64 encoded string, got "%s".', get_debug_type($parsedBinaryData)), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);
+        }
+
+        $parsedBinaryData = (string) $parsedBinaryData;
 
         if (!\is_scalar($parsedBinaryData ?? '') && !$parsedBinaryData instanceof \Stringable) {
             throw new ParseException(\sprintf('The "!!binary" tag only supports a base64 encoded string, got "%s".', get_debug_type($parsedBinaryData)), self::$parsedLineNumber + 1, $scalar, self::$parsedFilename);

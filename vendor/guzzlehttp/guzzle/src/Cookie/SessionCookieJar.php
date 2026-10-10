@@ -82,6 +82,7 @@ class SessionCookieJar extends CookieJar
         if (\is_array($data)) {
             $cookies = [];
             foreach ($data as $cookie) {
+<<<<<<< HEAD
                 if (!\is_array($cookie) || !\array_key_exists('HostOnly', $cookie) || !\is_bool($cookie['HostOnly'])) {
                     throw new \RuntimeException('Invalid cookie data');
                 }
@@ -92,6 +93,14 @@ class SessionCookieJar extends CookieJar
             foreach ($cookies as $cookie) {
                 $this->setCookie($cookie);
             }
+=======
+                if (!\is_array($cookie)) {
+                    throw new \RuntimeException('Invalid cookie data');
+                }
+
+                $this->setCookie(new SetCookie($cookie));
+            }
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         } elseif (\is_scalar($data) && \strlen((string) $data)) {
             throw new \RuntimeException('Invalid cookie data');
         }

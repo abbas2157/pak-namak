@@ -60,7 +60,64 @@ class Normalizer
         return self::normalize($string, $form) === $string;
     }
 
+<<<<<<< HEAD
     public static function getRawDecomposition(string $string, int $form = self::FORM_C)
+=======
+    public static function getRawDecomposition(string $s, int $form = self::FORM_C)
+    {
+        if ('' === $s || !preg_match('//u', $s)) {
+            return null;
+        }
+
+        $ulen = $s[0] < "\x80" ? 1 : (self::$ulenMask[$s[0] & "\xF0"] ?? 0);
+        if (!$ulen || \strlen($s) !== $ulen) {
+            return null;
+        }
+
+        if (self::NFC !== $form && self::NFD !== $form && self::NFKC !== $form && self::NFKD !== $form) {
+            return '';
+        }
+
+        if ($s >= "\xEA\xB0\x80" && $s <= "\xED\x9E\xA3") {
+            $u = unpack('C*', $s);
+            $j = (($u[1] - 224) << 12) + (($u[2] - 128) << 6) + $u[3] - 0xAC80;
+
+            if ($t = $j % 28) {
+                $j -= $t;
+                $lv = 0xAC00 + $j;
+                $r = \chr(0xE0 | $lv >> 12).\chr(0x80 | $lv >> 6 & 0x3F).\chr(0x80 | $lv & 0x3F);
+                $r .= $t < 25
+                    ? ("\xE1\x86".\chr(0xA7 + $t))
+                    : ("\xE1\x87".\chr(0x67 + $t));
+
+                return $r;
+            }
+
+            return "\xE1\x84".\chr(0x80 + (int) ($j / 588))
+                  ."\xE1\x85".\chr(0xA1 + (int) (($j % 588) / 28));
+        }
+
+        if (null === self::$rawD) {
+            self::$rawD = self::getData('rawCanonicalDecomposition');
+        }
+
+        if (isset(self::$rawD[$s])) {
+            return self::$rawD[$s];
+        }
+
+        if (self::NFKC === $form || self::NFKD === $form) {
+            if (null === self::$rawKD) {
+                self::$rawKD = self::getData('rawCompatibilityDecomposition');
+            }
+
+            return self::$rawKD[$s] ?? null;
+        }
+
+        return null;
+    }
+
+    public static function normalize(string $s, int $form = self::FORM_C)
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     {
         if ('' === $string || !preg_match('//u', $string)) {
             return null;

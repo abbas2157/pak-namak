@@ -121,6 +121,7 @@ class Worker
     public static $memoryExceededExitCode;
 
     /**
+<<<<<<< HEAD
      * The custom exit code to be used when a job times out.
      *
      * @var int|null
@@ -128,6 +129,8 @@ class Worker
     public static $timedOutExitCode;
 
     /**
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      * Indicates if the worker should check for the restart signal in the cache.
      *
      * @var bool
@@ -282,7 +285,11 @@ class Worker
                 ));
             }
 
+<<<<<<< HEAD
             $this->kill(static::$timedOutExitCode ?? static::EXIT_ERROR, $options, WorkerStopReason::TimedOut);
+=======
+            $this->kill(static::EXIT_ERROR, $options, WorkerStopReason::TimedOut);
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         }, true);
 
         pcntl_alarm(
@@ -878,10 +885,13 @@ class Worker
     public function kill($status = 0, $options = null, $reason = null)
     {
         $this->events->dispatch(new WorkerStopping($status, $options, $reason));
+<<<<<<< HEAD
 
         if (static::$killCallback) {
             call_user_func(static::$killCallback, $status);
         }
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
         if (extension_loaded('posix')) {
             posix_kill(getmypid(), SIGKILL);

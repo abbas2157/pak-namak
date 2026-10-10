@@ -107,8 +107,13 @@
     "scripts": {
         "phpcs": "php-cs-fixer fix -v --diff --dry-run",
         "phpdoc": "php phpdoc.php",
+<<<<<<< HEAD
         "phpmd": "phpmd analyze src --format=text --ruleset=/phpmd.yml",
         "phpmd-test": "phpmd analyze tests --format=text --ruleset=/tests/phpmd-test.yml",
+=======
+        "phpmd": "phpmd src text /phpmd.xml",
+        "phpmd-test": "phpmd tests text /tests/phpmd-test.xml",
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         "phpstan": "phpstan analyse --configuration phpstan.neon --memory-limit 1024M",
         "phpunit": "phpunit",
         "style-check": [

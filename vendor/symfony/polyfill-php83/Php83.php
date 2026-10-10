@@ -39,7 +39,10 @@ final class Php83
         }
 
         if ($depth > self::JSON_MAX_DEPTH) {
+<<<<<<< HEAD
             json_decode('0');
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             throw new \ValueError(\sprintf('json_validate(): Argument #2 ($depth) must be less than %d', self::JSON_MAX_DEPTH));
         }
 
@@ -64,7 +67,11 @@ final class Php83
             $errorToTrigger = \sprintf('mb_str_pad(): Argument #5 ($encoding) must be a valid encoding, "%s" given', $encoding);
         }
 
+<<<<<<< HEAD
         if (null === $errorToTrigger && 0 >= $padStringLength = mb_strlen($pad_string, $encoding)) {
+=======
+        if (null === $errorToTrigger && mb_strlen($pad_string, $encoding) <= 0) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             $errorToTrigger = 'mb_str_pad(): Argument #3 ($pad_string) must be a non-empty string';
         }
 
@@ -155,7 +162,11 @@ final class Php83
             throw new \ValueError('str_decrement(): Argument #1 ($string) must be composed only of alphanumeric ASCII characters');
         }
 
+<<<<<<< HEAD
         if ('0' === $string[0] || 'a' === $string || 'A' === $string) {
+=======
+        if (preg_match('/\A(?:0[aA0]?|[aA])\z/', $string)) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             throw new \ValueError(\sprintf('str_decrement(): Argument #1 ($string) "%s" is out of decrement range', $string));
         }
 

@@ -11,7 +11,10 @@ use Nette\Schema\Context;
 use Nette\Schema\DynamicParameter;
 use Nette\Schema\Helpers;
 use Nette\Schema\Schema;
+<<<<<<< HEAD
 use Nette\Utils\Validators;
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 use function array_key_exists, array_pop, implode, is_array, str_replace, strpos;
 
 
@@ -214,12 +217,16 @@ final class Type implements Schema
 			$isKeyOk = $context->createChecker();
 			$key = $this->itemsKey ? $this->itemsKey->complete($key, $context) : $key;
 			$context->isKey = false;
+<<<<<<< HEAD
 			$keyOk = $isKeyOk();
 			$val = $itemsValue->complete($val, $context);
 			if ($keyOk) {
 				$res[$key] = $val;
 			}
 
+=======
+			$res[$key ?? ''] = $this->itemsValue->complete($val, $context);
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 			array_pop($context->path);
 		}
 		$value = $res;

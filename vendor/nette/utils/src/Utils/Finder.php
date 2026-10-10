@@ -47,7 +47,11 @@ class Finder implements \IteratorAggregate
 
 
 	/**
+<<<<<<< HEAD
 	 * Begins search for files and directories matching mask. The ** wildcard searches recursively; a trailing slash limits the mask to directories.
+=======
+	 * Begins search for files and directories matching mask.
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 	 * @param  string|list<string>  $masks
 	 */
 	public static function find(string|array $masks = ['*']): static
@@ -59,7 +63,11 @@ class Finder implements \IteratorAggregate
 
 
 	/**
+<<<<<<< HEAD
 	 * Begins search for files matching mask. The ** wildcard searches recursively.
+=======
+	 * Begins search for files matching mask.
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 	 * @param  string|list<string>  $masks
 	 */
 	public static function findFiles(string|array $masks = ['*']): static
@@ -70,7 +78,11 @@ class Finder implements \IteratorAggregate
 
 
 	/**
+<<<<<<< HEAD
 	 * Begins search for directories matching mask. The ** wildcard searches recursively.
+=======
+	 * Begins search for directories matching mask.
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 	 * @param  string|list<string>  $masks
 	 */
 	public static function findDirectories(string|array $masks = ['*']): static
@@ -131,7 +143,11 @@ class Finder implements \IteratorAggregate
 
 
 	/**
+<<<<<<< HEAD
 	 * Searches in the given directories. Wildcards * and ? are allowed; unlike in masks, [ and ] are taken literally.
+=======
+	 * Searches in the given directories. Wildcards are allowed.
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 	 * @param  string|list<string>  $paths
 	 */
 	public function in(string|array $paths): static
@@ -143,7 +159,11 @@ class Finder implements \IteratorAggregate
 
 
 	/**
+<<<<<<< HEAD
 	 * Searches recursively from the given directories. Wildcards * and ? are allowed; unlike in masks, [ and ] are taken literally.
+=======
+	 * Searches recursively from the given directories. Wildcards are allowed.
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 	 * @param  string|list<string>  $paths
 	 */
 	public function from(string|array $paths): static
@@ -227,8 +247,12 @@ class Finder implements \IteratorAggregate
 
 
 	/**
+<<<<<<< HEAD
 	 * Skips entries that match the given masks, using the same grammar as find() masks, relative to the directories from in() or from().
 	 * A trailing slash excludes directories only; a trailing /* or /** excludes the contents while keeping the directory itself.
+=======
+	 * Skips entries that matches the given masks relative to the ones defined with the in() or from() methods.
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 	 * @param  string|list<string>  $masks
 	 */
 	public function exclude(string|array $masks): static

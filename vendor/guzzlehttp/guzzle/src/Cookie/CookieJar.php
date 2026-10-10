@@ -94,7 +94,11 @@ class CookieJar implements CookieJarInterface
     public function getCookieByName(string $name): ?SetCookie
     {
         foreach ($this->cookies as $cookie) {
+<<<<<<< HEAD
             if ($cookie->getName() !== null && Psr7\Utils::caselessEquals($cookie->getName(), $name)) {
+=======
+            if ($cookie->getName() !== null && \strtr($cookie->getName(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') === \strtr($name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 return $cookie;
             }
         }
@@ -177,7 +181,11 @@ class CookieJar implements CookieJarInterface
         $maxAge = $cookie->getMaxAge();
         if ($maxAge !== null && $maxAge <= 0) {
             if ($cookie->getDomain() !== null) {
+<<<<<<< HEAD
                 $this->removeCookie($cookie);
+=======
+                $this->clear($cookie->getDomain(), $cookie->getPath(), $cookie->getName());
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             }
 
             return false;
@@ -189,7 +197,10 @@ class CookieJar implements CookieJarInterface
             // identical.
             if ($c->getPath() !== $cookie->getPath()
                 || $c->getDomain() !== $cookie->getDomain()
+<<<<<<< HEAD
                 || $c->getHostOnly() !== $cookie->getHostOnly()
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 || $c->getName() !== $cookie->getName()
             ) {
                 continue;
@@ -249,6 +260,12 @@ class CookieJar implements CookieJarInterface
                 $sc = SetCookie::fromString($cookie);
                 $domain = $sc->getDomain();
                 if ($domain === null || $domain === '') {
+<<<<<<< HEAD
+=======
+                    $sc->setDomain($request->getUri()->getHost());
+                } elseif (\substr($domain, -1) === '.' && '' !== \trim($domain, '.')) {
+                    // Keep pure-dot domains rejected by the dot-only fix.
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                     $sc->setDomain($request->getUri()->getHost());
                     $sc->setHostOnly(true);
                 } elseif (\substr($domain, -1) === '.' && '' !== \trim($domain, '.')) {
@@ -343,7 +360,15 @@ class CookieJar implements CookieJarInterface
     {
         $cookieValue = $cookie->getValue();
         if (($cookieValue === null || $cookieValue === '') && $cookie->getDomain() !== null) {
+<<<<<<< HEAD
             $this->removeCookie($cookie);
+=======
+            $this->clear(
+                $cookie->getDomain(),
+                $cookie->getPath(),
+                $cookie->getName()
+            );
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         }
     }
 

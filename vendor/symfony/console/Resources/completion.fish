@@ -29,7 +29,11 @@ function _sf_{{ COMMAND_NAME }}
     set sfcomplete (env SHELL_VERBOSITY=0 $completecmd)
 
     for i in $sfcomplete
+<<<<<<< HEAD
         echo "$flag_prefix$i"
+=======
+        echo $i
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     end
 end
 

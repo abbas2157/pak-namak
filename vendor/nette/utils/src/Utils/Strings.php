@@ -333,8 +333,13 @@ class Strings
 	public static function compare(string $left, string $right, ?int $length = null): bool
 	{
 		if (class_exists('Normalizer', autoload: false)) {
+<<<<<<< HEAD
 			$left = \Normalizer::normalize($left, \Normalizer::FORM_D) ?: $left; // form NFD is faster, false on invalid UTF-8
 			$right = \Normalizer::normalize($right, \Normalizer::FORM_D) ?: $right; // form NFD is faster, false on invalid UTF-8
+=======
+			$left = \Normalizer::normalize($left, \Normalizer::FORM_D); // form NFD is faster
+			$right = \Normalizer::normalize($right, \Normalizer::FORM_D); // form NFD is faster
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 		}
 
 		if ($length < 0) {
@@ -385,7 +390,11 @@ class Strings
 		return match (true) {
 			extension_loaded('mbstring') => (int) mb_strlen($s, 'UTF-8'),
 			extension_loaded('iconv') => (int) iconv_strlen($s, 'UTF-8'),
+<<<<<<< HEAD
 			default => strlen((string) preg_replace('#[\x80-\xBF]#', '', $s)), // strips UTF-8 continuation bytes
+=======
+			default => strlen(@utf8_decode($s)), // deprecated
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 		};
 	}
 

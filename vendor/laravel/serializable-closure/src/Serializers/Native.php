@@ -569,6 +569,7 @@ class Native implements Serializable
     }
 
     /**
+<<<<<<< HEAD
      * Determine if the class inherits from a PHP internal class.
      *
      * Instances of such classes carry internal state that
@@ -595,6 +596,8 @@ class Native implements Serializable
     }
 
     /**
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      * Determine is virtual property.
      *
      * @param  \ReflectionProperty  $property

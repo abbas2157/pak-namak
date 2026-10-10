@@ -6,6 +6,7 @@ Updates should follow the [Keep a CHANGELOG](https://keepachangelog.com/) princi
 
 ## [Unreleased][unreleased]
 
+<<<<<<< HEAD
 ## [2.10.3] - 2026-09-21
 
 ### Fixed
@@ -127,6 +128,8 @@ This is a **security release** to address five denial of service vulnerabilities
 - Fixed `XmlRenderer` indenting every element by its full nesting depth without any upper bound, causing deeply-nested documents to render as quadratically-sized XML, which could be abused to cause a denial of service (GHSA-mj63-m3rc-8ppr)
 - Fixed `MarkDelimiterProcessor` not being declared as a `CacheableDelimiterProcessorInterface`, preventing the delimiter stack from caching the opener search for `==` runs (#1133)
 
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 ## [2.8.3] - 2026-07-12
 
 ### Fixed
@@ -859,6 +862,7 @@ No changes were introduced since the previous release.
     - Alternative 1: Use `CommonMarkConverter` or `GithubFlavoredMarkdownConverter` if you don't need to customize the environment
     - Alternative 2: Instantiate a new `Environment` and add the necessary extensions yourself
 
+<<<<<<< HEAD
 [unreleased]: https://github.com/thephpleague/commonmark/compare/2.10.3...HEAD
 [2.10.3]: https://github.com/thephpleague/commonmark/compare/2.10.2...2.10.3
 [2.10.2]: https://github.com/thephpleague/commonmark/compare/2.10.1...2.10.2
@@ -867,6 +871,9 @@ No changes were introduced since the previous release.
 [2.9.2]: https://github.com/thephpleague/commonmark/compare/2.9.1...2.9.2
 [2.9.1]: https://github.com/thephpleague/commonmark/compare/2.9.0...2.9.1
 [2.9.0]: https://github.com/thephpleague/commonmark/compare/2.8.3...2.9.0
+=======
+[unreleased]: https://github.com/thephpleague/commonmark/compare/2.8.3...HEAD
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 [2.8.3]: https://github.com/thephpleague/commonmark/compare/2.8.2...2.8.3
 [2.8.2]: https://github.com/thephpleague/commonmark/compare/2.8.1...2.8.2
 [2.8.1]: https://github.com/thephpleague/commonmark/compare/2.8.0...2.8.1

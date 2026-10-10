@@ -53,6 +53,7 @@ class RotatingFileHandler extends StreamHandler
         $this->timezone = $timezone;
         $this->setFilenameFormat($filenameFormat, $dateFormat);
         $this->nextRotation = $this->getNextRotation();
+        $this->timezone = $timezone;
 
         parent::__construct($this->getTimedFilename(), $level, $bubble, $filePermission, $useLocking);
     }
@@ -146,7 +147,11 @@ class RotatingFileHandler extends StreamHandler
             return strcmp($b, $a);
         });
 
+<<<<<<< HEAD
         $basePath = self::normalizeDirectorySeparators(dirname($this->filename));
+=======
+        $basePath = dirname($this->filename);
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
         foreach (\array_slice($logFiles, $this->maxFiles) as $file) {
             if (is_writable($file)) {
@@ -157,7 +162,11 @@ class RotatingFileHandler extends StreamHandler
                 });
                 unlink($file);
 
+<<<<<<< HEAD
                 $dir = self::normalizeDirectorySeparators(dirname($file));
+=======
+                $dir = dirname($file);
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 while ($dir !== $basePath) {
                     $entries = scandir($dir);
                     if ($entries === false || \count(array_diff($entries, ['.', '..'])) > 0) {
@@ -165,7 +174,11 @@ class RotatingFileHandler extends StreamHandler
                     }
 
                     rmdir($dir);
+<<<<<<< HEAD
                     $dir = self::normalizeDirectorySeparators(dirname($dir));
+=======
+                    $dir = dirname($dir);
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 }
                 restore_error_handler();
             }
@@ -178,7 +191,11 @@ class RotatingFileHandler extends StreamHandler
         $timedFilename = str_replace(
             ['{filename}', '{date}'],
             [$fileInfo['filename'], (new \DateTimeImmutable(timezone: $this->timezone))->format($this->dateFormat)],
+<<<<<<< HEAD
             self::appendDirectorySeparator($fileInfo['dirname'] ?? '') . $this->filenameFormat
+=======
+            ($fileInfo['dirname'] ?? '') . '/' . $this->filenameFormat
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         );
 
         if (isset($fileInfo['extension'])) {

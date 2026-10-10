@@ -60,20 +60,28 @@ final class Expect
 	}
 
 
+<<<<<<< HEAD
 	/**
 	 * Creates a structure schema with defined properties; output is stdClass.
 	 * @param  Schema[]  $shape
 	 */
+=======
+	/** @param Schema[]  $shape */
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 	public static function structure(array $shape): Structure
 	{
 		return new Structure($shape);
 	}
 
 
+<<<<<<< HEAD
 	/**
 	 * Generates a structure schema from a class instance by reflecting its properties or constructor parameters.
 	 * @param  array<string, Schema>  $items  Optional overrides for specific properties.
 	 */
+=======
+	/** @param  array<string, Schema>  $items */
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 	public static function from(object $object, array $items = []): Structure
 	{
 		$ro = new \ReflectionObject($object);

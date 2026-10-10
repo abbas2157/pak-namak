@@ -67,7 +67,11 @@ class SetCookie
                 $data['Value'] = $value;
             } else {
                 foreach (\array_keys(self::$defaults) as $search) {
+<<<<<<< HEAD
                     if (Psr7\Utils::caselessEquals($search, $key)) {
+=======
+                    if (\strtr($search, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') === \strtr($key, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')) {
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                         if ($search === 'Max-Age') {
                             if (is_numeric($value)) {
                                 $data[$search] = (int) $value;
@@ -499,7 +503,11 @@ class SetCookie
 
         // Remove the leading '.' as per spec in RFC 6265.
         // https://datatracker.ietf.org/doc/html/rfc6265#section-5.2.3
+<<<<<<< HEAD
         $cookieDomain = Psr7\Utils::asciiToLower($cookieDomain);
+=======
+        $cookieDomain = \strtr($cookieDomain, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         if ($cookieDomain !== '' && $cookieDomain[0] === '.') {
             /** @var string */
             $cookieDomain = \substr($cookieDomain, 1);
@@ -508,17 +516,24 @@ class SetCookie
             return false;
         }
 
+<<<<<<< HEAD
         $domain = Psr7\Utils::asciiToLower($domain);
+=======
+        $domain = \strtr($domain, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         if ($domain === $cookieDomain) {
             return true;
         }
 
+<<<<<<< HEAD
         // A percent-escaped cookie domain can decode to another host spelling.
         // Keep it exact-match-only to avoid extending that host's cookie scope.
         if (\strpos($cookieDomain, '%') !== false) {
             return false;
         }
 
+=======
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         // IP literals and numeric hosts are exact-match-only per RFC 6265.
         // Only the exact match above may succeed for those cookie domains.
         if (self::isIpAddressOrNumericHost($cookieDomain)) {
@@ -555,6 +570,7 @@ class SetCookie
         $labels = \explode('.', $host);
         $last = (string) \end($labels);
 
+<<<<<<< HEAD
         if ($last !== '' && \ctype_digit($last)) {
             return true;
         }
@@ -563,6 +579,9 @@ class SetCookie
         // grammar. Omitting range checks conservatively holds some names to an
         // exact match.
         return HostValidator::isNumericIpv4Host(\rtrim($host, '.'));
+=======
+        return $last !== '' && \ctype_digit($last);
+>>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     }
 
     /**
