@@ -12,8 +12,6 @@
     <x-laravel-exceptions-renderer::separator class="-mt-5 -z-10" />
 
     <x-laravel-exceptions-renderer::section-container class="flex flex-col gap-8 pt-14">
-        <x-laravel-exceptions-renderer::overview :request="$exception->request()" />
-
         <x-laravel-exceptions-renderer::trace :$exception />
 
         <x-laravel-exceptions-renderer::query :queries="$exception->applicationQueries()" />
@@ -33,7 +31,9 @@
 
     <x-laravel-exceptions-renderer::separator />
 
-    <x-laravel-exceptions-renderer::section-container class="pb-0 sm:pb-0">
-        <x-laravel-exceptions-renderer::laravel-ascii-spotlight />
-    </x-laravel-exceptions-renderer::section-container>
+    @if (! app()->runningUnitTests() && ! app()->runningInConsole())
+        <x-laravel-exceptions-renderer::section-container class="pb-0 sm:pb-0">
+            <x-laravel-exceptions-renderer::laravel-ascii-spotlight />
+        </x-laravel-exceptions-renderer::section-container>
+    @endif
 </x-laravel-exceptions-renderer::layout>
