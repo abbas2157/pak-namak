@@ -5,6 +5,8 @@ namespace Illuminate\Foundation\Exceptions\Renderer;
 use Illuminate\Foundation\Concerns\ResolvesDumpSource;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 
+use function Illuminate\Filesystem\join_paths;
+
 class Frame
 {
     use ResolvesDumpSource;
@@ -99,6 +101,10 @@ class Frame
      */
     public function class()
     {
+        if (! empty($this->frame['class'])) {
+            return $this->frame['class'];
+        }
+
         $class = array_search((string) realpath($this->frame['file']), $this->classMap, true);
 
         return $class === false ? null : $class;
@@ -114,7 +120,7 @@ class Frame
         return match (true) {
             ! isset($this->frame['file']) => '[internal function]',
             ! is_string($this->frame['file']) => '[unknown file]',
-            default => str_replace($this->basePath.'/', '', $this->frame['file']),
+            default => str_replace($this->basePath.DIRECTORY_SEPARATOR, '', $this->frame['file']),
         };
     }
 
@@ -141,7 +147,7 @@ class Frame
      */
     public function operator()
     {
-        return $this->frame['type'];
+        return $this->frame['type'] ?? '';
     }
 
     /**
@@ -206,7 +212,7 @@ class Frame
     public function isFromVendor()
     {
         return ! str_starts_with($this->frame['file'], $this->basePath)
-            || str_starts_with($this->frame['file'], $this->basePath.'/vendor');
+            || str_starts_with($this->frame['file'], join_paths($this->basePath, 'vendor'));
     }
 
     /**
