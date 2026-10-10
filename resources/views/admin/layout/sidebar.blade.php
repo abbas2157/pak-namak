@@ -22,6 +22,7 @@
                 $financeCatActive  = request()->routeIs('admin.expenses.*') || request()->routeIs('admin.assets.*') || request()->routeIs('admin.investments.*');
                 $settingsCatActive = request()->routeIs('admin.types.*') || request()->routeIs('admin.cities.*') || request()->routeIs('admin.areas.*') || request()->routeIs('admin.password.*');
                 $spicesCatActive   = request()->routeIs('admin.spice-*') && !$reportsCatActive;
+                $ownerActive       = request()->routeIs('admin.owner_account.*');
             @endphp
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
 
@@ -377,6 +378,14 @@
                             </a>
                         </li>
                     </ul>
+                </li>
+
+                {{-- ═══ OWNER (personal — kept apart from business menus) ═══ --}}
+                <li class="nav-item">
+                    <a href="{{ route('admin.owner_account.index') }}" class="nav-link nav-cat-link {{ $ownerActive ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-user-tie"></i>
+                        <p>Owner Account <small class="d-block nav-sub-lbl">مالک کا کھاتہ</small></p>
+                    </a>
                 </li>
 
                 {{-- ═══ SETTINGS ═══ --}}

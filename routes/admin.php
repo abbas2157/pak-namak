@@ -117,6 +117,13 @@ Route::middleware('web')->group(function () {
             ->except(['show']);
         Route::get('investments', [App\Http\Controllers\Admin\InvestmentController::class, 'index'])->name('admin.investments.index');
 
+        // Owner Account — personal money to/from Pak Namak; standalone, not in any business totals
+        Route::get('owner-account', [App\Http\Controllers\Admin\OwnerTransactionController::class, 'index'])->name('admin.owner_account.index');
+        Route::post('owner-account', [App\Http\Controllers\Admin\OwnerTransactionController::class, 'store'])->name('admin.owner_account.store');
+        Route::get('owner-account/{ownerTransaction}/edit', [App\Http\Controllers\Admin\OwnerTransactionController::class, 'edit'])->name('admin.owner_account.edit');
+        Route::put('owner-account/{ownerTransaction}', [App\Http\Controllers\Admin\OwnerTransactionController::class, 'update'])->name('admin.owner_account.update');
+        Route::delete('owner-account/{ownerTransaction}', [App\Http\Controllers\Admin\OwnerTransactionController::class, 'destroy'])->name('admin.owner_account.destroy');
+
         // Receipt (new tab / print-friendly)
         Route::get('sales/{id}/receipt', \App\Http\Controllers\Admin\SaleReceiptController::class)
             ->name('admin.sales.receipt');
