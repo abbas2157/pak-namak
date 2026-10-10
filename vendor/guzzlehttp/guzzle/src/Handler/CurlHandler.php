@@ -64,27 +64,16 @@ class CurlHandler
             : null;
 
         $this->factory = $this->shareHandleState !== null
-<<<<<<< HEAD
-            ? new CurlFactory(3, $this->shareHandleState->mode, $this->shareHandleState)
-=======
             ? new CurlFactory(3, $this->shareHandleState->mode, $this->shareHandleState->handle)
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             : new CurlFactory(3);
     }
 
     public function __invoke(RequestInterface $request, array $options): PromiseInterface
     {
-        HostValidator::assertRequestHost($request);
-
         if (isset($options['delay'])) {
             \usleep($options['delay'] * 1000);
         }
 
-        // A Multiplexing::NONE request option holds unconditionally here:
-        // transport sharing never shares the connection cache on this
-        // branch, and nothing else executes during the blocking curl_exec(),
-        // so the transfer cannot share its connection with a concurrent
-        // transfer.
         $easy = $this->factory->create($request, $options);
         \curl_exec($easy->handle);
         $easy->errno = \curl_errno($easy->handle);

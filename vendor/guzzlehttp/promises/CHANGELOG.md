@@ -1,24 +1,6 @@
 # CHANGELOG
 
 
-<<<<<<< HEAD
-## 2.5.3 - 2026-08-24
-
-### Added
-
-- Added support for PHP 8.6
-
-
-## 2.5.2 - 2026-08-05
-
-### Fixed
-
-- Fixed `EachPromise` abandoning its aggregate when the pending window drains unsettled
-- Fixed `EachPromise` admitting new work after its aggregate has settled
-
-
-=======
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 ## 2.5.1 - 2026-07-08
 
 ### Fixed

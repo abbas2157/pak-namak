@@ -7,7 +7,6 @@ namespace Doctrine\Common\Lexer;
 use ReflectionClass;
 use UnitEnum;
 
-use function count;
 use function implode;
 use function preg_split;
 use function sprintf;
@@ -21,7 +20,7 @@ use const PREG_SPLIT_OFFSET_CAPTURE;
  * Base class for writing simple lexers, i.e. for creating small DSLs.
  *
  * @template T of UnitEnum|string|int
- * @template V of string|int|float|bool
+ * @template V of string|int
  */
 abstract class AbstractLexer
 {
@@ -113,31 +112,13 @@ abstract class AbstractLexer
     /**
      * Resets the lexer position on the input to the given position.
      *
-     * @param int $position Character offset into the input, as found in
-     *                      Token::$position.
+     * @param int $position Position to place the lexical scanner.
      *
      * @return void
      */
     public function resetPosition(int $position = 0)
     {
-        $this->position = $this->findTokenIndexAtOrAfterOffset($position);
-    }
-
-    /**
-     * Finds the index of the first token at or after the given offset.
-     *
-     * Token offsets are strictly increasing, so a linear scan suffices.
-     * Returns one past the end when there is no such token.
-     */
-    private function findTokenIndexAtOrAfterOffset(int $offset): int
-    {
-        foreach ($this->tokens as $index => $token) {
-            if ($token->position >= $offset) {
-                return $index;
-            }
-        }
-
-        return count($this->tokens);
+        $this->position = $position;
     }
 
     /**
@@ -157,7 +138,7 @@ abstract class AbstractLexer
      *
      * @return bool
      *
-     * @phpstan-assert-if-true !=null $this->lookahead
+     * @psalm-assert-if-true !=null $this->lookahead
      */
     public function isNextToken(int|string|UnitEnum $type)
     {
@@ -171,7 +152,7 @@ abstract class AbstractLexer
      *
      * @return bool
      *
-     * @phpstan-assert-if-true !=null $this->lookahead
+     * @psalm-assert-if-true !=null $this->lookahead
      */
     public function isNextTokenAny(array $types)
     {
@@ -183,8 +164,7 @@ abstract class AbstractLexer
      *
      * @return bool
      *
-     * @phpstan-impure
-     * @phpstan-assert-if-true !null $this->lookahead
+     * @psalm-assert-if-true !null $this->lookahead
      */
     public function moveNext()
     {
@@ -238,8 +218,6 @@ abstract class AbstractLexer
      * Peeks at the next token, returns it and immediately resets the peek.
      *
      * @return Token<T, V>|null The next token or NULL if there are no more tokens ahead.
-     *
-     * @phpstan-impure
      */
     public function glimpse()
     {

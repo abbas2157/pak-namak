@@ -39,9 +39,6 @@ final class Structure implements Schema
 	}
 
 
-	/**
-	 * Not supported for structures; always throws.
-	 */
 	public function default(mixed $value): self
 	{
 		throw new Nette\InvalidStateException('Structure cannot have default value.');
@@ -62,9 +59,6 @@ final class Structure implements Schema
 	}
 
 
-	/**
-	 * Allows extra keys not defined in the shape, validating their values against the given type.
-	 */
 	public function otherItems(string|Schema $type = 'mixed'): self
 	{
 		$this->otherItems = $type instanceof Schema ? $type : new Type($type);
@@ -72,9 +66,6 @@ final class Structure implements Schema
 	}
 
 
-	/**
-	 * When enabled, properties whose value equals the default are omitted from the output.
-	 */
 	public function skipDefaults(bool $state = true): self
 	{
 		$this->skipDefaults = $state;
@@ -82,14 +73,7 @@ final class Structure implements Schema
 	}
 
 
-<<<<<<< HEAD
-	/**
-	 * Creates a new structure by merging this shape with additional properties.
-	 * @param  Schema[]|self  $shape
-	 */
-=======
 	/** @param Schema[]|self  $shape */
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 	public function extend(array|self $shape): self
 	{
 		$shape = $shape instanceof self ? $shape->items : $shape;
@@ -219,17 +203,8 @@ final class Structure implements Schema
 
 	public function completeDefault(Context $context): mixed
 	{
-		if (!$this->required) {
-			return null;
-		}
-
-		// the item is missing in the input, do not report it as used deprecated
-		$deprecated = $this->deprecated;
-		$this->deprecated = null;
-		try {
-			return $this->complete([], $context);
-		} finally {
-			$this->deprecated = $deprecated;
-		}
+		return $this->required
+			? $this->complete([], $context)
+			: null;
 	}
 }

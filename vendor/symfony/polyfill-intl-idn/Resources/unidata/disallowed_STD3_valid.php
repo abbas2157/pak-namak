@@ -65,4 +65,7 @@ return array (
   125 => true,
   126 => true,
   127 => true,
+  8800 => true,
+  8814 => true,
+  8815 => true,
 );

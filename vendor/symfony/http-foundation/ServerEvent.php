@@ -115,53 +115,31 @@ class ServerEvent implements \IteratorAggregate
      */
     public function getIterator(): \Traversable
     {
+        static $lastRetry = null;
+
         $head = '';
         if ($this->comment) {
-            $head .= self::field(': ', $this->comment);
+            $head .= \sprintf(': %s', $this->comment)."\n";
         }
         if ($this->id) {
-            $head .= \sprintf('id: %s', self::singleLine($this->id))."\n";
+            $head .= \sprintf('id: %s', $this->id)."\n";
         }
-        if ($this->retry > 0) {
-            $head .= \sprintf('retry: %s', $this->retry)."\n";
+        if ($this->retry > 0 && $this->retry !== $lastRetry) {
+            $head .= \sprintf('retry: %s', $lastRetry = $this->retry)."\n";
         }
         if ($this->type) {
-            $head .= \sprintf('event: %s', self::singleLine($this->type))."\n";
+            $head .= \sprintf('event: %s', $this->type)."\n";
         }
         yield $head;
 
         if (is_iterable($this->data)) {
             foreach ($this->data as $data) {
-<<<<<<< HEAD
-                yield self::field('data: ', $data);
-            }
-        } elseif ('' !== $this->data) {
-            yield self::field('data: ', $this->data);
-=======
                 yield \sprintf('data: %s', $data)."\n";
             }
         } elseif ('' !== $this->data) {
             yield \sprintf('data: %s', $this->data)."\n";
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         }
 
         yield "\n";
-    }
-
-    /**
-     * Renders a multi-line value as one prefixed line per line of the value.
-     */
-    private static function field(string $prefix, string $value): string
-    {
-        return $prefix.implode("\n".$prefix, preg_split("/\r\n|[\r\n]/", $value))."\n";
-    }
-
-    /**
-     * Removes the line terminators that would end the field early, as the
-     * SSE specification defines these fields as single-line only.
-     */
-    private static function singleLine(string $value): string
-    {
-        return str_replace(["\r", "\n"], '', $value);
     }
 }

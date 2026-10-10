@@ -86,11 +86,7 @@ if (extension_loaded('bcmath')) {
         function bcfloor(string $num): string { return p\Php84::bcfloor($num); }
     }
     if (!function_exists('bcround')) {
-<<<<<<< HEAD
-        function bcround(string $num, int $precision = 0, $mode = \RoundingMode::HalfAwayFromZero): string { return p\Php84::bcround($num, $precision, $mode); }
-=======
         function bcround(string $num, int $precision = 0, $mode = RoundingMode::HalfAwayFromZero): string { return p\Php84::bcround($num, $precision, $mode); }
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     }
 }
 

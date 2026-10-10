@@ -385,7 +385,6 @@ class SocketHandler extends AbstractProcessingHandler
         $length = \strlen($data);
         $sent = 0;
         $this->lastSentBytes = $sent;
-        $this->lastWritingAt = microtime(true);
         while ($this->isConnected() && $sent < $length) {
             if (0 === $sent) {
                 $chunk = $this->fwrite($data);

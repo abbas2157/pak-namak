@@ -40,7 +40,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      */
     public static function escape(string $text): string
     {
-        $text = str_replace(['<', '>'], ['\\<', '\\>'], $text);
+        $text = preg_replace('/([^\\\\]|^)([<>])/', '$1\\\\$2', $text);
 
         return self::escapeTrailingBackslash($text);
     }
@@ -141,12 +141,6 @@ class OutputFormatter implements WrappableOutputFormatterInterface
                 continue;
             }
 
-<<<<<<< HEAD
-            // tags are delimited by "<" and ">", which are ASCII, so a tag offset can never
-            // fall inside a multibyte sequence: slicing by bytes is safe here
-            $output .= $this->applyCurrentStyle(substr($message, $offset, $pos - $offset), $output, $width, $currentLineLength);
-            $offset = $pos + \strlen($text);
-=======
             if ($isAscii) {
                 // For ASCII, byte position = character position, no conversion needed
                 $output .= $this->applyCurrentStyle(substr($message, $offset, $pos - $offset), $output, $width, $currentLineLength);
@@ -158,7 +152,6 @@ class OutputFormatter implements WrappableOutputFormatterInterface
                 $output .= $this->applyCurrentStyle(Helper::substr($message, $offset, $pos - $offset), $output, $width, $currentLineLength);
                 $offset = $pos + Helper::length($text);
             }
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
             // opening tag?
             if ($open = '/' !== $text[1]) {
@@ -179,11 +172,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
             }
         }
 
-<<<<<<< HEAD
-        $output .= $this->applyCurrentStyle(substr($message, $offset), $output, $width, $currentLineLength);
-=======
         $output .= $this->applyCurrentStyle($isAscii ? substr($message, $offset) : Helper::substr($message, $offset), $output, $width, $currentLineLength);
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
         return strtr($output, ["\0" => '\\', '\\<' => '<', '\\>' => '>']);
     }

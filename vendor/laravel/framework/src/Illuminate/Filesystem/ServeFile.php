@@ -54,11 +54,7 @@ class ServeFile
      */
     protected function hasValidSignature(Request $request): bool
     {
-<<<<<<< HEAD
-        return ! filter_var($request->query('upload', false), FILTER_VALIDATE_BOOLEAN) && (
-=======
         return ! $request->boolean('upload') && (
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             ($this->config['visibility'] ?? 'private') === 'public' ||
             $request->hasValidRelativeSignature()
         );

@@ -64,13 +64,6 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
      *   fallback receives the cap as a marker only: it rejects enabled
      *   response streaming ("stream" => true) and does not limit overlapping
      *   buffered calls.
-<<<<<<< HEAD
-     * - multiplex: (string|null) Multiplexing::NONE to disable multiplexing on
-     *   the default CurlMultiHandler; the value also becomes the default
-     *   "multiplex" request option. Other Multiplexing::* values act as the
-     *   default request option only.
-=======
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      * - **: any request option
      *
      * @param array $config Client configuration settings.
@@ -90,13 +83,6 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
             }
         }
 
-<<<<<<< HEAD
-        // Deliberately not unset: the value also becomes the default
-        // "multiplex" request option, which the configured handler accepts.
-        $handlerMultiplex = ($config['multiplex'] ?? null) === Multiplexing::NONE;
-
-=======
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         $transportSharing = \array_key_exists('transport_sharing', $config) ? $config['transport_sharing'] : null;
         $transportSharingMode = CurlShareHandleState::normalizeMode($transportSharing, 'transport_sharing');
         unset($config['transport_sharing']);
@@ -106,13 +92,6 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
                 $handlerOptions['transport_sharing'] = $transportSharingMode;
             }
 
-<<<<<<< HEAD
-            if ($handlerMultiplex) {
-                $handlerOptions['multiplex'] = Multiplexing::NONE;
-            }
-
-=======
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             $config['handler'] = $handlerOptions === []
                 ? HandlerStack::create()
                 : HandlerStack::create(Utils::chooseHandler($handlerOptions));
@@ -142,8 +121,6 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
      */
     public function __call($method, $args)
     {
-        \trigger_deprecation('guzzlehttp/guzzle', '7.1', '%s::%s() is deprecated and will be removed in 8.0.', __CLASS__, __FUNCTION__);
-
         if (\count($args) < 1) {
             throw new InvalidArgumentException('Magic request methods require a URI and optional options array');
         }
@@ -153,11 +130,7 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
 
         $isAsync = \substr($method, -5) === 'Async';
         $method = $isAsync ? \substr($method, 0, -5) : $method;
-<<<<<<< HEAD
-        $method = Psr7\Utils::asciiToUpper($method);
-=======
         $method = \strtoupper($method);
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
         return $isAsync
             ? $this->requestAsync($method, $uri, $opts)
@@ -176,7 +149,7 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
         $options = $this->prepareDefaults($options);
 
         return $this->transfer(
-            $request->withUri($this->buildUri($request->getUri(), $options), self::shouldPreserveHost($request)),
+            $request->withUri($this->buildUri($request->getUri(), $options), $request->hasHeader('Host')),
             $options
         );
     }
@@ -224,11 +197,7 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
      */
     public function requestAsync(string $method, $uri = '', array $options = []): PromiseInterface
     {
-<<<<<<< HEAD
-        $normalizedMethod = Psr7\Utils::asciiToUpper($method);
-=======
         $normalizedMethod = \strtoupper($method);
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         if ($method !== $normalizedMethod) {
             \trigger_deprecation(
                 'guzzlehttp/guzzle',
@@ -275,11 +244,7 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
      */
     public function request(string $method, $uri = '', array $options = []): ResponseInterface
     {
-<<<<<<< HEAD
-        $normalizedMethod = Psr7\Utils::asciiToUpper($method);
-=======
         $normalizedMethod = \strtoupper($method);
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         if ($method !== $normalizedMethod) {
             \trigger_deprecation(
                 'guzzlehttp/guzzle',
@@ -328,33 +293,6 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
         }
 
         return $uri;
-<<<<<<< HEAD
-    }
-
-    /**
-     * Whether to preserve an existing Host header when the URI changes.
-     *
-     * A header matching the current URI carries no explicit override and is
-     * regenerated after base URI resolution or IDN conversion. Other values
-     * are preserved as deliberate overrides, as PSR-7 requires.
-     */
-    private static function shouldPreserveHost(RequestInterface $request): bool
-    {
-        if (!$request->hasHeader('Host')) {
-            return false;
-        }
-
-        $uri = $request->getUri();
-        $host = $uri->getHost();
-        $port = $uri->getPort();
-
-        if ($port !== null) {
-            $host .= ':'.$port;
-        }
-
-        return $host !== $request->getHeaderLine('Host');
-=======
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     }
 
     /**
@@ -403,11 +341,7 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
             // Add the User-Agent header if one was not already set.
             $hasUserAgent = false;
             foreach (\array_keys($this->config['headers']) as $name) {
-<<<<<<< HEAD
-                if (Psr7\Utils::asciiToLower((string) $name) === 'user-agent') {
-=======
                 if (\strtr((string) $name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') === 'user-agent') {
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                     $hasUserAgent = true;
                     break;
                 }
@@ -1183,13 +1117,7 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
         }
 
         if (isset($options['json'])) {
-            $json = \json_encode($options['json']);
-            if (\JSON_ERROR_NONE !== \json_last_error()) {
-                throw new InvalidArgumentException('json_encode error: '.\json_last_error_msg());
-            }
-
-            /** @var non-empty-string $json */
-            $options['body'] = $json;
+            $options['body'] = Utils::jsonEncode($options['json']);
             unset($options['json']);
             // Ensure that we don't have the header in different case and set the new value.
             $options['_conditional'] = Psr7\Utils::caselessRemove(['Content-Type'], $options['_conditional']);
@@ -1212,11 +1140,7 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
 
         if (!empty($options['auth']) && \is_array($options['auth'])) {
             $value = $options['auth'];
-<<<<<<< HEAD
-            $type = isset($value[2]) ? Psr7\Utils::asciiToLower($value[2]) : 'basic';
-=======
             $type = isset($value[2]) ? \strtr($value[2], 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') : 'basic';
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             switch ($type) {
                 case 'basic':
                     // Ensure that we don't have the header in different case and set the new value.

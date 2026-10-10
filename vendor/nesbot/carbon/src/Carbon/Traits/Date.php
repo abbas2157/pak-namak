@@ -1382,11 +1382,7 @@ trait Date
      */
     public function __set($name, $value)
     {
-<<<<<<< HEAD
-        if ($this->constructedObjectId === spl_object_id($this)) {
-=======
         if ($this->constructedObjectId === spl_object_hash($this)) {
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             if ($this->isImmutable()) {
                 throw ImmutableException::fromClass(static::class);
             }
@@ -2131,9 +2127,15 @@ trait Date
             'SSSSSSSSS' => static fn (CarbonInterface $date) => self::floorZeroPad($date->micro * 1000, 9),
             'M' => 'month',
             'MM' => ['rawFormat', ['m']],
-            'MMM' => static fn (CarbonInterface $date, $originalFormat = null) => $date->getTranslatedShortMonthName(
-                $originalFormat,
-            ),
+            'MMM' => static function (CarbonInterface $date, $originalFormat = null) {
+                $month = $date->getTranslatedShortMonthName($originalFormat);
+                $suffix = $date->getTranslationMessage('mmm_suffix');
+                if ($suffix && $month !== $date->monthName) {
+                    $month .= $suffix;
+                }
+
+                return $month;
+            },
             'MMMM' => static fn (CarbonInterface $date, $originalFormat = null) => $date->getTranslatedMonthName(
                 $originalFormat,
             ),
@@ -2261,8 +2263,6 @@ trait Date
         $inEscaped = false;
         $formats = null;
         $units = null;
-        $macroIndex = -1;
-        $macroDepth = 0;
 
         for ($i = 0; $i < $length; $i++) {
             $char = mb_substr($format, $i, 1);
@@ -2293,10 +2293,7 @@ trait Date
 
             $input = mb_substr($format, $i);
 
-            // Like moment.js, allow up to 5 nested macro expansions at the same position
-            $macroDepth = $i === $macroIndex ? $macroDepth + 1 : 0;
-
-            if ($macroDepth < 5 && preg_match('/^(LTS|LT|l{1,4}|L{1,4})/', $input, $match)) {
+            if (preg_match('/^(LTS|LT|l{1,4}|L{1,4})/', $input, $match)) {
                 if ($formats === null) {
                     $formats = $this->getIsoFormats();
                 }
@@ -2307,14 +2304,10 @@ trait Date
                     static fn ($code) => mb_substr($code[0], 1),
                     $formats[strtoupper($code)] ?? '',
                 );
-                $format = mb_substr($format, 0, $i).$sequence.mb_substr($format, $i + mb_strlen($code));
+                $rest = mb_substr($format, $i + mb_strlen($code));
+                $format = mb_substr($format, 0, $i).$sequence.$rest;
                 $length = mb_strlen($format);
-                $macroIndex = $i;
-                // Read the expanded sequence again from its first character,
-                // it may start with literal text, an escape or another macro
-                $i--;
-
-                continue;
+                $input = $sequence.$rest;
             }
 
             if (preg_match('/^'.CarbonInterface::ISO_FORMAT_REGEXP.'/', $input, $match)) {
@@ -2374,8 +2367,6 @@ trait Date
             't' => true,
             'L' => true,
             'o' => true,
-            'X' => true,
-            'x' => true,
             'Y' => true,
             'y' => true,
             'a' => 'a',
@@ -2390,11 +2381,9 @@ trait Date
             'u' => true,
             'v' => true,
             'E' => true,
-            'e' => true,
             'I' => true,
             'O' => true,
             'P' => true,
-            'p' => true,
             'Z' => true,
             'c' => true,
             'r' => true,

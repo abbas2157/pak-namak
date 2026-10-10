@@ -254,6 +254,7 @@ class Process implements \IteratorAggregate
      * @throws RuntimeException            When process is already running
      * @throws ProcessTimedOutException    When process timed out
      * @throws ProcessSignaledException    When process stopped after receiving signal
+     * @throws LogicException              In case a callback is provided and output has been disabled
      *
      * @final
      */
@@ -280,10 +281,7 @@ class Process implements \IteratorAggregate
      * @throws RuntimeException         When process is already running
      * @throws ProcessTimedOutException When process timed out
      * @throws ProcessSignaledException When process stopped after receiving signal
-<<<<<<< HEAD
-=======
      * @throws LogicException           In case a callback is provided and output has been disabled
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      *
      * @final
      */
@@ -313,6 +311,7 @@ class Process implements \IteratorAggregate
      *
      * @throws ProcessStartFailedException When process can't be launched
      * @throws RuntimeException            When process is already running
+     * @throws LogicException              In case a callback is provided and output has been disabled
      */
     public function start(?callable $callback = null, array $env = []): void
     {
@@ -1616,15 +1615,12 @@ class Process implements \IteratorAggregate
 
         static $comSpec;
 
-        if (!$comSpec) {
-            // use an absolute path to prevent CreateProcess() from looking for "cmd" in the current directory
-            $comSpec = (new ExecutableFinder())->find('cmd.exe') ?: (getenv('SystemRoot') ?: 'C:\Windows').'\System32\cmd.exe';
-
+        if (!$comSpec && $comSpec = (new ExecutableFinder())->find('cmd.exe')) {
             // Escape according to CommandLineToArgvW rules
             $comSpec = '"'.preg_replace('{(\\\\*+)"}', '$1$1\"', $comSpec).'"';
         }
 
-        $cmd = $comSpec.' /V:ON /E:ON /D /C ('.str_replace("\n", ' ', $cmd).')';
+        $cmd = ($comSpec ?? 'cmd').' /V:ON /E:ON /D /C ('.str_replace("\n", ' ', $cmd).')';
         foreach ($this->processPipes->getFiles() as $offset => $filename) {
             $cmd .= ' '.$offset.'>"'.$filename.'"';
         }

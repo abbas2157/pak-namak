@@ -41,17 +41,6 @@ if (\PHP_VERSION_ID >= 80000) {
     return;
 }
 
-<<<<<<< HEAD
-if (!class_exists('ValueError', false)) {
-    class ValueError extends Error
-    {
-    }
-}
-
-if (extension_loaded('intl') && !function_exists('grapheme_levenshtein')) {
-    function grapheme_levenshtein(string $string1, string $string2, ?int $insertion_cost = 1, ?int $replacement_cost = 1, ?int $deletion_cost = 1, string $locale = '') { return p\Php85::grapheme_levenshtein($string1, $string2, (int) $insertion_cost, (int) $replacement_cost, (int) $deletion_cost, $locale); }
-=======
 if (extension_loaded('intl') && !function_exists('grapheme_levenshtein')) {
     function grapheme_levenshtein(string $string1, string $string2, int $insertion_cost = 1, int $replacement_cost = 1, int $deletion_cost = 1, string $locale = '') { return p\Php85::grapheme_levenshtein($string1, $string2, $insertion_cost, $replacement_cost, $deletion_cost); }
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 }

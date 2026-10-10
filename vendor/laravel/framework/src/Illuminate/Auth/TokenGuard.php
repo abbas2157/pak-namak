@@ -80,7 +80,7 @@ class TokenGuard implements Guard
 
         $token = $this->getTokenForRequest();
 
-        if (is_string($token) && ! empty($token)) {
+        if (! empty($token)) {
             $user = $this->provider->retrieveByCredentials([
                 $this->storageKey => $this->hash ? hash('sha256', $token) : $token,
             ]);
@@ -110,7 +110,7 @@ class TokenGuard implements Guard
      */
     public function validate(array $credentials = [])
     {
-        if (! is_string($credentials[$this->inputKey] ?? null) || empty($credentials[$this->inputKey])) {
+        if (empty($credentials[$this->inputKey])) {
             return false;
         }
 

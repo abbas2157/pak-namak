@@ -4,21 +4,6 @@ All notable changes to `uri-template` will be documented in this file.
 
 Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
-<<<<<<< HEAD
-## v1.0.11 - 2026-08-24
-
-### Added
-
-- Added support for PHP 8.6
-
-## v1.0.10 - 2026-07-17
-
-### Fixed
-
-- Fixed prefix modifiers counting Unicode code points and pct-encoded characters instead of bytes
-
-=======
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 ## v1.0.9 - 2026-07-08
 
 ### Changed

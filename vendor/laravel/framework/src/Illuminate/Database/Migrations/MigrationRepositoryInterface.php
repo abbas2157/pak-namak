@@ -37,11 +37,7 @@ interface MigrationRepositoryInterface
     /**
      * Get the completed migrations with their batch numbers.
      *
-<<<<<<< HEAD
-     * @return array<string, int>
-=======
      * @return array<int, string>[]
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
      */
     public function getMigrationBatches();
 

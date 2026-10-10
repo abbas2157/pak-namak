@@ -168,28 +168,24 @@ final class TableParser extends AbstractBlockContinueParser implements BlockCont
      */
     public static function split(string $line): array
     {
-        // Scan raw bytes: the only significant characters are ASCII, and copying the other bytes through one at a
-        // time reassembles multibyte sequences unchanged. This is several times faster than stepping a Cursor.
-        $line   = \trim($line);
-        $length = \strlen($line);
+        $cursor = new Cursor(\trim($line));
 
-        $i = 0;
-        if ($length > 0 && $line[0] === '|') {
-            $i = 1;
+        if ($cursor->getCurrentCharacter() === '|') {
+            $cursor->advanceBy(1);
         }
 
         $cells = [];
         $sb    = '';
 
-        for (; $i < $length; $i++) {
-            switch ($c = $line[$i]) {
+        while (! $cursor->isAtEnd()) {
+            switch ($c = $cursor->getCurrentCharacter()) {
                 case '\\':
-                    if ($i + 1 < $length && $line[$i + 1] === '|') {
+                    if ($cursor->peek() === '|') {
                         // Pipe is special for table parsing. An escaped pipe doesn't result in a new cell, but is
                         // passed down to inline parsing as an unescaped pipe. Note that that applies even for the `\|`
                         // in an input like `\\|` - in other words, table parsing doesn't support escaping backslashes.
                         $sb .= '|';
-                        $i++;
+                        $cursor->advanceBy(1);
                     } else {
                         // Preserve backslash before other characters or at end of line.
                         $sb .= '\\';
@@ -203,6 +199,8 @@ final class TableParser extends AbstractBlockContinueParser implements BlockCont
                 default:
                     $sb .= $c;
             }
+
+            $cursor->advanceBy(1);
         }
 
         if ($sb !== '') {

@@ -161,7 +161,7 @@ trait Units
 
         $seconds = (int) $value;
         $microseconds = (int) round(
-            (abs((float) $value) - abs($seconds)) * ($value < 0 ? -1 : 1) * static::MICROSECONDS_PER_SECOND,
+            (abs($value) - abs($seconds)) * ($value < 0 ? -1 : 1) * static::MICROSECONDS_PER_SECOND,
         );
         $date = $this->setTimestamp($this->getTimestamp() + $seconds);
 
@@ -333,31 +333,11 @@ trait Units
         }
 
         if ($unit === 'weekday') {
-<<<<<<< HEAD
-            $absoluteValue = abs($value);
-            $sign = $value < 0 ? -1 : 1;
-            $intAbsoluteValue = (int) $absoluteValue;
-            $remaining = ((float) $absoluteValue - (float) $intAbsoluteValue);
-
-            if ($remaining !== 0.0) {
-                if ($intAbsoluteValue !== 0) {
-                    $date = $date->addUnit($unit, $sign * $intAbsoluteValue);
-                }
-
-                $date = $date->addDays($sign * $remaining);
-
-                while ($date->isWeekend()) {
-                    $date = $date->addDays($sign);
-                }
-
-                return $date;
-            }
-
-=======
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             $weekendDays = $this->transmitFactory(static::getWeekendDays(...));
 
             if ($weekendDays !== [static::SATURDAY, static::SUNDAY]) {
+                $absoluteValue = abs($value);
+                $sign = $value / max(1, $absoluteValue);
                 $weekDaysCount = static::DAYS_PER_WEEK - min(static::DAYS_PER_WEEK - 1, \count(array_unique($weekendDays)));
                 $weeks = floor($absoluteValue / $weekDaysCount);
 

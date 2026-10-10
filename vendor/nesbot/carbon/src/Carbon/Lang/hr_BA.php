@@ -12,7 +12,6 @@
 /*
  * Authors:
  * - DarkoDevelop
- * - Kamthorn Krairaksa
  */
 return array_replace_recursive(require __DIR__.'/hr.php', [
     'weekdays' => ['nedjelja', 'ponedjeljak', 'utorak', 'srijeda', 'četvrtak', 'petak', 'subota'],
@@ -25,7 +24,7 @@ return array_replace_recursive(require __DIR__.'/hr.php', [
     'formats' => [
         'LT' => 'HH:mm',
         'LTS' => 'HH:mm:ss',
-        'L' => 'D. M. YY.',
+        'L' => 'D. M. yy.',
         'LL' => 'D. MMM YYYY.',
         'LLL' => 'D. MMMM YYYY. HH:mm',
         'LLLL' => 'dddd, D. MMMM YYYY. HH:mm',

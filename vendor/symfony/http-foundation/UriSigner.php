@@ -182,17 +182,18 @@ class UriSigner
             parse_str($url['query'], $params);
         }
 
-        if (!\is_string($hash = $params[$this->hashParameter] ?? null) || '' === $hash) {
+        if (empty($params[$this->hashParameter])) {
             return self::STATUS_MISSING;
         }
 
+        $hash = $params[$this->hashParameter];
         unset($params[$this->hashParameter]);
 
         if (!hash_equals($this->computeHash($this->buildUrl($url, $params)), strtr(rtrim($hash, '='), ['/' => '_', '+' => '-']))) {
             return self::STATUS_INVALID;
         }
 
-        if (null === $expiration = $params[$this->expirationParameter] ?? null) {
+        if (!$expiration = $params[$this->expirationParameter] ?? false) {
             return self::STATUS_VALID;
         }
 

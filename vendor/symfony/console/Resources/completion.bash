@@ -16,50 +16,27 @@ _sf_{{ COMMAND_NAME }}() {
         fi
     done
 
+    # Use newline as only separator to allow space in completion values
+    local IFS=$'\n'
     local sf_cmd="${COMP_WORDS[0]}"
-    local sf_cmd_parts
 
-    # for an alias, get the real command behind it, which may carry arguments
+    # for an alias, get the real script behind it
     sf_cmd_type=$(type -t $sf_cmd)
     if [[ $sf_cmd_type == "alias" ]]; then
         sf_cmd=$(alias $sf_cmd | sed -E "s/alias $sf_cmd='(.*)'/\1/")
-        read -ra sf_cmd_parts <<< "$sf_cmd"
     elif [[ $sf_cmd_type == "file" ]]; then
-        sf_cmd_parts=("$(type -p $sf_cmd)")
-    else
-        sf_cmd_parts=("$sf_cmd")
+        sf_cmd=$(type -p $sf_cmd)
     fi
 
-    # the command must be a function, an executable of the PATH or an executable file
-    if [[ $sf_cmd_type != "function" ]] \
-        && ! type -P "${sf_cmd_parts[0]}" > /dev/null \
-        && [[ ! -x ${sf_cmd_parts[0]} ]] \
-    ; then
+    if [[ $sf_cmd_type != "function" && ! -x $sf_cmd ]]; then
         return 1
     fi
 
-    # The bash-completion package provides the parsing of the current command line
-    if ! declare -F _get_comp_words_by_ref > /dev/null; then
-        >&2 echo "The completion of {{ COMMAND_NAME }} requires the \"bash-completion\" package to be installed and loaded."
-
-        return 1
-    fi
-
-    # this must run with the default IFS: bash-completion 1.x, still shipped on
-    # macOS, joins every word into a single one when IFS is a newline
     local cur prev words cword
     _get_comp_words_by_ref -n := cur prev words cword
 
-<<<<<<< HEAD
-    # Use newline as only separator to allow space in completion values
-    local IFS=$'\n'
-
-    local completecmd=("${sf_cmd_parts[@]}" "_complete" "--no-interaction" "-sbash" "-c$cword" "-a{{ VERSION }}")
-    for w in "${words[@]}"; do
-=======
     local completecmd=("$sf_cmd" "_complete" "--no-interaction" "-sbash" "-c$cword" "-a{{ VERSION }}")
     for w in ${words[@]}; do
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         w="${w//\\\\/\\}"
         # remove quotes from typed values
         quote="${w:0:1}"
@@ -77,19 +54,8 @@ _sf_{{ COMMAND_NAME }}() {
     done
 
     local sfcomplete
-<<<<<<< HEAD
-    if sfcomplete=$(SHELL_VERBOSITY=0 "${completecmd[@]}" 2>&1); then
-=======
     if sfcomplete=$(SHELL_VERBOSITY=0 ${completecmd[@]} 2>&1); then
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         local quote suggestions
-
-        # for the "--option=value" form, the suggestions are the values: readline
-        # keeps the "--option=" part, which is a word of its own for it
-        if [[ "$cur" == -*=* ]]; then
-            cur="${cur#*=}"
-        fi
-
         quote=${cur:0:1}
 
         # Use single quotes by default if suggestions contains backslash (FQCN)
@@ -98,11 +64,8 @@ _sf_{{ COMMAND_NAME }}() {
         fi
 
         if [ "$quote" == \' ]; then
-            # single quotes: escape the single quotes contained in the values
-            suggestions=$(for s in $sfcomplete; do
-                s=${s//\'/\'\\\'\'}
-                printf $'%q%q%q\n' "$quote" "$s" "$quote";
-            done)
+            # single quotes: no additional escaping (does not accept ' in values)
+            suggestions=$(for s in $sfcomplete; do printf $'%q%q%q\n' "$quote" "$s" "$quote"; done)
         elif [ "$quote" == \" ]; then
             # double quotes: double escaping for \ $ ` "
             suggestions=$(for s in $sfcomplete; do

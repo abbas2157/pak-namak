@@ -175,37 +175,11 @@ abstract class AbstractPipes implements PipesInterface
             $this->input = null;
             fclose($this->pipes[0]);
             unset($this->pipes[0]);
-        } elseif (!$w || $this->hasReadyInput()) {
+        } elseif (!$w) {
             return [$this->pipes[0]];
         }
 
         return null;
-    }
-
-    private function closeBrokenInputPipe(): void
-    {
-        $this->lastError = error_get_last()['message'] ?? null;
-        if (\is_resource($this->pipes[0] ?? null)) {
-            fclose($this->pipes[0]);
-        }
-        unset($this->pipes[0]);
-
-        $this->input = null;
-        $this->inputBuffer = '';
-    }
-
-    /**
-     * Tells whether the next chunk of input can be written without waiting.
-     */
-    private function hasReadyInput(): bool
-    {
-        if (!$this->input instanceof \Iterator || !$this->input->valid()) {
-            return false;
-        }
-
-        $input = $this->input->current();
-
-        return \is_scalar($input) && '' !== (string) $input;
     }
 
     private function closeBrokenInputPipe(): void

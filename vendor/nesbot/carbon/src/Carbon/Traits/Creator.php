@@ -102,7 +102,7 @@ trait Creator
             throw new InvalidFormatException($exception->getMessage(), 0, $exception);
         }
 
-        $this->constructedObjectId = spl_object_id($this);
+        $this->constructedObjectId = spl_object_hash($this);
 
         self::setLastErrors(parent::getLastErrors());
     }
@@ -134,7 +134,7 @@ trait Creator
      */
     public function __clone(): void
     {
-        $this->constructedObjectId = spl_object_id($this);
+        $this->constructedObjectId = spl_object_hash($this);
     }
 
     /**
@@ -236,9 +236,7 @@ trait Creator
         ?string $locale = null,
         DateTimeZone|string|int|null $timezone = null,
     ): static {
-        $text = static::translateTimeString($time, $locale, static::DEFAULT_LOCALE);
-
-        return static::rawParse(str_replace("'", '', $text), $timezone);
+        return static::rawParse(static::translateTimeString($time, $locale, static::DEFAULT_LOCALE), $timezone);
     }
 
     /**

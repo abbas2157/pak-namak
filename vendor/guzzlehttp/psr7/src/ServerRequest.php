@@ -165,11 +165,7 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public static function fromGlobals(): ServerRequestInterface
     {
-<<<<<<< HEAD
-        $method = Utils::asciiToUpper(self::getServerParam('REQUEST_METHOD') ?? 'GET');
-=======
         $method = strtoupper(self::getServerParam('REQUEST_METHOD') ?? 'GET');
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         $headers = self::removeInvalidHostHeader(self::getAllHeaders());
         $uri = self::getUriFromGlobals();
         $body = new CachingStream(new LazyOpenStream('php://input', 'r+'));
@@ -224,11 +220,7 @@ class ServerRequest extends Request implements ServerRequestInterface
     private static function removeInvalidHostHeader(array $headers): array
     {
         foreach ($headers as $name => $value) {
-<<<<<<< HEAD
-            if (Utils::asciiToLower((string) $name) !== 'host') {
-=======
             if (strtr((string) $name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz') !== 'host') {
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
                 continue;
             }
 

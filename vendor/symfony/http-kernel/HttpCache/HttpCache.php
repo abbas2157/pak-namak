@@ -475,15 +475,6 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
         // always a "master" request (as the real master request can be in cache)
         $response = SubRequestHandler::handle($this->kernel, $request, HttpKernelInterface::MAIN_REQUEST, $catch);
         $this->forwardedRequest = $request;
-<<<<<<< HEAD
-
-        // These headers drive how the body is restored before sending the response.
-        // Only the store and the surrogate may set them, never the backend.
-        $response->headers->remove('X-Body-File');
-        $response->headers->remove('X-Body-Eval');
-        $response->headers->remove('X-Content-Digest');
-=======
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
         /*
          * Support stale-if-error given on Responses or as a config option.
@@ -695,7 +686,7 @@ class HttpCache implements HttpKernelInterface, TerminableInterface
             $key = strtolower(str_replace('HTTP_', '', $key));
 
             if ('cookie' === $key) {
-                if ($request->cookies->all()) {
+                if (\count($request->cookies->all())) {
                     return true;
                 }
             } elseif ($request->headers->has($key)) {

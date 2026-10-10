@@ -15,12 +15,6 @@ if (\PHP_VERSION_ID >= 80000) {
     return require __DIR__.'/bootstrap80.php';
 }
 
-if (!class_exists('ValueError', false)) {
-    class ValueError extends Error
-    {
-    }
-}
-
 if (!defined('GRAPHEME_EXTR_COUNT')) {
     define('GRAPHEME_EXTR_COUNT', 0);
 }
@@ -62,11 +56,7 @@ if (!function_exists('grapheme_str_split')) {
     function grapheme_str_split(string $string, int $length = 1) { return p\Grapheme::grapheme_str_split($string, $length); }
 }
 if (!function_exists('grapheme_levenshtein')) {
-<<<<<<< HEAD
-    function grapheme_levenshtein(string $string1, string $string2, ?int $insertion_cost = 1, ?int $replacement_cost = 1, ?int $deletion_cost = 1, string $locale = '') { return p\Grapheme::grapheme_levenshtein($string1, $string2, (int) $insertion_cost, (int) $replacement_cost, (int) $deletion_cost, $locale); }
-=======
     function grapheme_levenshtein(string $string1, string $string2, int $insertion_cost = 1, int $replacement_cost = 1, int $deletion_cost = 1, string $locale = '') { return p\Grapheme::grapheme_levenshtein($string1, $string2, $insertion_cost, $replacement_cost, $deletion_cost); }
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 }
 if (!function_exists('grapheme_strrev')) {
     function grapheme_strrev(string $string) { return p\Grapheme::grapheme_strrev($string); }

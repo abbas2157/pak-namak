@@ -30,8 +30,6 @@ use Symfony\Component\HttpFoundation\Response;
 class HttpKernelBrowser extends AbstractBrowser
 {
     private bool $catchExceptions = true;
-    private ?object $sentResponse = null;
-    private string $sentContent = '';
 
     /**
      * @param array $server The server parameters (equivalent of $_SERVER)
@@ -62,22 +60,6 @@ class HttpKernelBrowser extends AbstractBrowser
     protected function doRequest(object $request): Response
     {
         $response = $this->kernel->handle($request, HttpKernelInterface::MAIN_REQUEST, $this->catchExceptions);
-
-        // the content must be sent before the kernel is terminated, as when serving a real request
-        $content = '';
-        ob_start(static function ($chunk) use (&$content) {
-            $content .= $chunk;
-
-            return '';
-        });
-
-        try {
-            $response->sendContent();
-        } finally {
-            ob_end_clean();
-            $this->sentResponse = $response;
-            $this->sentContent = $content;
-        }
 
         if ($this->kernel instanceof TerminableInterface) {
             $this->kernel->terminate($request, $response);
@@ -198,25 +180,6 @@ class HttpKernelBrowser extends AbstractBrowser
      */
     protected function filterResponse(object $response): DomResponse
     {
-<<<<<<< HEAD
-        if ($response === $this->sentResponse) {
-            $content = $this->sentContent;
-            $this->sentResponse = null;
-            $this->sentContent = '';
-        } else {
-            $content = '';
-            ob_start(static function ($chunk) use (&$content) {
-                $content .= $chunk;
-
-                return '';
-            });
-
-            try {
-                $response->sendContent();
-            } finally {
-                ob_end_clean();
-            }
-=======
         $content = '';
         ob_start(static function ($chunk) use (&$content) {
             $content .= $chunk;
@@ -228,7 +191,6 @@ class HttpKernelBrowser extends AbstractBrowser
             $response->sendContent();
         } finally {
             ob_end_clean();
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         }
 
         return new DomResponse($content, $response->getStatusCode(), $response->headers->all());

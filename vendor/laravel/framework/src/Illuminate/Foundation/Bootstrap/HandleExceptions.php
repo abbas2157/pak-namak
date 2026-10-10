@@ -93,37 +93,28 @@ class HandleExceptions
         }
 
         if (! static::$app->bound('config')) {
-<<<<<<< HEAD
-=======
             return;
         }
 
         try {
             $logger = static::$app->make(LogManager::class);
         } catch (Exception) {
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             return;
         }
 
-        try {
-            $logger = static::$app->make(LogManager::class);
+        $this->ensureDeprecationLoggerIsConfigured();
 
-            $this->ensureDeprecationLoggerIsConfigured();
+        $options = static::$app['config']->get('logging.deprecations') ?? [];
 
-            $options = static::$app['config']->get('logging.deprecations') ?? [];
-
-            with($logger->channel('deprecations'), function ($log) use ($message, $file, $line, $level, $options) {
-                if ($options['trace'] ?? false) {
-                    $log->warning((string) new ErrorException($message, 0, $level, $file, $line));
-                } else {
-                    $log->warning(sprintf('%s in %s on line %s',
-                        $message, $file, $line
-                    ));
-                }
-            });
-        } catch (Throwable) {
-            return;
-        }
+        with($logger->channel('deprecations'), function ($log) use ($message, $file, $line, $level, $options) {
+            if ($options['trace'] ?? false) {
+                $log->warning((string) new ErrorException($message, 0, $level, $file, $line));
+            } else {
+                $log->warning(sprintf('%s in %s on line %s',
+                    $message, $file, $line
+                ));
+            }
+        });
     }
 
     /**

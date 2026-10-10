@@ -34,13 +34,9 @@ trait InteractsWithDockerComposeServices
         'memcached',
         'meilisearch',
         'typesense',
-<<<<<<< HEAD
-=======
         'minio',
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         'rustfs',
         'mailpit',
-        'mailtrap-local',
         'rabbitmq',
         'selenium',
         'soketi',
@@ -112,19 +108,11 @@ trait InteractsWithDockerComposeServices
         // Merge volumes...
         collect($services)
             ->filter(function ($service) {
-<<<<<<< HEAD
-                return in_array($service, ['mysql', 'pgsql', 'mariadb', 'mongodb', 'redis', 'valkey', 'meilisearch', 'typesense', 'rustfs', 'mailtrap-local', 'rabbitmq']);
-=======
                 return in_array($service, ['mysql', 'pgsql', 'mariadb', 'mongodb', 'redis', 'valkey', 'meilisearch', 'typesense', 'minio', 'rustfs', 'rabbitmq']);
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             })->filter(function ($service) use ($compose) {
                 return ! array_key_exists($service, $compose['volumes'] ?? []);
             })->each(function ($service) use (&$compose) {
                 $compose['volumes']["sail-{$service}"] = ['driver' => 'local'];
-
-                if ($service === 'mongodb') {
-                    $compose['volumes']['sail-mongodb-config'] = ['driver' => 'local'];
-                }
             });
 
         // If the list of volumes is empty, we can remove it...
@@ -202,9 +190,8 @@ trait InteractsWithDockerComposeServices
 
         if (in_array('meilisearch', $services)) {
             $environment .= "\nSCOUT_DRIVER=meilisearch";
-            $environment .= "\nMEILISEARCH_HOST=http://meilisearch:7700";
-            $environment .= "\nMEILISEARCH_NO_ANALYTICS=false";
-            $environment .= "\nMEILISEARCH_UPGRADE_DB=true\n";
+            $environment .= "\nMEILISEARCH_HOST=http://meilisearch:7700\n";
+            $environment .= "\nMEILISEARCH_NO_ANALYTICS=false\n";
         }
 
         if (in_array('typesense', $services)) {
@@ -230,10 +217,6 @@ trait InteractsWithDockerComposeServices
             $environment = preg_replace("/^MAIL_MAILER=(.*)/m", "MAIL_MAILER=smtp", $environment);
             $environment = preg_replace("/^MAIL_HOST=(.*)/m", "MAIL_HOST=mailpit", $environment);
             $environment = preg_replace("/^MAIL_PORT=(.*)/m", "MAIL_PORT=1025", $environment);
-        } elseif (in_array('mailtrap-local', $services)) {
-            $environment = preg_replace("/^MAIL_MAILER=(.*)/m", "MAIL_MAILER=smtp", $environment);
-            $environment = preg_replace("/^MAIL_HOST=(.*)/m", "MAIL_HOST=mailtrap-local", $environment);
-            $environment = preg_replace("/^MAIL_PORT=(.*)/m", "MAIL_PORT=3535", $environment);
         }
 
         if (in_array('rabbitmq', $services)) {
@@ -263,8 +246,11 @@ trait InteractsWithDockerComposeServices
         $phpunit = file_get_contents($path);
 
         $phpunit = preg_replace('/^.*DB_CONNECTION.*\n/m', '', $phpunit);
-        $phpunit = preg_replace(
-            '/(<!--[ \t]*)?<env[ \t]+name="DB_DATABASE"[ \t]+value=":memory:"[ \t]*\/>(?(1)[ \t]*-->)/',
+        $phpunit = str_replace(
+            [
+                '<!-- <env name="DB_DATABASE" value=":memory:"/> -->',
+                '<env name="DB_DATABASE" value=":memory:"/>',
+            ],
             '<env name="DB_DATABASE" value="testing"/>',
             $phpunit
         );

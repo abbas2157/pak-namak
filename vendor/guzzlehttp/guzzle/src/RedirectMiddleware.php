@@ -105,10 +105,6 @@ class RedirectMiddleware
             );
         }
 
-        // The caller's delay applies once, before the initial request, not
-        // before each followed redirect.
-        unset($options['delay']);
-
         $promise = $this($nextRequest, $options);
 
         // Add headers to be able to track history of redirects.
@@ -179,10 +175,6 @@ class RedirectMiddleware
             if ($requestMethod !== 'QUERY' || !\in_array($statusCode, [301, 302], true)) {
                 $modify['method'] = \in_array($requestMethod, ['GET', 'HEAD', 'OPTIONS'], true) ? $requestMethod : 'GET';
                 $modify['body'] = '';
-<<<<<<< HEAD
-                $modify['remove_headers'] = ['Content-Length', 'Transfer-Encoding'];
-=======
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
             }
         }
 
@@ -213,7 +205,7 @@ class RedirectMiddleware
         if ($options['allow_redirects']['referer']
             && $modify['uri']->getScheme() === $request->getUri()->getScheme()
         ) {
-            $uri = $request->getUri()->withUserInfo('')->withFragment('');
+            $uri = $request->getUri()->withUserInfo('');
             $modify['set_headers']['Referer'] = (string) $uri;
         } else {
             $modify['remove_headers'][] = 'Referer';

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<p align="center"><img src="logo.png" alt="Monolog" width="400"></p>
-=======
 <p align="center"><img src="logo.jpg" alt="Monolog" width="400"></p>
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 
 # Monolog - Logging for PHP [![Continuous Integration](https://github.com/Seldaek/monolog/workflows/Continuous%20Integration/badge.svg?branch=main)](https://github.com/Seldaek/monolog/actions)
 

@@ -13,7 +13,7 @@ return array_replace_recursive(require __DIR__.'/ne.php', [
     'formats' => [
         'LT' => 'h:mm a',
         'LTS' => 'h:mm:ss a',
-        'L' => 'YY/M/D',
+        'L' => 'yy/M/d',
         'LL' => 'YYYY MMM D',
         'LLL' => 'YYYY MMMM D, h:mm a',
         'LLLL' => 'YYYY MMMM D, dddd, h:mm a',

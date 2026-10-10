@@ -8,31 +8,15 @@ import sql from '@shikijs/langs/sql';
 import darkPlus from '@shikijs/themes/dark-plus';
 import lightPlus from '@shikijs/themes/light-plus';
 
-<<<<<<< HEAD
-const tippyOptions = {
-=======
 tippy('[data-tippy-content]', {
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
     arrow: false,
+    allowHTML: true,
     animation: 'shift-away',
     delay: [300, 0],
     duration: 200,
     theme: 'laravel',
-};
-
-tippy('[data-tippy-content]', {
-    ...tippyOptions,
-    allowHTML: false,
 });
 
-<<<<<<< HEAD
-tippy('[data-tippy-html-content]', {
-    ...tippyOptions,
-    allowHTML: true,
-});
-
-=======
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
 window.copyToClipboard = async function (text) {
     if (navigator.clipboard) {
         await navigator.clipboard.writeText(text);

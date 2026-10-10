@@ -153,13 +153,6 @@ class Option
             return $this->typeName::tryFrom($value) ?? throw InvalidOptionException::fromEnumValue($this->name, $value, $this->suggestedValues);
         }
 
-<<<<<<< HEAD
-        if (\is_string($value) && \in_array($this->typeName, ['int', 'float'], true) && !is_numeric($value)) {
-            throw InvalidOptionException::fromInvalidType($this->name, $value, $this->typeName);
-        }
-
-=======
->>>>>>> 9bc3608ef7b9c5a82d5f569b8ea6535b05e0f93b
         if ('array' === $this->typeName && $this->allowNull && [] === $value) {
             return null;
         }
